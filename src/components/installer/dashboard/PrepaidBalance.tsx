@@ -5,6 +5,7 @@ import { useToast } from "@/hooks/use-toast";
 import { motion } from "framer-motion";
 import { CustomAmountInput } from "./prepaid/CustomAmountInput";
 import { QuickTopUpButtons } from "./prepaid/QuickTopUpButtons";
+import { SavedCards } from "./prepaid/SavedCards";
 
 interface PrepaidBalanceProps {
   balance: number;
@@ -15,6 +16,17 @@ export const PrepaidBalance = ({ balance }: PrepaidBalanceProps) => {
   const lowBalanceThreshold = 50;
   const recommendedBalance = 200;
   const isLowBalance = balance <= lowBalanceThreshold;
+
+  // Exemple de cartes enregistrées (à remplacer par des vraies données)
+  const mockCards = [
+    {
+      id: "1",
+      last4: "4242",
+      brand: "Visa",
+      expMonth: 12,
+      expYear: 2024,
+    },
+  ];
 
   const handleRecharge = (amount: number) => {
     toast({
@@ -27,6 +39,20 @@ export const PrepaidBalance = ({ balance }: PrepaidBalanceProps) => {
     toast({
       title: "Historique",
       description: "Affichage de l'historique des transactions...",
+    });
+  };
+
+  const handleDeleteCard = (cardId: string) => {
+    toast({
+      title: "Carte supprimée",
+      description: "La carte a été supprimée avec succès.",
+    });
+  };
+
+  const handleAddCard = () => {
+    toast({
+      title: "Ajouter une carte",
+      description: "Redirection vers le formulaire d'ajout de carte...",
     });
   };
 
@@ -75,6 +101,12 @@ export const PrepaidBalance = ({ balance }: PrepaidBalanceProps) => {
               onChange={() => {}}
               onSubmit={() => handleRecharge(0)}
               isLoading={false}
+            />
+
+            <SavedCards 
+              cards={mockCards}
+              onDeleteCard={handleDeleteCard}
+              onAddCard={handleAddCard}
             />
 
             <Button 
