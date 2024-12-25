@@ -11,8 +11,8 @@ import { useState } from "react"
 export function InstallerDirectory() {
   const { toast } = useToast()
   const [searchTerm, setSearchTerm] = useState("")
-  const [selectedZone, setSelectedZone] = useState<string>("")
-  const [minConversionRate, setMinConversionRate] = useState<string>("")
+  const [selectedZone, setSelectedZone] = useState<string>("all")
+  const [minConversionRate, setMinConversionRate] = useState<string>("all")
 
   const handleContactRequest = (installerName: string) => {
     toast({
@@ -38,10 +38,10 @@ export function InstallerDirectory() {
       installer.companyName.toLowerCase().includes(searchTerm.toLowerCase())
     )
     .filter(installer =>
-      selectedZone === "" || installer.zones.includes(selectedZone)
+      selectedZone === "all" || installer.zones.includes(selectedZone)
     )
     .filter(installer =>
-      minConversionRate === "" || installer.conversionRate >= parseInt(minConversionRate)
+      minConversionRate === "all" || installer.conversionRate >= parseInt(minConversionRate)
     )
 
   return (
@@ -75,7 +75,7 @@ export function InstallerDirectory() {
               <SelectValue placeholder="Zone géographique" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">Toutes les zones</SelectItem>
+              <SelectItem value="all">Toutes les zones</SelectItem>
               {allZones.map(zone => (
                 <SelectItem key={zone} value={zone}>{zone}</SelectItem>
               ))}
@@ -87,7 +87,7 @@ export function InstallerDirectory() {
               <SelectValue placeholder="Taux de conversion" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">Tous les taux</SelectItem>
+              <SelectItem value="all">Tous les taux</SelectItem>
               <SelectItem value="50">50% et plus</SelectItem>
               <SelectItem value="60">60% et plus</SelectItem>
               <SelectItem value="70">70% et plus</SelectItem>
