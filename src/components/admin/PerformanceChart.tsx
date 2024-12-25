@@ -1,4 +1,5 @@
 import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip } from 'recharts';
+import { motion } from 'framer-motion';
 
 const data = [
   { month: 'Jan', leads: 500, devis: 200, conversion: 40 },
@@ -11,31 +12,57 @@ const data = [
 
 const PerformanceChart = () => {
   return (
-    <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-      <h2 className="text-xl font-semibold mb-6 text-gray-800">Performance Mensuelle</h2>
+    <motion.div 
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="rounded-xl bg-[#2A2F3C]/50 backdrop-blur-md border border-white/10 p-6"
+    >
+      <h2 className="text-xl font-semibold mb-6 bg-gradient-to-r from-[#9b87f5] to-[#D6BCFA] bg-clip-text text-transparent">
+        Performance Mensuelle
+      </h2>
       <div className="h-[300px]">
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart data={data}>
             <defs>
               <linearGradient id="colorLeads" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#3B82F6" stopOpacity={0.1}/>
-                <stop offset="95%" stopColor="#3B82F6" stopOpacity={0}/>
+                <stop offset="5%" stopColor="#9b87f5" stopOpacity={0.3}/>
+                <stop offset="95%" stopColor="#9b87f5" stopOpacity={0}/>
               </linearGradient>
               <linearGradient id="colorDevis" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#10B981" stopOpacity={0.1}/>
-                <stop offset="95%" stopColor="#10B981" stopOpacity={0}/>
+                <stop offset="5%" stopColor="#D6BCFA" stopOpacity={0.3}/>
+                <stop offset="95%" stopColor="#D6BCFA" stopOpacity={0}/>
               </linearGradient>
             </defs>
-            <CartesianGrid strokeDasharray="3 3" vertical={false} />
-            <XAxis dataKey="month" />
-            <YAxis yAxisId="left" />
-            <YAxis yAxisId="right" orientation="right" />
-            <Tooltip />
+            <CartesianGrid strokeDasharray="3 3" stroke="#ffffff10" vertical={false} />
+            <XAxis 
+              dataKey="month" 
+              stroke="#ffffff50"
+              tick={{ fill: '#ffffff80' }}
+            />
+            <YAxis 
+              yAxisId="left" 
+              stroke="#ffffff50"
+              tick={{ fill: '#ffffff80' }}
+            />
+            <YAxis 
+              yAxisId="right" 
+              orientation="right" 
+              stroke="#ffffff50"
+              tick={{ fill: '#ffffff80' }}
+            />
+            <Tooltip 
+              contentStyle={{ 
+                backgroundColor: '#2A2F3C', 
+                border: '1px solid rgba(255,255,255,0.1)',
+                borderRadius: '8px',
+                color: '#fff'
+              }}
+            />
             <Area 
               yAxisId="left"
               type="monotone" 
               dataKey="leads" 
-              stroke="#3B82F6" 
+              stroke="#9b87f5" 
               fillOpacity={1} 
               fill="url(#colorLeads)" 
               name="Leads"
@@ -44,7 +71,7 @@ const PerformanceChart = () => {
               yAxisId="left"
               type="monotone" 
               dataKey="devis" 
-              stroke="#10B981" 
+              stroke="#D6BCFA" 
               fillOpacity={1} 
               fill="url(#colorDevis)" 
               name="Devis"
@@ -53,14 +80,14 @@ const PerformanceChart = () => {
               yAxisId="right"
               type="monotone" 
               dataKey="conversion" 
-              stroke="#F59E0B" 
+              stroke="#7E69AB" 
               fill="none"
               name="Conversion (%)"
             />
           </AreaChart>
         </ResponsiveContainer>
       </div>
-    </div>
+    </motion.div>
   );
 };
 

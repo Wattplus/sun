@@ -18,9 +18,11 @@ const RecentActivity = () => {
     <motion.div 
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="glass-panel"
+      className="rounded-xl bg-[#2A2F3C]/50 backdrop-blur-md border border-white/10 p-6"
     >
-      <h2 className="text-xl font-semibold mb-6 gradient-text">Activité Récente</h2>
+      <h2 className="text-xl font-semibold mb-6 bg-gradient-to-r from-[#9b87f5] to-[#D6BCFA] bg-clip-text text-transparent">
+        Activité Récente
+      </h2>
       <div className="space-y-4">
         {activities.map((item, index) => (
           <motion.div 
@@ -28,12 +30,12 @@ const RecentActivity = () => {
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: index * 0.1 }}
-            className="flex items-center justify-between py-3 border-b border-white/10 last:border-0"
+            className="flex items-center justify-between py-3 border-b border-white/10 last:border-0 hover:bg-white/5 rounded-lg transition-colors duration-200 p-2"
           >
             <div className="flex items-center space-x-3">
               <div className={`w-2 h-2 rounded-full ${
-                item.status === 'success' ? 'bg-emerald-500' :
-                item.status === 'warning' ? 'bg-yellow-500' : 'bg-blue-500'
+                item.status === 'success' ? 'bg-emerald-400' :
+                item.status === 'warning' ? 'bg-yellow-400' : 'bg-[#9b87f5]'
               }`}></div>
               <p className="text-sm text-white/70">{item.action}</p>
             </div>
