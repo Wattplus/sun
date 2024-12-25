@@ -30,7 +30,7 @@ const specs = [
       "Garantie décennale"
     ],
     icon: Clock,
-    color: "from-purple-600 to-purple-800"
+    color: "from-indigo-600 to-indigo-800"
   }
 ];
 
@@ -39,7 +39,7 @@ export const TechnicalSpecs = () => {
     <div className="bg-gradient-to-b from-white to-gray-50 py-24 sm:py-32">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="mx-auto max-w-2xl text-center mb-16">
-          <h2 className="text-4xl font-bold tracking-tight text-gray-900 mb-6">
+          <h2 className="text-4xl font-bold tracking-tight text-gray-900 mb-6 bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
             Guide de l'installation solaire
           </h2>
           <p className="text-xl text-gray-600">
@@ -51,23 +51,23 @@ export const TechnicalSpecs = () => {
             <div key={spec.title} className="group relative">
               <div className="absolute -inset-1 rounded-3xl bg-gradient-to-r from-blue-600 to-green-600 opacity-25 blur transition duration-200 group-hover:opacity-100" />
               <div className="relative h-full rounded-2xl bg-white p-8 shadow-xl">
-                <div className="flex items-center gap-4 mb-6">
-                  <div className={`rounded-xl bg-gradient-to-br ${spec.color} p-3 text-white shadow-lg`}>
+                <div className="flex items-center gap-4 mb-8">
+                  <div className={`rounded-xl bg-gradient-to-br ${spec.color} p-4 text-white shadow-lg transform group-hover:scale-110 transition-transform duration-300`}>
                     <spec.icon className="h-6 w-6" />
                   </div>
-                  <h3 className="text-xl font-semibold text-gray-900">{spec.title}</h3>
+                  <h3 className="text-2xl font-semibold text-gray-900">{spec.title}</h3>
                 </div>
-                <ul className="space-y-4 mb-6">
+                <ul className="space-y-4 mb-8">
                   {spec.items.map((item, index) => (
-                    <li key={index} className="flex items-center text-gray-700">
-                      <span className="mr-2 text-green-500">•</span>
+                    <li key={index} className="flex items-center text-gray-700 text-lg">
+                      <span className="mr-3 text-green-500 text-2xl">•</span>
                       {item}
                     </li>
                   ))}
                 </ul>
                 <Button
                   variant="outline"
-                  className="w-full group hover:bg-green-500 hover:text-white hover:border-green-500"
+                  className="w-full group hover:bg-green-500 hover:text-white hover:border-green-500 transition-all duration-300"
                   onClick={() => document.getElementById('lead-form')?.scrollIntoView({ behavior: 'smooth' })}
                 >
                   En savoir plus
@@ -81,7 +81,7 @@ export const TechnicalSpecs = () => {
         <div className="mt-16 text-center">
           <Button 
             size="lg"
-            className="bg-green-500 hover:bg-green-600 text-white px-8 py-6 text-lg rounded-full shadow-lg shadow-green-500/20"
+            className="bg-green-500 hover:bg-green-600 text-white px-8 py-6 text-lg rounded-full shadow-lg shadow-green-500/20 transform hover:scale-105 transition-transform duration-300"
             onClick={() => document.getElementById('lead-form')?.scrollIntoView({ behavior: 'smooth' })}
           >
             Obtenez votre devis gratuit
