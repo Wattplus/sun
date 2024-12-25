@@ -69,6 +69,18 @@ export const DashboardTabs = () => {
 
       <PrepaidBalance balance={150} />
       
+      {/* Nouveau bouton CTA principal */}
+      <Button
+        size="lg"
+        onClick={() => setShowAllAvailableLeads(true)}
+        className="w-full py-8 text-lg font-semibold bg-gradient-to-r from-primary to-primary-light hover:from-primary-light hover:to-primary text-white shadow-lg transition-all duration-300 hover:scale-[1.02] group"
+      >
+        <span className="flex items-center justify-center gap-3">
+          Voir tous les leads disponibles
+          <ChevronRight className="h-6 w-6 transition-transform group-hover:translate-x-1" />
+        </span>
+      </Button>
+      
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Nouveaux leads disponibles */}
         <Card className="p-8 glass-panel border-2 border-primary/20 hover:border-primary/30 transition-all duration-300">
