@@ -5,6 +5,9 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { formatDistanceToNow } from "date-fns";
 import { fr } from "date-fns/locale";
 import { EmptyLeadState } from "./EmptyLeadState";
+import { Info, MapPin, Phone, Mail, Euro, Building2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useToast } from "@/hooks/use-toast";
 
 interface LeadsTableProps {
   leads: Lead[];
@@ -13,6 +16,8 @@ interface LeadsTableProps {
 }
 
 export const LeadsTable = ({ leads, onLeadSelect, selectedLeads = [] }: LeadsTableProps) => {
+  const { toast } = useToast();
+
   const getProjectTypeLabel = (type: string) => {
     switch (type) {
       case "residential":
@@ -22,6 +27,13 @@ export const LeadsTable = ({ leads, onLeadSelect, selectedLeads = [] }: LeadsTab
       default:
         return type;
     }
+  };
+
+  const handleInfoClick = (lead: Lead) => {
+    toast({
+      title: "Détails du projet",
+      description: lead.notes,
+    });
   };
 
   if (leads.length === 0) {
@@ -38,10 +50,12 @@ export const LeadsTable = ({ leads, onLeadSelect, selectedLeads = [] }: LeadsTab
             </TableHead>
           )}
           <TableHead>Type</TableHead>
-          <TableHead>Département</TableHead>
-          <TableHead>Budget</TableHead>
+          <TableHead>Contact</TableHead>
+          <TableHead>Localisation</TableHead>
+          <TableHead>Projet</TableHead>
           <TableHead>Date</TableHead>
           <TableHead className="text-right">Prix</TableHead>
+          <TableHead className="w-[50px]">Info</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -62,10 +76,41 @@ export const LeadsTable = ({ leads, onLeadSelect, selectedLeads = [] }: LeadsTab
               </Badge>
             </TableCell>
             <TableCell>
-              {lead.postalCode.substring(0, 2)}
+              <div className="space-y-1">
+                <div className="font-medium">
+                  {lead.firstName} {lead.lastName}
+                </div>
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <Phone className="h-3 w-3" />
+                  {lead.phone}
+                </div>
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <Mail className="h-3 w-3" />
+                  {lead.email}
+                </div>
+              </div>
             </TableCell>
             <TableCell>
-              {lead.budget.toLocaleString()}€
+              <div className="space-y-1">
+                <div className="flex items-center gap-2">
+                  <MapPin className="h-4 w-4 text-primary" />
+                  {lead.city}
+                </div>
+                <div className="text-sm text-muted-foreground">
+                  Dép. {lead.postalCode.substring(0, 2)}
+                </div>
+              </div>
+            </TableCell>
+            <TableCell>
+              <div className="space-y-1">
+                <div className="flex items-center gap-2">
+                  <Building2 className="h-4 w-4 text-primary" />
+                  {lead.budget.toLocaleString()}€
+                </div>
+                <div className="text-sm text-muted-foreground line-clamp-1">
+                  {lead.notes}
+                </div>
+              </div>
             </TableCell>
             <TableCell>
               {formatDistanceToNow(new Date(lead.createdAt), { 
@@ -74,7 +119,20 @@ export const LeadsTable = ({ leads, onLeadSelect, selectedLeads = [] }: LeadsTab
               })}
             </TableCell>
             <TableCell className="text-right font-medium">
-              {lead.price}€
+              <div className="flex items-center justify-end gap-1">
+                <Euro className="h-4 w-4" />
+                {lead.price}
+              </div>
+            </TableCell>
+            <TableCell>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => handleInfoClick(lead)}
+                className="opacity-0 group-hover:opacity-100 transition-opacity"
+              >
+                <Info className="h-4 w-4" />
+              </Button>
             </TableCell>
           </TableRow>
         ))}
