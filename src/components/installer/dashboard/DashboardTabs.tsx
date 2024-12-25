@@ -53,9 +53,9 @@ export const DashboardTabs = () => {
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-xl font-bold">Mes Leads Achetés</h2>
             <Button 
-              variant="ghost" 
+              variant="default"
               onClick={() => setShowAllPurchasedLeads(true)}
-              className="gap-2"
+              className="gap-2 bg-primary hover:bg-primary/90 text-white font-semibold shadow-sm"
             >
               Voir tout
               <ChevronRight className="h-4 w-4" />
