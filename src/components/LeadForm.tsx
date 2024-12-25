@@ -9,6 +9,7 @@ import emailjs from '@emailjs/browser';
 emailjs.init("nSGUhEBvdNcDlBp0F");
 
 interface FormData {
+  clientType: string;
   firstName: string;
   lastName: string;
   email: string;
@@ -21,6 +22,7 @@ export const LeadForm = () => {
   const [errors, setErrors] = useState<Partial<FormData>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState<FormData>({
+    clientType: "",
     firstName: "",
     lastName: "",
     email: "",
@@ -28,7 +30,7 @@ export const LeadForm = () => {
     postalCode: "",
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
     if (errors[name as keyof FormData]) {
@@ -39,6 +41,7 @@ export const LeadForm = () => {
   const validateForm = () => {
     const newErrors: Partial<FormData> = {};
     
+    if (!formData.clientType) newErrors.clientType = "Veuillez sélectionner un type de client";
     if (!formData.firstName.trim()) newErrors.firstName = "Le prénom est requis";
     if (!formData.lastName.trim()) newErrors.lastName = "Le nom est requis";
     if (!validateEmail(formData.email)) newErrors.email = "Email invalide";
@@ -59,6 +62,7 @@ export const LeadForm = () => {
         'service_611ohbh',
         'template_ct280jq',
         {
+          client_type: formData.clientType,
           first_name: formData.firstName,
           last_name: formData.lastName,
           email: formData.email,
@@ -82,6 +86,7 @@ export const LeadForm = () => {
       });
       
       setFormData({
+        clientType: "",
         firstName: "",
         lastName: "",
         email: "",
@@ -107,6 +112,28 @@ export const LeadForm = () => {
         <FormHeader />
 
         <form onSubmit={handleSubmit} className="space-y-8">
+          <div className="space-y-2">
+            <label htmlFor="clientType" className="block text-sm font-medium text-white">
+              Type de client
+            </label>
+            <select
+              id="clientType"
+              name="clientType"
+              value={formData.clientType}
+              onChange={handleChange}
+              className={`w-full px-4 py-2 bg-white/10 border ${
+                errors.clientType ? 'border-red-500' : 'border-white/20'
+              } rounded-md text-white focus:outline-none focus:ring-2 focus:ring-blue-500`}
+            >
+              <option value="">Sélectionnez votre profil</option>
+              <option value="particulier">Particulier</option>
+              <option value="professionnel">Professionnel</option>
+            </select>
+            {errors.clientType && (
+              <p className="text-sm text-red-500 mt-1">{errors.clientType}</p>
+            )}
+          </div>
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <FormField
               label="Prénom"
