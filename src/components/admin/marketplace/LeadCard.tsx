@@ -2,8 +2,9 @@ import { Lead } from "@/types/crm";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Euro, MapPin, Phone, Mail, User, Building2 } from "lucide-react";
+import { Euro, MapPin, Phone, Mail, User, Building2, Clock } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
+import { calculateLeadPrice, formatPrice } from "@/utils/leadPricing";
 
 interface LeadCardProps {
   lead: Lead;
@@ -14,6 +15,7 @@ interface LeadCardProps {
 
 export const LeadCard = ({ lead, onPurchase, isPurchased = false, showFullDetails = false }: LeadCardProps) => {
   const { toast } = useToast();
+  const prices = calculateLeadPrice(lead);
 
   const handlePurchase = async (type: 'mutualise' | 'exclusif') => {
     try {
@@ -67,7 +69,7 @@ export const LeadCard = ({ lead, onPurchase, isPurchased = false, showFullDetail
           </div>
           <Badge variant="outline" className="flex items-center gap-1 border-[#33C3F0]/20">
             <Euro className="h-4 w-4" />
-            {lead.price}€
+            {formatPrice(prices.mutualPrice)}
           </Badge>
         </div>
       </CardHeader>
@@ -111,6 +113,13 @@ export const LeadCard = ({ lead, onPurchase, isPurchased = false, showFullDetail
                   <p>{lead.address}</p>
                 </div>
               </div>
+              <div className="flex items-center gap-2">
+                <Clock className="h-4 w-4 text-[#1EAEDB]" />
+                <div>
+                  <span className="text-sm text-muted-foreground">Ancienneté:</span>
+                  <p>{getAgeLabel(lead.createdAt)}</p>
+                </div>
+              </div>
             </div>
           ) : (
             <p className="text-sm text-muted-foreground mt-3">
@@ -127,7 +136,7 @@ export const LeadCard = ({ lead, onPurchase, isPurchased = false, showFullDetail
               onClick={() => handlePurchase('mutualise')}
             >
               <Euro className="h-4 w-4 mr-2" />
-              Lead mutualisé - 19€
+              Lead mutualisé - {formatPrice(prices.mutualPrice)}
             </Button>
             <Button 
               className="w-full" 
@@ -135,7 +144,7 @@ export const LeadCard = ({ lead, onPurchase, isPurchased = false, showFullDetail
               onClick={() => handlePurchase('exclusif')}
             >
               <Euro className="h-4 w-4 mr-2" />
-              Lead exclusif - 35€
+              Lead exclusif - {formatPrice(prices.exclusivePrice)}
             </Button>
           </div>
         ) : (
