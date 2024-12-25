@@ -1,43 +1,111 @@
 import { Card } from "@/components/ui/card";
-import { Package, MessageSquare, ChevronRight } from "lucide-react";
-
-const mockNotifications = [
-  {
-    id: "1",
-    content: "3 nouveaux leads disponibles dans votre région",
-    type: "lead",
-    date: "Il y a 1 heure"
-  },
-  {
-    id: "2",
-    content: "Nouveau message du support",
-    type: "message",
-    date: "Il y a 2 heures"
-  }
-];
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Bell, MessageSquare, Euro, AlertTriangle } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 export const NotificationsList = () => {
+  const { toast } = useToast();
+
+  const notifications = [
+    {
+      id: 1,
+      type: "lead",
+      title: "Nouveau lead disponible",
+      description: "Un nouveau lead dans votre zone pour une installation solaire",
+      time: "Il y a 5 minutes",
+      priority: "high"
+    },
+    {
+      id: 2,
+      type: "message",
+      title: "Nouveau message",
+      description: "Jean D. a répondu à votre devis",
+      time: "Il y a 1 heure",
+      priority: "medium"
+    },
+    {
+      id: 3,
+      type: "balance",
+      title: "Solde bas",
+      description: "Votre solde prépayé est inférieur à 50€",
+      time: "Il y a 2 heures",
+      priority: "low"
+    }
+  ];
+
+  const handleAction = (notifId: number) => {
+    toast({
+      title: "Action effectuée",
+      description: `Notification ${notifId} traitée`,
+    });
+  };
+
+  const getIcon = (type: string) => {
+    switch (type) {
+      case "lead":
+        return <Bell className="h-4 w-4" />;
+      case "message":
+        return <MessageSquare className="h-4 w-4" />;
+      case "balance":
+        return <Euro className="h-4 w-4" />;
+      default:
+        return <AlertTriangle className="h-4 w-4" />;
+    }
+  };
+
+  const getPriorityColor = (priority: string) => {
+    switch (priority) {
+      case "high":
+        return "bg-red-100 text-red-800";
+      case "medium":
+        return "bg-yellow-100 text-yellow-800";
+      case "low":
+        return "bg-blue-100 text-blue-800";
+      default:
+        return "bg-gray-100 text-gray-800";
+    }
+  };
+
   return (
-    <Card className="bg-background/50 backdrop-blur-md border-primary/20 p-6">
-      <h2 className="text-lg font-semibold mb-4">Notifications récentes</h2>
+    <div className="space-y-4">
+      <div className="flex justify-between items-center">
+        <h3 className="text-lg font-semibold">Notifications récentes</h3>
+        <Button variant="ghost" size="sm">
+          Tout marquer comme lu
+        </Button>
+      </div>
+
       <div className="space-y-3">
-        {mockNotifications.map((notification) => (
-          <div key={notification.id} className="flex items-center justify-between p-3 rounded-lg bg-background/50 hover:bg-background transition-all cursor-pointer">
-            <div className="flex items-center gap-3">
-              {notification.type === 'lead' ? (
-                <Package className="h-5 w-5 text-primary" />
-              ) : (
-                <MessageSquare className="h-5 w-5 text-primary" />
-              )}
-              <div>
-                <p className="text-sm">{notification.content}</p>
-                <p className="text-xs text-muted-foreground">{notification.date}</p>
+        {notifications.map((notif) => (
+          <Card key={notif.id} className="p-4">
+            <div className="flex items-start gap-4">
+              <div className={`p-2 rounded-full ${getPriorityColor(notif.priority)}`}>
+                {getIcon(notif.type)}
+              </div>
+              <div className="flex-1">
+                <div className="flex justify-between items-start">
+                  <div>
+                    <h4 className="font-medium">{notif.title}</h4>
+                    <p className="text-sm text-muted-foreground mt-1">
+                      {notif.description}
+                    </p>
+                  </div>
+                  <Badge variant="outline">{notif.time}</Badge>
+                </div>
+                <Button 
+                  size="sm" 
+                  variant="ghost" 
+                  className="mt-2"
+                  onClick={() => handleAction(notif.id)}
+                >
+                  Voir les détails
+                </Button>
               </div>
             </div>
-            <ChevronRight className="h-4 w-4 text-muted-foreground" />
-          </div>
+          </Card>
         ))}
       </div>
-    </Card>
+    </div>
   );
 };

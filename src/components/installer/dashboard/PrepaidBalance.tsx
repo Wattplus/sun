@@ -1,103 +1,61 @@
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
-import { useToast } from "@/components/ui/use-toast";
-import { Euro, Plus } from "lucide-react";
-import { Input } from "@/components/ui/input";
+import { Euro, Plus, History } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
-export const PrepaidBalance = ({ balance = 0 }) => {
+interface PrepaidBalanceProps {
+  balance: number;
+}
+
+export const PrepaidBalance = ({ balance }: PrepaidBalanceProps) => {
   const { toast } = useToast();
-  const [isLoading, setIsLoading] = useState(false);
-  const [amount, setAmount] = useState("");
 
-  const handleTopUp = async (selectedAmount: number) => {
-    if (selectedAmount <= 0) {
-      toast({
-        title: "Erreur",
-        description: "Le montant doit être supérieur à 0€",
-        variant: "destructive",
-      });
-      return;
-    }
+  const handleRecharge = () => {
+    toast({
+      title: "Rechargement",
+      description: "Redirection vers la page de paiement...",
+    });
+  };
 
-    try {
-      setIsLoading(true);
-      const response = await fetch("https://dqzsycxxgltztufrhams.supabase.co/functions/v1/create-topup-checkout", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${process.env.SUPABASE_ANON_KEY}`,
-        },
-        body: JSON.stringify({ amount: selectedAmount }),
-      });
-
-      if (!response.ok) throw new Error();
-
-      const { url } = await response.json();
-      if (url) window.location.href = url;
-    } catch (error) {
-      toast({
-        title: "Erreur",
-        description: "Une erreur est survenue",
-        variant: "destructive",
-      });
-    } finally {
-      setIsLoading(false);
-    }
+  const handleHistory = () => {
+    toast({
+      title: "Historique",
+      description: "Affichage de l'historique des transactions...",
+    });
   };
 
   return (
-    <Card className="glass-panel">
-      <div className="p-4 space-y-4">
-        <div className="flex justify-between items-center">
-          <div>
-            <h3 className="text-lg font-medium">Mon Portefeuille</h3>
-            <p className="text-2xl font-bold text-primary mt-1">
-              {balance.toLocaleString()}€
-            </p>
-          </div>
-          <Button 
-            onClick={() => handleTopUp(100)}
-            disabled={isLoading}
-            className="glass-button"
-          >
-            <Plus className="h-4 w-4 mr-2" />
-            Recharger
-          </Button>
+    <Card className="p-6">
+      <div className="flex justify-between items-start mb-6">
+        <div>
+          <h3 className="text-lg font-semibold">Solde prépayé</h3>
+          <p className="text-sm text-muted-foreground mt-1">
+            Utilisé pour l'achat automatique de leads
+          </p>
         </div>
-        
-        <div className="grid grid-cols-3 gap-2">
-          {[50, 100, 200].map((value) => (
-            <Button
-              key={value}
-              variant="outline"
-              onClick={() => handleTopUp(value)}
-              disabled={isLoading}
-              className="glass-button"
-            >
-              <Euro className="h-4 w-4 mr-1" />
-              {value}€
-            </Button>
-          ))}
+        <div className="text-right">
+          <p className="text-3xl font-bold">{balance}€</p>
+          <p className="text-sm text-muted-foreground">
+            Seuil bas: 50€
+          </p>
         </div>
+      </div>
 
-        <div className="flex gap-2">
-          <Input
-            type="number"
-            placeholder="Montant personnalisé"
-            value={amount}
-            onChange={(e) => setAmount(e.target.value)}
-            className="glass-button"
-          />
-          <Button
-            onClick={() => handleTopUp(Number(amount))}
-            disabled={isLoading}
-            className="glass-button whitespace-nowrap"
-          >
-            <Euro className="h-4 w-4 mr-1" />
-            Valider
-          </Button>
-        </div>
+      <div className="flex gap-2">
+        <Button onClick={handleRecharge} className="flex items-center gap-2">
+          <Plus className="h-4 w-4" />
+          Recharger
+        </Button>
+        <Button variant="outline" onClick={handleHistory} className="flex items-center gap-2">
+          <History className="h-4 w-4" />
+          Historique
+        </Button>
+      </div>
+
+      <div className="mt-4 p-3 bg-yellow-50 rounded-lg border border-yellow-200">
+        <p className="text-sm text-yellow-800">
+          Conseil: Maintenez un solde minimum de 200€ pour ne pas manquer d'opportunités
+        </p>
       </div>
     </Card>
   );
