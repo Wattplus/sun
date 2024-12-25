@@ -1,11 +1,13 @@
 import { useState } from "react";
-import { FormField } from "@/components/form/FormField";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
-import { Save, Euro } from "lucide-react";
+import { Save } from "lucide-react";
 import { motion } from "framer-motion";
+import { RoofTypeSelect } from "./RoofTypeSelect";
+import { MonthlyBillInput } from "./MonthlyBillInput";
+import { AddressFields } from "./AddressFields";
 
 interface ClientInfo {
   roofType: string;
@@ -61,17 +63,6 @@ export const ClientInfoForm = () => {
     }
   };
 
-  const calculateAnnualBill = () => {
-    const monthlyBill = parseFloat(clientInfo.monthlyBillEuros);
-    if (!isNaN(monthlyBill)) {
-      return (monthlyBill * 12).toLocaleString('fr-FR', {
-        style: 'currency',
-        currency: 'EUR'
-      });
-    }
-    return "0 €";
-  };
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (validateForm()) {
@@ -96,50 +87,17 @@ export const ClientInfoForm = () => {
         </p>
         
         <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-200">Type de toit</label>
-            <Select
-              value={clientInfo.roofType}
-              onValueChange={(value) => handleSelectChange("roofType", value)}
-            >
-              <SelectTrigger className="w-full bg-background-dark/50 border-gray-700">
-                <SelectValue placeholder="Sélectionnez le type de toit" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="tuiles-plates">Tuiles plates</SelectItem>
-                <SelectItem value="tuiles-mecaniques">Tuiles mécaniques</SelectItem>
-                <SelectItem value="tuiles-romaines">Tuiles romaines</SelectItem>
-                <SelectItem value="ardoises-naturelles">Ardoises naturelles</SelectItem>
-                <SelectItem value="ardoises-fibrociment">Ardoises fibrociment</SelectItem>
-                <SelectItem value="bac-acier">Bac acier</SelectItem>
-                <SelectItem value="zinc">Zinc</SelectItem>
-                <SelectItem value="tole-ondulee">Tôle ondulée</SelectItem>
-                <SelectItem value="terrasse-beton">Terrasse béton</SelectItem>
-                <SelectItem value="terrasse-graviers">Terrasse gravillonnée</SelectItem>
-                <SelectItem value="shingle">Shingle</SelectItem>
-                <SelectItem value="autre">Autre</SelectItem>
-              </SelectContent>
-            </Select>
-            {errors.roofType && <p className="text-red-400 text-sm mt-1">{errors.roofType}</p>}
-          </div>
+          <RoofTypeSelect
+            value={clientInfo.roofType}
+            onChange={(value) => handleSelectChange("roofType", value)}
+            error={errors.roofType}
+          />
 
-          <div className="space-y-2">
-            <FormField
-              label="Facture mensuelle (€)"
-              id="monthlyBillEuros"
-              type="number"
-              value={clientInfo.monthlyBillEuros}
-              onChange={handleChange}
-              placeholder="Ex: 150"
-              error={errors.monthlyBillEuros}
-              lightMode
-            />
-            {clientInfo.monthlyBillEuros && !errors.monthlyBillEuros && (
-              <div className="text-sm text-green-400 mt-1">
-                Facture annuelle estimée : {calculateAnnualBill()}
-              </div>
-            )}
-          </div>
+          <MonthlyBillInput
+            value={clientInfo.monthlyBillEuros}
+            onChange={handleChange}
+            error={errors.monthlyBillEuros}
+          />
 
           <div className="space-y-2">
             <label className="text-sm font-medium text-gray-200">Type d'installation électrique</label>
@@ -157,38 +115,13 @@ export const ClientInfoForm = () => {
             </Select>
           </div>
 
-          <div className="space-y-6">
-            <FormField
-              label="Adresse"
-              id="address"
-              value={clientInfo.address}
-              onChange={handleChange}
-              placeholder="123 rue de la République"
-              error={errors.address}
-              lightMode
-            />
-
-            <div className="grid grid-cols-2 gap-4">
-              <FormField
-                label="Code postal"
-                id="postalCode"
-                value={clientInfo.postalCode}
-                onChange={handleChange}
-                placeholder="75001"
-                error={errors.postalCode}
-                lightMode
-              />
-              <FormField
-                label="Ville"
-                id="city"
-                value={clientInfo.city}
-                onChange={handleChange}
-                placeholder="Paris"
-                error={errors.city}
-                lightMode
-              />
-            </div>
-          </div>
+          <AddressFields
+            address={clientInfo.address}
+            postalCode={clientInfo.postalCode}
+            city={clientInfo.city}
+            onChange={handleChange}
+            errors={errors}
+          />
 
           <motion.div
             whileHover={{ scale: 1.02 }}
