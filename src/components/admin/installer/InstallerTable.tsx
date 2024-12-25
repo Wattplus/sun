@@ -13,7 +13,7 @@ interface InstallerTableProps {
 export const InstallerTable = ({ installers, onEditInstaller }: InstallerTableProps) => {
   const getStatusColor = (status: InstallerStatus) => {
     const colors = {
-      active: "bg-primary",
+      active: "bg-green-500",
       inactive: "bg-gray-500",
       pending: "bg-yellow-500"
     };
@@ -30,28 +30,27 @@ export const InstallerTable = ({ installers, onEditInstaller }: InstallerTablePr
   };
 
   return (
-    <ScrollArea className="h-[600px] rounded-md border border-primary/20">
+    <ScrollArea className="h-[600px] rounded-md border">
       <Table>
         <TableHeader>
-          <TableRow className="bg-background/50">
-            <TableHead className="text-primary">Société</TableHead>
-            <TableHead className="text-primary">Contact</TableHead>
-            <TableHead className="text-primary">Zone</TableHead>
-            <TableHead className="text-primary">Commission</TableHead>
-            <TableHead className="text-primary">Leads Assignés</TableHead>
-            <TableHead className="text-primary">Taux de Conversion</TableHead>
-            <TableHead className="text-primary">Statut</TableHead>
-            <TableHead className="text-primary">Actions</TableHead>
+          <TableRow>
+            <TableHead>Société</TableHead>
+            <TableHead>Contact</TableHead>
+            <TableHead>Zone</TableHead>
+            <TableHead>Leads Assignés</TableHead>
+            <TableHead>Taux de Conversion</TableHead>
+            <TableHead>Statut</TableHead>
+            <TableHead>Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {installers.map((installer) => (
-            <TableRow key={installer.id} className="hover:bg-primary/5 border-b border-primary/10">
-              <TableCell className="font-medium text-white">{installer.companyName}</TableCell>
+            <TableRow key={installer.id}>
+              <TableCell className="font-medium">{installer.companyName}</TableCell>
               <TableCell>
-                <div className="text-white">{installer.contactName}</div>
-                <div className="text-sm text-white/70">{installer.email}</div>
-                <div className="text-sm text-white/70">{installer.phone}</div>
+                <div>{installer.contactName}</div>
+                <div className="text-sm text-muted-foreground">{installer.email}</div>
+                <div className="text-sm text-muted-foreground">{installer.phone}</div>
               </TableCell>
               <TableCell>
                 <div className="flex flex-wrap gap-1">
@@ -59,18 +58,16 @@ export const InstallerTable = ({ installers, onEditInstaller }: InstallerTablePr
                     <Badge 
                       key={zone} 
                       variant="outline"
-                      className="border-primary/20 text-white"
                     >
                       {zone}
                     </Badge>
                   ))}
                 </div>
               </TableCell>
-              <TableCell className="text-white">{installer.commission}%</TableCell>
-              <TableCell className="text-white">{installer.leadsAssigned}</TableCell>
-              <TableCell className="text-white">{installer.conversionRate}%</TableCell>
+              <TableCell>{installer.leadsAssigned}</TableCell>
+              <TableCell>{installer.conversionRate}%</TableCell>
               <TableCell>
-                <Badge className={`${getStatusColor(installer.status)} text-white`}>
+                <Badge className={`${getStatusColor(installer.status)}`}>
                   {getStatusText(installer.status)}
                 </Badge>
               </TableCell>
@@ -80,17 +77,15 @@ export const InstallerTable = ({ installers, onEditInstaller }: InstallerTablePr
                     variant="outline" 
                     size="sm"
                     onClick={() => onEditInstaller(installer)}
-                    className="border-primary/20 hover:border-primary/40 hover:bg-primary/10"
                   >
-                    <Edit className="h-4 w-4 mr-2 text-primary" />
+                    <Edit className="h-4 w-4 mr-2" />
                     Éditer
                   </Button>
                   <Button 
                     variant="outline" 
                     size="sm"
-                    className="border-primary/20 hover:border-primary/40 hover:bg-primary/10"
                   >
-                    <Eye className="h-4 w-4 mr-2 text-primary" />
+                    <Eye className="h-4 w-4 mr-2" />
                     Détails
                   </Button>
                 </div>

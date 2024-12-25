@@ -52,36 +52,36 @@ export function EditInstallerDialog({
       <DialogContent className="sm:max-w-[500px] bg-background/95 backdrop-blur-md border-primary/20">
         <form onSubmit={handleSubmit}>
           <DialogHeader>
-            <DialogTitle className="text-white">Modifier l'installateur</DialogTitle>
-            <DialogDescription className="text-white/70">
+            <DialogTitle>Modifier l'installateur</DialogTitle>
+            <DialogDescription>
               Modifiez les informations de l'installateur ici. Cliquez sur sauvegarder une fois terminé.
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
             <div>
-              <label htmlFor="companyName" className="text-sm font-medium text-white">
+              <label htmlFor="companyName" className="text-sm font-medium">
                 Nom de l'entreprise
               </label>
               <Input
                 id="companyName"
                 value={formData.companyName || ""}
                 onChange={(e) => setFormData({ ...formData, companyName: e.target.value })}
-                className="bg-white/10 border-primary/20 text-white placeholder:text-white/50"
+                className="bg-background border-input"
               />
             </div>
             <div>
-              <label htmlFor="contactName" className="text-sm font-medium text-white">
+              <label htmlFor="contactName" className="text-sm font-medium">
                 Nom du contact
               </label>
               <Input
                 id="contactName"
                 value={formData.contactName || ""}
                 onChange={(e) => setFormData({ ...formData, contactName: e.target.value })}
-                className="bg-white/10 border-primary/20 text-white placeholder:text-white/50"
+                className="bg-background border-input"
               />
             </div>
             <div>
-              <label htmlFor="email" className="text-sm font-medium text-white">
+              <label htmlFor="email" className="text-sm font-medium">
                 Email
               </label>
               <Input
@@ -89,33 +89,33 @@ export function EditInstallerDialog({
                 type="email"
                 value={formData.email || ""}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                className="bg-white/10 border-primary/20 text-white placeholder:text-white/50"
+                className="bg-background border-input"
               />
             </div>
             <div>
-              <label htmlFor="phone" className="text-sm font-medium text-white">
+              <label htmlFor="phone" className="text-sm font-medium">
                 Téléphone
               </label>
               <Input
                 id="phone"
                 value={formData.phone || ""}
                 onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                className="bg-white/10 border-primary/20 text-white placeholder:text-white/50"
+                className="bg-background border-input"
               />
             </div>
             <div>
-              <label htmlFor="address" className="text-sm font-medium text-white">
+              <label htmlFor="address" className="text-sm font-medium">
                 Adresse
               </label>
               <Input
                 id="address"
                 value={formData.address || ""}
                 onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-                className="bg-white/10 border-primary/20 text-white placeholder:text-white/50"
+                className="bg-background border-input"
               />
             </div>
             <div>
-              <label htmlFor="zones" className="text-sm font-medium text-white">
+              <label htmlFor="zones" className="text-sm font-medium">
                 Zones d'intervention (séparées par des virgules)
               </label>
               <Input
@@ -127,11 +127,11 @@ export function EditInstallerDialog({
                     zones: e.target.value.split(",").map((zone) => zone.trim()),
                   })
                 }
-                className="bg-white/10 border-primary/20 text-white placeholder:text-white/50"
+                className="bg-background border-input"
               />
             </div>
             <div>
-              <label htmlFor="status" className="text-sm font-medium text-white">
+              <label htmlFor="status" className="text-sm font-medium">
                 Statut
               </label>
               <Select
@@ -150,26 +150,9 @@ export function EditInstallerDialog({
                 </SelectContent>
               </Select>
             </div>
-            <div>
-              <label htmlFor="commission" className="text-sm font-medium text-white">
-                Commission (%)
-              </label>
-              <Input
-                id="commission"
-                type="number"
-                value={formData.commission || ""}
-                onChange={(e) =>
-                  setFormData({ ...formData, commission: Number(e.target.value) })
-                }
-                className="bg-white/10 border-primary/20 text-white placeholder:text-white/50"
-              />
-            </div>
           </div>
           <DialogFooter>
-            <Button 
-              type="submit"
-              className="bg-primary hover:bg-primary-dark text-white"
-            >
+            <Button type="submit">
               Sauvegarder
             </Button>
           </DialogFooter>

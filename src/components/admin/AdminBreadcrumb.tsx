@@ -8,6 +8,7 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { useLocation, Link } from "react-router-dom";
+import { ChevronRight } from "lucide-react";
 
 const breadcrumbTitles: Record<string, string> = {
   "admin": "Administration",
@@ -21,7 +22,10 @@ const breadcrumbTitles: Record<string, string> = {
   "documents": "Documents",
   "messages": "Messages",
   "analytics": "Analyses",
-  "reports": "Rapports"
+  "reports": "Rapports",
+  "finance": "Finance",
+  "support": "Support",
+  "notifications": "Notifications"
 };
 
 export const AdminBreadcrumb = () => {
@@ -29,10 +33,10 @@ export const AdminBreadcrumb = () => {
   const pathSegments = location.pathname.split("/").filter(Boolean);
 
   return (
-    <Breadcrumb className="mb-6">
-      <BreadcrumbList>
+    <Breadcrumb>
+      <BreadcrumbList className="bg-background/50 backdrop-blur-md px-4 py-2 rounded-lg border border-border">
         <BreadcrumbItem>
-          <Link to="/" className="text-primary hover:text-primary-dark transition-colors">
+          <Link to="/" className="text-muted-foreground hover:text-foreground transition-colors">
             Accueil
           </Link>
         </BreadcrumbItem>
@@ -43,16 +47,18 @@ export const AdminBreadcrumb = () => {
           
           return (
             <React.Fragment key={path}>
-              <BreadcrumbSeparator className="text-primary" />
+              <BreadcrumbSeparator>
+                <ChevronRight className="h-4 w-4" />
+              </BreadcrumbSeparator>
               <BreadcrumbItem>
                 {isLast ? (
-                  <BreadcrumbPage className="text-primary-dark">
+                  <BreadcrumbPage className="font-medium">
                     {breadcrumbTitles[segment] || segment}
                   </BreadcrumbPage>
                 ) : (
                   <Link 
                     to={path} 
-                    className="text-primary hover:text-primary-dark transition-colors"
+                    className="text-muted-foreground hover:text-foreground transition-colors"
                   >
                     {breadcrumbTitles[segment] || segment}
                   </Link>
