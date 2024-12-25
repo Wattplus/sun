@@ -18,7 +18,11 @@ interface ClientInfo {
   city: string;
 }
 
-export const ClientInfoForm = () => {
+interface ClientInfoFormProps {
+  onMonthlyBillUpdate: (value: string) => void;
+}
+
+export const ClientInfoForm = ({ onMonthlyBillUpdate }: ClientInfoFormProps) => {
   const { toast } = useToast();
   const [clientInfo, setClientInfo] = useState<ClientInfo>({
     roofType: "",
@@ -53,6 +57,11 @@ export const ClientInfoForm = () => {
     setClientInfo(prev => ({ ...prev, [name]: value }));
     if (errors[name as keyof ClientInfo]) {
       setErrors(prev => ({ ...prev, [name]: undefined }));
+    }
+    
+    // Mettre à jour la facture mensuelle pour le calcul des économies
+    if (name === "monthlyBillEuros") {
+      onMonthlyBillUpdate(value);
     }
   };
 

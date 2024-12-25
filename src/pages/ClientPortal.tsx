@@ -15,6 +15,7 @@ import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList } from "@/co
 
 const ClientPortal = () => {
   const [activeTab, setActiveTab] = useState("dashboard");
+  const [monthlyBill, setMonthlyBill] = useState<string>("");
   const [userInfo] = useState({
     name: "Jean Dupont",
     email: "j********@example.com",
@@ -46,12 +47,15 @@ const ClientPortal = () => {
     }
   };
 
+  const handleMonthlyBillUpdate = (value: string) => {
+    setMonthlyBill(value);
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-background-dark to-background-light">
       <ClientNavbar />
       
       <main className="container mx-auto px-4 py-8">
-        {/* Breadcrumb */}
         <Breadcrumb className="mb-4">
           <BreadcrumbList>
             <BreadcrumbItem>
@@ -71,7 +75,6 @@ const ClientPortal = () => {
           <p className="text-gray-300 mt-2">Bienvenue, {userInfo.name}</p>
         </div>
 
-        {/* Contact Information Card */}
         <Card className="glass-panel p-6 mb-6">
           <h3 className="text-lg font-semibold text-white mb-4">Nos coordonnées</h3>
           <div className="space-y-3">
@@ -116,7 +119,7 @@ const ClientPortal = () => {
                 status={userInfo.projectStatus}
                 lastUpdate={userInfo.lastUpdate}
               />
-              <SavingsEstimate />
+              <SavingsEstimate monthlyBill={monthlyBill} />
             </div>
             
             <div className="grid gap-6 md:grid-cols-2">
@@ -124,7 +127,7 @@ const ClientPortal = () => {
               <NextSteps />
             </div>
 
-            <ClientInfoForm />
+            <ClientInfoForm onMonthlyBillUpdate={handleMonthlyBillUpdate} />
             
             <InstallerRequests
               requests={userInfo.installerRequests}
