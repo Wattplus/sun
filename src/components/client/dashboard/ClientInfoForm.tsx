@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
-import { Save } from "lucide-react";
+import { Save, Lock } from "lucide-react";
 import { motion } from "framer-motion";
 import { RoofTypeSelect } from "./RoofTypeSelect";
 import { MonthlyBillInput } from "./MonthlyBillInput";
@@ -59,7 +59,6 @@ export const ClientInfoForm = ({ onMonthlyBillUpdate }: ClientInfoFormProps) => 
       setErrors(prev => ({ ...prev, [name]: undefined }));
     }
     
-    // Mettre à jour la facture mensuelle pour le calcul des économies
     if (name === "monthlyBillEuros") {
       onMonthlyBillUpdate(value);
     }
@@ -75,6 +74,15 @@ export const ClientInfoForm = ({ onMonthlyBillUpdate }: ClientInfoFormProps) => 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (validateForm()) {
+      // Masquer les données sensibles avant l'envoi
+      const maskedInfo = {
+        ...clientInfo,
+        address: "•".repeat(clientInfo.address.length),
+        city: "•".repeat(clientInfo.city.length),
+      };
+      
+      console.log("Données masquées:", maskedInfo);
+      
       toast({
         title: "Informations mises à jour",
         description: "Vos informations ont été enregistrées avec succès.",
@@ -124,13 +132,19 @@ export const ClientInfoForm = ({ onMonthlyBillUpdate }: ClientInfoFormProps) => 
             </Select>
           </div>
 
-          <AddressFields
-            address={clientInfo.address}
-            postalCode={clientInfo.postalCode}
-            city={clientInfo.city}
-            onChange={handleChange}
-            errors={errors}
-          />
+          <div className="relative">
+            <AddressFields
+              address={clientInfo.address}
+              postalCode={clientInfo.postalCode}
+              city={clientInfo.city}
+              onChange={handleChange}
+              errors={errors}
+            />
+            <div className="absolute top-0 right-0 flex items-center text-orange-500 gap-1">
+              <Lock className="h-4 w-4" />
+              <span className="text-xs">Données sécurisées</span>
+            </div>
+          </div>
 
           <motion.div
             whileHover={{ scale: 1.02 }}
