@@ -1,38 +1,54 @@
-import { Card } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { ScrollArea } from "@/components/ui/scroll-area"
-import { MapPin, Star, MessageSquare, TrendingUp, Package, Users, Calendar } from "lucide-react"
-import { useToast } from "@/components/ui/use-toast"
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { MapPin, Star, MessageSquare, TrendingUp, Package, Users, Calendar, Euro } from "lucide-react";
+import { useToast } from "@/components/ui/use-toast";
+import { Link } from "react-router-dom";
+
+const mockLeads = [
+  {
+    id: "1",
+    projectType: "Installation Panneaux Solaires",
+    city: "Paris",
+    postalCode: "75001",
+    budget: 15000,
+    price: 50
+  },
+  {
+    id: "2",
+    projectType: "Pompe à chaleur",
+    city: "Lyon",
+    postalCode: "69001",
+    budget: 12000,
+    price: 45
+  }
+];
+
+const mockMessages = [
+  {
+    id: "1",
+    date: "2024-03-22",
+    content: "Nouveau lead disponible dans votre région",
+    read: false
+  },
+  {
+    id: "2",
+    date: "2024-03-20",
+    content: "Votre achat de lead a été confirmé",
+    read: true
+  }
+];
 
 export function InstallerDashboard() {
-  const { toast } = useToast()
+  const { toast } = useToast();
 
-  const mockStats = {
-    leadsAvailable: 12,
-    activeProjects: 5,
-    completedProjects: 45,
-    conversionRate: 68,
-  }
-
-  const mockLeads = [
-    {
-      id: "1",
-      clientName: "Thomas Martin",
-      projectType: "Installation Panneaux Solaires",
-      location: "Paris (75)",
-      date: "2024-03-20",
-      status: "new"
-    },
-    {
-      id: "2",
-      clientName: "Marie Dubois",
-      projectType: "Pompe à Chaleur",
-      location: "Lyon (69)",
-      date: "2024-03-19",
-      status: "contacted"
-    }
-  ]
+  const handleBuyLead = (leadId: string) => {
+    toast({
+      title: "Lead acheté avec succès",
+      description: "Vous pouvez maintenant voir les coordonnées complètes du contact.",
+    });
+  };
 
   return (
     <div className="container mx-auto p-6 space-y-6">
@@ -54,7 +70,7 @@ export function InstallerDashboard() {
             </div>
             <div>
               <p className="text-sm text-muted-foreground">Leads Disponibles</p>
-              <p className="text-2xl font-bold">{mockStats.leadsAvailable}</p>
+              <p className="text-2xl font-bold">12</p>
             </div>
           </div>
         </Card>
@@ -66,7 +82,7 @@ export function InstallerDashboard() {
             </div>
             <div>
               <p className="text-sm text-muted-foreground">Projets Actifs</p>
-              <p className="text-2xl font-bold">{mockStats.activeProjects}</p>
+              <p className="text-2xl font-bold">5</p>
             </div>
           </div>
         </Card>
@@ -78,7 +94,7 @@ export function InstallerDashboard() {
             </div>
             <div>
               <p className="text-sm text-muted-foreground">Projets Complétés</p>
-              <p className="text-2xl font-bold">{mockStats.completedProjects}</p>
+              <p className="text-2xl font-bold">45</p>
             </div>
           </div>
         </Card>
@@ -90,44 +106,89 @@ export function InstallerDashboard() {
             </div>
             <div>
               <p className="text-sm text-muted-foreground">Taux de Conversion</p>
-              <p className="text-2xl font-bold">{mockStats.conversionRate}%</p>
+              <p className="text-2xl font-bold">68%</p>
             </div>
           </div>
         </Card>
       </div>
 
-      <Card className="bg-background/50 backdrop-blur-md border-primary/20">
-        <div className="p-6">
-          <h2 className="text-xl font-semibold mb-4">Leads Récents</h2>
-          <ScrollArea className="h-[400px]">
-            <div className="space-y-4">
-              {mockLeads.map((lead) => (
-                <Card key={lead.id} className="p-4 border border-primary/10">
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <h3 className="font-medium">{lead.clientName}</h3>
-                      <p className="text-sm text-muted-foreground">{lead.projectType}</p>
-                      <div className="flex items-center gap-2 mt-2">
-                        <MapPin className="h-4 w-4 text-primary" />
-                        <span className="text-sm">{lead.location}</span>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Section Leads Disponibles */}
+        <Card className="bg-background/50 backdrop-blur-md border-primary/20">
+          <div className="p-6">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-lg font-semibold">Leads Disponibles</h2>
+              <Link to="/admin/marketplace">
+                <Button variant="outline" size="sm">
+                  Voir tout
+                </Button>
+              </Link>
+            </div>
+            <ScrollArea className="h-[300px]">
+              <div className="space-y-4">
+                {mockLeads.map((lead) => (
+                  <Card key={lead.id} className="p-4 border border-primary/10">
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <Badge variant="secondary" className="mb-2">
+                          {lead.projectType}
+                        </Badge>
+                        <div className="flex items-center gap-1 text-muted-foreground">
+                          <MapPin className="h-4 w-4" />
+                          <span>{lead.city} ({lead.postalCode})</span>
+                        </div>
+                        <div className="mt-2 text-sm">
+                          Budget estimé: {lead.budget.toLocaleString()}€
+                        </div>
                       </div>
-                    </div>
-                    <div className="flex flex-col items-end gap-2">
-                      <Badge variant="outline" className="bg-primary/10">
-                        {lead.status === 'new' ? 'Nouveau' : 'Contacté'}
-                      </Badge>
-                      <Button size="sm" variant="outline" className="border-primary/20">
-                        <MessageSquare className="h-4 w-4 mr-2" />
-                        Contacter
+                      <Button 
+                        size="sm"
+                        onClick={() => handleBuyLead(lead.id)}
+                        className="flex items-center gap-1"
+                      >
+                        <Euro className="h-4 w-4" />
+                        {lead.price}€
                       </Button>
                     </div>
-                  </div>
-                </Card>
-              ))}
+                  </Card>
+                ))}
+              </div>
+            </ScrollArea>
+          </div>
+        </Card>
+
+        {/* Section Messages */}
+        <Card className="bg-background/50 backdrop-blur-md border-primary/20">
+          <div className="p-6">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-lg font-semibold">Messages</h2>
+              <Badge variant="secondary">
+                {mockMessages.filter(m => !m.read).length} nouveaux
+              </Badge>
             </div>
-          </ScrollArea>
-        </div>
-      </Card>
+            <ScrollArea className="h-[300px]">
+              <div className="space-y-4">
+                {mockMessages.map((message) => (
+                  <Card 
+                    key={message.id} 
+                    className={`p-4 ${message.read ? 'bg-background' : 'bg-primary/5'} border-primary/10`}
+                  >
+                    <div className="flex justify-between items-start mb-2">
+                      <span className="text-sm text-muted-foreground">{message.date}</span>
+                      {!message.read && (
+                        <Badge variant="secondary" className="text-xs">
+                          Nouveau
+                        </Badge>
+                      )}
+                    </div>
+                    <p className="text-sm">{message.content}</p>
+                  </Card>
+                ))}
+              </div>
+            </ScrollArea>
+          </div>
+        </Card>
+      </div>
     </div>
-  )
+  );
 }
