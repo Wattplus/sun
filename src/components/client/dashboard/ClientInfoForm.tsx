@@ -9,7 +9,6 @@ import { motion } from "framer-motion";
 
 interface ClientInfo {
   roofType: string;
-  monthlyConsumption: string;
   monthlyBillEuros: string;
   electricPhase: string;
   address: string;
@@ -21,7 +20,6 @@ export const ClientInfoForm = () => {
   const { toast } = useToast();
   const [clientInfo, setClientInfo] = useState<ClientInfo>({
     roofType: "",
-    monthlyConsumption: "",
     monthlyBillEuros: "",
     electricPhase: "mono",
     address: "",
@@ -35,7 +33,6 @@ export const ClientInfoForm = () => {
     const newErrors: Partial<ClientInfo> = {};
     
     if (!clientInfo.roofType) newErrors.roofType = "Le type de toit est requis";
-    if (!clientInfo.monthlyConsumption) newErrors.monthlyConsumption = "La consommation est requise";
     if (!clientInfo.monthlyBillEuros) newErrors.monthlyBillEuros = "La facture mensuelle est requise";
     if (!clientInfo.address) newErrors.address = "L'adresse est requise";
     if (!clientInfo.postalCode) {
@@ -126,35 +123,22 @@ export const ClientInfoForm = () => {
             {errors.roofType && <p className="text-red-400 text-sm mt-1">{errors.roofType}</p>}
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="space-y-2">
             <FormField
-              label="Consommation mensuelle (kWh)"
-              id="monthlyConsumption"
+              label="Facture mensuelle (€)"
+              id="monthlyBillEuros"
               type="number"
-              value={clientInfo.monthlyConsumption}
+              value={clientInfo.monthlyBillEuros}
               onChange={handleChange}
-              placeholder="Ex: 300"
-              error={errors.monthlyConsumption}
+              placeholder="Ex: 150"
+              error={errors.monthlyBillEuros}
               lightMode
             />
-
-            <div className="space-y-2">
-              <FormField
-                label="Facture mensuelle (€)"
-                id="monthlyBillEuros"
-                type="number"
-                value={clientInfo.monthlyBillEuros}
-                onChange={handleChange}
-                placeholder="Ex: 150"
-                error={errors.monthlyBillEuros}
-                lightMode
-              />
-              {clientInfo.monthlyBillEuros && !errors.monthlyBillEuros && (
-                <div className="text-sm text-green-400 mt-1">
-                  Facture annuelle estimée : {calculateAnnualBill()}
-                </div>
-              )}
-            </div>
+            {clientInfo.monthlyBillEuros && !errors.monthlyBillEuros && (
+              <div className="text-sm text-green-400 mt-1">
+                Facture annuelle estimée : {calculateAnnualBill()}
+              </div>
+            )}
           </div>
 
           <div className="space-y-2">
