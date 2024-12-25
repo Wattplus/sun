@@ -10,6 +10,9 @@ interface ClientInfo {
   roofType: string;
   monthlyConsumption: string;
   electricPhase: string;
+  address: string;
+  postalCode: string;
+  city: string;
 }
 
 export const ClientInfoForm = () => {
@@ -17,7 +20,10 @@ export const ClientInfoForm = () => {
   const [clientInfo, setClientInfo] = useState<ClientInfo>({
     roofType: "",
     monthlyConsumption: "",
-    electricPhase: "mono"
+    electricPhase: "mono",
+    address: "",
+    postalCode: "",
+    city: ""
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -86,6 +92,33 @@ export const ClientInfoForm = () => {
               <SelectItem value="tri">Triphasé</SelectItem>
             </SelectContent>
           </Select>
+        </div>
+
+        <div className="space-y-6">
+          <FormField
+            label="Adresse"
+            id="address"
+            value={clientInfo.address}
+            onChange={handleChange}
+            placeholder="123 rue de la République"
+          />
+
+          <div className="grid grid-cols-2 gap-4">
+            <FormField
+              label="Code postal"
+              id="postalCode"
+              value={clientInfo.postalCode}
+              onChange={handleChange}
+              placeholder="75001"
+            />
+            <FormField
+              label="Ville"
+              id="city"
+              value={clientInfo.city}
+              onChange={handleChange}
+              placeholder="Paris"
+            />
+          </div>
         </div>
 
         <Button type="submit" className="w-full gap-2">
