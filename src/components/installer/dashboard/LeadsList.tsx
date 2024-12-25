@@ -18,6 +18,7 @@ export const LeadsList = ({ leads }: LeadsListProps) => {
   const { toast } = useToast();
   const [searchTerm, setSearchTerm] = useState("");
   const [projectType, setProjectType] = useState("all");
+  const [paymentMethod, setPaymentMethod] = useState<"prepaid" | "direct">("prepaid");
 
   const handleBuyLead = async (leadId: string, type: "mutualise" | "exclusif") => {
     try {
@@ -25,7 +26,11 @@ export const LeadsList = ({ leads }: LeadsListProps) => {
         ? 'price_1QZyKUFOePj4Hv47qEFQ1KzF' 
         : 'price_1QZyJpFOePj4Hv47sd76eDOz';
 
-      const response = await fetch("https://dqzsycxxgltztufrhams.supabase.co/functions/v1/create-lead-checkout", {
+      const endpoint = paymentMethod === "prepaid" 
+        ? "use-prepaid-balance"
+        : "create-lead-checkout";
+
+      const response = await fetch(`https://dqzsycxxgltztufrhams.supabase.co/functions/v1/${endpoint}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -39,12 +44,18 @@ export const LeadsList = ({ leads }: LeadsListProps) => {
       });
 
       if (!response.ok) {
-        throw new Error("Erreur lors de la création de la session de paiement");
+        throw new Error("Erreur lors de l'achat");
       }
 
-      const { url } = await response.json();
-      if (url) {
-        window.location.href = url;
+      const data = await response.json();
+      
+      if (paymentMethod === "direct" && data.url) {
+        window.location.href = data.url;
+      } else if (paymentMethod === "prepaid") {
+        toast({
+          title: "Succès",
+          description: "Le lead a été acheté avec votre solde prépayé.",
+        });
       }
     } catch (error) {
       console.error("Erreur d'achat:", error);
@@ -67,12 +78,23 @@ export const LeadsList = ({ leads }: LeadsListProps) => {
       <div className="p-6">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-lg font-semibold">Leads Disponibles</h2>
-          <Link to="/admin/marketplace">
-            <Button variant="outline" size="sm">
-              Voir tout
-              <ChevronRight className="h-4 w-4 ml-1" />
-            </Button>
-          </Link>
+          <div className="flex gap-2">
+            <Select value={paymentMethod} onValueChange={(value: "prepaid" | "direct") => setPaymentMethod(value)}>
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Mode de paiement" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="prepaid">Solde prépayé</SelectItem>
+                <SelectItem value="direct">Paiement direct</SelectItem>
+              </SelectContent>
+            </Select>
+            <Link to="/admin/marketplace">
+              <Button variant="outline" size="sm">
+                Voir tout
+                <ChevronRight className="h-4 w-4 ml-1" />
+              </Button>
+            </Link>
+          </div>
         </div>
 
         <div className="flex gap-4 mb-4">

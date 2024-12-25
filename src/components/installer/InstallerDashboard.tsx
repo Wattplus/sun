@@ -5,6 +5,7 @@ import { StatsCards } from "./dashboard/StatsCards";
 import { LeadsList } from "./dashboard/LeadsList";
 import { MessagesList } from "./dashboard/MessagesList";
 import { NotificationsList } from "./dashboard/NotificationsList";
+import { PrepaidBalance } from "./dashboard/PrepaidBalance";
 import { mockLeads } from "@/types/crm";
 
 export function InstallerDashboard() {
@@ -31,6 +32,9 @@ export function InstallerDashboard() {
           </Button>
         </div>
       </div>
+
+      {/* Solde Prépayé */}
+      <PrepaidBalance balance={250} />
 
       {/* Statistiques */}
       <StatsCards />
