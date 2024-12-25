@@ -7,6 +7,8 @@ import { LeadsList } from "./LeadsList";
 import { MessagesList } from "./MessagesList";
 import { InstallerProfile } from "@/pages/InstallerProfile";
 import { Card } from "@/components/ui/card";
+import { mockAvailableLeads } from "./mockAvailableLeads";
+import { mockPurchasedLeads } from "./mockPurchasedLeads";
 
 export const DashboardTabs = () => {
   return (
@@ -17,13 +19,13 @@ export const DashboardTabs = () => {
         {/* Nouveaux leads disponibles */}
         <Card className="p-6">
           <h2 className="text-xl font-bold mb-4">Nouveaux Leads Disponibles</h2>
-          <LeadsList leads={[]} />
+          <LeadsList leads={mockAvailableLeads} />
         </Card>
 
         {/* Leads achetés */}
         <Card className="p-6">
           <h2 className="text-xl font-bold mb-4">Mes Leads Achetés</h2>
-          <PurchasedLeads leads={[]} />
+          <PurchasedLeads leads={mockPurchasedLeads} />
         </Card>
       </div>
 
