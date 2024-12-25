@@ -12,6 +12,8 @@ import { mockPurchasedLeads } from "./mockPurchasedLeads";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { ChevronRight, X } from "lucide-react";
+import { SubscriptionPlans } from "../subscription/SubscriptionPlans";
+import { ClientFAQ } from "@/components/client/faq/ClientFAQ";
 
 export const DashboardTabs = () => {
   const [showAllPurchasedLeads, setShowAllPurchasedLeads] = useState(false);
@@ -106,11 +108,12 @@ export const DashboardTabs = () => {
       </div>
 
       <Tabs defaultValue="projects" className="w-full">
-        <TabsList className="grid w-full grid-cols-4">
+        <TabsList className="grid w-full grid-cols-5">
           <TabsTrigger value="projects">Projets</TabsTrigger>
           <TabsTrigger value="messages">Messages</TabsTrigger>
           <TabsTrigger value="profile">Profil</TabsTrigger>
-          <TabsTrigger value="stats">Plus de Stats</TabsTrigger>
+          <TabsTrigger value="subscription">Abonnement</TabsTrigger>
+          <TabsTrigger value="faq">FAQ</TabsTrigger>
         </TabsList>
 
         <TabsContent value="projects">
@@ -127,11 +130,15 @@ export const DashboardTabs = () => {
           <InstallerProfile />
         </TabsContent>
 
-        <TabsContent value="stats">
+        <TabsContent value="subscription">
           <Card className="p-6">
-            <div className="grid gap-6">
-              <StatsCards />
-            </div>
+            <SubscriptionPlans />
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="faq">
+          <Card className="p-6">
+            <ClientFAQ />
           </Card>
         </TabsContent>
       </Tabs>
