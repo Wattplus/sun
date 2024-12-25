@@ -11,7 +11,7 @@ export const Navbar = () => {
       <div className="absolute inset-0 bg-gradient-to-r from-background/80 to-accent/20 backdrop-blur-md border-b border-white/10" />
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-20 items-center">
-          <div className="flex-shrink-0 flex items-center">
+          <div className="flex-shrink-0 flex items-center -ml-4">
             <Sun className="h-8 w-8 text-primary mr-2" />
             <span className="text-2xl font-bold gradient-text">WattPlus</span>
           </div>
