@@ -13,6 +13,8 @@ import { LeadsList } from "./dashboard/LeadsList";
 import { MessagesList } from "./dashboard/MessagesList";
 import { NotificationsList } from "./dashboard/NotificationsList";
 import { PrepaidBalance } from "./dashboard/PrepaidBalance";
+import { PurchasedLeads } from "./dashboard/PurchasedLeads";
+import { InstallerProfile } from "@/pages/InstallerProfile";
 
 export function InstallerDashboard() {
   const [activeTab, setActiveTab] = useState("dashboard");
@@ -45,7 +47,6 @@ export function InstallerDashboard() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background/80 to-background p-4 space-y-4">
-      {/* En-tête simplifié */}
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-2xl font-bold">
           Tableau de bord
@@ -61,16 +62,15 @@ export function InstallerDashboard() {
         </div>
       </div>
 
-      {/* Navigation principale */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-4 mb-4">
+        <TabsList className="grid w-full grid-cols-5 mb-4">
           <TabsTrigger value="dashboard">Accueil</TabsTrigger>
           <TabsTrigger value="leads">Leads</TabsTrigger>
+          <TabsTrigger value="purchased">Leads Achetés</TabsTrigger>
           <TabsTrigger value="messages">Messages</TabsTrigger>
-          <TabsTrigger value="documents">Documents</TabsTrigger>
+          <TabsTrigger value="profile">Profil</TabsTrigger>
         </TabsList>
 
-        {/* Contenu des onglets */}
         <TabsContent value="dashboard">
           <div className="grid gap-4">
             <PrepaidBalance balance={0} />
@@ -118,29 +118,21 @@ export function InstallerDashboard() {
           </Card>
         </TabsContent>
 
+        <TabsContent value="purchased">
+          <PurchasedLeads leads={mockLeads.filter(lead => lead.status === "assigned")} />
+        </TabsContent>
+
         <TabsContent value="messages">
           <Card className="p-4">
             <MessagesList />
           </Card>
         </TabsContent>
 
-        <TabsContent value="documents">
-          <Card className="p-4">
-            <div className="text-center py-8">
-              <h3 className="text-lg font-medium mb-2">Documents & Ressources</h3>
-              <p className="text-muted-foreground mb-4">
-                Accédez à vos documents, factures et ressources
-              </p>
-              <Button onClick={() => handleAction("télécharger")}>
-                <Download className="h-4 w-4 mr-2" />
-                Télécharger mes documents
-              </Button>
-            </div>
-          </Card>
+        <TabsContent value="profile">
+          <InstallerProfile />
         </TabsContent>
       </Tabs>
 
-      {/* Notifications */}
       <Card className="p-4">
         <NotificationsList />
       </Card>
