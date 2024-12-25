@@ -3,7 +3,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Lead } from "@/types/crm";
-import { MapPin, Euro, Calendar, Phone, Mail, FileText, Lock } from "lucide-react";
+import { MapPin, Calendar, Phone, Mail, FileText } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { fr } from "date-fns/locale";
 import { useToast } from "@/hooks/use-toast";
@@ -67,17 +67,11 @@ export const LeadCard = ({ lead, status, onStatusChange }: LeadCardProps) => {
           </Select>
         </div>
 
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <p className="text-sm text-muted-foreground">Budget</p>
-            <p className="font-medium">{lead.budget.toLocaleString()}€</p>
-          </div>
-          <div>
-            <p className="text-sm text-muted-foreground">Type de projet</p>
-            <Badge variant="secondary" className="mt-1">
-              {lead.projectType === 'residential' ? 'Résidentiel' : 'Professionnel'}
-            </Badge>
-          </div>
+        <div>
+          <p className="text-sm text-muted-foreground">Type de projet</p>
+          <Badge variant="secondary" className="mt-1">
+            {lead.projectType === 'residential' ? 'Résidentiel' : 'Professionnel'}
+          </Badge>
         </div>
 
         <div className="flex gap-4">
