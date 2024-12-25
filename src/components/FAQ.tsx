@@ -28,7 +28,7 @@ const faqs = [
 
 export const FAQ = () => {
   return (
-    <div className="relative py-24 sm:py-32 bg-gradient-to-b from-blue-950 via-blue-900 to-blue-950">
+    <div className="relative py-24 sm:py-32 bg-gradient-to-b from-[#0B1221] via-[#1a5fb4] to-[#0B1221]">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(25,118,210,0.1)_0%,rgba(0,0,0,0.4)_100%)]" />
       <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
         <div className="mx-auto max-w-2xl text-center mb-16">
@@ -45,7 +45,7 @@ export const FAQ = () => {
               <AccordionItem 
                 key={index} 
                 value={`item-${index}`}
-                className="group bg-white/10 backdrop-blur-sm rounded-xl border border-white/20 px-6 shadow-lg transition-all duration-200 hover:shadow-xl"
+                className="group bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 px-6 shadow-lg transition-all duration-200 hover:shadow-xl"
               >
                 <AccordionTrigger className="text-lg font-semibold text-white group-hover:text-green-400 transition-colors py-6">
                   {faq.question}
@@ -62,7 +62,7 @@ export const FAQ = () => {
           <div className="inline-flex items-center justify-center p-1 bg-gradient-to-r from-green-500 to-blue-500 rounded-full">
             <Button
               size="lg"
-              className="bg-blue-950 hover:bg-blue-900 text-white px-8 py-6 text-lg rounded-full relative group transition-all duration-300 hover:scale-[0.98]"
+              className="bg-[#0B1221] hover:bg-[#1a5fb4] text-white px-8 py-6 text-lg rounded-full relative group transition-all duration-300 hover:scale-[0.98]"
               onClick={() => document.getElementById('lead-form')?.scrollIntoView({ behavior: 'smooth' })}
             >
               <span className="text-white">

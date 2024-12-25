@@ -24,11 +24,11 @@ const benefits = [
 
 export const Benefits = () => {
   return (
-    <div className="relative py-24 sm:py-32 bg-gradient-to-b from-blue-950 to-blue-900">
+    <div className="relative py-24 sm:py-32 bg-gradient-to-b from-[#0B1221] to-[#1a5fb4]">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(25,118,210,0.1)_0%,rgba(0,0,0,0.4)_100%)]" />
       <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
         <div className="mx-auto max-w-2xl text-center mb-16">
-          <h2 className="text-4xl font-bold tracking-tight text-white mb-6 bg-clip-text">
+          <h2 className="text-4xl font-bold tracking-tight text-white mb-6">
             Pourquoi choisir l'énergie solaire ?
           </h2>
           <p className="text-xl text-blue-200">
@@ -39,7 +39,7 @@ export const Benefits = () => {
           {benefits.map((benefit) => (
             <div 
               key={benefit.title} 
-              className="group relative bg-white/10 backdrop-blur-sm rounded-2xl p-8 shadow-xl border border-white/10 hover:shadow-2xl transition-all duration-300 overflow-hidden"
+              className="group relative bg-white/5 backdrop-blur-sm rounded-2xl p-8 shadow-xl border border-white/10 hover:shadow-2xl transition-all duration-300 overflow-hidden"
             >
               <div className="absolute inset-0 bg-gradient-to-br from-blue-900/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
               <div className="relative z-10">

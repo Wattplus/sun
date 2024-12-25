@@ -24,18 +24,18 @@ const steps = [
 
 export const Process = () => {
   return (
-    <div className="py-24 sm:py-32 bg-gradient-to-b from-gray-50 to-white" id="process">
+    <div className="py-24 sm:py-32 bg-gradient-to-b from-[#0B1221] to-[#1a5fb4]" id="process">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="mx-auto max-w-2xl text-center mb-16">
-          <h2 className="text-4xl font-bold tracking-tight text-gray-900 mb-6 bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
+          <h2 className="text-4xl font-bold tracking-tight text-white mb-6">
             Notre processus d'installation
           </h2>
-          <p className="text-xl text-gray-600">
+          <p className="text-xl text-blue-200">
             Simple, rapide et professionnel
           </p>
         </div>
         <div className="relative">
-          <div className="absolute top-1/2 left-4 right-4 h-1 bg-gradient-to-r from-blue-200 via-green-200 to-amber-200 -translate-y-1/2 hidden lg:block rounded-full" />
+          <div className="absolute top-1/2 left-4 right-4 h-1 bg-gradient-to-r from-blue-200 via-green-200 to-amber-200 -translate-y-1/2 hidden lg:block rounded-full opacity-20" />
           <div className="grid max-w-xl grid-cols-1 gap-x-8 gap-y-16 lg:max-w-none lg:grid-cols-3">
             {steps.map((step, index) => (
               <div key={step.title} className="flex flex-col items-center text-center relative">
@@ -43,13 +43,13 @@ export const Process = () => {
                   <div className={`rounded-full bg-gradient-to-br ${step.color} p-6 relative z-10 shadow-lg transform hover:scale-110 transition-transform duration-300`}>
                     <step.icon className="h-8 w-8 text-white" aria-hidden="true" />
                   </div>
-                  <div className="text-2xl font-semibold text-gray-900">{step.title}</div>
+                  <div className="text-2xl font-semibold text-white">{step.title}</div>
                 </dt>
-                <dd className="flex flex-col bg-white rounded-xl p-8 shadow-xl border border-gray-100 w-full hover:shadow-2xl transition-all duration-300">
-                  <p className="text-gray-600 text-lg mb-8">{step.description}</p>
+                <dd className="flex flex-col bg-white/5 backdrop-blur-sm rounded-xl p-8 shadow-xl border border-white/10 w-full hover:shadow-2xl transition-all duration-300">
+                  <p className="text-blue-200 text-lg mb-8">{step.description}</p>
                   <Button
                     variant="outline"
-                    className="mt-auto group hover:bg-green-500 hover:text-white hover:border-green-500 w-full"
+                    className="mt-auto group hover:bg-green-500 hover:text-white hover:border-green-500 bg-white/10 border-white/20 text-white w-full"
                     onClick={() => document.getElementById('lead-form')?.scrollIntoView({ behavior: 'smooth' })}
                   >
                     En savoir plus
