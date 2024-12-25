@@ -3,7 +3,7 @@ import { Card } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
-import { MapPin, Euro, Lock, Clock } from "lucide-react";
+import { MapPin, Euro, Lock, Clock, ArrowRight, Crown } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
 import { Lead } from "@/types/crm";
@@ -102,7 +102,7 @@ export const LeadsList = ({ leads }: LeadsListProps) => {
             <Button 
               variant="outline"
               onClick={() => handleContact(selectedLeads, 'mutualise')}
-              className="flex items-center gap-2"
+              className="flex items-center gap-2 border-primary/50 hover:bg-primary/10"
             >
               <Euro className="h-4 w-4" />
               Acheter {selectedLeads.length} leads mutualisés ({formatPrice(getTotalPrice('mutualise'))})
@@ -110,7 +110,7 @@ export const LeadsList = ({ leads }: LeadsListProps) => {
             <Button 
               variant="outline"
               onClick={() => handleContact(selectedLeads, 'exclusif')}
-              className="flex items-center gap-2"
+              className="flex items-center gap-2 border-primary/50 hover:bg-primary/10"
             >
               <Euro className="h-4 w-4" />
               Acheter {selectedLeads.length} leads exclusifs ({formatPrice(getTotalPrice('exclusif'))})
@@ -124,20 +124,22 @@ export const LeadsList = ({ leads }: LeadsListProps) => {
           {filteredLeads.map((lead) => {
             const prices = calculateLeadPrice(lead);
             return (
-              <Card key={lead.id} className="p-4">
-                <div className="flex justify-between items-start">
-                  <div className="flex gap-4">
+              <Card key={lead.id} className="p-6 hover:shadow-lg transition-all duration-200">
+                <div className="flex justify-between items-start gap-4">
+                  <div className="flex gap-4 flex-1">
                     <Checkbox
                       checked={selectedLeads.includes(lead.id)}
                       onCheckedChange={() => toggleLeadSelection(lead.id)}
                       className="mt-1"
                     />
-                    <div className="space-y-2">
-                      <div className="flex items-center gap-2">
-                        <span className="font-medium">{lead.firstName}</span>
-                        <span className="text-muted-foreground">{maskSensitiveInfo(lead.lastName)}</span>
-                        <Badge variant="outline" className="ml-2">
-                          <Clock className="h-3 w-3 mr-1" />
+                    <div className="space-y-3 flex-1">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <span className="font-medium text-lg">{lead.firstName}</span>
+                          <span className="text-muted-foreground ml-2">{maskSensitiveInfo(lead.lastName)}</span>
+                        </div>
+                        <Badge variant="outline" className="flex items-center gap-1">
+                          <Clock className="h-3 w-3" />
                           {getAgeLabel(lead.createdAt)}
                         </Badge>
                       </div>
@@ -150,32 +152,34 @@ export const LeadsList = ({ leads }: LeadsListProps) => {
 
                       <div className="flex items-center gap-2 text-muted-foreground">
                         <Euro className="h-4 w-4" />
-                        Budget: {lead.budget.toLocaleString()}€
+                        <span className="font-semibold">Budget: {lead.budget.toLocaleString()}€</span>
                       </div>
 
-                      <div className="text-sm text-muted-foreground mt-2">
-                        <strong>Type de projet:</strong>
-                        <p>{lead.projectType}</p>
+                      <div className="text-sm">
+                        <p className="font-medium mb-1">Type de projet:</p>
+                        <Badge variant="secondary" className="bg-primary/10 text-primary">
+                          {lead.projectType}
+                        </Badge>
                       </div>
 
-                      <div className="flex gap-2 mt-2">
+                      <div className="flex gap-4 mt-4">
                         <Button 
-                          size="sm" 
-                          variant="outline" 
+                          size="lg" 
                           onClick={() => handleContact([lead.id], 'mutualise')}
-                          className="flex items-center gap-2"
+                          className="flex-1 bg-primary/10 text-primary hover:bg-primary hover:text-white transition-colors"
                         >
-                          <Euro className="h-4 w-4" />
+                          <Euro className="h-4 w-4 mr-2" />
                           Lead mutualisé - {formatPrice(prices.mutualPrice)}
+                          <ArrowRight className="h-4 w-4 ml-2" />
                         </Button>
                         <Button 
-                          size="sm" 
-                          variant="outline" 
+                          size="lg" 
                           onClick={() => handleContact([lead.id], 'exclusif')}
-                          className="flex items-center gap-2"
+                          className="flex-1 bg-primary hover:bg-primary/90"
                         >
-                          <Euro className="h-4 w-4" />
+                          <Crown className="h-4 w-4 mr-2" />
                           Lead exclusif - {formatPrice(prices.exclusivePrice)}
+                          <ArrowRight className="h-4 w-4 ml-2" />
                         </Button>
                       </div>
                     </div>
