@@ -28,7 +28,6 @@ const Index = () => {
             </div>
           </div>
           <ElectricityPriceSection />
-          <PrimeRates />
           <Benefits />
           <TechnicalSpecs />
           <Process />
@@ -37,6 +36,7 @@ const Index = () => {
           <Certifications />
           <Testimonials />
           <FAQ />
+          <PrimeRates />
           <div id="lead-form-bottom" className="section-spacing container-padding">
             <div className="mx-auto max-w-7xl">
               <LeadForm />
