@@ -13,15 +13,11 @@ serve(async (req) => {
   }
 
   try {
-    const { leadId, type } = await req.json()
+    const { leadId, type, priceId } = await req.json()
 
     const stripe = new Stripe(Deno.env.get('STRIPE_SECRET_KEY') || '', {
       apiVersion: '2023-10-16',
     })
-
-    const priceId = type === 'exclusif' 
-      ? 'price_1QZyKUFOePj4Hv47qEFQ1KzF'  // Prix lead exclusif
-      : 'price_1QZyJpFOePj4Hv47sd76eDOz'   // Prix lead mutualisé
 
     console.log('Creating payment session...')
     const session = await stripe.checkout.sessions.create({
