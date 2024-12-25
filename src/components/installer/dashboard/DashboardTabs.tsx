@@ -61,6 +61,10 @@ export const DashboardTabs = () => {
 
   return (
     <div className="space-y-8">
+      <div className="grid gap-6">
+        <StatsCards />
+      </div>
+
       <PrepaidBalance balance={150} />
       
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -101,19 +105,13 @@ export const DashboardTabs = () => {
         </Card>
       </div>
 
-      <Tabs defaultValue="stats" className="w-full">
+      <Tabs defaultValue="projects" className="w-full">
         <TabsList className="grid w-full grid-cols-4">
-          <TabsTrigger value="stats">Statistiques</TabsTrigger>
           <TabsTrigger value="projects">Projets</TabsTrigger>
           <TabsTrigger value="messages">Messages</TabsTrigger>
           <TabsTrigger value="profile">Profil</TabsTrigger>
+          <TabsTrigger value="stats">Plus de Stats</TabsTrigger>
         </TabsList>
-
-        <TabsContent value="stats">
-          <div className="grid gap-6">
-            <StatsCards />
-          </div>
-        </TabsContent>
 
         <TabsContent value="projects">
           <ProjectsList />
@@ -127,6 +125,14 @@ export const DashboardTabs = () => {
 
         <TabsContent value="profile">
           <InstallerProfile />
+        </TabsContent>
+
+        <TabsContent value="stats">
+          <Card className="p-6">
+            <div className="grid gap-6">
+              <StatsCards />
+            </div>
+          </Card>
         </TabsContent>
       </Tabs>
     </div>
