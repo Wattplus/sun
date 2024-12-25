@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Outlet } from "react-router-dom";
 import AdminDashboard from "@/components/admin/AdminDashboard";
 
 const Admin = () => {
@@ -32,7 +33,7 @@ const Admin = () => {
   };
 
   if (isLoggedIn) {
-    return <AdminDashboard />;
+    return <Outlet />;
   }
 
   return (
