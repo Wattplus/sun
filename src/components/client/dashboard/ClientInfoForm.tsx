@@ -1,13 +1,15 @@
 import { useState } from "react";
 import { Card } from "@/components/ui/card";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { Save, Lock } from "lucide-react";
 import { motion } from "framer-motion";
+import { Button } from "@/components/ui/button";
 import { RoofTypeSelect } from "./RoofTypeSelect";
 import { MonthlyBillInput } from "./MonthlyBillInput";
 import { AddressFields } from "./AddressFields";
-import { Input } from "@/components/ui/input";
+import { ElectricalTypeSelect } from "./ElectricalTypeSelect";
+import { ProjectTypeSelect } from "./ProjectTypeSelect";
+import { BudgetInput } from "./BudgetInput";
 
 interface ClientInfo {
   roofType: string;
@@ -126,21 +128,10 @@ export const ClientInfoForm = ({ onMonthlyBillUpdate }: Props) => {
             error={errors.monthlyBillEuros}
           />
 
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-200">Type d'installation électrique</label>
-            <Select
-              value={clientInfo.electricalType}
-              onValueChange={(value) => handleSelectChange(value, "electricalType")}
-            >
-              <SelectTrigger className="w-full bg-background-dark/50 border-gray-700">
-                <SelectValue placeholder="Sélectionnez le type d'installation" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="monophase">Monophasé</SelectItem>
-                <SelectItem value="triphase">Triphasé</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
+          <ElectricalTypeSelect
+            value={clientInfo.electricalType}
+            onChange={(value) => handleSelectChange(value, "electricalType")}
+          />
 
           <div className="relative">
             <AddressFields
@@ -156,34 +147,16 @@ export const ClientInfoForm = ({ onMonthlyBillUpdate }: Props) => {
             </div>
           </div>
 
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-200">Budget (€)</label>
-            <Input
-              type="number"
-              name="budget"
-              value={clientInfo.budget}
-              onChange={handleChange}
-              className="bg-background-dark/50 border-gray-700"
-              error={errors.budget}
-            />
-          </div>
+          <BudgetInput
+            value={clientInfo.budget}
+            onChange={handleChange}
+            error={errors.budget}
+          />
 
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-200">Type de projet</label>
-            <Select
-              value={clientInfo.projectType}
-              onValueChange={(value) => handleSelectChange(value, "projectType")}
-            >
-              <SelectTrigger className="w-full bg-background-dark/50 border-gray-700">
-                <SelectValue placeholder="Sélectionnez le type de projet" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="Installation Panneaux Solaires">Installation Panneaux Solaires</SelectItem>
-                <SelectItem value="Rénovation">Rénovation</SelectItem>
-                <SelectItem value="Extension">Extension</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
+          <ProjectTypeSelect
+            value={clientInfo.projectType}
+            onChange={(value) => handleSelectChange(value, "projectType")}
+          />
 
           <motion.div
             whileHover={{ scale: 1.02 }}
