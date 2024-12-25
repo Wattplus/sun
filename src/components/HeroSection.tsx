@@ -24,7 +24,7 @@ export const HeroSection = () => {
           </h1>
           
           <p className="text-xl text-blue-100 mb-12 animate-fadeIn leading-relaxed">
-            Profitez des aides de l'État jusqu'à 75% pour votre installation photovoltaïque
+            Jusqu'à 40% d'économies sur vos factures grâce aux panneaux photovoltaïques et aides de l'État jusqu'à -75%
           </p>
 
           <div className="flex flex-col sm:flex-row gap-6 justify-center items-center mb-16 animate-fadeIn">
