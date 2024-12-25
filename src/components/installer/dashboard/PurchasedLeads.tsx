@@ -2,7 +2,7 @@ import { Lead } from "@/types/crm";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Users, MapPin, Euro, Calendar, Phone, Mail, FileText, CheckCircle2, XCircle } from "lucide-react";
+import { Users, MapPin, Euro, Calendar, Phone, Mail, FileText, CheckCircle2, XCircle, ShoppingCart, TrendingUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { formatDistanceToNow } from "date-fns";
 import { fr } from "date-fns/locale";
@@ -10,6 +10,7 @@ import { calculateLeadPrice } from "@/utils/leadPricing";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
+import { useNavigate } from "react-router-dom";
 
 interface PurchasedLeadsProps {
   leads: Lead[];
@@ -38,6 +39,7 @@ const statusIcons: Record<LeadStatus, React.ReactNode> = {
 export const PurchasedLeads = ({ leads }: PurchasedLeadsProps) => {
   const [leadStatuses, setLeadStatuses] = useState<Record<string, LeadStatus>>({});
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   const updateLeadStatus = (leadId: string, status: LeadStatus) => {
     setLeadStatuses(prev => ({ ...prev, [leadId]: status }));
@@ -46,6 +48,38 @@ export const PurchasedLeads = ({ leads }: PurchasedLeadsProps) => {
       description: `Le statut du lead a été mis à jour à "${status}"`,
     });
   };
+
+  if (leads.length === 0) {
+    return (
+      <Card className="p-8 text-center space-y-6 bg-background/50 backdrop-blur-md border-primary/20">
+        <div className="flex flex-col items-center gap-4">
+          <div className="p-4 bg-primary/10 rounded-full">
+            <ShoppingCart className="h-8 w-8 text-primary" />
+          </div>
+          <h3 className="text-xl font-semibold">Aucun lead acheté</h3>
+          <p className="text-muted-foreground max-w-md">
+            Commencez à développer votre activité en achetant vos premiers leads qualifiés
+          </p>
+        </div>
+        
+        <div className="flex flex-col gap-4 items-center">
+          <Button 
+            onClick={() => navigate("/espace-installateur/marketplace")}
+            className="bg-primary hover:bg-primary/90 gap-2"
+            size="lg"
+          >
+            <ShoppingCart className="h-5 w-5" />
+            Voir les leads disponibles
+          </Button>
+          
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <TrendingUp className="h-4 w-4" />
+            <span>32% de taux de conversion moyen</span>
+          </div>
+        </div>
+      </Card>
+    );
+  }
 
   return (
     <ScrollArea className="h-[600px] pr-4">
