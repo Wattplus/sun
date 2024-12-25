@@ -2,7 +2,7 @@ import { Lead } from "@/types/crm";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Euro, MapPin, Phone, Mail, User, Building2, Clock } from "lucide-react";
+import { Euro, MapPin, Phone, Mail, User, Building2, Clock, Crown } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import { calculateLeadPrice, formatPrice } from "@/utils/leadPricing";
 import { differenceInDays } from "date-fns";
@@ -32,6 +32,7 @@ export const LeadCard = ({
 }: LeadCardProps) => {
   const { toast } = useToast();
   const prices = calculateLeadPrice(lead, subscriptionTier);
+  const isSamePrice = prices.mutualPrice === prices.exclusivePrice;
 
   const handlePurchase = async (type: 'mutualise' | 'exclusif') => {
     try {
@@ -147,22 +148,35 @@ export const LeadCard = ({
       </CardContent>
       <CardFooter>
         {!isPurchased ? (
-          <div className="w-full space-y-2">
-            <Button 
-              className="w-full bg-[#1EAEDB] hover:bg-[#0FA0CE]" 
-              onClick={() => handlePurchase('mutualise')}
-            >
-              <Euro className="h-4 w-4 mr-2" />
-              Lead mutualisé - {formatPrice(prices.mutualPrice)}
-            </Button>
-            <Button 
-              className="w-full" 
-              variant="outline"
-              onClick={() => handlePurchase('exclusif')}
-            >
-              <Euro className="h-4 w-4 mr-2" />
-              Lead exclusif - {formatPrice(prices.exclusivePrice)}
-            </Button>
+          <div className="w-full">
+            {isSamePrice ? (
+              <Button 
+                className="w-full bg-[#1EAEDB] hover:bg-[#0FA0CE] flex items-center justify-center gap-2" 
+                onClick={() => handlePurchase('exclusif')}
+              >
+                <Crown className="h-4 w-4" />
+                <Euro className="h-4 w-4" />
+                Acheter ce lead - {formatPrice(prices.exclusivePrice)}
+              </Button>
+            ) : (
+              <div className="space-y-2">
+                <Button 
+                  className="w-full bg-[#1EAEDB] hover:bg-[#0FA0CE]" 
+                  onClick={() => handlePurchase('mutualise')}
+                >
+                  <Euro className="h-4 w-4 mr-2" />
+                  Lead mutualisé - {formatPrice(prices.mutualPrice)}
+                </Button>
+                <Button 
+                  className="w-full" 
+                  variant="outline"
+                  onClick={() => handlePurchase('exclusif')}
+                >
+                  <Euro className="h-4 w-4 mr-2" />
+                  Lead exclusif - {formatPrice(prices.exclusivePrice)}
+                </Button>
+              </div>
+            )}
           </div>
         ) : (
           <Badge className="w-full justify-center py-2 bg-emerald-500">
