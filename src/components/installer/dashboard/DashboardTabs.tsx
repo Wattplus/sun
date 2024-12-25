@@ -15,6 +15,7 @@ import { ChevronRight, X } from "lucide-react";
 
 export const DashboardTabs = () => {
   const [showAllPurchasedLeads, setShowAllPurchasedLeads] = useState(false);
+  const [showAllAvailableLeads, setShowAllAvailableLeads] = useState(false);
 
   if (showAllPurchasedLeads) {
     return (
@@ -37,15 +38,46 @@ export const DashboardTabs = () => {
     );
   }
 
+  if (showAllAvailableLeads) {
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <h2 className="text-2xl font-bold">Tous Les Leads Disponibles</h2>
+          <Button 
+            variant="ghost" 
+            onClick={() => setShowAllAvailableLeads(false)}
+            className="gap-2"
+          >
+            <X className="h-4 w-4" />
+            Fermer
+          </Button>
+        </div>
+        <Card className="p-6">
+          <LeadsList leads={mockAvailableLeads} />
+        </Card>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
       <PrepaidBalance balance={150} />
       
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Nouveaux leads disponibles */}
-        <Card className="p-6">
-          <h2 className="text-xl font-bold mb-4">Nouveaux Leads Disponibles</h2>
-          <LeadsList leads={mockAvailableLeads} />
+        <Card className="p-6 border-2 border-primary/20">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-bold">Nouveaux Leads Disponibles</h2>
+            <Button 
+              variant="default"
+              onClick={() => setShowAllAvailableLeads(true)}
+              className="gap-2 bg-primary hover:bg-primary/90 text-white font-semibold shadow-sm"
+            >
+              Voir tout
+              <ChevronRight className="h-4 w-4" />
+            </Button>
+          </div>
+          <LeadsList leads={mockAvailableLeads.slice(0, 2)} />
         </Card>
 
         {/* Leads achetés */}
