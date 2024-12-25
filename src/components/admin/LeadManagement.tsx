@@ -12,6 +12,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogFooter,
+  DialogDescription,
 } from "@/components/ui/dialog";
 import {
   Select,
@@ -29,8 +30,10 @@ const LeadManagement = () => {
   const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [assignDialogOpen, setAssignDialogOpen] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [selectedInstallerId, setSelectedInstallerId] = useState<string>("");
   const [leadToAssign, setLeadToAssign] = useState<Lead | null>(null);
+  const [leadToDelete, setLeadToDelete] = useState<Lead | null>(null);
   const { toast } = useToast();
 
   const getStatusColor = (status: LeadStatus) => {
@@ -65,6 +68,23 @@ const LeadManagement = () => {
   const handleAssignClick = (lead: Lead) => {
     setLeadToAssign(lead);
     setAssignDialogOpen(true);
+  };
+
+  const handleDeleteClick = (lead: Lead) => {
+    setLeadToDelete(lead);
+    setDeleteDialogOpen(true);
+  };
+
+  const handleConfirmDelete = () => {
+    if (!leadToDelete) return;
+    
+    setLeads(leads.filter(lead => lead.id !== leadToDelete.id));
+    toast({
+      title: "Lead supprimé",
+      description: "Le lead a été supprimé avec succès.",
+    });
+    setDeleteDialogOpen(false);
+    setLeadToDelete(null);
   };
 
   const handleEditClose = () => {
@@ -131,6 +151,7 @@ const LeadManagement = () => {
           leads={leads}
           onEditClick={handleEditClick}
           onAssignClick={handleAssignClick}
+          onDeleteClick={handleDeleteClick}
           getStatusColor={getStatusColor}
           getStatusText={getStatusText}
         />
@@ -177,6 +198,32 @@ const LeadManagement = () => {
                 className="bg-[#1EAEDB] hover:bg-[#0FA0CE]"
               >
                 Confirmer
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
+        <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+          <DialogContent className="bg-background/95 backdrop-blur-md border-[#33C3F0]/20">
+            <DialogHeader>
+              <DialogTitle>Supprimer le lead</DialogTitle>
+              <DialogDescription>
+                Êtes-vous sûr de vouloir supprimer ce lead ? Cette action est irréversible.
+              </DialogDescription>
+            </DialogHeader>
+            <DialogFooter>
+              <Button
+                variant="outline"
+                onClick={() => setDeleteDialogOpen(false)}
+                className="border-[#33C3F0]/20 hover:border-[#33C3F0]/40"
+              >
+                Annuler
+              </Button>
+              <Button
+                onClick={handleConfirmDelete}
+                className="bg-red-500 hover:bg-red-600"
+              >
+                Supprimer
               </Button>
             </DialogFooter>
           </DialogContent>

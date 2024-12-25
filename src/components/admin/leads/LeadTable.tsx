@@ -3,12 +3,13 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Lead, LeadStatus } from "@/types/crm";
-import { Edit } from "lucide-react";
+import { Edit, Trash2 } from "lucide-react";
 
 interface LeadTableProps {
   leads: Lead[];
   onEditClick: (lead: Lead) => void;
   onAssignClick: (lead: Lead) => void;
+  onDeleteClick: (lead: Lead) => void;
   getStatusColor: (status: LeadStatus) => string;
   getStatusText: (status: LeadStatus) => string;
 }
@@ -17,6 +18,7 @@ export const LeadTable = ({
   leads,
   onEditClick,
   onAssignClick,
+  onDeleteClick,
   getStatusColor,
   getStatusText,
 }: LeadTableProps) => {
@@ -77,6 +79,15 @@ export const LeadTable = ({
                     className="border-[#33C3F0]/20 hover:border-[#33C3F0]/40 hover:bg-[#33C3F0]/10"
                   >
                     Assigner
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => onDeleteClick(lead)}
+                    className="border-red-500/20 hover:border-red-500/40 hover:bg-red-500/10"
+                  >
+                    <Trash2 className="h-4 w-4 mr-2 text-red-500" />
+                    Supprimer
                   </Button>
                 </div>
               </TableCell>
