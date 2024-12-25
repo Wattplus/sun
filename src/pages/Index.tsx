@@ -20,10 +20,10 @@ const Index = () => {
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(26,95,180,0.15)_0%,rgba(11,18,33,0.4)_100%)]" />
       <div className="relative z-10">
         <Navbar />
-        <main className="space-y-0">
+        <main>
           <HeroSection />
-          <div id="lead-form-top" className="section-spacing container-padding">
-            <div className="mx-auto max-w-7xl">
+          <div id="lead-form-top" className="py-16">
+            <div className="container mx-auto px-4">
               <LeadForm />
             </div>
           </div>
@@ -37,8 +37,8 @@ const Index = () => {
           <Testimonials />
           <FAQ />
           <PrimeRates />
-          <div id="lead-form-bottom" className="section-spacing container-padding">
-            <div className="mx-auto max-w-7xl">
+          <div id="lead-form-bottom" className="py-16">
+            <div className="container mx-auto px-4">
               <LeadForm />
             </div>
           </div>
