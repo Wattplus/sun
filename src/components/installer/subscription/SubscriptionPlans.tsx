@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Check } from "lucide-react";
+import { Check, Sparkles } from "lucide-react";
 import { subscriptionPlans } from "@/types/subscription";
 import { useToast } from "@/components/ui/use-toast";
 
@@ -50,9 +50,26 @@ export const SubscriptionPlans = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto px-4">
         {subscriptionPlans.map((plan) => (
-          <Card key={plan.id} className="flex flex-col">
+          <Card 
+            key={plan.id} 
+            className={`flex flex-col relative transform transition-all duration-200 hover:scale-105 ${
+              plan.tier === 'premium' 
+                ? 'border-primary shadow-lg shadow-primary/20 scale-105' 
+                : ''
+            }`}
+          >
+            {plan.tier === 'premium' && (
+              <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
+                <span className="bg-primary text-white px-4 py-1 rounded-full text-sm font-medium flex items-center gap-1">
+                  <Sparkles className="h-4 w-4" />
+                  Recommandé
+                </span>
+              </div>
+            )}
             <CardHeader>
-              <CardTitle className="text-xl">{plan.name}</CardTitle>
+              <CardTitle className="text-xl flex items-center justify-between">
+                {plan.name}
+              </CardTitle>
               <div className="mt-2">
                 <span className="text-3xl font-bold">{plan.price}€</span>
                 <span className="text-muted-foreground">/mois</span>
@@ -62,7 +79,9 @@ export const SubscriptionPlans = () => {
               <ul className="space-y-2">
                 {plan.features.map((feature, index) => (
                   <li key={index} className="flex items-center gap-2">
-                    <Check className="h-4 w-4 text-green-500" />
+                    <Check className={`h-4 w-4 ${
+                      plan.tier === 'premium' ? 'text-primary' : 'text-green-500'
+                    }`} />
                     <span>{feature}</span>
                   </li>
                 ))}
@@ -70,7 +89,13 @@ export const SubscriptionPlans = () => {
             </CardContent>
             <CardFooter>
               <Button 
-                className="w-full" 
+                className={`w-full ${
+                  plan.tier === 'premium' 
+                    ? 'bg-primary hover:bg-primary/90' 
+                    : plan.tier === 'free' 
+                    ? 'bg-gray-100 hover:bg-gray-200 text-gray-900' 
+                    : 'border-2 border-primary/50'
+                }`}
                 variant={plan.tier === 'premium' ? 'default' : 'outline'}
                 onClick={() => handleSubscribe(plan.priceId)}
               >
