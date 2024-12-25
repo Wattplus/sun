@@ -26,14 +26,8 @@ const Index = () => {
               <LeadForm />
             </div>
           </div>
-          <div className="relative">
-            <div className="absolute inset-0 bg-gradient-to-b from-[#0B1221] to-transparent h-32" />
-            <Benefits />
-          </div>
-          <div className="relative">
-            <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[#0B1221] h-32" />
-            <TechnicalSpecs />
-          </div>
+          <Benefits />
+          <TechnicalSpecs />
           <Process />
           <SavingsCalculator />
           <EnvironmentalImpact />
