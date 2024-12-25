@@ -9,7 +9,6 @@ import { Footer } from "@/components/Footer";
 import { TechnicalSpecs } from "@/components/TechnicalSpecs";
 import { SavingsCalculator } from "@/components/SavingsCalculator";
 import { EnvironmentalImpact } from "@/components/EnvironmentalImpact";
-import { ProjectGallery } from "@/components/ProjectGallery";
 import { Certifications } from "@/components/Certifications";
 
 const Index = () => {
@@ -21,13 +20,12 @@ const Index = () => {
         <main>
           <HeroSection />
           <Benefits />
-          <SavingsCalculator />
-          <Process />
           <TechnicalSpecs />
+          <Process />
+          <SavingsCalculator />
           <EnvironmentalImpact />
-          <ProjectGallery />
-          <Testimonials />
           <Certifications />
+          <Testimonials />
           <FAQ />
           <div className="py-24 sm:py-32">
             <div className="mx-auto max-w-7xl px-6 lg:px-8">

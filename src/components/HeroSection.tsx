@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 export const HeroSection = () => {
   return (
     <div className="relative min-h-[90vh] bg-gradient-to-br from-[#0B1221] via-[#1a5fb4] to-[#0B1221] text-white overflow-hidden">
-      {/* Effet de particules/étoiles en arrière-plan */}
       <div className="absolute inset-0">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(25,118,210,0.15)_0%,rgba(0,0,0,0.4)_100%)]" />
         <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSIjRkZGIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxjaXJjbGUgY3g9IjMiIGN5PSIzIiByPSIxIi8+PC9nPjwvc3ZnPg==')] opacity-20" />
@@ -13,13 +12,13 @@ export const HeroSection = () => {
       <div className="relative z-10 mx-auto max-w-7xl px-6 py-32 lg:px-8">
         <div className="mx-auto max-w-3xl text-center">
           <div className="flex flex-wrap justify-center gap-4 mb-8">
-            <div className="bg-white/10 backdrop-blur-sm px-6 py-2 rounded-full text-sm border border-white/20 shadow-lg animate-fade-in">
+            <div className="glass-panel px-6 py-2 rounded-full text-sm shadow-lg animate-fade-in">
               Devis gratuit et sans engagement
             </div>
           </div>
           
           <h1 className="text-4xl font-bold tracking-tight sm:text-6xl mb-6 animate-fade-in [text-wrap:balance]">
-            <span className="bg-clip-text text-transparent bg-gradient-to-r from-white via-blue-100 to-white">
+            <span className="gradient-text">
               Réduisez votre facture d'électricité avec l'énergie solaire
             </span>
           </h1>
@@ -60,7 +59,7 @@ export const HeroSection = () => {
             ].map((item, index) => (
               <div 
                 key={index} 
-                className="group flex flex-col items-center p-4 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 transition-all duration-300"
+                className="glass-panel p-4 hover:bg-white/10 transition-all duration-300"
               >
                 <span className="text-3xl mb-2 transform group-hover:scale-110 transition-transform duration-300">{item.emoji}</span>
                 <h3 className="font-semibold text-sm sm:text-base">{item.title}</h3>
@@ -71,7 +70,7 @@ export const HeroSection = () => {
         </div>
       </div>
 
-      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-white via-white/20 to-transparent" />
+      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[#0B1221] via-[#0B1221]/20 to-transparent" />
     </div>
   );
 };
