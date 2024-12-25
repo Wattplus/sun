@@ -6,14 +6,13 @@ import { ProjectStatus } from "@/components/client/dashboard/ProjectStatus";
 import { InstallerRequests } from "@/components/client/dashboard/InstallerRequests";
 import { DocumentsList } from "@/components/client/documents/DocumentsList";
 import { MessagesList } from "@/components/client/messages/MessagesList";
-import { useToast } from "@/components/ui/use-toast";
+import { ClientInfoForm } from "@/components/client/dashboard/ClientInfoForm";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
 const ClientPortal = () => {
   const [activeTab, setActiveTab] = useState("dashboard");
-  const { toast } = useToast();
-  const [userInfo, setUserInfo] = useState({
+  const [userInfo] = useState({
     name: "Jean Dupont",
     email: "j********@example.com",
     phone: "06 ** ** ** 89",
@@ -28,30 +27,6 @@ const ClientPortal = () => {
       }
     ]
   });
-
-  const handleAcceptRequest = (requestId: number) => {
-    setUserInfo(prev => ({
-      ...prev,
-      installerRequests: prev.installerRequests.map(req =>
-        req.id === requestId ? { ...req, status: "accepted" } : req
-      )
-    }));
-    toast({
-      title: "Demande acceptée",
-      description: "L'installateur pourra maintenant vous contacter directement.",
-    });
-  };
-
-  const handleRejectRequest = (requestId: number) => {
-    setUserInfo(prev => ({
-      ...prev,
-      installerRequests: prev.installerRequests.filter(req => req.id !== requestId)
-    }));
-    toast({
-      title: "Demande rejetée",
-      description: "L'installateur ne pourra pas accéder à vos coordonnées.",
-    });
-  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -89,10 +64,11 @@ const ClientPortal = () => {
                 status={userInfo.projectStatus}
                 lastUpdate={userInfo.lastUpdate}
               />
+              <ClientInfoForm />
               <InstallerRequests
                 requests={userInfo.installerRequests}
-                onAccept={handleAcceptRequest}
-                onReject={handleRejectRequest}
+                onAccept={(id) => console.log('Accept request:', id)}
+                onReject={(id) => console.log('Reject request:', id)}
               />
             </div>
           </TabsContent>
@@ -110,9 +86,7 @@ const ClientPortal = () => {
               <h3 className="text-lg font-semibold mb-6">Paramètres du compte</h3>
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">
-                    Nom
-                  </label>
+                  <label className="block text-sm font-medium text-gray-700">Nom</label>
                   <input
                     type="text"
                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
@@ -121,9 +95,7 @@ const ClientPortal = () => {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">
-                    Email
-                  </label>
+                  <label className="block text-sm font-medium text-gray-700">Email</label>
                   <input
                     type="email"
                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
@@ -131,7 +103,7 @@ const ClientPortal = () => {
                     readOnly
                   />
                 </div>
-                <Button className="mt-4">Modifier le mot de passe</Button>
+                <Button>Modifier le mot de passe</Button>
               </div>
             </Card>
           </TabsContent>
