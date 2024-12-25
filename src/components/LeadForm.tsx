@@ -123,9 +123,9 @@ export const LeadForm = () => {
               onChange={handleChange}
               className={`w-full px-4 py-2 bg-white/10 border ${
                 errors.clientType ? 'border-red-500' : 'border-white/20'
-              } rounded-md text-white focus:outline-none focus:ring-2 focus:ring-blue-500`}
+              } rounded-md text-white focus:outline-none focus:ring-2 focus:ring-blue-500 [&>option]:text-black [&>option]:bg-white/90`}
             >
-              <option value="">Sélectionnez votre profil</option>
+              <option value="" className="text-gray-400">Sélectionnez votre profil</option>
               <option value="particulier">Particulier</option>
               <option value="professionnel">Professionnel</option>
             </select>
