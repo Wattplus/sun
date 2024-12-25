@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { FormField } from "./form/FormField";
 import { validateEmail, validatePhone, validatePostalCode } from "@/utils/formValidation";
+import { Send } from "lucide-react";
 
 interface FormData {
   firstName: string;
@@ -66,30 +67,34 @@ export const LeadForm = () => {
   };
 
   return (
-    <div className="w-full max-w-md mx-auto p-6 bg-white rounded-xl shadow-lg space-y-6">
-      <div className="text-center space-y-2">
-        <h2 className="text-2xl font-bold text-gray-900">Demandez votre étude gratuite</h2>
-        <p className="text-gray-500">
+    <div className="w-full max-w-3xl mx-auto p-8 rounded-xl bg-[#1a5fb4] text-white">
+      <div className="text-center space-y-3 mb-8">
+        <h2 className="text-3xl font-bold">Demandez votre étude gratuite</h2>
+        <p className="text-gray-100">
           Découvrez votre potentiel d'économies avec une étude personnalisée sans engagement
         </p>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <FormField
-          label="Prénom"
-          id="firstName"
-          value={formData.firstName}
-          onChange={handleChange}
-          error={errors.firstName}
-        />
-        
-        <FormField
-          label="Nom"
-          id="lastName"
-          value={formData.lastName}
-          onChange={handleChange}
-          error={errors.lastName}
-        />
+      <form onSubmit={handleSubmit} className="space-y-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <FormField
+            label="Prénom"
+            id="firstName"
+            value={formData.firstName}
+            onChange={handleChange}
+            error={errors.firstName}
+            lightMode
+          />
+          
+          <FormField
+            label="Nom"
+            id="lastName"
+            value={formData.lastName}
+            onChange={handleChange}
+            error={errors.lastName}
+            lightMode
+          />
+        </div>
         
         <FormField
           label="Email"
@@ -98,31 +103,37 @@ export const LeadForm = () => {
           value={formData.email}
           onChange={handleChange}
           error={errors.email}
+          lightMode
         />
         
-        <FormField
-          label="Téléphone"
-          id="phone"
-          type="tel"
-          value={formData.phone}
-          onChange={handleChange}
-          error={errors.phone}
-          placeholder="06 12 34 56 78"
-        />
-        
-        <FormField
-          label="Code postal"
-          id="postalCode"
-          value={formData.postalCode}
-          onChange={handleChange}
-          error={errors.postalCode}
-          placeholder="75001"
-        />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <FormField
+            label="Téléphone"
+            id="phone"
+            type="tel"
+            value={formData.phone}
+            onChange={handleChange}
+            error={errors.phone}
+            placeholder="06 12 34 56 78"
+            lightMode
+          />
+          
+          <FormField
+            label="Code postal"
+            id="postalCode"
+            value={formData.postalCode}
+            onChange={handleChange}
+            error={errors.postalCode}
+            placeholder="75001"
+            lightMode
+          />
+        </div>
 
         <Button 
           type="submit" 
-          className="w-full bg-green-600 hover:bg-green-700 text-lg py-6"
+          className="w-full bg-green-500 hover:bg-green-600 text-lg h-14 gap-2"
         >
+          <Send className="w-5 h-5" />
           Recevoir mon étude gratuite
         </Button>
       </form>

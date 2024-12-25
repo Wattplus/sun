@@ -9,6 +9,7 @@ interface FormFieldProps {
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   error?: string;
   placeholder?: string;
+  lightMode?: boolean;
 }
 
 export const FormField = ({
@@ -19,20 +20,27 @@ export const FormField = ({
   onChange,
   error,
   placeholder,
+  lightMode,
 }: FormFieldProps) => {
   return (
     <div className="space-y-2">
-      <Label htmlFor={id}>{label}</Label>
+      <Label htmlFor={id} className={lightMode ? "text-white" : ""}>
+        {label}
+      </Label>
       <Input
         type={type}
         id={id}
         name={id}
         value={value}
         onChange={onChange}
-        className={error ? "border-red-500" : ""}
+        className={`${error ? "border-red-500" : ""} ${
+          lightMode 
+            ? "bg-white/10 border-white/20 text-white placeholder:text-white/50 focus-visible:border-white" 
+            : ""
+        }`}
         placeholder={placeholder}
       />
-      {error && <p className="text-red-500 text-sm">{error}</p>}
+      {error && <p className="text-red-300 text-sm">{error}</p>}
     </div>
   );
 };
