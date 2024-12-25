@@ -20,20 +20,21 @@ export const LeadsList = ({ leads }: LeadsListProps) => {
   const [projectType, setProjectType] = useState("all");
 
   const handleBuyLead = async (leadId: string, type: "mutualise" | "exclusif") => {
-    const price = type === "exclusif" ? 35 : 19;
     try {
-      const response = await fetch("/api/create-lead-checkout", {
+      const priceId = type === 'exclusif' 
+        ? 'price_1QZyKUFOePj4Hv47qEFQ1KzF' 
+        : 'price_1QZyJpFOePj4Hv47sd76eDOz';
+
+      const response = await fetch("https://dqzsycxxgltztufrhams.supabase.co/functions/v1/create-lead-checkout", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${localStorage.getItem("supabase.auth.token")}`,
+          "Authorization": `Bearer ${process.env.SUPABASE_ANON_KEY}`,
         },
         body: JSON.stringify({
           leadId,
           type,
-          priceId: type === "exclusif" 
-            ? "price_1QZyKUFOePj4Hv47qEFQ1KzF" 
-            : "price_1QZyJpFOePj4Hv47sd76eDOz"
+          priceId
         }),
       });
 

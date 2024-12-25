@@ -17,14 +17,20 @@ export const LeadCard = ({ lead, onPurchase, isPurchased = false, showFullDetail
 
   const handlePurchase = async (type: 'mutualise' | 'exclusif') => {
     try {
-      const response = await fetch("/api/create-lead-checkout", {
+      const priceId = type === 'exclusif' 
+        ? 'price_1QZyKUFOePj4Hv47qEFQ1KzF' 
+        : 'price_1QZyJpFOePj4Hv47sd76eDOz';
+
+      const response = await fetch("https://dqzsycxxgltztufrhams.supabase.co/functions/v1/create-lead-checkout", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": `Bearer ${process.env.SUPABASE_ANON_KEY}`,
         },
         body: JSON.stringify({
           leadId: lead.id,
-          type
+          type,
+          priceId
         }),
       });
 
@@ -37,6 +43,7 @@ export const LeadCard = ({ lead, onPurchase, isPurchased = false, showFullDetail
         window.location.href = url;
       }
     } catch (error) {
+      console.error("Erreur d'achat:", error);
       toast({
         title: "Erreur",
         description: "Une erreur est survenue lors de l'achat du lead.",
