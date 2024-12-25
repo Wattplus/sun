@@ -14,6 +14,7 @@ import { MessagesList } from "./dashboard/MessagesList";
 import { NotificationsList } from "./dashboard/NotificationsList";
 import { PrepaidBalance } from "./dashboard/PrepaidBalance";
 import { PurchasedLeads } from "./dashboard/PurchasedLeads";
+import { ProjectsList } from "./dashboard/ProjectsList";
 import { InstallerProfile } from "@/pages/InstallerProfile";
 import { SubscriptionPlans } from "./subscription/SubscriptionPlans";
 
@@ -117,44 +118,16 @@ export function InstallerDashboard() {
           <TabsTrigger value="dashboard">Accueil</TabsTrigger>
           <TabsTrigger value="leads">Leads</TabsTrigger>
           <TabsTrigger value="purchased">Leads Achetés</TabsTrigger>
+          <TabsTrigger value="projects">Projets</TabsTrigger>
           <TabsTrigger value="messages">Messages</TabsTrigger>
           <TabsTrigger value="profile">Profil</TabsTrigger>
-          <TabsTrigger value="subscription">Abonnement</TabsTrigger>
         </TabsList>
 
         <TabsContent value="dashboard">
           <div className="grid gap-6">
             <PrepaidBalance balance={150} />
             <StatsCards />
-            <Card className="p-6">
-              <h3 className="text-xl font-semibold mb-4">Actions rapides</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <Button 
-                  variant="outline" 
-                  onClick={() => handleAction("nouveaux-leads")}
-                  className="flex items-center justify-center gap-2 hover:bg-primary/10 h-16"
-                >
-                  <ShoppingBag className="h-5 w-5 text-primary" />
-                  <div className="text-left">
-                    <div className="font-semibold">Voir les nouveaux leads</div>
-                    <div className="text-sm text-muted-foreground">8 leads disponibles</div>
-                  </div>
-                  <ChevronRight className="h-5 w-5 ml-auto" />
-                </Button>
-                <Button 
-                  variant="outline" 
-                  onClick={() => handleAction("messages")}
-                  className="flex items-center justify-center gap-2 hover:bg-primary/10 h-16"
-                >
-                  <Mail className="h-5 w-5 text-primary" />
-                  <div className="text-left">
-                    <div className="font-semibold">Messages non lus</div>
-                    <div className="text-sm text-muted-foreground">3 nouveaux messages</div>
-                  </div>
-                  <ChevronRight className="h-5 w-5 ml-auto" />
-                </Button>
-              </div>
-            </Card>
+            <ProjectsList />
           </div>
         </TabsContent>
 
@@ -181,6 +154,10 @@ export function InstallerDashboard() {
           <PurchasedLeads leads={mockLeads.filter(lead => lead.status === "assigned")} />
         </TabsContent>
 
+        <TabsContent value="projects">
+          <ProjectsList />
+        </TabsContent>
+
         <TabsContent value="messages">
           <Card className="p-6">
             <MessagesList />
@@ -189,12 +166,6 @@ export function InstallerDashboard() {
 
         <TabsContent value="profile">
           <InstallerProfile />
-        </TabsContent>
-
-        <TabsContent value="subscription">
-          <Card className="p-6">
-            <SubscriptionPlans />
-          </Card>
         </TabsContent>
       </Tabs>
 
