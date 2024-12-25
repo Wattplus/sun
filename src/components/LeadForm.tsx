@@ -67,76 +67,84 @@ export const LeadForm = () => {
   };
 
   return (
-    <div className="w-full max-w-3xl mx-auto p-8 rounded-xl bg-[#1a5fb4] text-white">
-      <div className="text-center space-y-3 mb-8">
-        <h2 className="text-3xl font-bold">Demandez votre étude gratuite</h2>
-        <p className="text-gray-100">
-          Découvrez votre potentiel d'économies avec une étude personnalisée sans engagement
-        </p>
+    <div className="relative group">
+      <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 to-green-600 rounded-xl blur opacity-25 group-hover:opacity-75 transition duration-1000"></div>
+      <div className="relative w-full max-w-3xl mx-auto p-8 rounded-xl bg-gradient-to-br from-[#1a5fb4] to-[#0B1221] text-white border border-white/10 backdrop-blur-sm shadow-2xl">
+        <div className="text-center space-y-3 mb-8">
+          <h2 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white via-blue-100 to-white">
+            Demandez votre étude gratuite
+          </h2>
+          <p className="text-gray-100">
+            Découvrez votre potentiel d'économies avec une étude personnalisée sans engagement
+          </p>
+        </div>
+
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <FormField
+              label="Prénom"
+              id="firstName"
+              value={formData.firstName}
+              onChange={handleChange}
+              error={errors.firstName}
+              lightMode
+            />
+            
+            <FormField
+              label="Nom"
+              id="lastName"
+              value={formData.lastName}
+              onChange={handleChange}
+              error={errors.lastName}
+              lightMode
+            />
+          </div>
+          
+          <FormField
+            label="Email"
+            id="email"
+            type="email"
+            value={formData.email}
+            onChange={handleChange}
+            error={errors.email}
+            lightMode
+          />
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <FormField
+              label="Téléphone"
+              id="phone"
+              type="tel"
+              value={formData.phone}
+              onChange={handleChange}
+              error={errors.phone}
+              placeholder="06 12 34 56 78"
+              lightMode
+            />
+            
+            <FormField
+              label="Code postal"
+              id="postalCode"
+              value={formData.postalCode}
+              onChange={handleChange}
+              error={errors.postalCode}
+              placeholder="75001"
+              lightMode
+            />
+          </div>
+
+          <div className="relative group">
+            <div className="absolute -inset-1 bg-gradient-to-r from-green-600 to-green-400 rounded-full blur opacity-70 group-hover:opacity-100 transition duration-200"></div>
+            <Button 
+              type="submit" 
+              className="relative w-full bg-green-500 hover:bg-green-600 text-lg h-14 gap-2 rounded-full"
+            >
+              <Send className="w-5 h-5" />
+              Recevoir mon étude gratuite
+            </Button>
+          </div>
+        </form>
       </div>
-
-      <form onSubmit={handleSubmit} className="space-y-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <FormField
-            label="Prénom"
-            id="firstName"
-            value={formData.firstName}
-            onChange={handleChange}
-            error={errors.firstName}
-            lightMode
-          />
-          
-          <FormField
-            label="Nom"
-            id="lastName"
-            value={formData.lastName}
-            onChange={handleChange}
-            error={errors.lastName}
-            lightMode
-          />
-        </div>
-        
-        <FormField
-          label="Email"
-          id="email"
-          type="email"
-          value={formData.email}
-          onChange={handleChange}
-          error={errors.email}
-          lightMode
-        />
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <FormField
-            label="Téléphone"
-            id="phone"
-            type="tel"
-            value={formData.phone}
-            onChange={handleChange}
-            error={errors.phone}
-            placeholder="06 12 34 56 78"
-            lightMode
-          />
-          
-          <FormField
-            label="Code postal"
-            id="postalCode"
-            value={formData.postalCode}
-            onChange={handleChange}
-            error={errors.postalCode}
-            placeholder="75001"
-            lightMode
-          />
-        </div>
-
-        <Button 
-          type="submit" 
-          className="w-full bg-green-500 hover:bg-green-600 text-lg h-14 gap-2"
-        >
-          <Send className="w-5 h-5" />
-          Recevoir mon étude gratuite
-        </Button>
-      </form>
     </div>
   );
 };
