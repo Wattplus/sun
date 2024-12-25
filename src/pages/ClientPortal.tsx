@@ -7,8 +7,10 @@ import { InstallerRequests } from "@/components/client/dashboard/InstallerReques
 import { DocumentsList } from "@/components/client/documents/DocumentsList";
 import { MessagesList } from "@/components/client/messages/MessagesList";
 import { ClientInfoForm } from "@/components/client/dashboard/ClientInfoForm";
+import { ConsumptionChart } from "@/components/client/dashboard/ConsumptionChart";
+import { SavingsEstimate } from "@/components/client/dashboard/SavingsEstimate";
+import { NextSteps } from "@/components/client/dashboard/NextSteps";
 import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 
 const ClientPortal = () => {
   const [activeTab, setActiveTab] = useState("dashboard");
@@ -58,19 +60,27 @@ const ClientPortal = () => {
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="dashboard">
+          <TabsContent value="dashboard" className="space-y-6">
             <div className="grid gap-6 md:grid-cols-2">
               <ProjectStatus 
                 status={userInfo.projectStatus}
                 lastUpdate={userInfo.lastUpdate}
               />
-              <ClientInfoForm />
-              <InstallerRequests
-                requests={userInfo.installerRequests}
-                onAccept={(id) => console.log('Accept request:', id)}
-                onReject={(id) => console.log('Reject request:', id)}
-              />
+              <SavingsEstimate />
             </div>
+            
+            <div className="grid gap-6 md:grid-cols-2">
+              <ConsumptionChart />
+              <NextSteps />
+            </div>
+
+            <ClientInfoForm />
+            
+            <InstallerRequests
+              requests={userInfo.installerRequests}
+              onAccept={(id) => console.log('Accept request:', id)}
+              onReject={(id) => console.log('Reject request:', id)}
+            />
           </TabsContent>
 
           <TabsContent value="documents">
@@ -104,10 +114,6 @@ const ClientPortal = () => {
                       readOnly
                     />
                   </div>
-                  <Button className="glass-button w-full">
-                    <Shield className="w-4 h-4 mr-2" />
-                    Modifier le mot de passe
-                  </Button>
                 </div>
               </div>
             </Card>
