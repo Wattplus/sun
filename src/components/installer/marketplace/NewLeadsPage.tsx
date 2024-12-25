@@ -1,12 +1,22 @@
 import { useState } from "react";
-import { LeadsList } from "../dashboard/LeadsList";
 import { InstallerBreadcrumb } from "../navigation/InstallerBreadcrumb";
 import { mockAvailableLeads } from "../dashboard/mockAvailableLeads";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { Lead } from "@/types/crm";
-import { ShoppingCart, Package } from "lucide-react";
+import { ShoppingCart, Package, MapPin } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { Checkbox } from "@/components/ui/checkbox";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { formatDistanceToNow } from "date-fns";
+import { fr } from "date-fns/locale";
 
 export function NewLeadsPage() {
   const [selectedLeads, setSelectedLeads] = useState<Lead[]>([]);
@@ -35,7 +45,6 @@ export function NewLeadsPage() {
     }
 
     try {
-      // Here we would normally make an API call to process the bulk purchase
       toast({
         title: "Achat en cours",
         description: `Traitement de l'achat de ${selectedLeads.length} leads...`,
@@ -98,11 +107,63 @@ export function NewLeadsPage() {
         </div>
         
         <div className="glass-panel p-6">
-          <LeadsList 
-            leads={mockAvailableLeads}
-            onLeadSelect={handleLeadSelect}
-            selectedLeads={selectedLeads}
-          />
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="w-12"></TableHead>
+                <TableHead>Client</TableHead>
+                <TableHead>Localisation</TableHead>
+                <TableHead>Type de projet</TableHead>
+                <TableHead>Date</TableHead>
+                <TableHead className="text-right">Prix</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {mockAvailableLeads.map((lead) => (
+                <TableRow key={lead.id} className="cursor-pointer hover:bg-primary/5">
+                  <TableCell>
+                    <Checkbox
+                      checked={selectedLeads.some(l => l.id === lead.id)}
+                      onCheckedChange={() => handleLeadSelect(lead)}
+                      className="data-[state=checked]:bg-primary data-[state=checked]:border-primary"
+                    />
+                  </TableCell>
+                  <TableCell>
+                    <div>
+                      <div className="font-medium">
+                        {lead.firstName} {lead.lastName}
+                      </div>
+                      <div className="text-sm text-muted-foreground">
+                        {lead.email}
+                      </div>
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex items-center gap-1">
+                      <MapPin className="w-4 h-4 text-primary" />
+                      <span>{lead.postalCode} {lead.city}</span>
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    <Badge variant="secondary" className="bg-primary/10">
+                      {lead.projectType === 'residential' ? 'Résidentiel' : 'Professionnel'}
+                    </Badge>
+                  </TableCell>
+                  <TableCell>
+                    {formatDistanceToNow(new Date(lead.createdAt), { 
+                      addSuffix: true,
+                      locale: fr 
+                    })}
+                  </TableCell>
+                  <TableCell className="text-right">
+                    <Badge variant="outline" className="bg-primary/10">
+                      {lead.price}€
+                    </Badge>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
         </div>
       </div>
     </div>
