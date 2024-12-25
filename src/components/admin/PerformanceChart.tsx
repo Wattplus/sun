@@ -15,7 +15,7 @@ const PerformanceChart = () => {
     <motion.div 
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="rounded-xl bg-[#2A2F3C]/50 backdrop-blur-md border border-white/10 p-6"
+      className="rounded-xl bg-[#2A2F3C]/50 backdrop-blur-md border border-[#9b87f5]/20 p-6"
     >
       <h2 className="text-xl font-semibold mb-6 bg-gradient-to-r from-[#9b87f5] to-[#D6BCFA] bg-clip-text text-transparent">
         Performance Mensuelle

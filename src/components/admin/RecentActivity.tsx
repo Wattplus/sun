@@ -18,7 +18,7 @@ const RecentActivity = () => {
     <motion.div 
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="rounded-xl bg-[#2A2F3C]/50 backdrop-blur-md border border-white/10 p-6"
+      className="rounded-xl bg-[#2A2F3C]/50 backdrop-blur-md border border-[#9b87f5]/20 p-6"
     >
       <h2 className="text-xl font-semibold mb-6 bg-gradient-to-r from-[#9b87f5] to-[#D6BCFA] bg-clip-text text-transparent">
         Activité Récente
@@ -30,7 +30,7 @@ const RecentActivity = () => {
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: index * 0.1 }}
-            className="flex items-center justify-between py-3 border-b border-white/10 last:border-0 hover:bg-white/5 rounded-lg transition-colors duration-200 p-2"
+            className="flex items-center justify-between py-3 border-b border-[#9b87f5]/10 last:border-0 hover:bg-[#9b87f5]/5 rounded-lg transition-colors duration-200 p-2"
           >
             <div className="flex items-center space-x-3">
               <div className={`w-2 h-2 rounded-full ${
