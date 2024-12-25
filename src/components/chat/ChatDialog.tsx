@@ -39,7 +39,7 @@ export const ChatDialog = ({ open, onOpenChange }: ChatDialogProps) => {
           Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
         },
         body: JSON.stringify({
-          model: "gpt-4",
+          model: "gpt-4o",
           messages: [
             {
               role: "system",
