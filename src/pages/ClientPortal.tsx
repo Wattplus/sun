@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Home, FileText, MessageSquare, Settings, Shield } from "lucide-react";
+import { Home, FileText, MessageSquare, Settings, Shield, MapPin, Phone, Mail } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ClientNavbar } from "@/components/client/ClientNavbar";
 import { ProjectStatus } from "@/components/client/dashboard/ProjectStatus";
@@ -11,6 +11,7 @@ import { ConsumptionChart } from "@/components/client/dashboard/ConsumptionChart
 import { SavingsEstimate } from "@/components/client/dashboard/SavingsEstimate";
 import { NextSteps } from "@/components/client/dashboard/NextSteps";
 import { Card } from "@/components/ui/card";
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList } from "@/components/ui/breadcrumb";
 
 const ClientPortal = () => {
   const [activeTab, setActiveTab] = useState("dashboard");
@@ -30,15 +31,64 @@ const ClientPortal = () => {
     ]
   });
 
+  const getBreadcrumbText = () => {
+    switch (activeTab) {
+      case "dashboard":
+        return "Tableau de bord";
+      case "documents":
+        return "Documents";
+      case "messages":
+        return "Messages";
+      case "settings":
+        return "Paramètres";
+      default:
+        return "";
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-background-dark to-background-light">
       <ClientNavbar />
       
       <main className="container mx-auto px-4 py-8">
+        {/* Breadcrumb */}
+        <Breadcrumb className="mb-4">
+          <BreadcrumbList>
+            <BreadcrumbItem>
+              <BreadcrumbLink href="/">Accueil</BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbItem>
+              <BreadcrumbLink href="/client">Espace Client</BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbItem>
+              <span className="text-gray-400">{getBreadcrumbText()}</span>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
+
         <div className="mb-8 glass-panel p-6">
           <h1 className="text-3xl font-bold gradient-text">Tableau de bord</h1>
           <p className="text-gray-300 mt-2">Bienvenue, {userInfo.name}</p>
         </div>
+
+        {/* Contact Information Card */}
+        <Card className="glass-panel p-6 mb-6">
+          <h3 className="text-lg font-semibold text-white mb-4">Nos coordonnées</h3>
+          <div className="space-y-3">
+            <div className="flex items-center gap-3 text-gray-300">
+              <MapPin className="w-5 h-5 text-primary" />
+              <span>123 Avenue du Soleil, 75001 Paris</span>
+            </div>
+            <div className="flex items-center gap-3 text-gray-300">
+              <Phone className="w-5 h-5 text-primary" />
+              <a href="tel:0977774164" className="hover:text-primary transition-colors">09 77 77 41 64</a>
+            </div>
+            <div className="flex items-center gap-3 text-gray-300">
+              <Mail className="w-5 h-5 text-primary" />
+              <a href="mailto:mikael@wattplus.org" className="hover:text-primary transition-colors">mikael@wattplus.org</a>
+            </div>
+          </div>
+        </Card>
 
         <Tabs defaultValue="dashboard" className="space-y-6">
           <TabsList className="glass-panel p-1">
