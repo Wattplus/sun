@@ -3,7 +3,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Outlet } from "react-router-dom";
-import AdminDashboard from "@/components/admin/AdminDashboard";
+import { motion } from "framer-motion";
 
 const Admin = () => {
   const [email, setEmail] = useState("");
@@ -37,14 +37,19 @@ const Admin = () => {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
-        <h1 className="text-2xl font-bold text-center mb-6">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-background-dark to-background-light">
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="glass-panel w-full max-w-md p-8 space-y-6"
+      >
+        <h1 className="text-2xl font-bold text-center gradient-text mb-8">
           Connexion Administrateur
         </h1>
-        <form onSubmit={handleLogin} className="space-y-4">
-          <div>
-            <label htmlFor="email" className="block text-sm font-medium mb-1">
+        <form onSubmit={handleLogin} className="space-y-6">
+          <div className="space-y-2">
+            <label htmlFor="email" className="block text-sm font-medium text-white/90">
               Email
             </label>
             <Input
@@ -53,10 +58,12 @@ const Admin = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
+              className="bg-white/10 border-white/20 text-white placeholder:text-white/50"
+              placeholder="votre@email.com"
             />
           </div>
-          <div>
-            <label htmlFor="password" className="block text-sm font-medium mb-1">
+          <div className="space-y-2">
+            <label htmlFor="password" className="block text-sm font-medium text-white/90">
               Mot de passe
             </label>
             <Input
@@ -65,13 +72,18 @@ const Admin = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
+              className="bg-white/10 border-white/20 text-white placeholder:text-white/50"
+              placeholder="••••••••"
             />
           </div>
-          <Button type="submit" className="w-full">
+          <Button 
+            type="submit" 
+            className="w-full glass-button hover:scale-105 transition-transform"
+          >
             Se connecter
           </Button>
         </form>
-      </div>
+      </motion.div>
     </div>
   );
 };
