@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import {
   Table,
   TableBody,
@@ -11,35 +12,53 @@ import {
 } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ClientNavbar } from "@/components/client/ClientNavbar";
-import { FileText, Home, MessageSquare, Settings } from "lucide-react";
+import { FileText, Home, MessageSquare, Settings, Shield } from "lucide-react";
+import { useToast } from "@/components/ui/use-toast";
 
 const ClientPortal = () => {
   const [activeTab, setActiveTab] = useState("dashboard");
+  const { toast } = useToast();
   const [userInfo, setUserInfo] = useState({
     name: "Jean Dupont",
-    email: "jean.dupont@example.com",
+    email: "j********@example.com", // Email masqué
+    phone: "06 ** ** ** 89", // Téléphone masqué
     projectStatus: "En cours d'étude",
     lastUpdate: "2024-03-20",
+    installerRequests: [
+      {
+        id: 1,
+        companyName: "Solar Pro",
+        date: "2024-03-22",
+        status: "pending"
+      }
+    ]
   });
 
-  const documents = [
-    { name: "Étude personnalisée", date: "2024-03-20", status: "Disponible" },
-    { name: "Devis", date: "2024-03-20", status: "En attente" },
-    { name: "Plan d'installation", date: "2024-03-21", status: "En cours" },
-  ];
+  const handleAcceptRequest = (requestId: number) => {
+    // Simuler l'acceptation de la demande
+    setUserInfo(prev => ({
+      ...prev,
+      installerRequests: prev.installerRequests.map(req =>
+        req.id === requestId ? { ...req, status: "accepted" } : req
+      )
+    }));
+    toast({
+      title: "Demande acceptée",
+      description: "L'installateur pourra maintenant vous contacter directement.",
+    });
+  };
 
-  const messages = [
-    {
-      date: "2024-03-20",
-      content: "Votre étude personnalisée est maintenant disponible.",
-      read: true,
-    },
-    {
-      date: "2024-03-21",
-      content: "Un conseiller a été assigné à votre projet.",
-      read: false,
-    },
-  ];
+  const handleRejectRequest = (requestId: number) => {
+    // Simuler le rejet de la demande
+    setUserInfo(prev => ({
+      ...prev,
+      installerRequests: prev.installerRequests.filter(req => req.id !== requestId)
+    }));
+    toast({
+      title: "Demande rejetée",
+      description: "L'installateur ne pourra pas accéder à vos coordonnées.",
+    });
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -84,25 +103,53 @@ const ClientPortal = () => {
                     <p className="text-sm text-gray-500">Dernière mise à jour</p>
                     <p className="font-medium">{userInfo.lastUpdate}</p>
                   </div>
+                  <div className="pt-4 border-t">
+                    <div className="flex items-center gap-2 text-sm text-gray-600">
+                      <Shield className="w-4 h-4 text-green-500" />
+                      <span>Vos coordonnées sont protégées</span>
+                    </div>
+                  </div>
                 </div>
               </Card>
 
               <Card className="p-6">
-                <h3 className="text-lg font-semibold mb-4">Prochaines étapes</h3>
-                <ul className="space-y-3">
-                  <li className="flex items-center text-green-600">
-                    <span className="mr-2">✓</span>
-                    Soumission de la demande
-                  </li>
-                  <li className="flex items-center text-blue-600">
-                    <span className="mr-2">→</span>
-                    Étude personnalisée
-                  </li>
-                  <li className="flex items-center text-gray-400">
-                    <span className="mr-2">○</span>
-                    Visite technique
-                  </li>
-                </ul>
+                <h3 className="text-lg font-semibold mb-4">Demandes d'installateurs</h3>
+                {userInfo.installerRequests.length > 0 ? (
+                  <div className="space-y-4">
+                    {userInfo.installerRequests.map((request) => (
+                      <div key={request.id} className="p-4 border rounded-lg">
+                        <div className="flex justify-between items-start mb-3">
+                          <div>
+                            <p className="font-medium">{request.companyName}</p>
+                            <p className="text-sm text-gray-500">{request.date}</p>
+                          </div>
+                          <Badge variant={request.status === 'pending' ? 'outline' : 'success'}>
+                            {request.status === 'pending' ? 'En attente' : 'Accepté'}
+                          </Badge>
+                        </div>
+                        {request.status === 'pending' && (
+                          <div className="flex gap-2">
+                            <Button 
+                              size="sm" 
+                              onClick={() => handleAcceptRequest(request.id)}
+                            >
+                              Accepter
+                            </Button>
+                            <Button 
+                              size="sm" 
+                              variant="outline"
+                              onClick={() => handleRejectRequest(request.id)}
+                            >
+                              Refuser
+                            </Button>
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-gray-500 text-sm">Aucune demande d'installateur en attente</p>
+                )}
               </Card>
             </div>
           </TabsContent>
