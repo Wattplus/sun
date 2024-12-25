@@ -1,8 +1,8 @@
 import { Lead } from "@/types/crm";
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Euro } from "lucide-react";
+import { Euro, MapPin, Phone, Mail, User, Building2 } from "lucide-react";
 
 interface LeadCardProps {
   lead: Lead;
@@ -12,43 +12,69 @@ interface LeadCardProps {
 
 export const LeadCard = ({ lead, onPurchase, showFullDetails = false }: LeadCardProps) => {
   return (
-    <Card className="w-full">
-      <CardHeader>
-        <CardTitle className="flex justify-between items-center">
-          <span>{lead.projectType}</span>
-          <Badge variant="secondary" className="flex items-center gap-1">
+    <Card className="w-full transition-all duration-300 hover:shadow-lg hover:border-primary/20">
+      <CardHeader className="pb-2">
+        <div className="flex justify-between items-start">
+          <div>
+            <Badge variant="secondary" className="mb-2">
+              {lead.projectType}
+            </Badge>
+            <div className="flex items-center gap-1 text-muted-foreground">
+              <MapPin className="h-4 w-4" />
+              <span>{lead.city} ({lead.postalCode})</span>
+            </div>
+          </div>
+          <Badge variant="outline" className="flex items-center gap-1">
             <Euro className="h-4 w-4" />
             {lead.price}€
           </Badge>
-        </CardTitle>
+        </div>
       </CardHeader>
       <CardContent>
-        <div className="space-y-2">
-          <div>
-            <span className="font-medium">Localisation:</span>
-            <p>{lead.city} ({lead.postalCode})</p>
-          </div>
-          <div>
-            <span className="font-medium">Budget:</span>
-            <p>{lead.budget.toLocaleString()}€</p>
-          </div>
-          {showFullDetails ? (
-            <>
-              <div>
-                <span className="font-medium">Contact:</span>
-                <p>{lead.firstName} {lead.lastName}</p>
-                <p>{lead.email}</p>
-                <p>{lead.phone}</p>
-              </div>
-              <div>
-                <span className="font-medium">Adresse:</span>
-                <p>{lead.address}</p>
-              </div>
-            </>
-          ) : (
-            <div className="text-sm text-muted-foreground">
-              Les coordonnées seront visibles après l'achat
+        <div className="space-y-3">
+          <div className="flex items-center gap-2">
+            <Building2 className="h-4 w-4 text-primary" />
+            <div>
+              <span className="text-sm text-muted-foreground">Budget estimé:</span>
+              <p className="font-medium">{lead.budget.toLocaleString()}€</p>
             </div>
+          </div>
+          
+          {showFullDetails ? (
+            <div className="space-y-3 border-t border-border/50 pt-3 mt-3">
+              <div className="flex items-center gap-2">
+                <User className="h-4 w-4 text-primary" />
+                <div>
+                  <span className="text-sm text-muted-foreground">Contact:</span>
+                  <p>{lead.firstName} {lead.lastName}</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                <Phone className="h-4 w-4 text-primary" />
+                <div>
+                  <span className="text-sm text-muted-foreground">Téléphone:</span>
+                  <p>{lead.phone}</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                <Mail className="h-4 w-4 text-primary" />
+                <div>
+                  <span className="text-sm text-muted-foreground">Email:</span>
+                  <p>{lead.email}</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                <MapPin className="h-4 w-4 text-primary" />
+                <div>
+                  <span className="text-sm text-muted-foreground">Adresse:</span>
+                  <p>{lead.address}</p>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <p className="text-sm text-muted-foreground mt-3">
+              Les coordonnées seront visibles après l'achat
+            </p>
           )}
         </div>
       </CardContent>
@@ -58,6 +84,7 @@ export const LeadCard = ({ lead, onPurchase, showFullDetails = false }: LeadCard
             className="w-full" 
             onClick={() => onPurchase(lead)}
           >
+            <Euro className="h-4 w-4 mr-2" />
             Acheter ce lead
           </Button>
         )}
