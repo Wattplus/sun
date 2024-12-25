@@ -4,7 +4,7 @@ import { mockAvailableLeads } from "../dashboard/mockAvailableLeads";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { Lead } from "@/types/crm";
-import { ShoppingCart, Package, MapPin } from "lucide-react";
+import { ShoppingCart, Package, MapPin, Filter, ArrowUpDown } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -17,9 +17,14 @@ import {
 } from "@/components/ui/table";
 import { formatDistanceToNow } from "date-fns";
 import { fr } from "date-fns/locale";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
 
 export function NewLeadsPage() {
   const [selectedLeads, setSelectedLeads] = useState<Lead[]>([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [projectTypeFilter, setProjectTypeFilter] = useState<string>("all");
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
   const { toast } = useToast();
 
   const handleLeadSelect = (lead: Lead) => {
@@ -67,6 +72,21 @@ export function NewLeadsPage() {
     }
   };
 
+  const filteredLeads = mockAvailableLeads
+    .filter(lead => {
+      const matchesSearch = 
+        lead.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        lead.lastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        lead.city.toLowerCase().includes(searchTerm.toLowerCase());
+      
+      const matchesType = projectTypeFilter === "all" || lead.projectType === projectTypeFilter;
+      
+      return matchesSearch && matchesType;
+    })
+    .sort((a, b) => {
+      return sortOrder === "asc" ? a.price - b.price : b.price - a.price;
+    });
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-background/80 to-background p-6 space-y-8">
       <InstallerBreadcrumb />
@@ -107,6 +127,38 @@ export function NewLeadsPage() {
         </div>
         
         <div className="glass-panel p-6">
+          <div className="flex gap-4 mb-6">
+            <div className="flex-1">
+              <div className="relative">
+                <Input
+                  placeholder="Rechercher par nom ou ville..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-10"
+                />
+                <Filter className="w-4 h-4 absolute left-3 top-3 text-muted-foreground" />
+              </div>
+            </div>
+            <Select value={projectTypeFilter} onValueChange={setProjectTypeFilter}>
+              <SelectTrigger className="w-[200px]">
+                <SelectValue placeholder="Type de projet" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Tous les types</SelectItem>
+                <SelectItem value="residential">Résidentiel</SelectItem>
+                <SelectItem value="professional">Professionnel</SelectItem>
+              </SelectContent>
+            </Select>
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={() => setSortOrder(sortOrder === "asc" ? "desc" : "asc")}
+              className="shrink-0"
+            >
+              <ArrowUpDown className="h-4 w-4" />
+            </Button>
+          </div>
+
           <Table>
             <TableHeader>
               <TableRow>
@@ -119,7 +171,7 @@ export function NewLeadsPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {mockAvailableLeads.map((lead) => (
+              {filteredLeads.map((lead) => (
                 <TableRow key={lead.id} className="cursor-pointer hover:bg-primary/5">
                   <TableCell>
                     <Checkbox
