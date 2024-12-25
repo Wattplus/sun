@@ -12,11 +12,11 @@ interface LeadCardProps {
 
 export const LeadCard = ({ lead, onPurchase, showFullDetails = false }: LeadCardProps) => {
   return (
-    <Card className="w-full transition-all duration-300 hover:shadow-lg hover:border-primary/20">
+    <Card className="w-full transition-all duration-300 hover:shadow-lg hover:border-[#33C3F0]/20 bg-background/50 backdrop-blur-md">
       <CardHeader className="pb-2">
         <div className="flex justify-between items-start">
           <div>
-            <Badge variant="secondary" className="mb-2">
+            <Badge variant="secondary" className="mb-2 bg-[#1EAEDB]/10 text-[#1EAEDB]">
               {lead.projectType}
             </Badge>
             <div className="flex items-center gap-1 text-muted-foreground">
@@ -24,7 +24,7 @@ export const LeadCard = ({ lead, onPurchase, showFullDetails = false }: LeadCard
               <span>{lead.city} ({lead.postalCode})</span>
             </div>
           </div>
-          <Badge variant="outline" className="flex items-center gap-1">
+          <Badge variant="outline" className="flex items-center gap-1 border-[#33C3F0]/20">
             <Euro className="h-4 w-4" />
             {lead.price}€
           </Badge>
@@ -33,7 +33,7 @@ export const LeadCard = ({ lead, onPurchase, showFullDetails = false }: LeadCard
       <CardContent>
         <div className="space-y-3">
           <div className="flex items-center gap-2">
-            <Building2 className="h-4 w-4 text-primary" />
+            <Building2 className="h-4 w-4 text-[#1EAEDB]" />
             <div>
               <span className="text-sm text-muted-foreground">Budget estimé:</span>
               <p className="font-medium">{lead.budget.toLocaleString()}€</p>
@@ -41,30 +41,30 @@ export const LeadCard = ({ lead, onPurchase, showFullDetails = false }: LeadCard
           </div>
           
           {showFullDetails ? (
-            <div className="space-y-3 border-t border-border/50 pt-3 mt-3">
+            <div className="space-y-3 border-t border-[#33C3F0]/20 pt-3 mt-3">
               <div className="flex items-center gap-2">
-                <User className="h-4 w-4 text-primary" />
+                <User className="h-4 w-4 text-[#1EAEDB]" />
                 <div>
                   <span className="text-sm text-muted-foreground">Contact:</span>
                   <p>{lead.firstName} {lead.lastName}</p>
                 </div>
               </div>
               <div className="flex items-center gap-2">
-                <Phone className="h-4 w-4 text-primary" />
+                <Phone className="h-4 w-4 text-[#1EAEDB]" />
                 <div>
                   <span className="text-sm text-muted-foreground">Téléphone:</span>
                   <p>{lead.phone}</p>
                 </div>
               </div>
               <div className="flex items-center gap-2">
-                <Mail className="h-4 w-4 text-primary" />
+                <Mail className="h-4 w-4 text-[#1EAEDB]" />
                 <div>
                   <span className="text-sm text-muted-foreground">Email:</span>
                   <p>{lead.email}</p>
                 </div>
               </div>
               <div className="flex items-center gap-2">
-                <MapPin className="h-4 w-4 text-primary" />
+                <MapPin className="h-4 w-4 text-[#1EAEDB]" />
                 <div>
                   <span className="text-sm text-muted-foreground">Adresse:</span>
                   <p>{lead.address}</p>
@@ -81,7 +81,7 @@ export const LeadCard = ({ lead, onPurchase, showFullDetails = false }: LeadCard
       <CardFooter>
         {!showFullDetails && (
           <Button 
-            className="w-full" 
+            className="w-full bg-[#1EAEDB] hover:bg-[#0FA0CE]" 
             onClick={() => onPurchase(lead)}
           >
             <Euro className="h-4 w-4 mr-2" />

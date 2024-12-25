@@ -10,13 +10,13 @@
     --card-foreground: 210 40% 98%;
     --popover: 222 47% 11%;
     --popover-foreground: 210 40% 98%;
-    --primary: 199 75% 49%;
+    --primary: 195 75% 49%;
     --primary-foreground: 210 40% 98%;
     --secondary: 222 47% 11%;
     --secondary-foreground: 210 40% 98%;
     --muted: 215 27% 17%;
     --muted-foreground: 215 20% 65%;
-    --accent: 217 91% 60%;
+    --accent: 199 89% 48%;
     --accent-foreground: 210 40% 98%;
     --destructive: 0 62% 30%;
     --destructive-foreground: 210 40% 98%;
@@ -33,25 +33,25 @@
   }
   body {
     @apply bg-background text-foreground;
-    background: linear-gradient(to bottom, #0B1221 0%, #1a5fb4 100%);
+    background: linear-gradient(to bottom, #0B1221 0%, #1EAEDB 100%);
     min-height: 100vh;
   }
 }
 
 .glass-panel {
-  @apply bg-[#0B1221]/50 backdrop-blur-md border border-white/10 rounded-2xl shadow-xl;
+  @apply bg-[#0B1221]/50 backdrop-blur-md border border-[#33C3F0]/10 rounded-2xl shadow-xl;
 }
 
 .glass-button {
   @apply relative overflow-hidden px-8 py-3 rounded-full shadow-lg transform transition-all duration-300;
-  background: linear-gradient(90deg, rgba(11,18,33,0.5) 0%, rgba(26,95,180,0.5) 100%);
+  background: linear-gradient(90deg, rgba(11,18,33,0.5) 0%, rgba(30,174,219,0.5) 100%);
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255,255,255,0.1);
 }
 
 .glass-button:hover {
   @apply scale-105;
-  background: linear-gradient(90deg, rgba(11,18,33,0.7) 0%, rgba(26,95,180,0.7) 100%);
+  background: linear-gradient(90deg, rgba(11,18,33,0.7) 0%, rgba(30,174,219,0.7) 100%);
   border-color: rgba(255,255,255,0.2);
 }
 
