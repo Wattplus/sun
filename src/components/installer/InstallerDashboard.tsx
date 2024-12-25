@@ -15,6 +15,7 @@ import { NotificationsList } from "./dashboard/NotificationsList";
 import { PrepaidBalance } from "./dashboard/PrepaidBalance";
 import { PurchasedLeads } from "./dashboard/PurchasedLeads";
 import { InstallerProfile } from "@/pages/InstallerProfile";
+import { SubscriptionPlans } from "./subscription/SubscriptionPlans";
 
 export function InstallerDashboard() {
   const [activeTab, setActiveTab] = useState("dashboard");
@@ -63,12 +64,13 @@ export function InstallerDashboard() {
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-5 mb-4">
+        <TabsList className="grid w-full grid-cols-6 mb-4">
           <TabsTrigger value="dashboard">Accueil</TabsTrigger>
           <TabsTrigger value="leads">Leads</TabsTrigger>
           <TabsTrigger value="purchased">Leads Achetés</TabsTrigger>
           <TabsTrigger value="messages">Messages</TabsTrigger>
           <TabsTrigger value="profile">Profil</TabsTrigger>
+          <TabsTrigger value="subscription">Abonnement</TabsTrigger>
         </TabsList>
 
         <TabsContent value="dashboard">
@@ -130,6 +132,12 @@ export function InstallerDashboard() {
 
         <TabsContent value="profile">
           <InstallerProfile />
+        </TabsContent>
+
+        <TabsContent value="subscription">
+          <Card className="p-4">
+            <SubscriptionPlans />
+          </Card>
         </TabsContent>
       </Tabs>
 
