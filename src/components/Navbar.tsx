@@ -1,6 +1,7 @@
 import { Button } from "./ui/button";
-import { Phone, Menu, X, Sun } from "lucide-react";
+import { Phone, Menu, X, Sun, User, UserCheck } from "lucide-react";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 export const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -24,6 +25,16 @@ export const Navbar = () => {
             <a href="#testimonials" className="text-blue-100 hover:text-white transition-colors">
               Témoignages
             </a>
+            <div className="flex items-center space-x-4">
+              <Link to="/client" className="flex items-center text-blue-100 hover:text-white transition-colors">
+                <User className="w-4 h-4 mr-2" />
+                Mon compte
+              </Link>
+              <Link to="/espace-installateur" className="flex items-center text-blue-100 hover:text-white transition-colors">
+                <UserCheck className="w-4 h-4 mr-2" />
+                Compte installateur
+              </Link>
+            </div>
             <Button 
               onClick={() => document.getElementById('lead-form')?.scrollIntoView({ behavior: 'smooth' })}
               className="bg-green-500 hover:bg-green-600 text-white rounded-full"
@@ -53,6 +64,14 @@ export const Navbar = () => {
               <a href="#testimonials" className="text-blue-100 hover:text-white" onClick={() => setIsMenuOpen(false)}>
                 Témoignages
               </a>
+              <Link to="/client" className="flex items-center text-blue-100 hover:text-white" onClick={() => setIsMenuOpen(false)}>
+                <User className="w-4 h-4 mr-2" />
+                Mon compte
+              </Link>
+              <Link to="/espace-installateur" className="flex items-center text-blue-100 hover:text-white" onClick={() => setIsMenuOpen(false)}>
+                <UserCheck className="w-4 h-4 mr-2" />
+                Compte installateur
+              </Link>
               <Button 
                 onClick={() => {
                   document.getElementById('lead-form')?.scrollIntoView({ behavior: 'smooth' });
