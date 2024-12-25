@@ -15,8 +15,6 @@ export const ProjectTypeSelect = ({ value, onChange }: ProjectTypeSelectProps) =
         </SelectTrigger>
         <SelectContent>
           <SelectItem value="Installation Panneaux Solaires">Installation Panneaux Solaires</SelectItem>
-          <SelectItem value="Rénovation">Rénovation</SelectItem>
-          <SelectItem value="Extension">Extension</SelectItem>
         </SelectContent>
       </Select>
     </div>

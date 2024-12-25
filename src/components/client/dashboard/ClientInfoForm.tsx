@@ -40,7 +40,7 @@ export const ClientInfoForm = ({ onMonthlyBillUpdate }: Props) => {
     postalCode: "75001",
     city: "",
     budget: "15000",
-    projectType: "Installation Panneaux Solaires"
+    projectType: "Installation Panneaux Solaires" // Valeur par défaut
   });
 
   const [errors, setErrors] = useState<Errors>({});
@@ -109,9 +109,9 @@ export const ClientInfoForm = ({ onMonthlyBillUpdate }: Props) => {
     <Card className="p-6">
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="space-y-2">
-          <h2 className="text-2xl font-semibold">Complétez vos informations</h2>
+          <h2 className="text-2xl font-semibold">Installation Panneaux Photovoltaïques</h2>
           <p className="text-muted-foreground">
-            Ces informations nous permettront de mieux évaluer vos besoins en installation solaire
+            Complétez vos informations pour recevoir une étude personnalisée de votre projet solaire
           </p>
         </div>
 
@@ -151,11 +151,6 @@ export const ClientInfoForm = ({ onMonthlyBillUpdate }: Props) => {
             value={clientInfo.budget}
             onChange={handleChange}
             error={errors.budget}
-          />
-
-          <ProjectTypeSelect
-            value={clientInfo.projectType}
-            onChange={(value) => handleSelectChange(value, "projectType")}
           />
 
           <motion.div
