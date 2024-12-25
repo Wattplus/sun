@@ -1,9 +1,8 @@
-import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import { Card } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Input } from "@/components/ui/input";
-import { MapPin, Euro, Phone, Mail } from "lucide-react";
+import { MapPin, Euro, Phone, Mail, Lock } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
 import { Lead } from "@/types/crm";
@@ -16,15 +15,13 @@ export const LeadsList = ({ leads }: LeadsListProps) => {
   const { toast } = useToast();
   const [searchTerm, setSearchTerm] = useState("");
 
-  const handleBuyLead = async (leadId: string, type: "mutualise" | "exclusif") => {
+  const handleBuyLead = async (leadId: string) => {
     try {
-      const priceId = type === 'exclusif' 
-        ? 'price_1QZyKUFOePj4Hv47qEFQ1KzF' 
-        : 'price_1QZyJpFOePj4Hv47sd76eDOz';
-
+      const priceId = 'price_1QZyJpFOePj4Hv47sd76eDOz';
+      
       toast({
         title: "Achat en cours",
-        description: "Traitement de votre demande...",
+        description: "Redirection vers la page de paiement...",
       });
 
       const response = await fetch(`https://dqzsycxxgltztufrhams.supabase.co/functions/v1/create-lead-checkout`, {
@@ -35,7 +32,6 @@ export const LeadsList = ({ leads }: LeadsListProps) => {
         },
         body: JSON.stringify({
           leadId,
-          type,
           priceId
         }),
       });
@@ -55,7 +51,7 @@ export const LeadsList = ({ leads }: LeadsListProps) => {
 
   const handleContact = async (leadId: string, method: "phone" | "email") => {
     try {
-      const priceId = 'price_1QZyJpFOePj4Hv47sd76eDOz'; // Prix pour accéder aux contacts
+      const priceId = 'price_1QZyJpFOePj4Hv47sd76eDOz';
       
       toast({
         title: "Achat en cours",
@@ -89,38 +85,52 @@ export const LeadsList = ({ leads }: LeadsListProps) => {
   };
 
   const filteredLeads = leads.filter(lead => 
-    lead.city.toLowerCase().includes(searchTerm.toLowerCase())
+    lead.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    lead.postalCode.includes(searchTerm)
   );
 
+  const maskSensitiveInfo = (text: string) => "•".repeat(text.length);
+
   return (
-    <div className="space-y-4">
-      <div className="flex justify-between items-center">
-        <h2 className="text-lg font-medium">Leads Disponibles</h2>
+    <Card className="p-4">
+      <div className="mb-4">
         <Input
-          placeholder="Rechercher par ville..."
-          className="max-w-[200px]"
+          placeholder="Rechercher par prénom ou code postal..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
+          className="max-w-sm"
         />
       </div>
 
-      <ScrollArea className="h-[400px]">
-        <div className="space-y-3">
+      <ScrollArea className="h-[600px] pr-4">
+        <div className="space-y-4">
           {filteredLeads.map((lead) => (
             <Card key={lead.id} className="p-4">
               <div className="flex justify-between items-start">
                 <div className="space-y-2">
-                  <Badge variant="secondary" className="mb-2">
-                    {lead.projectType}
-                  </Badge>
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <MapPin className="h-4 w-4" />
-                    {lead.city}
+                  <div className="flex items-center gap-2">
+                    <span className="font-medium">{lead.firstName}</span>
+                    <span className="text-muted-foreground">{maskSensitiveInfo(lead.lastName)}</span>
                   </div>
-                  <div className="flex items-center gap-2 text-sm">
+                  
+                  <div className="flex items-center gap-2 text-muted-foreground">
+                    <MapPin className="h-4 w-4" />
+                    <span>{lead.postalCode}</span>
+                    <Lock className="h-3 w-3 text-orange-500" title="Adresse complète masquée" />
+                  </div>
+
+                  <div className="flex items-center gap-2 text-muted-foreground">
                     <Euro className="h-4 w-4" />
                     Budget: {lead.budget.toLocaleString()}€
                   </div>
+
+                  {lead.projectDetails && (
+                    <div className="text-sm text-muted-foreground mt-2">
+                      <strong>Détails du projet:</strong>
+                      <p>{lead.projectDetails}</p>
+                    </div>
+                  )}
+
                   <div className="flex gap-2 mt-2">
                     <Button 
                       size="sm" 
@@ -129,6 +139,7 @@ export const LeadsList = ({ leads }: LeadsListProps) => {
                       className="flex items-center gap-2"
                     >
                       <Phone className="h-4 w-4" />
+                      <Lock className="h-3 w-3" />
                       9€ Appeler
                     </Button>
                     <Button 
@@ -138,30 +149,24 @@ export const LeadsList = ({ leads }: LeadsListProps) => {
                       className="flex items-center gap-2"
                     >
                       <Mail className="h-4 w-4" />
+                      <Lock className="h-3 w-3" />
                       9€ Email
                     </Button>
                   </div>
                 </div>
-                <div className="flex flex-col gap-2">
-                  <Button 
-                    size="sm"
-                    onClick={() => handleBuyLead(lead.id, "mutualise")}
-                  >
-                    19€ Mutualisé
-                  </Button>
-                  <Button 
-                    size="sm"
-                    variant="secondary"
-                    onClick={() => handleBuyLead(lead.id, "exclusif")}
-                  >
-                    35€ Exclusif
-                  </Button>
-                </div>
+
+                <Button
+                  variant="default"
+                  onClick={() => handleBuyLead(lead.id)}
+                  className="bg-green-600 hover:bg-green-700"
+                >
+                  Acheter ce lead
+                </Button>
               </div>
             </Card>
           ))}
         </div>
       </ScrollArea>
-    </div>
+    </Card>
   );
 };
