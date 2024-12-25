@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Input } from "@/components/ui/input";
-import { MapPin, Euro } from "lucide-react";
+import { MapPin, Euro, Phone, Mail } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import { useState } from "react";
 import { Lead } from "@/types/crm";
@@ -21,6 +21,11 @@ export const LeadsList = ({ leads }: LeadsListProps) => {
       const priceId = type === 'exclusif' 
         ? 'price_1QZyKUFOePj4Hv47qEFQ1KzF' 
         : 'price_1QZyJpFOePj4Hv47sd76eDOz';
+
+      toast({
+        title: "Achat en cours",
+        description: "Traitement de votre demande...",
+      });
 
       const response = await fetch(`https://dqzsycxxgltztufrhams.supabase.co/functions/v1/create-lead-checkout`, {
         method: "POST",
@@ -48,6 +53,13 @@ export const LeadsList = ({ leads }: LeadsListProps) => {
     }
   };
 
+  const handleContact = (method: "phone" | "email") => {
+    toast({
+      title: "Contact",
+      description: `La fonction de ${method === "phone" ? "téléphone" : "email"} sera bientôt disponible`,
+    });
+  };
+
   const filteredLeads = leads.filter(lead => 
     lead.city.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -58,7 +70,7 @@ export const LeadsList = ({ leads }: LeadsListProps) => {
         <h2 className="text-lg font-medium">Leads Disponibles</h2>
         <Input
           placeholder="Rechercher par ville..."
-          className="max-w-[200px] glass-button"
+          className="max-w-[200px]"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
@@ -67,9 +79,9 @@ export const LeadsList = ({ leads }: LeadsListProps) => {
       <ScrollArea className="h-[400px]">
         <div className="space-y-3">
           {filteredLeads.map((lead) => (
-            <Card key={lead.id} className="p-3 glass-panel">
+            <Card key={lead.id} className="p-4">
               <div className="flex justify-between items-start">
-                <div>
+                <div className="space-y-2">
                   <Badge variant="secondary" className="mb-2">
                     {lead.projectType}
                   </Badge>
@@ -77,15 +89,25 @@ export const LeadsList = ({ leads }: LeadsListProps) => {
                     <MapPin className="h-4 w-4" />
                     {lead.city}
                   </div>
-                  <div className="mt-2 text-sm">
+                  <div className="flex items-center gap-2 text-sm">
+                    <Euro className="h-4 w-4" />
                     Budget: {lead.budget.toLocaleString()}€
+                  </div>
+                  <div className="flex gap-2 mt-2">
+                    <Button size="sm" variant="outline" onClick={() => handleContact("phone")}>
+                      <Phone className="h-4 w-4 mr-1" />
+                      Appeler
+                    </Button>
+                    <Button size="sm" variant="outline" onClick={() => handleContact("email")}>
+                      <Mail className="h-4 w-4 mr-1" />
+                      Email
+                    </Button>
                   </div>
                 </div>
                 <div className="flex flex-col gap-2">
                   <Button 
                     size="sm"
                     onClick={() => handleBuyLead(lead.id, "mutualise")}
-                    className="glass-button"
                   >
                     19€ Mutualisé
                   </Button>
@@ -93,7 +115,6 @@ export const LeadsList = ({ leads }: LeadsListProps) => {
                     size="sm"
                     variant="secondary"
                     onClick={() => handleBuyLead(lead.id, "exclusif")}
-                    className="glass-button"
                   >
                     35€ Exclusif
                   </Button>
