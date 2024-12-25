@@ -19,6 +19,7 @@ export const subscriptionPlans: SubscriptionPlan[] = [
     features: [
       'Accès aux leads de base',
       'Maximum 5 leads par mois',
+      'Prix standard des leads',
       'Profil de base',
     ],
   },
@@ -31,6 +32,7 @@ export const subscriptionPlans: SubscriptionPlan[] = [
     features: [
       'Accès prioritaire aux leads',
       'Leads illimités',
+      '-10% sur tous les leads',
       'Profil premium',
       'Support prioritaire',
       'Statistiques avancées',
@@ -45,6 +47,7 @@ export const subscriptionPlans: SubscriptionPlan[] = [
     features: [
       'Tous les avantages Pro',
       'Leads exclusifs',
+      '-20% sur tous les leads',
       'API d\'intégration',
       'Support dédié',
       'Formation personnalisée',
