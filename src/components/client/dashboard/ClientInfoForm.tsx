@@ -3,7 +3,7 @@ import { FormField } from "@/components/form/FormField";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import { Save, CheckCircle2 } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -49,7 +49,6 @@ export const ClientInfoForm = () => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setClientInfo(prev => ({ ...prev, [name]: value }));
-    // Clear error when user types
     if (errors[name as keyof ClientInfo]) {
       setErrors(prev => ({ ...prev, [name]: undefined }));
     }
@@ -68,7 +67,7 @@ export const ClientInfoForm = () => {
       toast({
         title: "Informations mises à jour",
         description: "Vos informations ont été enregistrées avec succès.",
-        icon: <CheckCircle2 className="h-4 w-4 text-green-500" />
+        duration: 3000
       });
     }
   };
@@ -96,10 +95,18 @@ export const ClientInfoForm = () => {
                 <SelectValue placeholder="Sélectionnez le type de toit" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="tuiles">Tuiles</SelectItem>
-                <SelectItem value="ardoises">Ardoises</SelectItem>
-                <SelectItem value="tole">Tôle</SelectItem>
-                <SelectItem value="terrasse">Terrasse</SelectItem>
+                <SelectItem value="tuiles-plates">Tuiles plates</SelectItem>
+                <SelectItem value="tuiles-mecaniques">Tuiles mécaniques</SelectItem>
+                <SelectItem value="tuiles-romaines">Tuiles romaines</SelectItem>
+                <SelectItem value="ardoises-naturelles">Ardoises naturelles</SelectItem>
+                <SelectItem value="ardoises-fibrociment">Ardoises fibrociment</SelectItem>
+                <SelectItem value="bac-acier">Bac acier</SelectItem>
+                <SelectItem value="zinc">Zinc</SelectItem>
+                <SelectItem value="tole-ondulee">Tôle ondulée</SelectItem>
+                <SelectItem value="terrasse-beton">Terrasse béton</SelectItem>
+                <SelectItem value="terrasse-graviers">Terrasse gravillonnée</SelectItem>
+                <SelectItem value="shingle">Shingle</SelectItem>
+                <SelectItem value="autre">Autre</SelectItem>
               </SelectContent>
             </Select>
             {errors.roofType && <p className="text-red-400 text-sm mt-1">{errors.roofType}</p>}
