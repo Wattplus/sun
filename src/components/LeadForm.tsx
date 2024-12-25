@@ -4,6 +4,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { FormField } from "./form/FormField";
 import { validateEmail, validatePhone, validatePostalCode } from "@/utils/formValidation";
 import { Send } from "lucide-react";
+import emailjs from '@emailjs/browser';
 
 interface FormData {
   firstName: string;
@@ -16,6 +17,7 @@ interface FormData {
 export const LeadForm = () => {
   const { toast } = useToast();
   const [errors, setErrors] = useState<Partial<FormData>>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState<FormData>({
     firstName: "",
     lastName: "",
@@ -50,20 +52,51 @@ export const LeadForm = () => {
     
     if (!validateForm()) return;
 
-    console.log("Form submitted:", formData);
-    
-    toast({
-      title: "Demande envoyée avec succès !",
-      description: "Votre étude personnalisée vous sera envoyée très prochainement.",
-    });
-    
-    setFormData({
-      firstName: "",
-      lastName: "",
-      email: "",
-      phone: "",
-      postalCode: "",
-    });
+    setIsSubmitting(true);
+
+    try {
+      const templateParams = {
+        from_name: `${formData.firstName} ${formData.lastName}`,
+        from_email: formData.email,
+        phone: formData.phone,
+        postal_code: formData.postalCode,
+        to_name: "Service Commercial",
+        message: `Nouvelle demande d'étude :
+          Nom complet : ${formData.firstName} ${formData.lastName}
+          Email : ${formData.email}
+          Téléphone : ${formData.phone}
+          Code postal : ${formData.postalCode}`
+      };
+
+      await emailjs.send(
+        'service_611ohbh',
+        'template_id', // Vous devrez créer un template dans EmailJS et utiliser son ID ici
+        templateParams,
+        '12Wtu7mylEymnNxyV' // Votre clé publique
+      );
+
+      toast({
+        title: "Demande envoyée avec succès !",
+        description: "Votre étude personnalisée vous sera envoyée très prochainement.",
+      });
+      
+      setFormData({
+        firstName: "",
+        lastName: "",
+        email: "",
+        phone: "",
+        postalCode: "",
+      });
+    } catch (error) {
+      console.error('Error sending email:', error);
+      toast({
+        title: "Erreur lors de l'envoi",
+        description: "Un problème est survenu lors de l'envoi de votre demande. Veuillez réessayer.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -138,9 +171,10 @@ export const LeadForm = () => {
             <Button 
               type="submit" 
               className="relative w-full bg-green-500 hover:bg-green-600 text-lg h-14 gap-2 rounded-full"
+              disabled={isSubmitting}
             >
               <Send className="w-5 h-5" />
-              Recevoir mon étude gratuite
+              {isSubmitting ? "Envoi en cours..." : "Recevoir mon étude gratuite"}
             </Button>
           </div>
         </form>
