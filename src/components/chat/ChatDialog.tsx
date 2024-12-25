@@ -33,12 +33,14 @@ export const ChatDialog = ({ open, onOpenChange }: ChatDialogProps) => {
 
     try {
       console.log("Sending request to OpenAI API...");
-      const response = await fetch("/api/chat", {
+      const response = await fetch("/api/v1/chat/completions", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": `Bearer ${import.meta.env.VITE_OPENAI_API_KEY}`,
         },
         body: JSON.stringify({
+          model: "gpt-4",
           messages: [
             {
               role: "system",
@@ -47,6 +49,8 @@ export const ChatDialog = ({ open, onOpenChange }: ChatDialogProps) => {
             ...messages,
             userMessage,
           ],
+          temperature: 0.7,
+          max_tokens: 500,
         }),
       });
 
