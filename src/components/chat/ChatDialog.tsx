@@ -32,14 +32,13 @@ export const ChatDialog = ({ open, onOpenChange }: ChatDialogProps) => {
     setIsLoading(true);
 
     try {
-      const response = await fetch("https://api.openai.com/v1/chat/completions", {
+      console.log("Sending request to OpenAI API...");
+      const response = await fetch("/api/chat", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
         },
         body: JSON.stringify({
-          model: "gpt-4o",
           messages: [
             {
               role: "system",
@@ -48,8 +47,6 @@ export const ChatDialog = ({ open, onOpenChange }: ChatDialogProps) => {
             ...messages,
             userMessage,
           ],
-          temperature: 0.7,
-          max_tokens: 500,
         }),
       });
 
@@ -81,6 +78,7 @@ export const ChatDialog = ({ open, onOpenChange }: ChatDialogProps) => {
         }, 2000);
       }
     } catch (error) {
+      console.error("Chat error:", error);
       toast({
         title: "Erreur",
         description: "Une erreur est survenue lors de la communication avec l'assistant.",
@@ -93,10 +91,10 @@ export const ChatDialog = ({ open, onOpenChange }: ChatDialogProps) => {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[500px] h-[600px] flex flex-col p-0">
+      <DialogContent className="sm:max-w-[500px] h-[600px] flex flex-col p-0" aria-describedby="chat-description">
         <div className="p-6 border-b">
-          <h2 className="text-2xl font-semibold">Comment puis-je vous aider ?</h2>
-          <p className="text-sm text-muted-foreground">
+          <h2 className="text-2xl font-semibold" id="chat-title">Comment puis-je vous aider ?</h2>
+          <p className="text-sm text-muted-foreground" id="chat-description">
             Je suis là pour répondre à vos questions sur les panneaux solaires
           </p>
         </div>
