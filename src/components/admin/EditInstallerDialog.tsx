@@ -17,6 +17,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import { Switch } from "@/components/ui/switch"
+import { Label } from "@/components/ui/label"
 
 interface EditInstallerDialogProps {
   installer: Installer | null
@@ -32,9 +34,12 @@ export function EditInstallerDialog({
   onSave,
 }: EditInstallerDialogProps) {
   const [formData, setFormData] = useState<Partial<Installer>>(installer || {})
+  const [isNationwide, setIsNationwide] = useState(false)
 
   useEffect(() => {
     if (installer) {
+      const nationwide = installer.zones.includes("Toute France")
+      setIsNationwide(nationwide)
       setFormData(installer)
     }
   }, [installer])
@@ -42,8 +47,28 @@ export function EditInstallerDialog({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     if (installer && formData) {
-      onSave({ ...installer, ...formData })
+      let zones = isNationwide ? ["Toute France"] : formData.zones || []
+      if (!isNationwide && formData.zones) {
+        zones = formData.zones.filter(zone => zone !== "Toute France")
+      }
+      onSave({ ...installer, ...formData, zones })
       onOpenChange(false)
+    }
+  }
+
+  const handleZonesChange = (value: string) => {
+    if (!isNationwide) {
+      const zones = value.split(",").map((zone) => zone.trim()).filter(Boolean)
+      setFormData({ ...formData, zones })
+    }
+  }
+
+  const handleNationwideChange = (checked: boolean) => {
+    setIsNationwide(checked)
+    if (checked) {
+      setFormData({ ...formData, zones: ["Toute France"] })
+    } else {
+      setFormData({ ...formData, zones: [] })
     }
   }
 
@@ -114,21 +139,30 @@ export function EditInstallerDialog({
                 className="bg-background border-input"
               />
             </div>
-            <div>
-              <label htmlFor="zones" className="text-sm font-medium">
-                Zones d'intervention (séparées par des virgules)
-              </label>
-              <Input
-                id="zones"
-                value={formData.zones?.join(", ") || ""}
-                onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    zones: e.target.value.split(",").map((zone) => zone.trim()),
-                  })
-                }
-                className="bg-background border-input"
-              />
+            <div className="space-y-4">
+              <div className="flex items-center space-x-2">
+                <Switch
+                  id="nationwide"
+                  checked={isNationwide}
+                  onCheckedChange={handleNationwideChange}
+                />
+                <Label htmlFor="nationwide">Toute France</Label>
+              </div>
+              {!isNationwide && (
+                <div>
+                  <label htmlFor="zones" className="text-sm font-medium">
+                    Zones d'intervention (séparées par des virgules)
+                  </label>
+                  <Input
+                    id="zones"
+                    value={formData.zones?.join(", ") || ""}
+                    onChange={(e) => handleZonesChange(e.target.value)}
+                    className="bg-background border-input"
+                    placeholder="75, 92, 93..."
+                    disabled={isNationwide}
+                  />
+                </div>
+              )}
             </div>
             <div>
               <label htmlFor="status" className="text-sm font-medium">
