@@ -52,7 +52,7 @@ export const DashboardTabs = () => {
             Fermer
           </Button>
         </div>
-        <Card className="p-6">
+        <Card className="p-6 glass-panel">
           <LeadsList leads={mockAvailableLeads} />
         </Card>
       </div>
@@ -60,18 +60,20 @@ export const DashboardTabs = () => {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <PrepaidBalance balance={150} />
       
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Nouveaux leads disponibles */}
-        <Card className="p-6 border-2 border-primary/20">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-bold">Nouveaux Leads Disponibles</h2>
+        <Card className="p-8 glass-panel border-2 border-primary/20 hover:border-primary/30 transition-all duration-300">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-2xl font-bold bg-gradient-to-r from-primary to-primary-light bg-clip-text text-transparent">
+              Nouveaux Leads Disponibles
+            </h2>
             <Button 
               variant="default"
               onClick={() => setShowAllAvailableLeads(true)}
-              className="gap-2 bg-primary hover:bg-primary/90 text-white font-semibold shadow-sm"
+              className="gap-2 bg-primary hover:bg-primary-light text-white font-semibold shadow-lg transition-all duration-300 hover:scale-105"
             >
               Voir tout
               <ChevronRight className="h-4 w-4" />
@@ -81,13 +83,15 @@ export const DashboardTabs = () => {
         </Card>
 
         {/* Leads achetés */}
-        <Card className="p-6">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-bold">Mes Leads Achetés</h2>
+        <Card className="p-8 glass-panel">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-2xl font-bold bg-gradient-to-r from-primary to-primary-light bg-clip-text text-transparent">
+              Mes Leads Achetés
+            </h2>
             <Button 
               variant="default"
               onClick={() => setShowAllPurchasedLeads(true)}
-              className="gap-2 bg-primary hover:bg-primary/90 text-white font-semibold shadow-sm"
+              className="gap-2 bg-primary hover:bg-primary-light text-white font-semibold shadow-lg transition-all duration-300 hover:scale-105"
             >
               Voir tout
               <ChevronRight className="h-4 w-4" />
