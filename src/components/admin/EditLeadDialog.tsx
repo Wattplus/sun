@@ -10,7 +10,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Lead, LeadStatus } from "@/types/crm"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import {
   Select,
   SelectContent,
@@ -28,6 +28,12 @@ interface EditLeadDialogProps {
 
 export function EditLeadDialog({ lead, open, onOpenChange, onSave }: EditLeadDialogProps) {
   const [formData, setFormData] = useState<Partial<Lead>>(lead || {})
+
+  useEffect(() => {
+    if (lead) {
+      setFormData(lead)
+    }
+  }, [lead])
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()

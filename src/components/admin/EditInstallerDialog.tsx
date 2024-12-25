@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Installer, InstallerStatus } from "@/types/crm"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import {
   Select,
   SelectContent,
@@ -32,6 +32,12 @@ export function EditInstallerDialog({
   onSave,
 }: EditInstallerDialogProps) {
   const [formData, setFormData] = useState<Partial<Installer>>(installer || {})
+
+  useEffect(() => {
+    if (installer) {
+      setFormData(installer)
+    }
+  }, [installer])
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
