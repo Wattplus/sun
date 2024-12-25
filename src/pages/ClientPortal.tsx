@@ -14,6 +14,7 @@ import { Card } from "@/components/ui/card"
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList } from "@/components/ui/breadcrumb"
 import { ClientFAQ } from "@/components/client/faq/ClientFAQ"
 import { InstallerDirectory } from "@/components/client/directory/InstallerDirectory"
+import { PurchasedContactsList } from "@/components/client/dashboard/PurchasedContactsList"
 
 const ClientPortal = () => {
   const [activeTab, setActiveTab] = useState("dashboard")
@@ -79,24 +80,6 @@ const ClientPortal = () => {
           <p className="text-gray-300 mt-2">Bienvenue, {userInfo.name}</p>
         </div>
 
-        <Card className="glass-panel p-6 mb-6">
-          <h3 className="text-lg font-semibold text-white mb-4">Nos coordonnées</h3>
-          <div className="space-y-3">
-            <div className="flex items-center gap-3 text-gray-300">
-              <MapPin className="w-5 h-5 text-primary" />
-              <span>123 Avenue du Soleil, 75001 Paris</span>
-            </div>
-            <div className="flex items-center gap-3 text-gray-300">
-              <Phone className="w-5 h-5 text-primary" />
-              <a href="tel:0977774164" className="hover:text-primary transition-colors">09 77 77 41 64</a>
-            </div>
-            <div className="flex items-center gap-3 text-gray-300">
-              <Mail className="w-5 h-5 text-primary" />
-              <a href="mailto:mikael@wattplus.org" className="hover:text-primary transition-colors">mikael@wattplus.org</a>
-            </div>
-          </div>
-        </Card>
-
         <Tabs defaultValue="dashboard" className="space-y-6">
           <TabsList className="glass-panel p-1">
             <TabsTrigger value="dashboard" onClick={() => setActiveTab("dashboard")} className="gap-2">
@@ -122,7 +105,13 @@ const ClientPortal = () => {
           </TabsList>
 
           <TabsContent value="dashboard">
-            <div className="grid gap-6 md:grid-cols-2">
+            {/* Formulaire d'informations en premier */}
+            <ClientInfoForm onMonthlyBillUpdate={handleMonthlyBillUpdate} />
+            
+            {/* Liste des entreprises qui ont acheté le contact */}
+            <PurchasedContactsList />
+            
+            <div className="grid gap-6 md:grid-cols-2 mt-6">
               <ProjectStatus 
                 status={userInfo.projectStatus}
                 lastUpdate={userInfo.lastUpdate}
@@ -135,8 +124,6 @@ const ClientPortal = () => {
               <NextSteps />
             </div>
 
-            <ClientInfoForm onMonthlyBillUpdate={handleMonthlyBillUpdate} />
-            
             <InstallerRequests
               requests={userInfo.installerRequests}
               onAccept={(id) => console.log('Accept request:', id)}
