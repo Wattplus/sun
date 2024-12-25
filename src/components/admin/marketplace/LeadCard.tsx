@@ -29,13 +29,11 @@ export const LeadCard = ({
         : 'price_1QZyJpFOePj4Hv47sd76eDOz';
 
       if (paymentMethod === 'prepaid') {
-        // Logique pour payer avec le solde prépayé
         toast({
           title: "Paiement avec solde prépayé",
           description: "Le lead sera débité de votre solde prépayé.",
         });
       } else {
-        // Logique pour payer directement
         const response = await fetch("https://dqzsycxxgltztufrhams.supabase.co/functions/v1/create-lead-checkout", {
           method: "POST",
           headers: {
@@ -107,43 +105,45 @@ export const LeadCard = ({
           </div>
         </div>
 
-        <div className="space-y-3">
-          <div className="grid grid-cols-2 gap-3">
-            <button 
-              className="px-4 py-2 text-sm font-medium rounded-lg bg-[#0B1221] hover:bg-[#1EAEDB]/10 text-[#1EAEDB] border border-[#1EAEDB]/20 hover:border-[#1EAEDB]/40 transition-colors duration-200 flex items-center justify-center gap-2"
-              onClick={() => handlePurchase('mutualise', 'prepaid')}
-            >
-              <Wallet className="w-4 h-4" />
-              Solde prépayé ({prices.mutualPrice}€)
-            </button>
-            
-            <button 
-              className="px-4 py-2 text-sm font-medium rounded-lg bg-[#1EAEDB] hover:bg-[#33C3F0] text-white transition-colors duration-200 flex items-center justify-center gap-2"
-              onClick={() => handlePurchase('mutualise', 'direct')}
-            >
-              <CreditCard className="w-4 h-4" />
-              Payer ({prices.mutualPrice}€)
-            </button>
-          </div>
+        {!isPurchased && (
+          <div className="space-y-3">
+            <div className="grid grid-cols-2 gap-3">
+              <button 
+                className="px-4 py-2 text-sm font-medium rounded-lg bg-[#0B1221] hover:bg-[#1EAEDB]/10 text-[#1EAEDB] border border-[#1EAEDB]/20 hover:border-[#1EAEDB]/40 transition-colors duration-200 flex items-center justify-center gap-2"
+                onClick={() => handlePurchase('mutualise', 'prepaid')}
+              >
+                <Wallet className="w-4 h-4" />
+                Solde prépayé ({prices.mutualPrice}€)
+              </button>
+              
+              <button 
+                className="px-4 py-2 text-sm font-medium rounded-lg bg-[#1EAEDB] hover:bg-[#33C3F0] text-white transition-colors duration-200 flex items-center justify-center gap-2"
+                onClick={() => handlePurchase('mutualise', 'direct')}
+              >
+                <CreditCard className="w-4 h-4" />
+                Payer ({prices.mutualPrice}€)
+              </button>
+            </div>
 
-          <div className="grid grid-cols-2 gap-3">
-            <button 
-              className="px-4 py-2 text-sm font-medium rounded-lg bg-[#0B1221] hover:bg-[#1EAEDB]/10 text-[#1EAEDB] border border-[#1EAEDB]/20 hover:border-[#1EAEDB]/40 transition-colors duration-200 flex items-center justify-center gap-2"
-              onClick={() => handlePurchase('exclusif', 'prepaid')}
-            >
-              <Wallet className="w-4 h-4" />
-              Lead exclusif ({prices.exclusivePrice}€)
-            </button>
-            
-            <button 
-              className="px-4 py-2 text-sm font-medium rounded-lg bg-[#1EAEDB] hover:bg-[#33C3F0] text-white transition-colors duration-200 flex items-center justify-center gap-2"
-              onClick={() => handlePurchase('exclusif', 'direct')}
-            >
-              <CreditCard className="w-4 h-4" />
-              Lead exclusif ({prices.exclusivePrice}€)
-            </button>
+            <div className="grid grid-cols-2 gap-3">
+              <button 
+                className="px-4 py-2 text-sm font-medium rounded-lg bg-[#0B1221] hover:bg-[#1EAEDB]/10 text-[#1EAEDB] border border-[#1EAEDB]/20 hover:border-[#1EAEDB]/40 transition-colors duration-200 flex items-center justify-center gap-2"
+                onClick={() => handlePurchase('exclusif', 'prepaid')}
+              >
+                <Wallet className="w-4 h-4" />
+                Lead exclusif ({prices.exclusivePrice}€)
+              </button>
+              
+              <button 
+                className="px-4 py-2 text-sm font-medium rounded-lg bg-[#1EAEDB] hover:bg-[#33C3F0] text-white transition-colors duration-200 flex items-center justify-center gap-2"
+                onClick={() => handlePurchase('exclusif', 'direct')}
+              >
+                <CreditCard className="w-4 h-4" />
+                Lead exclusif ({prices.exclusivePrice}€)
+              </button>
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </Card>
   );
