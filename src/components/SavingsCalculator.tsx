@@ -19,44 +19,46 @@ export const SavingsCalculator = () => {
   };
 
   return (
-    <div className="py-24 sm:py-32 bg-gradient-to-br from-blue-50 to-green-50">
+    <div className="py-24 sm:py-32 bg-gradient-to-b from-[#0B1221] to-[#1a5fb4]">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="mx-auto max-w-2xl text-center mb-16">
-          <h2 className="text-4xl font-bold tracking-tight text-gray-900 mb-6">
+          <h2 className="text-4xl font-bold tracking-tight text-white mb-6">
             Calculez vos économies
           </h2>
-          <p className="text-xl text-gray-600">
+          <p className="text-xl text-blue-200">
             Découvrez combien vous pourriez économiser avec l'énergie solaire
           </p>
         </div>
 
-        <div className="mx-auto max-w-xl bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
+        <div className="mx-auto max-w-xl glass-panel p-8">
           <div className="space-y-6">
             <div className="space-y-2">
-              <Label htmlFor="monthlyBill">Facture mensuelle actuelle (€)</Label>
+              <Label htmlFor="monthlyBill" className="text-white">Facture mensuelle actuelle (€)</Label>
               <Input
                 id="monthlyBill"
                 type="number"
                 value={monthlyBill}
                 onChange={(e) => setMonthlyBill(e.target.value)}
                 placeholder="150"
+                className="bg-secondary border-white/10 text-white placeholder:text-gray-400"
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="roofSize">Surface de toiture disponible (m²)</Label>
+              <Label htmlFor="roofSize" className="text-white">Surface de toiture disponible (m²)</Label>
               <Input
                 id="roofSize"
                 type="number"
                 value={roofSize}
                 onChange={(e) => setRoofSize(e.target.value)}
                 placeholder="30"
+                className="bg-secondary border-white/10 text-white placeholder:text-gray-400"
               />
             </div>
 
             <Button 
               onClick={calculateSavings}
-              className="w-full bg-green-500 hover:bg-green-600 text-white"
+              className="w-full bg-primary hover:bg-primary-dark text-white"
               size="lg"
             >
               <Calculator className="mr-2" />
@@ -64,18 +66,18 @@ export const SavingsCalculator = () => {
             </Button>
 
             {savings && (
-              <div className="mt-8 p-6 bg-green-50 rounded-xl border border-green-100">
+              <div className="mt-8 glass-panel">
                 <div className="flex items-center justify-center gap-4 mb-4">
-                  <Sun className="h-8 w-8 text-green-500" />
-                  <h3 className="text-2xl font-bold text-gray-900">
+                  <Sun className="h-8 w-8 text-primary" />
+                  <h3 className="text-2xl font-bold text-white">
                     Vos économies estimées
                   </h3>
                 </div>
-                <p className="text-4xl font-bold text-green-600 text-center mb-4">
+                <p className="text-4xl font-bold text-primary text-center mb-4">
                   {savings.toLocaleString('fr-FR')}€ / an
                 </p>
                 <Button 
-                  className="w-full bg-green-500 hover:bg-green-600"
+                  className="w-full bg-primary hover:bg-primary-dark"
                   onClick={() => document.getElementById('lead-form')?.scrollIntoView({ behavior: 'smooth' })}
                 >
                   Obtenir mon étude détaillée

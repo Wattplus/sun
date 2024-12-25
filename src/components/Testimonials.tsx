@@ -30,13 +30,13 @@ const testimonials = [
 
 export const Testimonials = () => {
   return (
-    <div className="py-24 sm:py-32 bg-gradient-to-b from-gray-50 to-white">
+    <div className="py-24 sm:py-32 bg-gradient-to-b from-[#0B1221] to-[#1a5fb4]">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="mx-auto max-w-2xl text-center mb-16">
-          <h2 className="text-4xl font-bold tracking-tight text-gray-900 mb-6">
+          <h2 className="text-4xl font-bold tracking-tight text-white mb-6">
             Ce que nos clients disent
           </h2>
-          <p className="text-xl text-gray-600">
+          <p className="text-xl text-blue-200">
             Des milliers de propriétaires satisfaits ont déjà fait le choix du photovoltaïque
           </p>
         </div>
@@ -46,27 +46,27 @@ export const Testimonials = () => {
               key={index}
               className="group relative"
             >
-              <div className="absolute -inset-1 rounded-3xl bg-gradient-to-r from-green-600 to-blue-600 opacity-25 blur transition duration-200 group-hover:opacity-100" />
-              <div className="relative flex h-full flex-col rounded-2xl bg-white p-8 shadow-xl">
+              <div className="absolute -inset-1 rounded-3xl bg-gradient-to-r from-primary to-accent opacity-25 blur transition duration-200 group-hover:opacity-100" />
+              <div className="relative flex h-full flex-col glass-panel p-8">
                 <div className="flex justify-center mb-6">
                   {[...Array(testimonial.rating)].map((_, i) => (
                     <Star key={i} className="h-6 w-6 text-yellow-400 fill-yellow-400" />
                   ))}
                 </div>
-                <blockquote className="flex-1 text-lg font-medium leading-8 text-gray-900 mb-8">
+                <blockquote className="flex-1 text-lg font-medium leading-8 text-white mb-8">
                   "{testimonial.content}"
                 </blockquote>
                 <div className="mt-auto">
-                  <div className="font-semibold text-gray-900 text-lg mb-1">{testimonial.author}</div>
-                  <div className="text-gray-600 mb-4">{testimonial.location}</div>
-                  <div className="grid grid-cols-2 gap-4 pt-4 border-t border-gray-100">
+                  <div className="font-semibold text-white text-lg mb-1">{testimonial.author}</div>
+                  <div className="text-blue-200 mb-4">{testimonial.location}</div>
+                  <div className="grid grid-cols-2 gap-4 pt-4 border-t border-white/10">
                     <div className="text-center">
-                      <span className="block text-green-600 font-bold text-xl">{testimonial.savings}</span>
-                      <span className="text-sm text-gray-600">d'économies</span>
+                      <span className="block text-primary font-bold text-xl">{testimonial.savings}</span>
+                      <span className="text-sm text-blue-200">d'économies</span>
                     </div>
                     <div className="text-center">
-                      <span className="block text-gray-900 font-semibold">{testimonial.date}</span>
-                      <span className="text-sm text-gray-600">installation</span>
+                      <span className="block text-white font-semibold">{testimonial.date}</span>
+                      <span className="text-sm text-blue-200">installation</span>
                     </div>
                   </div>
                 </div>
@@ -78,7 +78,7 @@ export const Testimonials = () => {
         <div className="mt-16 text-center">
           <Button 
             size="lg"
-            className="bg-green-500 hover:bg-green-600 text-white px-8 py-6 text-lg rounded-full shadow-lg shadow-green-500/20"
+            className="bg-primary hover:bg-primary-dark text-white px-8 py-6 text-lg rounded-full shadow-lg shadow-primary/20"
             onClick={() => document.getElementById('lead-form')?.scrollIntoView({ behavior: 'smooth' })}
           >
             Rejoignez nos clients satisfaits
