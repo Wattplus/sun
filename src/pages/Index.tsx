@@ -11,6 +11,7 @@ import { SavingsCalculator } from "@/components/SavingsCalculator";
 import { EnvironmentalImpact } from "@/components/EnvironmentalImpact";
 import { Certifications } from "@/components/Certifications";
 import { PrimeRates } from "@/components/PrimeRates";
+import { ChatButton } from "@/components/chat/ChatButton";
 
 const Index = () => {
   return (
@@ -36,6 +37,7 @@ const Index = () => {
           <FAQ />
         </main>
         <Footer />
+        <ChatButton />
       </div>
     </div>
   );
