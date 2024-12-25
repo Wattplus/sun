@@ -20,27 +20,27 @@ export default {
     extend: {
       colors: {
         primary: {
-          DEFAULT: "#1a5fb4",
-          light: "#2975d1",
-          dark: "#154c91",
+          DEFAULT: "#10B981", // Vert pour les boutons principaux
+          light: "#34D399",
+          dark: "#059669",
           foreground: "white",
         },
         secondary: {
-          DEFAULT: "#0B1221",
-          light: "#1a2942",
-          dark: "#060912",
+          DEFAULT: "#0B1221", // Bleu foncé pour les champs
+          light: "#1E293B",
+          dark: "#020617",
           foreground: "white",
         },
         accent: {
-          DEFAULT: "#3498db",
-          light: "#5dade2",
-          dark: "#2980b9",
+          DEFAULT: "#60A5FA", // Bleu clair pour les accents
+          light: "#93C5FD",
+          dark: "#3B82F6",
           foreground: "white",
         },
         background: {
-          DEFAULT: "#0B1221",
-          light: "#1a2942",
-          dark: "#060912",
+          DEFAULT: "#F8FAFC", // Fond blanc légèrement bleuté
+          light: "#FFFFFF",
+          dark: "#F1F5F9",
         },
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -66,9 +66,9 @@ export default {
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
         'gradient-conic': 'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
-        'blue-gradient': 'linear-gradient(to right, #1a5fb4, #0B1221)',
-        'glass-gradient': 'linear-gradient(90deg, rgba(26,95,180,0.2) 0%, rgba(11,18,33,0.2) 100%)',
-        'glass-gradient-hover': 'linear-gradient(90deg, rgba(26,95,180,0.4) 0%, rgba(11,18,33,0.4) 100%)',
+        'blue-gradient': 'linear-gradient(to bottom, #60A5FA, #F8FAFC)',
+        'glass-gradient': 'linear-gradient(90deg, rgba(96,165,250,0.1) 0%, rgba(11,18,33,0.1) 100%)',
+        'glass-gradient-hover': 'linear-gradient(90deg, rgba(96,165,250,0.2) 0%, rgba(11,18,33,0.2) 100%)',
       },
       borderRadius: {
         lg: "var(--radius)",

@@ -4,19 +4,19 @@
 
 @layer base {
   :root {
-    --background: 222 47% 11%;
-    --foreground: 210 40% 98%;
-    --card: 222 47% 11%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222 47% 11%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 217 71% 53%;
+    --background: 210 40% 98%;
+    --foreground: 222 47% 11%;
+    --card: 210 40% 98%;
+    --card-foreground: 222 47% 11%;
+    --popover: 210 40% 98%;
+    --popover-foreground: 222 47% 11%;
+    --primary: 152 61% 40%;
     --primary-foreground: 210 40% 98%;
-    --secondary: 215 27% 17%;
+    --secondary: 222 47% 11%;
     --secondary-foreground: 210 40% 98%;
     --muted: 215 27% 17%;
     --muted-foreground: 215 20% 65%;
-    --accent: 217 71% 53%;
+    --accent: 217 91% 60%;
     --accent-foreground: 210 40% 98%;
     --destructive: 0 62% 30%;
     --destructive-foreground: 210 40% 98%;
@@ -33,13 +33,13 @@
     --card-foreground: 210 40% 98%;
     --popover: 222 47% 11%;
     --popover-foreground: 210 40% 98%;
-    --primary: 217 71% 53%;
+    --primary: 152 61% 40%;
     --primary-foreground: 210 40% 98%;
     --secondary: 215 27% 17%;
     --secondary-foreground: 210 40% 98%;
     --muted: 215 27% 17%;
     --muted-foreground: 215 20% 65%;
-    --accent: 217 71% 53%;
+    --accent: 217 91% 60%;
     --accent-foreground: 210 40% 98%;
     --destructive: 0 62% 30%;
     --destructive-foreground: 210 40% 98%;
@@ -55,7 +55,7 @@
   }
   body {
     @apply bg-background text-foreground;
-    background: radial-gradient(circle at center, #1a5fb4 0%, #0B1221 100%);
+    background: linear-gradient(to bottom, #60A5FA 0%, #F8FAFC 100%);
     min-height: 100vh;
   }
 }
@@ -66,14 +66,14 @@
 
 .glass-button {
   @apply relative overflow-hidden px-8 py-3 rounded-full;
-  background: linear-gradient(90deg, rgba(26,95,180,0.2) 0%, rgba(11,18,33,0.2) 100%);
+  background: linear-gradient(90deg, rgba(96,165,250,0.1) 0%, rgba(11,18,33,0.1) 100%);
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255,255,255,0.1);
   transition: all 0.3s ease;
 }
 
 .glass-button:hover {
-  background: linear-gradient(90deg, rgba(26,95,180,0.4) 0%, rgba(11,18,33,0.4) 100%);
+  background: linear-gradient(90deg, rgba(96,165,250,0.2) 0%, rgba(11,18,33,0.2) 100%);
   border-color: rgba(255,255,255,0.2);
 }
 
@@ -98,5 +98,5 @@
 }
 
 .gradient-text {
-  @apply bg-clip-text text-transparent bg-gradient-to-r from-white via-blue-100 to-white;
+  @apply bg-clip-text text-transparent bg-gradient-to-r from-secondary via-secondary-light to-secondary;
 }
