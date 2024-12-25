@@ -5,11 +5,15 @@ import AdminDashboard from "./components/admin/AdminDashboard";
 import InstallerManagement from "./components/admin/InstallerManagement";
 import LeadManagement from "./components/admin/LeadManagement";
 import { Toaster } from "./components/ui/toaster";
+import Index from "./pages/Index";
 
 function App() {
   return (
     <Router>
       <Routes>
+        {/* Landing page */}
+        <Route path="/" element={<Index />} />
+
         {/* Installer routes */}
         <Route path="/espace-installateur" element={<InstallerDashboard />} />
         <Route path="/espace-installateur/projets/:projectId" element={<ProjectDetails />} />
