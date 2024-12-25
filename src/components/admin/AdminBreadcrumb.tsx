@@ -14,6 +14,14 @@ const breadcrumbTitles: Record<string, string> = {
   "leads": "Gestion des Leads",
   "installers": "Gestion des Installateurs",
   "marketplace": "Marketplace",
+  "dashboard": "Tableau de bord",
+  "clients": "Gestion des Clients",
+  "settings": "Paramètres",
+  "profile": "Profil",
+  "documents": "Documents",
+  "messages": "Messages",
+  "analytics": "Analyses",
+  "reports": "Rapports"
 };
 
 export const AdminBreadcrumb = () => {
@@ -24,7 +32,7 @@ export const AdminBreadcrumb = () => {
     <Breadcrumb className="mb-6">
       <BreadcrumbList>
         <BreadcrumbItem>
-          <Link to="/" className="transition-colors hover:text-foreground">
+          <Link to="/" className="text-primary hover:text-primary-dark transition-colors">
             Accueil
           </Link>
         </BreadcrumbItem>
@@ -35,12 +43,17 @@ export const AdminBreadcrumb = () => {
           
           return (
             <React.Fragment key={path}>
-              <BreadcrumbSeparator />
+              <BreadcrumbSeparator className="text-primary" />
               <BreadcrumbItem>
                 {isLast ? (
-                  <BreadcrumbPage>{breadcrumbTitles[segment] || segment}</BreadcrumbPage>
+                  <BreadcrumbPage className="text-primary-dark">
+                    {breadcrumbTitles[segment] || segment}
+                  </BreadcrumbPage>
                 ) : (
-                  <Link to={path} className="transition-colors hover:text-foreground">
+                  <Link 
+                    to={path} 
+                    className="text-primary hover:text-primary-dark transition-colors"
+                  >
                     {breadcrumbTitles[segment] || segment}
                   </Link>
                 )}

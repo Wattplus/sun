@@ -10,6 +10,7 @@ import { EditInstallerDialog } from "./EditInstallerDialog";
 import { useToast } from "@/components/ui/use-toast";
 import { InstallerTable } from "./installer/InstallerTable";
 import { InstallerHeader } from "./installer/InstallerHeader";
+import { AdminBreadcrumb } from "./AdminBreadcrumb";
 
 export const mockInstallers: Installer[] = [
   {
@@ -89,27 +90,30 @@ const InstallerManagement = () => {
   };
 
   return (
-    <div className="bg-background/50 backdrop-blur-md p-6 rounded-xl border border-primary/20">
-      <InstallerHeader 
-        searchTerm={searchTerm}
-        onSearchChange={setSearchTerm}
-        onNewInstaller={handleNewInstaller}
-      />
+    <div className="space-y-6">
+      <AdminBreadcrumb />
+      <div className="bg-background/50 backdrop-blur-md p-6 rounded-xl border border-primary/20">
+        <InstallerHeader 
+          searchTerm={searchTerm}
+          onSearchChange={setSearchTerm}
+          onNewInstaller={handleNewInstaller}
+        />
 
-      <InstallerTable 
-        installers={installers}
-        onEditInstaller={(installer) => {
-          setSelectedInstaller(installer);
-          setEditDialogOpen(true);
-        }}
-      />
+        <InstallerTable 
+          installers={installers}
+          onEditInstaller={(installer) => {
+            setSelectedInstaller(installer);
+            setEditDialogOpen(true);
+          }}
+        />
 
-      <EditInstallerDialog
-        installer={selectedInstaller}
-        open={editDialogOpen}
-        onOpenChange={handleEditClose}
-        onSave={handleSaveInstaller}
-      />
+        <EditInstallerDialog
+          installer={selectedInstaller}
+          open={editDialogOpen}
+          onOpenChange={handleEditClose}
+          onSave={handleSaveInstaller}
+        />
+      </div>
     </div>
   );
 };
