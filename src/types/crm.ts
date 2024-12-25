@@ -34,6 +34,10 @@ export interface Installer {
   conversionRate: number;
   prepaidBalance?: number;
   paymentType: PaymentType;
+  description?: string;
+  certifications?: string[];
+  specialties?: string[];
+  profileImage?: string;
 }
 
 // Mock data for testing

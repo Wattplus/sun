@@ -1,4 +1,4 @@
-import { LayoutDashboard, Users, FileText, ShoppingBag } from "lucide-react";
+import { LayoutDashboard, Users, FileText, ShoppingBag, UserCircle } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
@@ -18,6 +18,11 @@ const navItems = [
     title: "Installateurs",
     icon: Users,
     href: "/admin/installers"
+  },
+  {
+    title: "Profil",
+    icon: UserCircle,
+    href: "/admin/profile"
   },
   {
     title: "Marketplace",
