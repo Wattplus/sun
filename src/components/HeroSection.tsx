@@ -28,7 +28,7 @@ export const HeroSection = () => {
           </p>
 
           <p className="text-lg text-blue-200 mb-12 animate-fadeIn leading-relaxed">
-            Découvrez nos offres exclusives de panneaux photovoltaïques et commencez à économiser sur vos factures d'électricité dès aujourd'hui. Chez Carrefour Énergies, on s'engage à fournir des solutions énergétiques durables et économiques pour tous les foyers.
+            Découvrez nos offres exclusives de panneaux photovoltaïques et commencez à économiser sur vos factures d'électricité dès aujourd'hui. Chez WattPlus, on s'engage à fournir des solutions énergétiques durables et économiques pour tous les foyers.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-6 justify-center items-center mb-16 animate-fadeIn">
