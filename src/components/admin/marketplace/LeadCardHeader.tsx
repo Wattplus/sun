@@ -1,5 +1,5 @@
 import { Badge } from "@/components/ui/badge";
-import { MapPin, Clock } from "lucide-react";
+import { MapPin, Clock, Users, UserPlus } from "lucide-react";
 import { differenceInDays } from "date-fns";
 
 interface LeadCardHeaderProps {
@@ -9,6 +9,7 @@ interface LeadCardHeaderProps {
   createdAt: string;
   projectType: string;
   budget: number;
+  purchasedBy?: Array<{ installerId: string; purchaseType: string; purchaseDate: string; }>;
 }
 
 const getAgeLabel = (createdAt: string) => {
@@ -24,8 +25,13 @@ export const LeadCardHeader = ({
   postalCode, 
   createdAt, 
   projectType,
-  budget
+  budget,
+  purchasedBy = []
 }: LeadCardHeaderProps) => {
+  const purchaseCount = purchasedBy.length;
+  const remainingPurchases = 3 - purchaseCount;
+  const hasExclusivePurchase = purchasedBy.some(p => p.purchaseType === 'exclusif');
+
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
@@ -57,6 +63,19 @@ export const LeadCardHeader = ({
           <Badge variant="secondary" className="mt-1 bg-primary/10 text-primary">
             {projectType}
           </Badge>
+        </div>
+
+        <div className="flex items-center justify-between mt-4 text-sm text-muted-foreground">
+          <div className="flex items-center gap-2">
+            <Users className="h-4 w-4" />
+            <span>{purchaseCount} installateur{purchaseCount > 1 ? 's' : ''}</span>
+          </div>
+          {!hasExclusivePurchase && remainingPurchases > 0 && (
+            <div className="flex items-center gap-2">
+              <UserPlus className="h-4 w-4" />
+              <span>{remainingPurchases} place{remainingPurchases > 1 ? 's' : ''} restante{remainingPurchases > 1 ? 's' : ''}</span>
+            </div>
+          )}
         </div>
       </div>
     </div>

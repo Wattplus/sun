@@ -95,6 +95,7 @@ export const LeadCard = ({
         createdAt={lead.createdAt}
         projectType={lead.projectType}
         budget={lead.budget}
+        purchasedBy={lead.purchasedBy}
       />
       
       {!isPurchased && (
