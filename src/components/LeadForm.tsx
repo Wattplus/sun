@@ -6,8 +6,8 @@ import { validateEmail, validatePhone, validatePostalCode } from "@/utils/formVa
 import { Send } from "lucide-react";
 import emailjs from '@emailjs/browser';
 
-// Initialize EmailJS with your public key
-emailjs.init("12Wtu7mylEymnNxyV");
+// Remplacez VOTRE_CLE_PUBLIQUE par votre clé publique EmailJS
+emailjs.init("VOTRE_CLE_PUBLIQUE");
 
 interface FormData {
   firstName: string;
@@ -73,19 +73,18 @@ export const LeadForm = () => {
         })
       };
 
-      // Add console.log to debug the EmailJS parameters
       console.log('EmailJS Parameters:', {
-        serviceId: 'service_611ohbh',
-        templateId: 'template_0qqwwzj',
+        serviceId: 'VOTRE_SERVICE_ID',
+        templateId: 'VOTRE_TEMPLATE_ID',
         templateParams,
-        publicKey: '12Wtu7mylEymnNxyV'
+        publicKey: 'VOTRE_CLE_PUBLIQUE'
       });
 
       await emailjs.send(
-        'service_611ohbh',
-        'template_0qqwwzj',
+        'VOTRE_SERVICE_ID',
+        'VOTRE_TEMPLATE_ID',
         templateParams,
-        '12Wtu7mylEymnNxyV'
+        'VOTRE_CLE_PUBLIQUE'
       );
 
       toast({
@@ -194,4 +193,3 @@ export const LeadForm = () => {
       </div>
     </div>
   );
-};
