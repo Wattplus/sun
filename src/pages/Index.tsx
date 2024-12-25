@@ -24,7 +24,7 @@ const Index = () => {
           <HeroSection />
           <ElectricityPriceSection />
           <PrimeRates />
-          <div id="lead-form" className="section-spacing container-padding">
+          <div className="section-spacing container-padding">
             <div className="mx-auto max-w-7xl">
               <LeadForm />
             </div>
