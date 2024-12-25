@@ -28,14 +28,14 @@ const faqs = [
 
 export const FAQ = () => {
   return (
-    <div className="relative py-24 sm:py-32">
-      <div className="absolute inset-0 bg-gradient-to-b from-white via-gray-50 to-white" />
+    <div className="relative py-24 sm:py-32 bg-gradient-to-b from-blue-950 via-blue-900 to-blue-950">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(25,118,210,0.1)_0%,rgba(0,0,0,0.4)_100%)]" />
       <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
         <div className="mx-auto max-w-2xl text-center mb-16">
-          <h2 className="text-4xl font-bold tracking-tight text-gray-900 mb-6 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-green-600">
+          <h2 className="text-4xl font-bold tracking-tight text-white mb-6">
             Questions fréquentes
           </h2>
-          <p className="text-xl text-gray-600">
+          <p className="text-xl text-blue-200">
             Tout ce que vous devez savoir sur l'énergie solaire
           </p>
         </div>
@@ -45,12 +45,12 @@ export const FAQ = () => {
               <AccordionItem 
                 key={index} 
                 value={`item-${index}`}
-                className="group bg-white rounded-xl border border-gray-200 px-6 shadow-lg shadow-gray-100/50 transition-all duration-200 hover:shadow-xl"
+                className="group bg-white/10 backdrop-blur-sm rounded-xl border border-white/20 px-6 shadow-lg transition-all duration-200 hover:shadow-xl"
               >
-                <AccordionTrigger className="text-lg font-semibold text-gray-900 group-hover:text-green-600 transition-colors py-6">
+                <AccordionTrigger className="text-lg font-semibold text-white group-hover:text-green-400 transition-colors py-6">
                   {faq.question}
                 </AccordionTrigger>
-                <AccordionContent className="text-gray-600 text-base leading-relaxed pb-6">
+                <AccordionContent className="text-blue-200 text-base leading-relaxed pb-6">
                   {faq.answer}
                 </AccordionContent>
               </AccordionItem>
@@ -62,16 +62,16 @@ export const FAQ = () => {
           <div className="inline-flex items-center justify-center p-1 bg-gradient-to-r from-green-500 to-blue-500 rounded-full">
             <Button
               size="lg"
-              className="bg-white hover:bg-gray-50 text-gray-900 px-8 py-6 text-lg rounded-full relative group transition-all duration-300 hover:scale-[0.98]"
+              className="bg-blue-950 hover:bg-blue-900 text-white px-8 py-6 text-lg rounded-full relative group transition-all duration-300 hover:scale-[0.98]"
               onClick={() => document.getElementById('lead-form')?.scrollIntoView({ behavior: 'smooth' })}
             >
-              <span className="bg-clip-text text-transparent bg-gradient-to-r from-green-600 to-blue-600">
+              <span className="text-white">
                 Demandez votre étude gratuite
               </span>
-              <ArrowRight className="ml-2 h-5 w-5 text-green-600 group-hover:translate-x-1 transition-transform" />
+              <ArrowRight className="ml-2 h-5 w-5 text-green-400 group-hover:translate-x-1 transition-transform" />
             </Button>
           </div>
-          <p className="mt-4 text-sm text-gray-500">
+          <p className="mt-4 text-sm text-blue-200">
             Sans engagement • Réponse sous 24h
           </p>
         </div>
