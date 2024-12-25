@@ -61,8 +61,8 @@ export const LeadCard = ({
   };
 
   return (
-    <Card className="bg-[#0B1221] text-white p-6 border border-[#1EAEDB]/20">
-      <div className="space-y-4">
+    <Card className="overflow-hidden bg-[#0B1221] text-white border border-[#1EAEDB]/20 hover:border-[#1EAEDB]/40 transition-all duration-300">
+      <div className="p-6 space-y-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <input 
@@ -104,16 +104,16 @@ export const LeadCard = ({
           </div>
         </div>
 
-        <div className="flex gap-2 mt-4">
+        <div className="grid grid-cols-2 gap-3 mt-4">
           <button 
-            className="flex-1 px-4 py-2 text-sm font-medium rounded-lg bg-[#0B1221] hover:bg-[#1EAEDB]/10 text-[#1EAEDB] border border-[#1EAEDB]/20 hover:border-[#1EAEDB]/40 transition-colors duration-200"
+            className="px-4 py-2 text-sm font-medium rounded-lg bg-[#0B1221] hover:bg-[#1EAEDB]/10 text-[#1EAEDB] border border-[#1EAEDB]/20 hover:border-[#1EAEDB]/40 transition-colors duration-200"
             onClick={() => handlePurchase('mutualise')}
           >
             Lead mutualisé - {prices.mutualPrice}€
           </button>
           
           <button 
-            className="flex-1 px-4 py-2 text-sm font-medium rounded-lg bg-[#1EAEDB] hover:bg-[#33C3F0] text-white transition-colors duration-200"
+            className="px-4 py-2 text-sm font-medium rounded-lg bg-[#1EAEDB] hover:bg-[#33C3F0] text-white transition-colors duration-200"
             onClick={() => handlePurchase('exclusif')}
           >
             Lead exclusif - {prices.exclusivePrice}€

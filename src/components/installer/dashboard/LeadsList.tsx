@@ -11,10 +11,12 @@ interface LeadsListProps {
   leads: Lead[];
 }
 
+type SortOrder = "default" | "asc" | "desc";
+
 export const LeadsList = ({ leads }: LeadsListProps) => {
   const [selectedDepartments, setSelectedDepartments] = useState<string[]>([]);
   const [projectTypeFilter, setProjectTypeFilter] = useState<string>("all");
-  const [priceFilter, setPriceFilter] = useState<"default" | "asc" | "desc">("default");
+  const [priceFilter, setPriceFilter] = useState<SortOrder>("default");
 
   const availableDepartments = useMemo(() => {
     const departments = new Set<string>();
@@ -60,8 +62,12 @@ export const LeadsList = ({ leads }: LeadsListProps) => {
     setSelectedDepartments(selectedDepartments.filter(d => d !== department));
   };
 
+  const handlePriceFilterChange = (value: string) => {
+    setPriceFilter(value as SortOrder);
+  };
+
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 max-w-7xl mx-auto">
       <div className="flex items-center justify-between">
         <h2 className="text-3xl font-bold text-[#1EAEDB]">
           Nouveaux Leads Disponibles
@@ -78,7 +84,7 @@ export const LeadsList = ({ leads }: LeadsListProps) => {
             <label className="text-sm font-medium text-[#1EAEDB]">
               Départements
             </label>
-            <Select onValueChange={handleDepartmentSelect} value={selectedDepartments[0] || ""}>
+            <Select onValueChange={handleDepartmentSelect}>
               <SelectTrigger className="bg-[#0B1221] border-[#1EAEDB]/20 text-white">
                 <SelectValue placeholder="Sélectionner un département" />
               </SelectTrigger>
@@ -136,7 +142,7 @@ export const LeadsList = ({ leads }: LeadsListProps) => {
             <label className="text-sm font-medium text-[#1EAEDB]">
               Prix
             </label>
-            <Select value={priceFilter} onValueChange={setPriceFilter}>
+            <Select value={priceFilter} onValueChange={handlePriceFilterChange}>
               <SelectTrigger className="bg-[#0B1221] border-[#1EAEDB]/20 text-white">
                 <SelectValue placeholder="Par défaut" />
               </SelectTrigger>
