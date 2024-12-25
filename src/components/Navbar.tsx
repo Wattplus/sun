@@ -16,8 +16,8 @@ export const Navbar = () => {
             <span className="text-2xl font-bold gradient-text">WattPlus</span>
           </div>
           
-          <div className="hidden md:flex items-center space-x-16">
-            <div className="flex items-center space-x-12">
+          <div className="hidden md:flex items-center space-x-8">
+            <div className="flex items-center space-x-8">
               <a href="#why-solar" className="text-sm font-medium text-blue-100 hover:text-white transition-colors">
                 Pourquoi le solaire
               </a>
