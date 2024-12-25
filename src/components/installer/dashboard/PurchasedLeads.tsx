@@ -23,7 +23,7 @@ export const PurchasedLeads = ({ leads = mockPurchasedLeads }: PurchasedLeadsPro
   }
 
   return (
-    <ScrollArea className="h-[600px]">
+    <ScrollArea className="h-[500px] pr-4">
       <div className="space-y-4">
         {leads.map((lead) => (
           <LeadCard

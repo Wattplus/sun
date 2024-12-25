@@ -63,35 +63,36 @@ export const LeadsList = ({ leads }: LeadsListProps) => {
     setSelectedDepartments(selectedDepartments.filter(d => d !== department));
   };
 
+  const handlePriceFilterChange = (value: SortOrder) => {
+    setPriceFilter(value);
+  };
+
   return (
-    <div className="space-y-6">
-      <Card className="p-4 bg-[#0B1221]/80 border-[#1EAEDB]/20">
+    <div className="space-y-4">
+      <Card className="p-4 bg-background/40 border-primary/20">
         <div className="space-y-4">
           <div className="space-y-2">
-            <label className="text-sm font-medium text-[#1EAEDB]">
+            <label className="text-sm font-medium text-primary">
               Départements
             </label>
             <Select onValueChange={handleDepartmentSelect}>
-              <SelectTrigger className="bg-[#0B1221] border-[#1EAEDB]/20 text-white">
+              <SelectTrigger className="bg-background/60 border-primary/20">
                 <SelectValue placeholder="Sélectionner un département" />
               </SelectTrigger>
-              <SelectContent className="bg-[#0B1221] border-[#1EAEDB]/20">
+              <SelectContent>
                 {availableDepartments.map((dept) => (
-                  <SelectItem 
-                    key={dept} 
-                    value={dept}
-                    className="text-white hover:bg-[#1EAEDB]/20"
-                  >
+                  <SelectItem key={dept} value={dept}>
                     Département {dept}
                   </SelectItem>
                 ))}
               </SelectContent>
             </Select>
-            <div className="flex flex-wrap gap-2 mt-2">
+            <div className="flex flex-wrap gap-2">
               {selectedDepartments.map((dept) => (
                 <Badge 
                   key={dept}
-                  className="bg-[#1EAEDB]/20 text-[#1EAEDB] border-[#1EAEDB]/20 flex items-center gap-1"
+                  variant="secondary"
+                  className="bg-primary/10 text-primary border-primary/20 flex items-center gap-1"
                 >
                   Dép. {dept}
                   <X 
@@ -104,52 +105,40 @@ export const LeadsList = ({ leads }: LeadsListProps) => {
           </div>
 
           <div className="space-y-2">
-            <label className="text-sm font-medium text-[#1EAEDB]">
+            <label className="text-sm font-medium text-primary">
               Type de projet
             </label>
             <Select value={projectTypeFilter} onValueChange={setProjectTypeFilter}>
-              <SelectTrigger className="bg-[#0B1221] border-[#1EAEDB]/20 text-white">
+              <SelectTrigger className="bg-background/60 border-primary/20">
                 <SelectValue placeholder="Tous les types" />
               </SelectTrigger>
-              <SelectContent className="bg-[#0B1221] border-[#1EAEDB]/20">
-                <SelectItem value="all" className="text-white hover:bg-[#1EAEDB]/20">
-                  Tous les types
-                </SelectItem>
-                <SelectItem value="residential" className="text-white hover:bg-[#1EAEDB]/20">
-                  Résidentiel
-                </SelectItem>
-                <SelectItem value="professional" className="text-white hover:bg-[#1EAEDB]/20">
-                  Professionnel
-                </SelectItem>
+              <SelectContent>
+                <SelectItem value="all">Tous les types</SelectItem>
+                <SelectItem value="residential">Résidentiel</SelectItem>
+                <SelectItem value="professional">Professionnel</SelectItem>
               </SelectContent>
             </Select>
           </div>
 
           <div className="space-y-2">
-            <label className="text-sm font-medium text-[#1EAEDB]">
+            <label className="text-sm font-medium text-primary">
               Prix
             </label>
-            <Select value={priceFilter} onValueChange={setPriceFilter}>
-              <SelectTrigger className="bg-[#0B1221] border-[#1EAEDB]/20 text-white">
+            <Select value={priceFilter} onValueChange={handlePriceFilterChange}>
+              <SelectTrigger className="bg-background/60 border-primary/20">
                 <SelectValue placeholder="Par défaut" />
               </SelectTrigger>
-              <SelectContent className="bg-[#0B1221] border-[#1EAEDB]/20">
-                <SelectItem value="default" className="text-white hover:bg-[#1EAEDB]/20">
-                  Par défaut
-                </SelectItem>
-                <SelectItem value="asc" className="text-white hover:bg-[#1EAEDB]/20">
-                  Prix croissant
-                </SelectItem>
-                <SelectItem value="desc" className="text-white hover:bg-[#1EAEDB]/20">
-                  Prix décroissant
-                </SelectItem>
+              <SelectContent>
+                <SelectItem value="default">Par défaut</SelectItem>
+                <SelectItem value="asc">Prix croissant</SelectItem>
+                <SelectItem value="desc">Prix décroissant</SelectItem>
               </SelectContent>
             </Select>
           </div>
         </div>
       </Card>
 
-      <ScrollArea className="h-[600px]">
+      <ScrollArea className="h-[500px] pr-4">
         <div className="space-y-4">
           {availableLeads.length > 0 ? (
             availableLeads.map((lead) => (
