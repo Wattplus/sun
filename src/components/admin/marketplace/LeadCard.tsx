@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Euro, MapPin, Phone, Mail, User, Building2, Clock } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import { calculateLeadPrice, formatPrice } from "@/utils/leadPricing";
+import { differenceInDays } from "date-fns";
 
 interface LeadCardProps {
   lead: Lead;
@@ -12,6 +13,13 @@ interface LeadCardProps {
   isPurchased?: boolean;
   showFullDetails?: boolean;
 }
+
+const getAgeLabel = (createdAt: string) => {
+  const days = differenceInDays(new Date(), new Date(createdAt));
+  if (days >= 30) return "Plus d'un mois";
+  if (days >= 15) return "Plus de 15 jours";
+  return "Nouveau";
+};
 
 export const LeadCard = ({ lead, onPurchase, isPurchased = false, showFullDetails = false }: LeadCardProps) => {
   const { toast } = useToast();
