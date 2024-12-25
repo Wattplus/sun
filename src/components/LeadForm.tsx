@@ -72,7 +72,7 @@ export const LeadForm = () => {
 
       await emailjs.send(
         'service_611ohbh',
-        'template_id', // Remplacez par l'ID de votre nouveau template
+        'template_0qqwwzj', // ID du template mis à jour
         templateParams,
         '12Wtu7mylEymnNxyV'
       );
