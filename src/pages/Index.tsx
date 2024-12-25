@@ -22,13 +22,13 @@ const Index = () => {
         <Navbar />
         <main className="space-y-0">
           <HeroSection />
-          <ElectricityPriceSection />
-          <PrimeRates />
-          <div className="section-spacing container-padding">
+          <div id="lead-form-top" className="section-spacing container-padding">
             <div className="mx-auto max-w-7xl">
               <LeadForm />
             </div>
           </div>
+          <ElectricityPriceSection />
+          <PrimeRates />
           <Benefits />
           <TechnicalSpecs />
           <Process />
@@ -37,6 +37,11 @@ const Index = () => {
           <Certifications />
           <Testimonials />
           <FAQ />
+          <div id="lead-form-bottom" className="section-spacing container-padding">
+            <div className="mx-auto max-w-7xl">
+              <LeadForm />
+            </div>
+          </div>
         </main>
         <Footer />
         <ChatButton />
