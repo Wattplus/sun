@@ -114,7 +114,7 @@ export const LeadForm = () => {
         <form onSubmit={handleSubmit} className="space-y-8">
           <div className="space-y-2">
             <label htmlFor="clientType" className="block text-sm font-medium text-white">
-              Type de client
+              Type de projet photovoltaïque
             </label>
             <select
               id="clientType"
@@ -125,9 +125,9 @@ export const LeadForm = () => {
                 errors.clientType ? 'border-red-500' : 'border-white/20'
               } rounded-md text-white focus:outline-none focus:ring-2 focus:ring-blue-500 [&>option]:text-black [&>option]:bg-white/90`}
             >
-              <option value="" className="text-gray-400">Sélectionnez votre profil</option>
-              <option value="particulier">Particulier</option>
-              <option value="professionnel">Professionnel</option>
+              <option value="" className="text-gray-400">Sélectionnez votre type de projet</option>
+              <option value="particulier">Résidentiel</option>
+              <option value="professionnel">Professionnel / Industriel</option>
             </select>
             {errors.clientType && (
               <p className="text-sm text-red-500 mt-1">{errors.clientType}</p>
