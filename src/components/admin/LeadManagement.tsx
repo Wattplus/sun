@@ -4,42 +4,52 @@ import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
-import { Lead, LeadStatus } from "@/types/crm";
+import { Lead, LeadStatus, Installer } from "@/types/crm";
 import { Search, Download, Plus, Edit } from "lucide-react";
 import { EditLeadDialog } from "./EditLeadDialog";
 import { useToast } from "@/components/ui/use-toast";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
-const mockLeads: Lead[] = [
+// Mock data for installers (you would typically fetch this from your backend)
+const mockInstallers: Installer[] = [
   {
     id: "1",
-    firstName: "Jean",
-    lastName: "Dupont",
-    email: "jean@example.com",
-    phone: "06 12 34 56 78",
-    address: "123 Rue de Paris",
-    postalCode: "75001",
-    city: "Paris",
-    projectType: "Installation neuve",
-    budget: 15000,
-    status: "new",
-    notes: "Intéressé par une installation complète",
-    createdAt: "2024-03-10",
+    companyName: "Électricité Plus",
+    contactName: "Pierre Durant",
+    email: "contact@electriciteplus.fr",
+    phone: "01 23 45 67 89",
+    address: "789 Boulevard Haussmann, 75008 Paris",
+    zones: ["75", "92", "93", "94"],
+    status: "active",
+    commission: 10,
+    leadsAssigned: 45,
+    conversionRate: 68
   },
   {
     id: "2",
-    firstName: "Marie",
-    lastName: "Martin",
-    email: "marie@example.com",
-    phone: "06 98 76 54 32",
-    address: "456 Avenue de Lyon",
-    postalCode: "69001",
-    city: "Lyon",
-    projectType: "Rénovation",
-    budget: 12000,
-    status: "qualified",
-    notes: "A déjà un devis concurrent",
-    createdAt: "2024-03-09",
-    assignedTo: "Solar Pro"
+    companyName: "Solar Pro",
+    contactName: "Sophie Martin",
+    email: "info@solarpro.fr",
+    phone: "04 56 78 90 12",
+    address: "456 Rue de la République, 69001 Lyon",
+    zones: ["69", "38", "01"],
+    status: "active",
+    commission: 12,
+    leadsAssigned: 32,
+    conversionRate: 72
   }
 ];
 
@@ -95,6 +105,41 @@ const LeadManagement = () => {
       description: "Les modifications ont été enregistrées avec succès.",
     });
     handleEditClose();
+  };
+
+  const [assignDialogOpen, setAssignDialogOpen] = useState(false);
+  const [selectedInstallerId, setSelectedInstallerId] = useState<string>("");
+  const [leadToAssign, setLeadToAssign] = useState<Lead | null>(null);
+
+  const handleAssignClick = (lead: Lead) => {
+    setLeadToAssign(lead);
+    setAssignDialogOpen(true);
+  };
+
+  const handleAssignSubmit = () => {
+    if (!leadToAssign || !selectedInstallerId) return;
+
+    const installer = mockInstallers.find(i => i.id === selectedInstallerId);
+    if (!installer) return;
+
+    const updatedLead = {
+      ...leadToAssign,
+      status: "assigned" as LeadStatus,
+      assignedTo: installer.companyName
+    };
+
+    setLeads(leads.map(lead => 
+      lead.id === updatedLead.id ? updatedLead : lead
+    ));
+
+    toast({
+      title: "Lead assigné avec succès",
+      description: `Le lead a été assigné à ${installer.companyName}`,
+    });
+
+    setAssignDialogOpen(false);
+    setSelectedInstallerId("");
+    setLeadToAssign(null);
   };
 
   return (
@@ -169,7 +214,12 @@ const LeadManagement = () => {
                       <Edit className="h-4 w-4 mr-2" />
                       Éditer
                     </Button>
-                    <Button variant="outline" size="sm">
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => handleAssignClick(lead)}
+                      disabled={lead.status === "assigned" || lead.status === "converted"}
+                    >
                       Assigner
                     </Button>
                   </div>
@@ -186,6 +236,38 @@ const LeadManagement = () => {
         onOpenChange={handleEditClose}
         onSave={handleSaveLead}
       />
+
+      <Dialog open={assignDialogOpen} onOpenChange={setAssignDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Assigner le lead à un installateur</DialogTitle>
+          </DialogHeader>
+          <div className="py-4">
+            <Select value={selectedInstallerId} onValueChange={setSelectedInstallerId}>
+              <SelectTrigger>
+                <SelectValue placeholder="Sélectionner un installateur" />
+              </SelectTrigger>
+              <SelectContent>
+                {mockInstallers
+                  .filter(installer => installer.status === "active")
+                  .map(installer => (
+                    <SelectItem key={installer.id} value={installer.id}>
+                      {installer.companyName}
+                    </SelectItem>
+                  ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setAssignDialogOpen(false)}>
+              Annuler
+            </Button>
+            <Button onClick={handleAssignSubmit} disabled={!selectedInstallerId}>
+              Confirmer
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
