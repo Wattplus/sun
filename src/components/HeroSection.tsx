@@ -19,12 +19,16 @@ export const HeroSection = () => {
           
           <h1 className="text-4xl font-bold tracking-tight sm:text-6xl mb-6 animate-fadeIn text-shadow">
             <span className="gradient-text">
-              Réduisez votre facture d'électricité avec l'énergie solaire
+              Installez des panneaux solaires pour produire votre propre énergie
             </span>
           </h1>
           
-          <p className="text-xl text-blue-100 mb-12 animate-fadeIn leading-relaxed">
+          <p className="text-xl text-blue-100 mb-6 animate-fadeIn leading-relaxed">
             Jusqu'à 40% d'économies sur vos factures grâce aux panneaux photovoltaïques
+          </p>
+
+          <p className="text-lg text-blue-200 mb-12 animate-fadeIn leading-relaxed">
+            Découvrez nos offres exclusives de panneaux photovoltaïques et commencez à économiser sur vos factures d'électricité dès aujourd'hui. Chez Carrefour Énergies, on s'engage à fournir des solutions énergétiques durables et économiques pour tous les foyers.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-6 justify-center items-center mb-16 animate-fadeIn">
