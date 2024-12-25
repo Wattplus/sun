@@ -4,16 +4,17 @@ import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
-import { Lead, LeadStatus, Installer } from "@/types/crm";
+import { Lead, LeadStatus, mockLeads } from "@/types/crm";
 import { Search, Download, Plus, Edit } from "lucide-react";
 import { EditLeadDialog } from "./EditLeadDialog";
 import { useToast } from "@/components/ui/use-toast";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogFooter,
 } from "@/components/ui/dialog";
 import {
   Select,
@@ -22,36 +23,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-
-// Mock data for installers (you would typically fetch this from your backend)
-const mockInstallers: Installer[] = [
-  {
-    id: "1",
-    companyName: "Électricité Plus",
-    contactName: "Pierre Durant",
-    email: "contact@electriciteplus.fr",
-    phone: "01 23 45 67 89",
-    address: "789 Boulevard Haussmann, 75008 Paris",
-    zones: ["75", "92", "93", "94"],
-    status: "active",
-    commission: 10,
-    leadsAssigned: 45,
-    conversionRate: 68
-  },
-  {
-    id: "2",
-    companyName: "Solar Pro",
-    contactName: "Sophie Martin",
-    email: "info@solarpro.fr",
-    phone: "04 56 78 90 12",
-    address: "456 Rue de la République, 69001 Lyon",
-    zones: ["69", "38", "01"],
-    status: "active",
-    commission: 12,
-    leadsAssigned: 32,
-    conversionRate: 72
-  }
-];
 
 const LeadManagement = () => {
   const [leads, setLeads] = useState<Lead[]>(mockLeads);
