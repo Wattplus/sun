@@ -15,9 +15,9 @@ const PerformanceChart = () => {
     <motion.div 
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="rounded-xl bg-[#2A2F3C]/50 backdrop-blur-md border border-[#9b87f5]/20 p-6"
+      className="rounded-xl bg-[#0B1221]/50 backdrop-blur-md border border-primary/20 p-6"
     >
-      <h2 className="text-xl font-semibold mb-6 bg-gradient-to-r from-[#9b87f5] to-[#D6BCFA] bg-clip-text text-transparent">
+      <h2 className="text-xl font-semibold mb-6 bg-gradient-to-r from-primary to-primary-light bg-clip-text text-transparent">
         Performance Mensuelle
       </h2>
       <div className="h-[300px]">
@@ -25,12 +25,12 @@ const PerformanceChart = () => {
           <AreaChart data={data}>
             <defs>
               <linearGradient id="colorLeads" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#9b87f5" stopOpacity={0.3}/>
-                <stop offset="95%" stopColor="#9b87f5" stopOpacity={0}/>
+                <stop offset="5%" stopColor="#1EAEDB" stopOpacity={0.3}/>
+                <stop offset="95%" stopColor="#1EAEDB" stopOpacity={0}/>
               </linearGradient>
               <linearGradient id="colorDevis" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#D6BCFA" stopOpacity={0.3}/>
-                <stop offset="95%" stopColor="#D6BCFA" stopOpacity={0}/>
+                <stop offset="5%" stopColor="#33C3F0" stopOpacity={0.3}/>
+                <stop offset="95%" stopColor="#33C3F0" stopOpacity={0}/>
               </linearGradient>
             </defs>
             <CartesianGrid strokeDasharray="3 3" stroke="#ffffff10" vertical={false} />
@@ -52,7 +52,7 @@ const PerformanceChart = () => {
             />
             <Tooltip 
               contentStyle={{ 
-                backgroundColor: '#2A2F3C', 
+                backgroundColor: '#0B1221', 
                 border: '1px solid rgba(255,255,255,0.1)',
                 borderRadius: '8px',
                 color: '#fff'
@@ -62,7 +62,7 @@ const PerformanceChart = () => {
               yAxisId="left"
               type="monotone" 
               dataKey="leads" 
-              stroke="#9b87f5" 
+              stroke="#1EAEDB" 
               fillOpacity={1} 
               fill="url(#colorLeads)" 
               name="Leads"
@@ -71,7 +71,7 @@ const PerformanceChart = () => {
               yAxisId="left"
               type="monotone" 
               dataKey="devis" 
-              stroke="#D6BCFA" 
+              stroke="#33C3F0" 
               fillOpacity={1} 
               fill="url(#colorDevis)" 
               name="Devis"
@@ -80,7 +80,7 @@ const PerformanceChart = () => {
               yAxisId="right"
               type="monotone" 
               dataKey="conversion" 
-              stroke="#7E69AB" 
+              stroke="#0FA0CE" 
               fill="none"
               name="Conversion (%)"
             />

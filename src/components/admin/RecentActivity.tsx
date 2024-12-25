@@ -18,9 +18,9 @@ const RecentActivity = () => {
     <motion.div 
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="rounded-xl bg-[#2A2F3C]/50 backdrop-blur-md border border-[#9b87f5]/20 p-6"
+      className="rounded-xl bg-[#0B1221]/50 backdrop-blur-md border border-primary/20 p-6"
     >
-      <h2 className="text-xl font-semibold mb-6 bg-gradient-to-r from-[#9b87f5] to-[#D6BCFA] bg-clip-text text-transparent">
+      <h2 className="text-xl font-semibold mb-6 bg-gradient-to-r from-primary to-primary-light bg-clip-text text-transparent">
         Activité Récente
       </h2>
       <div className="space-y-4">
@@ -30,12 +30,12 @@ const RecentActivity = () => {
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: index * 0.1 }}
-            className="flex items-center justify-between py-3 border-b border-[#9b87f5]/10 last:border-0 hover:bg-[#9b87f5]/5 rounded-lg transition-colors duration-200 p-2"
+            className="flex items-center justify-between py-3 border-b border-primary/10 last:border-0 hover:bg-primary/5 rounded-lg transition-colors duration-200 p-2"
           >
             <div className="flex items-center space-x-3">
               <div className={`w-2 h-2 rounded-full ${
                 item.status === 'success' ? 'bg-emerald-400' :
-                item.status === 'warning' ? 'bg-yellow-400' : 'bg-[#9b87f5]'
+                item.status === 'warning' ? 'bg-yellow-400' : 'bg-primary'
               }`}></div>
               <p className="text-sm text-white/70">{item.action}</p>
             </div>
