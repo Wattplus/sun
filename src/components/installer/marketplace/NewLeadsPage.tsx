@@ -4,10 +4,9 @@ import { LeadsList } from "../dashboard/LeadsList";
 import { mockAvailableLeads } from "../dashboard/mockAvailableLeads";
 import { PrepaidBalance } from "../dashboard/PrepaidBalance";
 import { Button } from "@/components/ui/button";
-import { ShoppingCart, AlertTriangle, CheckCircle2, TrendingUp, Shield, Info } from "lucide-react";
+import { ShoppingCart, CheckCircle2, TrendingUp, Shield } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Lead } from "@/types/crm";
-import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 
 export const NewLeadsPage = () => {
@@ -55,20 +54,14 @@ export const NewLeadsPage = () => {
           {/* Header Section */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
             <div className="space-y-6">
-              <div className="space-y-4">
-                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary">
-                  <ShoppingCart className="h-5 w-5" />
-                  <span className="font-medium">Marketplace</span>
-                </div>
-                <h1 className="text-4xl font-bold gradient-text">
-                  Nouveaux Leads Disponibles
-                </h1>
-                <p className="text-lg text-muted-foreground leading-relaxed max-w-xl">
-                  Découvrez tous les leads qualifiés disponibles pour votre région. 
-                  Nos leads sont soigneusement sélectionnés et vérifiés pour assurer 
-                  une qualité optimale.
-                </p>
-              </div>
+              <h1 className="text-4xl font-bold gradient-text">
+                Nouveaux Leads
+              </h1>
+              <p className="text-lg text-muted-foreground leading-relaxed max-w-xl">
+                Découvrez tous les leads qualifiés disponibles pour votre région. 
+                Nos leads sont soigneusement sélectionnés et vérifiés pour assurer 
+                une qualité optimale.
+              </p>
 
               {/* Stats Grid */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -115,28 +108,15 @@ export const NewLeadsPage = () => {
 
           <Separator className="bg-primary/10" />
 
-          {/* Info Banner */}
-          <div className="flex items-start gap-3 p-4 rounded-lg bg-blue-500/10 border border-blue-500/20">
-            <Info className="h-5 w-5 text-blue-500 flex-shrink-0 mt-0.5" />
-            <div className="space-y-1">
-              <h4 className="font-medium text-blue-500">Informations importantes</h4>
-              <p className="text-sm text-muted-foreground">
-                Les leads sont disponibles pendant 24h après leur mise en ligne. 
-                Vous pouvez acheter plusieurs leads à la fois et bénéficier de prix dégressifs.
-                La garantie satisfait ou remboursé s'applique pendant 7 jours après l'achat.
-              </p>
-            </div>
-          </div>
+          {/* Leads Table */}
+          <Card className="glass-panel p-6 animate-fadeIn">
+            <LeadsList 
+              leads={mockAvailableLeads} 
+              onLeadSelect={handleLeadSelect}
+              selectedLeads={selectedLeads}
+            />
+          </Card>
         </div>
-
-        {/* Leads Table */}
-        <Card className="glass-panel p-6 animate-fadeIn">
-          <LeadsList 
-            leads={mockAvailableLeads} 
-            onLeadSelect={handleLeadSelect}
-            selectedLeads={selectedLeads}
-          />
-        </Card>
       </div>
     </div>
   );
