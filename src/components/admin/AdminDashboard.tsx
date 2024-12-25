@@ -2,6 +2,8 @@ import { Users, FileText, Target, Activity, TrendingUp, ArrowUpRight, LineChart 
 import StatCard from "./StatCard";
 import PerformanceChart from "./PerformanceChart";
 import RecentActivity from "./RecentActivity";
+import LeadManagement from "./LeadManagement";
+import InstallerManagement from "./InstallerManagement";
 
 const AdminDashboard = () => {
   return (
@@ -46,9 +48,14 @@ const AdminDashboard = () => {
           />
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
           <PerformanceChart />
           <RecentActivity />
+        </div>
+
+        <div className="space-y-6">
+          <LeadManagement />
+          <InstallerManagement />
         </div>
       </div>
     </div>
