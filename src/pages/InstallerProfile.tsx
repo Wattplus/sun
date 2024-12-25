@@ -20,8 +20,7 @@ export const InstallerProfile = () => {
       qualiPV: false,
       rge: false,
       qualibat: false
-    },
-    specialties: [],
+    }
   });
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -117,23 +116,6 @@ export const InstallerProfile = () => {
               placeholder="Décrivez votre entreprise, votre expérience..."
               className="min-h-[100px]"
             />
-          </div>
-
-          <div className="space-y-4">
-            <div className="flex items-center gap-2">
-              <BadgeCheck className="h-5 w-5 text-emerald-500" />
-              <h3 className="font-medium">Certifications</h3>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <Button variant="outline" className="justify-start">
-                <Award className="h-4 w-4 mr-2" />
-                QualiPV
-              </Button>
-              <Button variant="outline" className="justify-start">
-                <Award className="h-4 w-4 mr-2" />
-                QualiBat
-              </Button>
-            </div>
           </div>
 
           <Button type="submit" className="w-full" size="lg">
