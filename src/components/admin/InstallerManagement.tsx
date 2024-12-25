@@ -6,6 +6,8 @@ import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { Installer, InstallerStatus } from "@/types/crm";
 import { Search, Download, Plus, Edit, Eye } from "lucide-react";
+import { EditInstallerDialog } from "./EditInstallerDialog";
+import { useToast } from "@/components/ui/use-toast";
 
 const mockInstallers: Installer[] = [
   {
@@ -37,8 +39,11 @@ const mockInstallers: Installer[] = [
 ];
 
 const InstallerManagement = () => {
-  const [installers] = useState<Installer[]>(mockInstallers);
+  const [installers, setInstallers] = useState<Installer[]>(mockInstallers);
   const [searchTerm, setSearchTerm] = useState("");
+  const [selectedInstaller, setSelectedInstaller] = useState<Installer | null>(null);
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const { toast } = useToast();
 
   const getStatusColor = (status: InstallerStatus) => {
     const colors = {
@@ -59,8 +64,17 @@ const InstallerManagement = () => {
   };
 
   const exportToCSV = () => {
-    // TODO: Implémenter l'export CSV
     console.log("Exporting to CSV...");
+  };
+
+  const handleSaveInstaller = (updatedInstaller: Installer) => {
+    setInstallers(installers.map(installer => 
+      installer.id === updatedInstaller.id ? updatedInstaller : installer
+    ));
+    toast({
+      title: "Installateur mis à jour",
+      description: "Les modifications ont été enregistrées avec succès.",
+    });
   };
 
   return (
@@ -130,7 +144,14 @@ const InstallerManagement = () => {
                 </TableCell>
                 <TableCell>
                   <div className="flex gap-2">
-                    <Button variant="outline" size="sm">
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => {
+                        setSelectedInstaller(installer);
+                        setEditDialogOpen(true);
+                      }}
+                    >
                       <Edit className="h-4 w-4 mr-2" />
                       Éditer
                     </Button>
@@ -145,6 +166,13 @@ const InstallerManagement = () => {
           </TableBody>
         </Table>
       </ScrollArea>
+
+      <EditInstallerDialog
+        installer={selectedInstaller}
+        open={editDialogOpen}
+        onOpenChange={setEditDialogOpen}
+        onSave={handleSaveInstaller}
+      />
     </div>
   );
 };

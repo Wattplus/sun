@@ -5,7 +5,9 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { Lead, LeadStatus } from "@/types/crm";
-import { Search, Download, Plus } from "lucide-react";
+import { Search, Download, Plus, Edit } from "lucide-react";
+import { EditLeadDialog } from "./EditLeadDialog";
+import { useToast } from "@/components/ui/use-toast";
 
 const mockLeads: Lead[] = [
   {
@@ -42,8 +44,11 @@ const mockLeads: Lead[] = [
 ];
 
 const LeadManagement = () => {
-  const [leads] = useState<Lead[]>(mockLeads);
+  const [leads, setLeads] = useState<Lead[]>(mockLeads);
   const [searchTerm, setSearchTerm] = useState("");
+  const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const { toast } = useToast();
 
   const getStatusColor = (status: LeadStatus) => {
     const colors = {
@@ -70,8 +75,15 @@ const LeadManagement = () => {
   };
 
   const exportToCSV = () => {
-    // TODO: Implémenter l'export CSV
     console.log("Exporting to CSV...");
+  };
+
+  const handleSaveLead = (updatedLead: Lead) => {
+    setLeads(leads.map(lead => lead.id === updatedLead.id ? updatedLead : lead));
+    toast({
+      title: "Lead mis à jour",
+      description: "Les modifications ont été enregistrées avec succès.",
+    });
   };
 
   return (
@@ -138,7 +150,15 @@ const LeadManagement = () => {
                 </TableCell>
                 <TableCell>
                   <div className="flex gap-2">
-                    <Button variant="outline" size="sm">
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => {
+                        setSelectedLead(lead);
+                        setEditDialogOpen(true);
+                      }}
+                    >
+                      <Edit className="h-4 w-4 mr-2" />
                       Éditer
                     </Button>
                     <Button variant="outline" size="sm">
@@ -151,6 +171,13 @@ const LeadManagement = () => {
           </TableBody>
         </Table>
       </ScrollArea>
+
+      <EditLeadDialog
+        lead={selectedLead}
+        open={editDialogOpen}
+        onOpenChange={setEditDialogOpen}
+        onSave={handleSaveLead}
+      />
     </div>
   );
 };
