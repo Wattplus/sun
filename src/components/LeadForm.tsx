@@ -6,6 +6,9 @@ import { validateEmail, validatePhone, validatePostalCode } from "@/utils/formVa
 import { Send } from "lucide-react";
 import emailjs from '@emailjs/browser';
 
+// Initialize EmailJS with your public key
+emailjs.init("12Wtu7mylEymnNxyV");
+
 interface FormData {
   firstName: string;
   lastName: string;
@@ -72,7 +75,7 @@ export const LeadForm = () => {
 
       await emailjs.send(
         'service_611ohbh',
-        'template_0qqwwzj', // ID du template mis à jour
+        'template_0qqwwzj',
         templateParams,
         '12Wtu7mylEymnNxyV'
       );
