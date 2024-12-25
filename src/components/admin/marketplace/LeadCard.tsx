@@ -2,7 +2,7 @@ import { Lead } from "@/types/crm";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Euro, MapPin, Phone, Mail, User, Building2, Clock, Crown } from "lucide-react";
+import { Euro, MapPin, Phone, Mail, User, Building2, Clock, Crown, Users } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import { calculateLeadPrice, formatPrice } from "@/utils/leadPricing";
 import { differenceInDays } from "date-fns";
@@ -85,10 +85,16 @@ export const LeadCard = ({
               <span>{lead.city} ({lead.postalCode})</span>
             </div>
           </div>
-          <Badge variant="outline" className="flex items-center gap-1 border-[#33C3F0]/20">
-            <Euro className="h-4 w-4" />
-            {formatPrice(prices.mutualPrice)}
-          </Badge>
+          <div className="flex flex-col items-end gap-2">
+            <Badge variant="outline" className="flex items-center gap-1 border-[#33C3F0]/20">
+              <Euro className="h-4 w-4" />
+              {formatPrice(prices.mutualPrice)}
+            </Badge>
+            <Badge variant="outline" className="flex items-center gap-1 text-muted-foreground">
+              <Users className="h-4 w-4" />
+              {lead.purchasedBy?.length || 0} installateur{lead.purchasedBy?.length !== 1 ? 's' : ''}
+            </Badge>
+          </div>
         </div>
       </CardHeader>
       <CardContent>
