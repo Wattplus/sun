@@ -3,10 +3,8 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { MapPin, Euro, ChevronRight, Search } from "lucide-react";
+import { MapPin, Euro } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
-import { Link } from "react-router-dom";
 import { useState } from "react";
 import { Lead } from "@/types/crm";
 
@@ -17,8 +15,6 @@ interface LeadsListProps {
 export const LeadsList = ({ leads }: LeadsListProps) => {
   const { toast } = useToast();
   const [searchTerm, setSearchTerm] = useState("");
-  const [projectType, setProjectType] = useState("all");
-  const [paymentMethod, setPaymentMethod] = useState<"prepaid" | "direct">("prepaid");
 
   const handleBuyLead = async (leadId: string, type: "mutualise" | "exclusif") => {
     try {
@@ -26,11 +22,7 @@ export const LeadsList = ({ leads }: LeadsListProps) => {
         ? 'price_1QZyKUFOePj4Hv47qEFQ1KzF' 
         : 'price_1QZyJpFOePj4Hv47sd76eDOz';
 
-      const endpoint = paymentMethod === "prepaid" 
-        ? "use-prepaid-balance"
-        : "create-lead-checkout";
-
-      const response = await fetch(`https://dqzsycxxgltztufrhams.supabase.co/functions/v1/${endpoint}`, {
+      const response = await fetch(`https://dqzsycxxgltztufrhams.supabase.co/functions/v1/create-lead-checkout`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -43,99 +35,50 @@ export const LeadsList = ({ leads }: LeadsListProps) => {
         }),
       });
 
-      if (!response.ok) {
-        throw new Error("Erreur lors de l'achat");
-      }
+      if (!response.ok) throw new Error();
 
       const data = await response.json();
-      
-      if (paymentMethod === "direct" && data.url) {
-        window.location.href = data.url;
-      } else if (paymentMethod === "prepaid") {
-        toast({
-          title: "Succès",
-          description: "Le lead a été acheté avec votre solde prépayé.",
-        });
-      }
+      if (data.url) window.location.href = data.url;
     } catch (error) {
-      console.error("Erreur d'achat:", error);
       toast({
         title: "Erreur",
-        description: "Une erreur est survenue lors de l'achat du lead.",
+        description: "Une erreur est survenue lors de l'achat du lead",
         variant: "destructive",
       });
     }
   };
 
-  const filteredLeads = leads.filter(lead => {
-    if (projectType !== "all" && lead.projectType !== projectType) return false;
-    if (searchTerm && !lead.city.toLowerCase().includes(searchTerm.toLowerCase())) return false;
-    return true;
-  });
+  const filteredLeads = leads.filter(lead => 
+    lead.city.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
-    <div>
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-xl font-semibold gradient-text">Leads Disponibles</h2>
-        <div className="flex gap-2">
-          <Select value={paymentMethod} onValueChange={(value: "prepaid" | "direct") => setPaymentMethod(value)}>
-            <SelectTrigger className="w-[180px] glass-button">
-              <SelectValue placeholder="Mode de paiement" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="prepaid">Solde prépayé</SelectItem>
-              <SelectItem value="direct">Paiement direct</SelectItem>
-            </SelectContent>
-          </Select>
-          <Link to="/admin/marketplace">
-            <Button variant="outline" size="sm" className="glass-button">
-              Voir tout
-              <ChevronRight className="h-4 w-4 ml-1" />
-            </Button>
-          </Link>
-        </div>
+    <div className="space-y-4">
+      <div className="flex justify-between items-center">
+        <h2 className="text-lg font-medium">Leads Disponibles</h2>
+        <Input
+          placeholder="Rechercher par ville..."
+          className="max-w-[200px] glass-button"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
       </div>
 
-      <div className="flex gap-4 mb-6">
-        <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
-          <Input
-            placeholder="Rechercher un lead..."
-            className="pl-10 glass-button"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-        </div>
-        <Select value={projectType} onValueChange={setProjectType}>
-          <SelectTrigger className="w-[180px] glass-button">
-            <SelectValue placeholder="Type de projet" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">Tous les projets</SelectItem>
-            <SelectItem value="solar">Panneaux Solaires</SelectItem>
-            <SelectItem value="heat">Pompe à chaleur</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
-
-      <ScrollArea className="h-[400px] pr-4">
-        <div className="space-y-4">
+      <ScrollArea className="h-[400px]">
+        <div className="space-y-3">
           {filteredLeads.map((lead) => (
-            <Card key={lead.id} className="glass-panel p-4 card-hover">
+            <Card key={lead.id} className="p-3 glass-panel">
               <div className="flex justify-between items-start">
                 <div>
-                  <Badge variant="secondary" className="mb-2 glass-button">
+                  <Badge variant="secondary" className="mb-2">
                     {lead.projectType}
                   </Badge>
-                  <div className="flex items-center gap-2 text-muted-foreground mt-2">
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
                     <MapPin className="h-4 w-4" />
-                    <span>{lead.city} ({lead.postalCode})</span>
+                    {lead.city}
                   </div>
-                  <div className="mt-2 text-sm font-medium">
-                    Budget estimé: {lead.budget.toLocaleString()}€
-                  </div>
-                  <div className="text-xs text-muted-foreground mt-1">
-                    {lead.createdAt}
+                  <div className="mt-2 text-sm">
+                    Budget: {lead.budget.toLocaleString()}€
                   </div>
                 </div>
                 <div className="flex flex-col gap-2">
@@ -144,7 +87,6 @@ export const LeadsList = ({ leads }: LeadsListProps) => {
                     onClick={() => handleBuyLead(lead.id, "mutualise")}
                     className="glass-button"
                   >
-                    <Euro className="h-4 w-4" />
                     19€ Mutualisé
                   </Button>
                   <Button 
@@ -153,7 +95,6 @@ export const LeadsList = ({ leads }: LeadsListProps) => {
                     onClick={() => handleBuyLead(lead.id, "exclusif")}
                     className="glass-button"
                   >
-                    <Euro className="h-4 w-4" />
                     35€ Exclusif
                   </Button>
                 </div>

@@ -10,47 +10,41 @@ import { mockLeads } from "@/types/crm";
 
 export function InstallerDashboard() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background/80 to-background p-6 space-y-8">
-      {/* Header avec notifications */}
-      <div className="flex justify-between items-start mb-8">
-        <div>
-          <h1 className="text-3xl font-bold gradient-text">
-            Mon Espace Pro
-          </h1>
-          <p className="text-muted-foreground mt-2">
-            Gérez vos leads et suivez votre activité en temps réel
-          </p>
-        </div>
-        <div className="flex gap-4">
+    <div className="min-h-screen bg-gradient-to-b from-background/80 to-background p-6 space-y-6">
+      {/* En-tête simplifié */}
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-2xl font-bold gradient-text">
+          Tableau de Bord
+        </h1>
+        <div className="flex gap-2">
           <Button variant="outline" className="glass-button">
-            <Bell className="h-4 w-4 mr-2" />
+            <Bell className="h-4 w-4" />
             <Badge variant="secondary" className="ml-1">2</Badge>
           </Button>
           <Button variant="outline" className="glass-button">
-            <Calendar className="h-4 w-4 mr-2" />
-            Planning
+            <Calendar className="h-4 w-4" />
           </Button>
         </div>
       </div>
 
-      {/* Solde et Stats */}
-      <div className="grid gap-8">
+      {/* Portefeuille et Statistiques */}
+      <div className="grid gap-4">
         <PrepaidBalance balance={0} />
         <StatsCards />
       </div>
 
-      {/* Leads et Messages */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <div className="glass-panel p-6">
+      {/* Leads et Messages côte à côte */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <div className="glass-panel p-4">
           <LeadsList leads={mockLeads} />
         </div>
-        <div className="glass-panel p-6">
+        <div className="glass-panel p-4">
           <MessagesList />
         </div>
       </div>
 
-      {/* Section Notifications */}
-      <div className="glass-panel p-6">
+      {/* Notifications en bas */}
+      <div className="glass-panel p-4">
         <NotificationsList />
       </div>
     </div>

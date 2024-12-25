@@ -2,55 +2,18 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
-import { CreditCard, Euro, History, Plus } from "lucide-react";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { QuickTopUpButtons } from "./prepaid/QuickTopUpButtons";
-import { CustomAmountInput } from "./prepaid/CustomAmountInput";
-import { TransactionHistory } from "./prepaid/TransactionHistory";
-
-interface Transaction {
-  id: string;
-  type: "credit" | "debit";
-  amount: number;
-  description: string;
-  date: string;
-}
-
-const mockTransactions: Transaction[] = [
-  {
-    id: "1",
-    type: "credit",
-    amount: 100,
-    description: "Rechargement par carte",
-    date: "2024-03-20 14:30"
-  },
-  {
-    id: "2",
-    type: "debit",
-    amount: 35,
-    description: "Achat lead exclusif - Paris",
-    date: "2024-03-20 15:45"
-  }
-];
+import { Euro, Plus } from "lucide-react";
+import { Input } from "@/components/ui/input";
 
 export const PrepaidBalance = ({ balance = 0 }) => {
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
-  const [showHistory, setShowHistory] = useState(false);
-  const [showCardDialog, setShowCardDialog] = useState(false);
-  const [transactions] = useState<Transaction[]>(mockTransactions);
-  const [customAmount, setCustomAmount] = useState("");
+  const [amount, setAmount] = useState("");
 
-  const handleTopUp = async (amount: number) => {
-    if (amount <= 0) {
+  const handleTopUp = async (selectedAmount: number) => {
+    if (selectedAmount <= 0) {
       toast({
-        title: "Montant invalide",
+        title: "Erreur",
         description: "Le montant doit être supérieur à 0€",
         variant: "destructive",
       });
@@ -65,22 +28,17 @@ export const PrepaidBalance = ({ balance = 0 }) => {
           "Content-Type": "application/json",
           "Authorization": `Bearer ${process.env.SUPABASE_ANON_KEY}`,
         },
-        body: JSON.stringify({ amount }),
+        body: JSON.stringify({ amount: selectedAmount }),
       });
 
-      if (!response.ok) {
-        throw new Error("Erreur lors de la création de la session de paiement");
-      }
+      if (!response.ok) throw new Error();
 
       const { url } = await response.json();
-      if (url) {
-        window.location.href = url;
-      }
+      if (url) window.location.href = url;
     } catch (error) {
-      console.error("Erreur de rechargement:", error);
       toast({
         title: "Erreur",
-        description: "Une erreur est survenue lors du rechargement du compte.",
+        description: "Une erreur est survenue",
         variant: "destructive",
       });
     } finally {
@@ -88,110 +46,59 @@ export const PrepaidBalance = ({ balance = 0 }) => {
     }
   };
 
-  const handleCustomTopUp = () => {
-    const amount = parseFloat(customAmount);
-    if (isNaN(amount)) {
-      toast({
-        title: "Montant invalide",
-        description: "Veuillez entrer un montant valide",
-        variant: "destructive",
-      });
-      return;
-    }
-    handleTopUp(amount);
-  };
-
   return (
-    <>
-      <Card className="glass-panel">
-        <div className="p-6 space-y-6">
-          <div className="flex justify-between items-center">
-            <div>
-              <h3 className="text-xl font-semibold gradient-text">Mon Portefeuille</h3>
-              <p className="text-3xl font-bold text-primary mt-2">
-                {balance.toLocaleString()}€
-              </p>
-            </div>
-            <div className="flex gap-3">
-              <Button 
-                variant="outline"
-                onClick={() => setShowHistory(true)}
-                className="glass-button"
-              >
-                <History className="h-4 w-4 mr-2" />
-                Historique
-              </Button>
-              <Button 
-                variant="outline"
-                onClick={() => setShowCardDialog(true)}
-                className="glass-button"
-              >
-                <CreditCard className="h-4 w-4 mr-2" />
-                Gérer CB
-              </Button>
-              <Button 
-                onClick={() => handleTopUp(100)}
-                disabled={isLoading}
-                className="glass-button"
-              >
-                <Plus className="h-4 w-4 mr-2" />
-                Recharger
-              </Button>
-            </div>
+    <Card className="glass-panel">
+      <div className="p-4 space-y-4">
+        <div className="flex justify-between items-center">
+          <div>
+            <h3 className="text-lg font-medium">Mon Portefeuille</h3>
+            <p className="text-2xl font-bold text-primary mt-1">
+              {balance.toLocaleString()}€
+            </p>
           </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <QuickTopUpButtons onTopUp={handleTopUp} isLoading={isLoading} />
-            <CustomAmountInput
-              value={customAmount}
-              onChange={setCustomAmount}
-              onSubmit={handleCustomTopUp}
-              isLoading={isLoading}
-            />
-          </div>
+          <Button 
+            onClick={() => handleTopUp(100)}
+            disabled={isLoading}
+            className="glass-button"
+          >
+            <Plus className="h-4 w-4 mr-2" />
+            Recharger
+          </Button>
         </div>
-      </Card>
-
-      <Dialog open={showHistory} onOpenChange={setShowHistory}>
-        <DialogContent className="glass-panel sm:max-w-[600px]">
-          <DialogHeader>
-            <DialogTitle className="gradient-text">Historique des transactions</DialogTitle>
-            <DialogDescription>
-              Consultez l'historique de vos rechargements et dépenses
-            </DialogDescription>
-          </DialogHeader>
-          <TransactionHistory transactions={transactions} />
-        </DialogContent>
-      </Dialog>
-
-      <Dialog open={showCardDialog} onOpenChange={setShowCardDialog}>
-        <DialogContent className="glass-panel">
-          <DialogHeader>
-            <DialogTitle className="gradient-text">Gestion des moyens de paiement</DialogTitle>
-            <DialogDescription>
-              Ajoutez ou modifiez vos cartes bancaires
-            </DialogDescription>
-          </DialogHeader>
-          <div className="space-y-4 py-4">
-            <div className="flex items-center justify-between p-4 border rounded-lg glass-panel">
-              <div className="flex items-center gap-3">
-                <CreditCard className="h-5 w-5 text-primary" />
-                <div>
-                  <p className="font-medium">Carte Visa ****4242</p>
-                  <p className="text-sm text-muted-foreground">Expire 12/25</p>
-                </div>
-              </div>
-              <Button variant="ghost" size="sm" className="hover:text-destructive">
-                Supprimer
-              </Button>
-            </div>
-            <Button className="w-full glass-button">
-              <Plus className="h-4 w-4 mr-2" />
-              Ajouter une carte
+        
+        <div className="grid grid-cols-3 gap-2">
+          {[50, 100, 200].map((value) => (
+            <Button
+              key={value}
+              variant="outline"
+              onClick={() => handleTopUp(value)}
+              disabled={isLoading}
+              className="glass-button"
+            >
+              <Euro className="h-4 w-4 mr-1" />
+              {value}€
             </Button>
-          </div>
-        </DialogContent>
-      </Dialog>
-    </>
+          ))}
+        </div>
+
+        <div className="flex gap-2">
+          <Input
+            type="number"
+            placeholder="Montant personnalisé"
+            value={amount}
+            onChange={(e) => setAmount(e.target.value)}
+            className="glass-button"
+          />
+          <Button
+            onClick={() => handleTopUp(Number(amount))}
+            disabled={isLoading}
+            className="glass-button whitespace-nowrap"
+          >
+            <Euro className="h-4 w-4 mr-1" />
+            Valider
+          </Button>
+        </div>
+      </div>
+    </Card>
   );
 };
