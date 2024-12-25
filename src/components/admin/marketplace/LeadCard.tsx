@@ -3,6 +3,7 @@ import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Euro, MapPin, Phone, Mail, User, Building2 } from "lucide-react";
+import { useToast } from "@/components/ui/use-toast";
 
 interface LeadCardProps {
   lead: Lead;
@@ -12,6 +13,38 @@ interface LeadCardProps {
 }
 
 export const LeadCard = ({ lead, onPurchase, isPurchased = false, showFullDetails = false }: LeadCardProps) => {
+  const { toast } = useToast();
+
+  const handlePurchase = async (type: 'mutualise' | 'exclusif') => {
+    try {
+      const response = await fetch("/api/create-lead-checkout", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          leadId: lead.id,
+          type
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Erreur lors de la création de la session de paiement");
+      }
+
+      const { url } = await response.json();
+      if (url) {
+        window.location.href = url;
+      }
+    } catch (error) {
+      toast({
+        title: "Erreur",
+        description: "Une erreur est survenue lors de l'achat du lead.",
+        variant: "destructive",
+      });
+    }
+  };
+
   return (
     <Card className="w-full transition-all duration-300 hover:shadow-lg hover:border-[#33C3F0]/20 bg-background/50 backdrop-blur-md">
       <CardHeader className="pb-2">
@@ -81,13 +114,23 @@ export const LeadCard = ({ lead, onPurchase, isPurchased = false, showFullDetail
       </CardContent>
       <CardFooter>
         {!isPurchased ? (
-          <Button 
-            className="w-full bg-[#1EAEDB] hover:bg-[#0FA0CE]" 
-            onClick={() => onPurchase(lead)}
-          >
-            <Euro className="h-4 w-4 mr-2" />
-            Acheter ce lead
-          </Button>
+          <div className="w-full space-y-2">
+            <Button 
+              className="w-full bg-[#1EAEDB] hover:bg-[#0FA0CE]" 
+              onClick={() => handlePurchase('mutualise')}
+            >
+              <Euro className="h-4 w-4 mr-2" />
+              Lead mutualisé - 19€
+            </Button>
+            <Button 
+              className="w-full" 
+              variant="outline"
+              onClick={() => handlePurchase('exclusif')}
+            >
+              <Euro className="h-4 w-4 mr-2" />
+              Lead exclusif - 35€
+            </Button>
+          </div>
         ) : (
           <Badge className="w-full justify-center py-2 bg-emerald-500">
             Lead acheté
