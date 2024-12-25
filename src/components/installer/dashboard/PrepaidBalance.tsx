@@ -1,10 +1,8 @@
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Euro, Plus, CreditCard, History } from "lucide-react";
 import { useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { FormField } from "@/components/form/FormField";
+import { CreditCard, Euro, History, Plus } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -12,6 +10,9 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { QuickTopUpButtons } from "./prepaid/QuickTopUpButtons";
+import { CustomAmountInput } from "./prepaid/CustomAmountInput";
+import { TransactionHistory } from "./prepaid/TransactionHistory";
 
 interface Transaction {
   id: string;
@@ -105,7 +106,7 @@ export const PrepaidBalance = ({ balance = 0 }) => {
       <Card className="p-6 bg-background/50 backdrop-blur-md border-primary/20">
         <div className="flex justify-between items-center mb-4">
           <div>
-            <h3 className="text-lg font-semibold">Solde Prépayé</h3>
+            <h3 className="text-lg font-semibold">Mon Portefeuille</h3>
             <p className="text-2xl font-bold text-primary mt-1">
               {balance.toLocaleString()}€
             </p>
@@ -138,37 +139,13 @@ export const PrepaidBalance = ({ balance = 0 }) => {
           </div>
         </div>
         <div className="grid grid-cols-4 gap-3 mt-4">
-          {[50, 100, 200].map((amount) => (
-            <Button
-              key={amount}
-              variant="outline"
-              onClick={() => handleTopUp(amount)}
-              disabled={isLoading}
-              className="w-full"
-            >
-              <Euro className="h-4 w-4 mr-2" />
-              {amount}€
-            </Button>
-          ))}
-          <div className="flex gap-2">
-            <FormField
-              id="customAmount"
-              type="number"
-              value={customAmount}
-              onChange={(e) => setCustomAmount(e.target.value)}
-              placeholder="Montant personnalisé"
-              className="flex-1"
-            />
-            <Button
-              variant="outline"
-              onClick={handleCustomTopUp}
-              disabled={isLoading}
-              className="whitespace-nowrap"
-            >
-              <Euro className="h-4 w-4 mr-2" />
-              Recharger
-            </Button>
-          </div>
+          <QuickTopUpButtons onTopUp={handleTopUp} isLoading={isLoading} />
+          <CustomAmountInput
+            value={customAmount}
+            onChange={setCustomAmount}
+            onSubmit={handleCustomTopUp}
+            isLoading={isLoading}
+          />
         </div>
       </Card>
 
@@ -180,31 +157,7 @@ export const PrepaidBalance = ({ balance = 0 }) => {
               Consultez l'historique de vos rechargements et dépenses
             </DialogDescription>
           </DialogHeader>
-          <ScrollArea className="h-[400px] pr-4">
-            <div className="space-y-4">
-              {transactions.map((transaction) => (
-                <div
-                  key={transaction.id}
-                  className="flex justify-between items-center p-3 border rounded-lg"
-                >
-                  <div>
-                    <p className="font-medium">{transaction.description}</p>
-                    <p className="text-sm text-muted-foreground">
-                      {transaction.date}
-                    </p>
-                  </div>
-                  <p className={`font-semibold ${
-                    transaction.type === 'credit' 
-                      ? 'text-green-500' 
-                      : 'text-red-500'
-                  }`}>
-                    {transaction.type === 'credit' ? '+' : '-'}
-                    {transaction.amount}€
-                  </p>
-                </div>
-              ))}
-            </div>
-          </ScrollArea>
+          <TransactionHistory transactions={transactions} />
         </DialogContent>
       </Dialog>
 
