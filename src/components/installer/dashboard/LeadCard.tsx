@@ -45,7 +45,7 @@ export const LeadCard = ({ lead, status, onStatusChange }: LeadCardProps) => {
         <div className="flex items-center justify-between">
           <div>
             <h3 className="text-lg font-medium">
-              {lead.firstName} {lead.lastName.slice(0, 1)}••••••
+              {lead.firstName} {lead.lastName}
             </h3>
             <div className="flex items-center gap-2 text-muted-foreground mt-1">
               <MapPin className="h-4 w-4" />
@@ -87,7 +87,7 @@ export const LeadCard = ({ lead, status, onStatusChange }: LeadCardProps) => {
             onClick={() => handleContact('phone')}
           >
             <Phone className="h-4 w-4 mr-2" />
-            Appeler
+            {lead.phone}
           </Button>
           <Button 
             variant="outline" 
