@@ -15,40 +15,6 @@ export const LeadsList = ({ leads }: LeadsListProps) => {
   const { toast } = useToast();
   const [searchTerm, setSearchTerm] = useState("");
 
-  const handleBuyLead = async (leadId: string) => {
-    try {
-      const priceId = 'price_1QZyJpFOePj4Hv47sd76eDOz';
-      
-      toast({
-        title: "Achat en cours",
-        description: "Redirection vers la page de paiement...",
-      });
-
-      const response = await fetch(`https://dqzsycxxgltztufrhams.supabase.co/functions/v1/create-lead-checkout`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${process.env.SUPABASE_ANON_KEY}`,
-        },
-        body: JSON.stringify({
-          leadId,
-          priceId
-        }),
-      });
-
-      if (!response.ok) throw new Error();
-
-      const data = await response.json();
-      if (data.url) window.location.href = data.url;
-    } catch (error) {
-      toast({
-        title: "Erreur",
-        description: "Une erreur est survenue lors de l'achat du lead",
-        variant: "destructive",
-      });
-    }
-  };
-
   const handleContact = async (leadId: string, method: "phone" | "email") => {
     try {
       const priceId = 'price_1QZyJpFOePj4Hv47sd76eDOz';
@@ -116,7 +82,7 @@ export const LeadsList = ({ leads }: LeadsListProps) => {
                   <div className="flex items-center gap-2 text-muted-foreground">
                     <MapPin className="h-4 w-4" />
                     <span>{lead.postalCode}</span>
-                    <Lock className="h-3 w-3 text-orange-500" title="Adresse complète masquée" />
+                    <Lock className="h-3 w-3 text-orange-500" aria-label="Adresse complète masquée" />
                   </div>
 
                   <div className="flex items-center gap-2 text-muted-foreground">
@@ -124,12 +90,10 @@ export const LeadsList = ({ leads }: LeadsListProps) => {
                     Budget: {lead.budget.toLocaleString()}€
                   </div>
 
-                  {lead.projectDetails && (
-                    <div className="text-sm text-muted-foreground mt-2">
-                      <strong>Détails du projet:</strong>
-                      <p>{lead.projectDetails}</p>
-                    </div>
-                  )}
+                  <div className="text-sm text-muted-foreground mt-2">
+                    <strong>Type de projet:</strong>
+                    <p>{lead.projectType}</p>
+                  </div>
 
                   <div className="flex gap-2 mt-2">
                     <Button 
@@ -157,7 +121,7 @@ export const LeadsList = ({ leads }: LeadsListProps) => {
 
                 <Button
                   variant="default"
-                  onClick={() => handleBuyLead(lead.id)}
+                  onClick={() => handleContact(lead.id, "phone")}
                   className="bg-green-600 hover:bg-green-700"
                 >
                   Acheter ce lead
