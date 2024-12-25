@@ -4,6 +4,7 @@ import { Euro, Plus, CreditCard, History } from "lucide-react";
 import { useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { FormField } from "@/components/form/FormField";
 import {
   Dialog,
   DialogContent,
@@ -43,8 +44,18 @@ export const PrepaidBalance = ({ balance = 0 }) => {
   const [showHistory, setShowHistory] = useState(false);
   const [showCardDialog, setShowCardDialog] = useState(false);
   const [transactions] = useState<Transaction[]>(mockTransactions);
+  const [customAmount, setCustomAmount] = useState("");
 
   const handleTopUp = async (amount: number) => {
+    if (amount <= 0) {
+      toast({
+        title: "Montant invalide",
+        description: "Le montant doit être supérieur à 0€",
+        variant: "destructive",
+      });
+      return;
+    }
+
     try {
       setIsLoading(true);
       const response = await fetch("https://dqzsycxxgltztufrhams.supabase.co/functions/v1/create-topup-checkout", {
@@ -74,6 +85,19 @@ export const PrepaidBalance = ({ balance = 0 }) => {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleCustomTopUp = () => {
+    const amount = parseFloat(customAmount);
+    if (isNaN(amount)) {
+      toast({
+        title: "Montant invalide",
+        description: "Veuillez entrer un montant valide",
+        variant: "destructive",
+      });
+      return;
+    }
+    handleTopUp(amount);
   };
 
   return (
@@ -113,7 +137,7 @@ export const PrepaidBalance = ({ balance = 0 }) => {
             </Button>
           </div>
         </div>
-        <div className="grid grid-cols-3 gap-3 mt-4">
+        <div className="grid grid-cols-4 gap-3 mt-4">
           {[50, 100, 200].map((amount) => (
             <Button
               key={amount}
@@ -126,6 +150,25 @@ export const PrepaidBalance = ({ balance = 0 }) => {
               {amount}€
             </Button>
           ))}
+          <div className="flex gap-2">
+            <FormField
+              id="customAmount"
+              type="number"
+              value={customAmount}
+              onChange={(e) => setCustomAmount(e.target.value)}
+              placeholder="Montant personnalisé"
+              className="flex-1"
+            />
+            <Button
+              variant="outline"
+              onClick={handleCustomTopUp}
+              disabled={isLoading}
+              className="whitespace-nowrap"
+            >
+              <Euro className="h-4 w-4 mr-2" />
+              Recharger
+            </Button>
+          </div>
         </div>
       </Card>
 
