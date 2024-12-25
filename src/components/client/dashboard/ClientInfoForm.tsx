@@ -4,12 +4,13 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
-import { Save, CheckCircle2 } from "lucide-react";
+import { Save, Euro } from "lucide-react";
 import { motion } from "framer-motion";
 
 interface ClientInfo {
   roofType: string;
   monthlyConsumption: string;
+  monthlyBillEuros: string;
   electricPhase: string;
   address: string;
   postalCode: string;
@@ -21,6 +22,7 @@ export const ClientInfoForm = () => {
   const [clientInfo, setClientInfo] = useState<ClientInfo>({
     roofType: "",
     monthlyConsumption: "",
+    monthlyBillEuros: "",
     electricPhase: "mono",
     address: "",
     postalCode: "",
@@ -34,6 +36,7 @@ export const ClientInfoForm = () => {
     
     if (!clientInfo.roofType) newErrors.roofType = "Le type de toit est requis";
     if (!clientInfo.monthlyConsumption) newErrors.monthlyConsumption = "La consommation est requise";
+    if (!clientInfo.monthlyBillEuros) newErrors.monthlyBillEuros = "La facture mensuelle est requise";
     if (!clientInfo.address) newErrors.address = "L'adresse est requise";
     if (!clientInfo.postalCode) {
       newErrors.postalCode = "Le code postal est requis";
@@ -59,6 +62,17 @@ export const ClientInfoForm = () => {
     if (errors[name as keyof ClientInfo]) {
       setErrors(prev => ({ ...prev, [name]: undefined }));
     }
+  };
+
+  const calculateAnnualBill = () => {
+    const monthlyBill = parseFloat(clientInfo.monthlyBillEuros);
+    if (!isNaN(monthlyBill)) {
+      return (monthlyBill * 12).toLocaleString('fr-FR', {
+        style: 'currency',
+        currency: 'EUR'
+      });
+    }
+    return "0 €";
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -112,16 +126,36 @@ export const ClientInfoForm = () => {
             {errors.roofType && <p className="text-red-400 text-sm mt-1">{errors.roofType}</p>}
           </div>
 
-          <FormField
-            label="Consommation mensuelle (kWh)"
-            id="monthlyConsumption"
-            type="number"
-            value={clientInfo.monthlyConsumption}
-            onChange={handleChange}
-            placeholder="Ex: 300"
-            error={errors.monthlyConsumption}
-            lightMode
-          />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <FormField
+              label="Consommation mensuelle (kWh)"
+              id="monthlyConsumption"
+              type="number"
+              value={clientInfo.monthlyConsumption}
+              onChange={handleChange}
+              placeholder="Ex: 300"
+              error={errors.monthlyConsumption}
+              lightMode
+            />
+
+            <div className="space-y-2">
+              <FormField
+                label="Facture mensuelle (€)"
+                id="monthlyBillEuros"
+                type="number"
+                value={clientInfo.monthlyBillEuros}
+                onChange={handleChange}
+                placeholder="Ex: 150"
+                error={errors.monthlyBillEuros}
+                lightMode
+              />
+              {clientInfo.monthlyBillEuros && !errors.monthlyBillEuros && (
+                <div className="text-sm text-green-400 mt-1">
+                  Facture annuelle estimée : {calculateAnnualBill()}
+                </div>
+              )}
+            </div>
+          </div>
 
           <div className="space-y-2">
             <label className="text-sm font-medium text-gray-200">Type d'installation électrique</label>
