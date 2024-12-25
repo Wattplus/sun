@@ -3,7 +3,8 @@ import { Card } from "@/components/ui/card";
 import { useToast } from "@/components/ui/use-toast";
 import { calculateLeadPrice } from "@/utils/leadPricing";
 import { SubscriptionTier } from "@/types/subscription";
-import { MapPin, Wallet, CreditCard } from "lucide-react";
+import { MapPin } from "lucide-react";
+import { LeadCardActions } from "./LeadCardActions";
 
 interface LeadCardProps {
   lead: Lead;
@@ -106,43 +107,14 @@ export const LeadCard = ({
         </div>
 
         {!isPurchased && (
-          <div className="space-y-3">
-            <div className="grid grid-cols-2 gap-3">
-              <button 
-                className="px-4 py-2 text-sm font-medium rounded-lg bg-[#0B1221] hover:bg-[#1EAEDB]/10 text-[#1EAEDB] border border-[#1EAEDB]/20 hover:border-[#1EAEDB]/40 transition-colors duration-200 flex items-center justify-center gap-2"
-                onClick={() => handlePurchase('mutualise', 'prepaid')}
-              >
-                <Wallet className="w-4 h-4" />
-                Solde prépayé ({prices.mutualPrice}€)
-              </button>
-              
-              <button 
-                className="px-4 py-2 text-sm font-medium rounded-lg bg-[#1EAEDB] hover:bg-[#33C3F0] text-white transition-colors duration-200 flex items-center justify-center gap-2"
-                onClick={() => handlePurchase('mutualise', 'direct')}
-              >
-                <CreditCard className="w-4 h-4" />
-                Payer ({prices.mutualPrice}€)
-              </button>
-            </div>
-
-            <div className="grid grid-cols-2 gap-3">
-              <button 
-                className="px-4 py-2 text-sm font-medium rounded-lg bg-[#0B1221] hover:bg-[#1EAEDB]/10 text-[#1EAEDB] border border-[#1EAEDB]/20 hover:border-[#1EAEDB]/40 transition-colors duration-200 flex items-center justify-center gap-2"
-                onClick={() => handlePurchase('exclusif', 'prepaid')}
-              >
-                <Wallet className="w-4 h-4" />
-                Lead exclusif ({prices.exclusivePrice}€)
-              </button>
-              
-              <button 
-                className="px-4 py-2 text-sm font-medium rounded-lg bg-[#1EAEDB] hover:bg-[#33C3F0] text-white transition-colors duration-200 flex items-center justify-center gap-2"
-                onClick={() => handlePurchase('exclusif', 'direct')}
-              >
-                <CreditCard className="w-4 h-4" />
-                Lead exclusif ({prices.exclusivePrice}€)
-              </button>
-            </div>
-          </div>
+          <LeadCardActions
+            onPurchase={handlePurchase}
+            mutualPrice={prices.mutualPrice}
+            exclusivePrice={prices.exclusivePrice}
+            canPurchaseMutual={true}
+            canPurchaseExclusive={true}
+            isProfessionalProject={lead.projectType === 'professional'}
+          />
         )}
       </div>
     </Card>
