@@ -13,9 +13,9 @@ export const mockAvailableLeads: Lead[] = [
     projectType: "residential",
     budget: 18000,
     status: "qualified",
-    notes: "Intéressée par des panneaux solaires pour sa maison",
+    notes: "Intéressée par des panneaux solaires pour sa maison individuelle de 120m²",
     createdAt: "2024-03-18",
-    price: 55
+    price: 25
   },
   {
     id: "5",
@@ -29,9 +29,9 @@ export const mockAvailableLeads: Lead[] = [
     projectType: "residential",
     budget: 22000,
     status: "qualified",
-    notes: "Souhaite une installation complète avec batteries",
+    notes: "Projet d'installation complète avec batteries, maison neuve",
     createdAt: "2024-03-17",
-    price: 65
+    price: 35
   },
   {
     id: "6",
@@ -45,8 +45,8 @@ export const mockAvailableLeads: Lead[] = [
     projectType: "professional",
     budget: 35000,
     status: "qualified",
-    notes: "Restaurant cherchant à réduire sa facture énergétique",
+    notes: "Restaurant 200m² cherchant à réduire sa facture énergétique",
     createdAt: "2024-03-16",
-    price: 85
+    price: 45
   }
 ];

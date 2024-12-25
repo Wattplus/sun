@@ -1,12 +1,13 @@
-import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { LeadsList } from "../dashboard/LeadsList";
 import { mockAvailableLeads } from "../dashboard/mockAvailableLeads";
 import { PrepaidBalance } from "../dashboard/PrepaidBalance";
-import { Button } from "@/components/ui/button";
-import { ShoppingCart } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
 import { Lead } from "@/types/crm";
+import { useState } from "react";
+import { useToast } from "@/hooks/use-toast";
+import { ShoppingCart, Info } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 export const NewLeadsPage = () => {
   const [selectedLeads, setSelectedLeads] = useState<Lead[]>([]);
@@ -30,11 +31,28 @@ export const NewLeadsPage = () => {
 
   return (
     <div className="container mx-auto py-6 space-y-6">
+      <div className="flex items-center justify-between">
+        <h1 className="text-2xl font-semibold">Nouveaux Leads Disponibles</h1>
+        {selectedLeads.length > 0 && (
+          <Button 
+            onClick={handlePurchaseLeads}
+            className="bg-primary hover:bg-primary/90"
+          >
+            <ShoppingCart className="mr-2 h-4 w-4" />
+            Acheter {selectedLeads.length} lead{selectedLeads.length > 1 ? 's' : ''} ({selectedLeads.reduce((sum, lead) => sum + lead.price, 0)}€)
+          </Button>
+        )}
+      </div>
+
+      <Alert>
+        <Info className="h-4 w-4" />
+        <AlertDescription>
+          Les leads sont disponibles pendant 24h après leur qualification. Les prix varient selon le type de projet et le budget.
+        </AlertDescription>
+      </Alert>
+
       <div className="flex items-start justify-between gap-8">
-        {/* Left side - Leads list */}
         <div className="flex-1">
-          <h1 className="text-2xl font-semibold mb-6">Nouveaux Leads</h1>
-          
           <Card className="p-6">
             <LeadsList 
               leads={mockAvailableLeads} 
@@ -44,7 +62,6 @@ export const NewLeadsPage = () => {
           </Card>
         </div>
 
-        {/* Right side - Purchase summary */}
         <div className="w-80 space-y-6">
           <PrepaidBalance balance={150} />
           
@@ -53,19 +70,21 @@ export const NewLeadsPage = () => {
               <div className="space-y-4">
                 <div>
                   <p className="font-medium text-lg">
-                    {selectedLeads.length} lead{selectedLeads.length > 1 ? 's' : ''} sélectionné{selectedLeads.length > 1 ? 's' : ''}
+                    Récapitulatif de la sélection
                   </p>
-                  <p className="text-muted-foreground">
-                    Total: {selectedLeads.reduce((sum, lead) => sum + lead.price, 0)}€
-                  </p>
+                  <div className="mt-2 space-y-2">
+                    {selectedLeads.map(lead => (
+                      <div key={lead.id} className="flex justify-between text-sm">
+                        <span>{lead.firstName} {lead.lastName}</span>
+                        <span className="font-medium">{lead.price}€</span>
+                      </div>
+                    ))}
+                    <div className="border-t pt-2 mt-2 flex justify-between font-medium">
+                      <span>Total</span>
+                      <span>{selectedLeads.reduce((sum, lead) => sum + lead.price, 0)}€</span>
+                    </div>
+                  </div>
                 </div>
-                <Button 
-                  onClick={handlePurchaseLeads}
-                  className="w-full bg-primary hover:bg-primary/90"
-                >
-                  <ShoppingCart className="mr-2 h-4 w-4" />
-                  Acheter les leads
-                </Button>
               </div>
             </Card>
           )}
