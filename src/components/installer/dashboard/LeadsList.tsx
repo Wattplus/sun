@@ -7,17 +7,18 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { X } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Checkbox } from "@/components/ui/checkbox";
 
 interface LeadsListProps {
   leads: Lead[];
+  onLeadSelect?: (lead: Lead) => void;
+  selectedLeads?: Lead[];
 }
 
-type SortOrder = "default" | "asc" | "desc";
-
-export const LeadsList = ({ leads }: LeadsListProps) => {
+export const LeadsList = ({ leads, onLeadSelect, selectedLeads = [] }: LeadsListProps) => {
   const [selectedDepartments, setSelectedDepartments] = useState<string[]>([]);
   const [projectTypeFilter, setProjectTypeFilter] = useState<string>("all");
-  const [priceFilter, setPriceFilter] = useState<SortOrder>("default");
+  const [priceFilter, setPriceFilter] = useState<"default" | "asc" | "desc">("default");
 
   const availableDepartments = useMemo(() => {
     const departments = new Set<string>();
@@ -63,7 +64,7 @@ export const LeadsList = ({ leads }: LeadsListProps) => {
     setSelectedDepartments(selectedDepartments.filter(d => d !== department));
   };
 
-  const handlePriceFilterChange = (value: SortOrder) => {
+  const handlePriceFilterChange = (value: "default" | "asc" | "desc") => {
     setPriceFilter(value);
   };
 
@@ -142,12 +143,25 @@ export const LeadsList = ({ leads }: LeadsListProps) => {
         <div className="space-y-4">
           {availableLeads.length > 0 ? (
             availableLeads.map((lead) => (
-              <LeadCard
-                key={lead.id}
-                lead={lead}
-                onPurchase={() => {}}
-                subscriptionTier="free"
-              />
+              <div key={lead.id} className="relative group">
+                {onLeadSelect && (
+                  <div className="absolute left-4 top-1/2 -translate-y-1/2 z-10">
+                    <Checkbox
+                      checked={selectedLeads.some(l => l.id === lead.id)}
+                      onCheckedChange={() => onLeadSelect(lead)}
+                      className="data-[state=checked]:bg-primary data-[state=checked]:border-primary"
+                    />
+                  </div>
+                )}
+                <div className={onLeadSelect ? "pl-12" : ""}>
+                  <LeadCard
+                    key={lead.id}
+                    lead={lead}
+                    onPurchase={() => {}}
+                    subscriptionTier="free"
+                  />
+                </div>
+              </div>
             ))
           ) : (
             <EmptyLeadState />
