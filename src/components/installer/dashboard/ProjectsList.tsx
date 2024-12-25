@@ -3,6 +3,8 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Calendar, MapPin, Euro, FileText, Clock, ArrowRight } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { useToast } from "@/hooks/use-toast";
 
 interface Project {
   id: string;
@@ -52,6 +54,18 @@ const getStatusColor = (status: string) => {
 };
 
 export const ProjectsList = () => {
+  const navigate = useNavigate();
+  const { toast } = useToast();
+
+  const handleViewDetails = (projectId: string) => {
+    // Pour l'instant, on affiche juste un toast car la page de détails n'existe pas encore
+    toast({
+      title: "Navigation",
+      description: "Redirection vers les détails du projet...",
+    });
+    navigate(`/espace-installateur/projets/${projectId}`);
+  };
+
   return (
     <Card className="p-6">
       <div className="flex justify-between items-center mb-6">
@@ -109,7 +123,11 @@ export const ProjectsList = () => {
                     <span>{project.documents} documents</span>
                   </div>
                 </div>
-                <Button variant="outline" size="sm">
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={() => handleViewDetails(project.id)}
+                >
                   Voir les détails
                 </Button>
               </div>
