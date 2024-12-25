@@ -2,15 +2,21 @@ import { Bell, Calendar, LayoutDashboard, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
+import { useNavigate } from "react-router-dom";
 
 export const DashboardHeader = () => {
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   const handleAction = (action: string) => {
-    toast({
-      title: "Action en cours",
-      description: `La fonctionnalité ${action} est en cours de développement`,
-    });
+    if (action === "voir_leads") {
+      navigate("/espace-installateur/marketplace/nouveaux-leads");
+    } else {
+      toast({
+        title: "Action en cours",
+        description: `La fonctionnalité ${action} est en cours de développement`,
+      });
+    }
   };
 
   return (
