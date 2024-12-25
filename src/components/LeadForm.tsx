@@ -6,7 +6,6 @@ import { validateEmail, validatePhone, validatePostalCode } from "@/utils/formVa
 import { Send } from "lucide-react";
 import emailjs from '@emailjs/browser';
 
-// Initialisation d'EmailJS avec votre clé publique
 emailjs.init("nSGUhEBvdNcDlBp0F");
 
 interface FormData {
@@ -88,8 +87,15 @@ export const LeadForm = () => {
       );
 
       toast({
-        title: "Demande envoyée avec succès !",
-        description: "Votre étude personnalisée vous sera envoyée très prochainement.",
+        title: "Demande envoyée avec succès ! 🎉",
+        description: (
+          <div className="space-y-2">
+            <p>Votre étude personnalisée vous sera envoyée très prochainement.</p>
+            <p>Un email de confirmation avec vos identifiants pour accéder à votre espace client a été envoyé à : <strong>{formData.email}</strong></p>
+            <p className="text-sm text-muted-foreground">Pensez à vérifier vos spams si vous ne recevez pas l'email.</p>
+          </div>
+        ),
+        duration: 6000,
       });
       
       setFormData({
