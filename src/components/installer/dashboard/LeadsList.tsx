@@ -5,7 +5,7 @@ import { useState, useMemo } from "react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { X } from "lucide-react";
+import { X, ChevronRight } from "lucide-react";
 
 interface LeadsListProps {
   leads: Lead[];
@@ -16,7 +16,6 @@ export const LeadsList = ({ leads }: LeadsListProps) => {
   const [projectTypeFilter, setProjectTypeFilter] = useState<string>("all");
   const [priceFilter, setPriceFilter] = useState<"default" | "asc" | "desc">("default");
 
-  // Extraire tous les départements uniques des leads
   const availableDepartments = useMemo(() => {
     const departments = new Set<string>();
     leads.forEach(lead => {
@@ -27,10 +26,8 @@ export const LeadsList = ({ leads }: LeadsListProps) => {
     return Array.from(departments).sort();
   }, [leads]);
 
-  // Filtrer les leads qui n'ont pas encore été achetés
   let availableLeads = leads.filter(lead => !lead.purchasedBy?.length);
 
-  // Appliquer les filtres
   if (selectedDepartments.length > 0) {
     availableLeads = availableLeads.filter(lead => 
       selectedDepartments.includes(lead.postalCode.substring(0, 2))
@@ -63,63 +60,58 @@ export const LeadsList = ({ leads }: LeadsListProps) => {
     setSelectedDepartments(selectedDepartments.filter(d => d !== department));
   };
 
-  if (availableLeads.length === 0) {
-    return <EmptyLeadState />;
-  }
-
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-bold text-[#1EAEDB]">Nouveaux Leads Disponibles</h2>
-        <button className="text-[#1EAEDB] hover:text-[#33C3F0] flex items-center gap-2">
+      <div className="flex items-center justify-between">
+        <h2 className="text-3xl font-bold text-[#1EAEDB]">
+          Nouveaux Leads Disponibles
+        </h2>
+        <button className="flex items-center gap-2 px-6 py-2 text-white bg-[#1EAEDB] rounded-lg hover:bg-[#33C3F0] transition-colors duration-200">
           Voir tout
-          <span className="text-xl">→</span>
+          <ChevronRight className="w-5 h-5" />
         </button>
       </div>
 
-      <Card className="p-4 bg-[#0B1221]/80 border-[#1EAEDB]/20">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div>
-            <label className="text-sm font-medium mb-2 block text-[#1EAEDB]">
+      <Card className="p-6 bg-[#0B1221]/80 border-[#1EAEDB]/20">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-[#1EAEDB]">
               Départements
             </label>
-            <div className="space-y-2">
-              <Select 
-                value={selectedDepartments[selectedDepartments.length - 1] || "select"} 
-                onValueChange={handleDepartmentSelect}
-              >
-                <SelectTrigger className="bg-[#0B1221] border-[#1EAEDB]/20 text-white">
-                  <SelectValue placeholder="Sélectionner un département" />
-                </SelectTrigger>
-                <SelectContent className="bg-[#0B1221] border-[#1EAEDB]/20">
-                  <SelectItem value="select" disabled>Sélectionner un département</SelectItem>
-                  {availableDepartments.map((dept) => (
-                    <SelectItem key={dept} value={dept} className="text-white hover:bg-[#1EAEDB]/20">
-                      Département {dept}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <div className="flex flex-wrap gap-2">
-                {selectedDepartments.map((dept) => (
-                  <Badge 
+            <Select onValueChange={handleDepartmentSelect} value={selectedDepartments[0] || ""}>
+              <SelectTrigger className="bg-[#0B1221] border-[#1EAEDB]/20 text-white">
+                <SelectValue placeholder="Sélectionner un département" />
+              </SelectTrigger>
+              <SelectContent className="bg-[#0B1221] border-[#1EAEDB]/20">
+                {availableDepartments.map((dept) => (
+                  <SelectItem 
                     key={dept} 
-                    variant="secondary" 
-                    className="bg-[#1EAEDB]/20 text-[#1EAEDB] border-[#1EAEDB]/20 flex items-center gap-1"
+                    value={dept}
+                    className="text-white hover:bg-[#1EAEDB]/20"
                   >
-                    Dép. {dept}
-                    <X 
-                      className="h-3 w-3 cursor-pointer hover:text-white" 
-                      onClick={() => removeDepartment(dept)}
-                    />
-                  </Badge>
+                    Département {dept}
+                  </SelectItem>
                 ))}
-              </div>
+              </SelectContent>
+            </Select>
+            <div className="flex flex-wrap gap-2 mt-2">
+              {selectedDepartments.map((dept) => (
+                <Badge 
+                  key={dept}
+                  className="bg-[#1EAEDB]/20 text-[#1EAEDB] border-[#1EAEDB]/20 flex items-center gap-1"
+                >
+                  Dép. {dept}
+                  <X 
+                    className="w-3 h-3 cursor-pointer hover:text-white" 
+                    onClick={() => removeDepartment(dept)}
+                  />
+                </Badge>
+              ))}
             </div>
           </div>
-          
-          <div>
-            <label className="text-sm font-medium mb-2 block text-[#1EAEDB]">
+
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-[#1EAEDB]">
               Type de projet
             </label>
             <Select value={projectTypeFilter} onValueChange={setProjectTypeFilter}>
@@ -127,28 +119,37 @@ export const LeadsList = ({ leads }: LeadsListProps) => {
                 <SelectValue placeholder="Tous les types" />
               </SelectTrigger>
               <SelectContent className="bg-[#0B1221] border-[#1EAEDB]/20">
-                <SelectItem value="all" className="text-white hover:bg-[#1EAEDB]/20">Tous les types</SelectItem>
-                <SelectItem value="residential" className="text-white hover:bg-[#1EAEDB]/20">Résidentiel</SelectItem>
-                <SelectItem value="commercial" className="text-white hover:bg-[#1EAEDB]/20">Professionnel</SelectItem>
+                <SelectItem value="all" className="text-white hover:bg-[#1EAEDB]/20">
+                  Tous les types
+                </SelectItem>
+                <SelectItem value="residential" className="text-white hover:bg-[#1EAEDB]/20">
+                  Résidentiel
+                </SelectItem>
+                <SelectItem value="professional" className="text-white hover:bg-[#1EAEDB]/20">
+                  Professionnel
+                </SelectItem>
               </SelectContent>
             </Select>
           </div>
 
-          <div>
-            <label className="text-sm font-medium mb-2 block text-[#1EAEDB]">
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-[#1EAEDB]">
               Prix
             </label>
-            <Select 
-              value={priceFilter} 
-              onValueChange={(value: "default" | "asc" | "desc") => setPriceFilter(value)}
-            >
+            <Select value={priceFilter} onValueChange={setPriceFilter}>
               <SelectTrigger className="bg-[#0B1221] border-[#1EAEDB]/20 text-white">
                 <SelectValue placeholder="Par défaut" />
               </SelectTrigger>
               <SelectContent className="bg-[#0B1221] border-[#1EAEDB]/20">
-                <SelectItem value="default" className="text-white hover:bg-[#1EAEDB]/20">Par défaut</SelectItem>
-                <SelectItem value="asc" className="text-white hover:bg-[#1EAEDB]/20">Prix croissant</SelectItem>
-                <SelectItem value="desc" className="text-white hover:bg-[#1EAEDB]/20">Prix décroissant</SelectItem>
+                <SelectItem value="default" className="text-white hover:bg-[#1EAEDB]/20">
+                  Par défaut
+                </SelectItem>
+                <SelectItem value="asc" className="text-white hover:bg-[#1EAEDB]/20">
+                  Prix croissant
+                </SelectItem>
+                <SelectItem value="desc" className="text-white hover:bg-[#1EAEDB]/20">
+                  Prix décroissant
+                </SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -165,6 +166,8 @@ export const LeadsList = ({ leads }: LeadsListProps) => {
           />
         ))}
       </div>
+
+      {availableLeads.length === 0 && <EmptyLeadState />}
     </div>
   );
 };
