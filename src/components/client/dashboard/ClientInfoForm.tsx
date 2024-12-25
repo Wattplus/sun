@@ -8,10 +8,11 @@ import { RoofTypeSelect } from "./RoofTypeSelect";
 import { MonthlyBillInput } from "./MonthlyBillInput";
 import { AddressFields } from "./AddressFields";
 import { ElectricalTypeSelect } from "./ElectricalTypeSelect";
-import { ProjectTypeSelect } from "./ProjectTypeSelect";
 import { BudgetInput } from "./BudgetInput";
+import { ClientTypeSelect } from "./ClientTypeSelect";
 
 interface ClientInfo {
+  clientType: string;
   roofType: string;
   monthlyBillEuros: string;
   electricalType: string;
@@ -33,6 +34,7 @@ interface Props {
 export const ClientInfoForm = ({ onMonthlyBillUpdate }: Props) => {
   const { toast } = useToast();
   const [clientInfo, setClientInfo] = useState<ClientInfo>({
+    clientType: "",
     roofType: "",
     monthlyBillEuros: "",
     electricalType: "monophase",
@@ -48,6 +50,9 @@ export const ClientInfoForm = ({ onMonthlyBillUpdate }: Props) => {
   const validateForm = () => {
     const newErrors: Errors = {};
     
+    if (!clientInfo.clientType) {
+      newErrors.clientType = "Le type de client est requis";
+    }
     if (!clientInfo.roofType) {
       newErrors.roofType = "Le type de toit est requis";
     }
@@ -116,6 +121,12 @@ export const ClientInfoForm = ({ onMonthlyBillUpdate }: Props) => {
         </div>
 
         <div className="space-y-6">
+          <ClientTypeSelect
+            value={clientInfo.clientType}
+            onChange={(value) => handleSelectChange(value, "clientType")}
+            error={errors.clientType}
+          />
+
           <RoofTypeSelect
             value={clientInfo.roofType}
             onChange={(value) => handleSelectChange(value, "roofType")}
