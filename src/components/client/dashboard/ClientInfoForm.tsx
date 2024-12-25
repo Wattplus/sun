@@ -66,7 +66,6 @@ export const ClientInfoForm = () => {
         <FormField
           label="Consommation mensuelle (kWh)"
           id="monthlyConsumption"
-          name="monthlyConsumption"
           type="number"
           value={clientInfo.monthlyConsumption}
           onChange={handleChange}
