@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { FormField } from "./form/FormField";
 import { validateEmail, validatePhone, validatePostalCode } from "@/utils/formValidation";
-import { Send } from "lucide-react";
+import { FormHeader } from "./form/FormHeader";
+import { SubmitButton } from "./form/SubmitButton";
 import emailjs from '@emailjs/browser';
 
 emailjs.init("nSGUhEBvdNcDlBp0F");
@@ -51,50 +51,33 @@ export const LeadForm = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
     if (!validateForm()) return;
-
     setIsSubmitting(true);
 
     try {
-      const templateParams = {
-        first_name: formData.firstName,
-        last_name: formData.lastName,
-        email: formData.email,
-        phone: formData.phone,
-        postal_code: formData.postalCode,
-        date: new Date().toLocaleDateString('fr-FR', {
-          year: 'numeric',
-          month: 'long',
-          day: 'numeric',
-          hour: '2-digit',
-          minute: '2-digit'
-        })
-      };
-
-      console.log('EmailJS Parameters:', {
-        serviceId: 'service_611ohbh',
-        templateId: 'template_ct280jq',
-        templateParams,
-        publicKey: 'nSGUhEBvdNcDlBp0F'
-      });
-
       await emailjs.send(
         'service_611ohbh',
         'template_ct280jq',
-        templateParams,
+        {
+          first_name: formData.firstName,
+          last_name: formData.lastName,
+          email: formData.email,
+          phone: formData.phone,
+          postal_code: formData.postalCode,
+          date: new Date().toLocaleDateString('fr-FR', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+          })
+        },
         'nSGUhEBvdNcDlBp0F'
       );
 
       toast({
         title: "Demande envoyée avec succès ! 🎉",
-        description: (
-          <div className="space-y-2">
-            <p>Votre étude personnalisée vous sera envoyée très prochainement.</p>
-            <p>Un email de confirmation avec vos identifiants pour accéder à votre espace client a été envoyé à : <strong>{formData.email}</strong></p>
-            <p className="text-sm text-muted-foreground">Pensez à vérifier vos spams si vous ne recevez pas l'email.</p>
-          </div>
-        ),
+        description: "Votre étude personnalisée vous sera envoyée très prochainement.",
         duration: 6000,
       });
       
@@ -118,20 +101,13 @@ export const LeadForm = () => {
   };
 
   return (
-    <div className="relative group">
+    <div className="relative group my-20">
       <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 to-green-600 rounded-xl blur opacity-25 group-hover:opacity-75 transition duration-1000"></div>
-      <div className="relative w-full max-w-3xl mx-auto p-8 rounded-xl bg-gradient-to-br from-[#1a5fb4] to-[#0B1221] text-white border border-white/10 backdrop-blur-sm shadow-2xl">
-        <div className="text-center space-y-3 mb-8">
-          <h2 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white via-blue-100 to-white">
-            Demandez votre étude gratuite
-          </h2>
-          <p className="text-gray-100">
-            Découvrez votre potentiel d'économies avec une étude personnalisée sans engagement
-          </p>
-        </div>
+      <div className="relative w-full max-w-2xl mx-auto p-10 rounded-xl bg-gradient-to-br from-[#1a5fb4] to-[#0B1221] text-white border border-white/10 backdrop-blur-sm shadow-2xl">
+        <FormHeader />
 
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <form onSubmit={handleSubmit} className="space-y-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <FormField
               label="Prénom"
               id="firstName"
@@ -161,7 +137,7 @@ export const LeadForm = () => {
             lightMode
           />
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <FormField
               label="Téléphone"
               id="phone"
@@ -184,17 +160,7 @@ export const LeadForm = () => {
             />
           </div>
 
-          <div className="relative group">
-            <div className="absolute -inset-1 bg-gradient-to-r from-green-600 to-green-400 rounded-full blur opacity-70 group-hover:opacity-100 transition duration-200"></div>
-            <Button 
-              type="submit" 
-              className="relative w-full bg-green-500 hover:bg-green-600 text-lg h-14 gap-2 rounded-full"
-              disabled={isSubmitting}
-            >
-              <Send className="w-5 h-5" />
-              {isSubmitting ? "Envoi en cours..." : "Recevoir mon étude gratuite"}
-            </Button>
-          </div>
+          <SubmitButton isSubmitting={isSubmitting} />
         </form>
       </div>
     </div>
