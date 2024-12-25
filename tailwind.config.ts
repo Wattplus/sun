@@ -20,9 +20,9 @@ export default {
     extend: {
       colors: {
         primary: {
-          DEFAULT: "#10B981",
-          light: "#34D399",
-          dark: "#059669",
+          DEFAULT: "#1EAEDB",
+          light: "#33C3F0",
+          dark: "#0FA0CE",
           foreground: "white",
         },
         secondary: {
@@ -67,8 +67,8 @@ export default {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
         'gradient-conic': 'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
         'blue-gradient': 'linear-gradient(to bottom, #0B1221, #1a5fb4)',
-        'glass-gradient': 'linear-gradient(90deg, rgba(11,18,33,0.5) 0%, rgba(26,95,180,0.5) 100%)',
-        'glass-gradient-hover': 'linear-gradient(90deg, rgba(11,18,33,0.7) 0%, rgba(26,95,180,0.7) 100%)',
+        'glass-gradient': 'linear-gradient(90deg, rgba(11,18,33,0.8) 0%, rgba(26,95,180,0.8) 100%)',
+        'glass-gradient-hover': 'linear-gradient(90deg, rgba(11,18,33,0.9) 0%, rgba(26,95,180,0.9) 100%)',
       },
       borderRadius: {
         lg: "var(--radius)",
