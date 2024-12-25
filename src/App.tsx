@@ -22,6 +22,7 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/client/*" element={<ClientPortal />} />
+          <Route path="/espace-installateur/*" element={<InstallerManagement />} />
           <Route path="/admin" element={<Admin />}>
             <Route index element={<AdminDashboard />} />
             <Route path="leads" element={<LeadManagement />} />
