@@ -18,6 +18,7 @@ export interface Lead {
   createdAt: string;
   assignedTo?: string;
   price: number;
+  exclusivityPrice?: number;
 }
 
 export interface Installer {
