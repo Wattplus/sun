@@ -14,6 +14,7 @@ import { InstallerDashboard } from "./components/installer/InstallerDashboard";
 import NotificationsPage from "./components/admin/notifications/NotificationsPage";
 import SettingsPage from "./components/admin/settings/SettingsPage";
 import ProfilePage from "./components/admin/profile/ProfilePage";
+import StatisticsPage from "./components/admin/statistics/StatisticsPage";
 
 const queryClient = new QueryClient();
 
@@ -35,6 +36,7 @@ const App = () => (
             <Route path="notifications" element={<NotificationsPage />} />
             <Route path="settings" element={<SettingsPage />} />
             <Route path="profile" element={<ProfilePage />} />
+            <Route path="statistics" element={<StatisticsPage />} />
           </Route>
         </Routes>
       </BrowserRouter>
