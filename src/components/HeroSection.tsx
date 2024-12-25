@@ -12,33 +12,30 @@ export const HeroSection = () => {
       <div className="relative z-10 mx-auto max-w-7xl px-6 py-32 lg:px-8">
         <div className="mx-auto max-w-3xl text-center">
           <div className="flex flex-wrap justify-center gap-4 mb-8">
-            <div className="glass-panel px-6 py-2 rounded-full text-sm shadow-lg animate-fade-in">
+            <div className="glass-panel px-6 py-2 rounded-full text-sm shadow-lg animate-fadeIn">
               Devis gratuit et sans engagement
             </div>
           </div>
           
-          <h1 className="text-4xl font-bold tracking-tight sm:text-6xl mb-6 animate-fade-in [text-wrap:balance]">
+          <h1 className="text-4xl font-bold tracking-tight sm:text-6xl mb-6 animate-fadeIn text-shadow">
             <span className="gradient-text">
               Réduisez votre facture d'électricité avec l'énergie solaire
             </span>
           </h1>
           
-          <p className="text-xl text-blue-100 mb-12 animate-fade-in [text-wrap:balance] leading-relaxed">
+          <p className="text-xl text-blue-100 mb-12 animate-fadeIn leading-relaxed">
             Profitez des aides de l'État jusqu'à 75% pour votre installation photovoltaïque
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16 animate-fade-in">
-            <div className="relative group">
-              <div className="absolute -inset-1 bg-gradient-to-r from-green-600 to-green-400 rounded-full blur opacity-70 group-hover:opacity-100 transition duration-200" />
-              <Button 
-                size="lg"
-                className="relative bg-green-500 hover:bg-green-600 text-white px-8 py-6 text-lg rounded-full shadow-lg shadow-green-500/20 w-full sm:w-auto"
-                onClick={() => document.getElementById('lead-form')?.scrollIntoView({ behavior: 'smooth' })}
-              >
-                Je calcule mes aides
-                <ArrowRight className="ml-2 h-5 w-5" />
-              </Button>
-            </div>
+          <div className="flex flex-col sm:flex-row gap-6 justify-center items-center mb-16 animate-fadeIn">
+            <Button 
+              size="lg"
+              className="glass-button group w-full sm:w-auto"
+              onClick={() => document.getElementById('lead-form')?.scrollIntoView({ behavior: 'smooth' })}
+            >
+              Je calcule mes aides
+              <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+            </Button>
 
             <a 
               href="tel:0977774164" 
@@ -50,7 +47,7 @@ export const HeroSection = () => {
             </a>
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-16 animate-fade-in">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-16 animate-fadeIn">
             {[
               { title: "Installation rapide", subtitle: "En 48h", emoji: "⚡" },
               { title: "Garantie 25 ans", subtitle: "Tranquillité assurée", emoji: "🛡️" },
@@ -59,9 +56,9 @@ export const HeroSection = () => {
             ].map((item, index) => (
               <div 
                 key={index} 
-                className="glass-panel p-4 hover:bg-white/10 transition-all duration-300"
+                className="glass-panel p-4 card-hover gradient-border"
               >
-                <span className="text-3xl mb-2 transform group-hover:scale-110 transition-transform duration-300">{item.emoji}</span>
+                <span className="text-3xl mb-2 block">{item.emoji}</span>
                 <h3 className="font-semibold text-sm sm:text-base">{item.title}</h3>
                 <p className="text-xs sm:text-sm text-blue-200">{item.subtitle}</p>
               </div>
