@@ -1,8 +1,9 @@
-import { Bell, Calendar, Download, Filter, Phone, Mail, ChevronRight, Wallet, Users, LineChart, ShoppingBag } from "lucide-react";
+import { Bell, Calendar, Download, Filter, Phone, Mail, ChevronRight, Wallet, Users, LineChart, ShoppingBag, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { mockLeads } from "@/types/crm";
@@ -20,6 +21,7 @@ import { SubscriptionPlans } from "./subscription/SubscriptionPlans";
 
 export function InstallerDashboard() {
   const [activeTab, setActiveTab] = useState("dashboard");
+  const [searchTerm, setSearchTerm] = useState("");
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -53,24 +55,28 @@ export function InstallerDashboard() {
       value: "150 €",
       icon: <Wallet className="h-4 w-4 text-primary" />,
       change: "+12% ce mois",
+      color: "bg-blue-500/10",
     },
     {
       title: "Leads achetés",
       value: "24",
       icon: <ShoppingBag className="h-4 w-4 text-green-500" />,
       change: "+4 cette semaine",
+      color: "bg-green-500/10",
     },
     {
       title: "Taux de conversion",
       value: "68%",
       icon: <LineChart className="h-4 w-4 text-blue-500" />,
       change: "+2.4% ce mois",
+      color: "bg-blue-500/10",
     },
     {
       title: "Leads actifs",
       value: "12",
       icon: <Users className="h-4 w-4 text-purple-500" />,
       change: "3 nouveaux aujourd'hui",
+      color: "bg-purple-500/10",
     },
   ];
 
@@ -78,7 +84,7 @@ export function InstallerDashboard() {
     <div className="min-h-screen bg-gradient-to-b from-background/80 to-background p-6 space-y-6">
       <div className="flex justify-between items-center mb-6">
         <div>
-          <h1 className="text-3xl font-bold gradient-text">
+          <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
             Tableau de bord
           </h1>
           <p className="text-muted-foreground mt-1">
@@ -98,7 +104,7 @@ export function InstallerDashboard() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
         {quickStats.map((stat, index) => (
-          <Card key={index} className="p-4 hover:shadow-lg transition-all duration-200 cursor-pointer">
+          <Card key={index} className={`p-4 hover:shadow-lg transition-all duration-200 cursor-pointer ${stat.color}`}>
             <div className="flex justify-between items-start">
               <div>
                 <p className="text-sm text-muted-foreground">{stat.title}</p>
@@ -134,8 +140,22 @@ export function InstallerDashboard() {
         <TabsContent value="leads">
           <Card className="p-6">
             <div className="flex justify-between items-center mb-6">
-              <h2 className="text-xl font-semibold">Mes Leads</h2>
+              <div className="space-y-1">
+                <h2 className="text-2xl font-semibold">Mes Leads</h2>
+                <p className="text-sm text-muted-foreground">
+                  Gérez et suivez vos leads en temps réel
+                </p>
+              </div>
               <div className="flex gap-3">
+                <div className="relative w-64">
+                  <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    placeholder="Rechercher un lead..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="pl-8"
+                  />
+                </div>
                 <Button variant="outline" size="sm">
                   <Filter className="h-4 w-4 mr-2" />
                   Filtrer
@@ -146,7 +166,11 @@ export function InstallerDashboard() {
                 </Button>
               </div>
             </div>
-            <LeadsList leads={mockLeads} />
+            <LeadsList leads={mockLeads.filter(lead => 
+              lead.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+              lead.lastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+              lead.city.toLowerCase().includes(searchTerm.toLowerCase())
+            )} />
           </Card>
         </TabsContent>
 
