@@ -10,45 +10,51 @@ import { Card } from "@/components/ui/card";
 
 export const DashboardTabs = () => {
   return (
-    <Tabs defaultValue="dashboard" className="w-full">
-      <TabsList className="grid w-full grid-cols-3 lg:grid-cols-6 mb-6">
-        <TabsTrigger value="dashboard">Accueil</TabsTrigger>
-        <TabsTrigger value="leads">Leads</TabsTrigger>
-        <TabsTrigger value="purchased">Leads Achetés</TabsTrigger>
-        <TabsTrigger value="projects">Projets</TabsTrigger>
-        <TabsTrigger value="messages">Messages</TabsTrigger>
-        <TabsTrigger value="profile">Profil</TabsTrigger>
-      </TabsList>
-
-      <TabsContent value="dashboard">
-        <div className="grid gap-6">
-          <PrepaidBalance balance={150} />
-          <StatsCards />
-          <ProjectsList />
-        </div>
-      </TabsContent>
-
-      <TabsContent value="leads">
-        <LeadsList leads={[]} />
-      </TabsContent>
-
-      <TabsContent value="purchased">
-        <PurchasedLeads leads={[]} />
-      </TabsContent>
-
-      <TabsContent value="projects">
-        <ProjectsList />
-      </TabsContent>
-
-      <TabsContent value="messages">
+    <div className="space-y-6">
+      <PrepaidBalance balance={150} />
+      
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Nouveaux leads disponibles */}
         <Card className="p-6">
-          <MessagesList />
+          <h2 className="text-xl font-bold mb-4">Nouveaux Leads Disponibles</h2>
+          <LeadsList leads={[]} />
         </Card>
-      </TabsContent>
 
-      <TabsContent value="profile">
-        <InstallerProfile />
-      </TabsContent>
-    </Tabs>
+        {/* Leads achetés */}
+        <Card className="p-6">
+          <h2 className="text-xl font-bold mb-4">Mes Leads Achetés</h2>
+          <PurchasedLeads leads={[]} />
+        </Card>
+      </div>
+
+      <Tabs defaultValue="stats" className="w-full">
+        <TabsList className="grid w-full grid-cols-4">
+          <TabsTrigger value="stats">Statistiques</TabsTrigger>
+          <TabsTrigger value="projects">Projets</TabsTrigger>
+          <TabsTrigger value="messages">Messages</TabsTrigger>
+          <TabsTrigger value="profile">Profil</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="stats">
+          <div className="grid gap-6">
+            <StatsCards />
+          </div>
+        </TabsContent>
+
+        <TabsContent value="projects">
+          <ProjectsList />
+        </TabsContent>
+
+        <TabsContent value="messages">
+          <Card className="p-6">
+            <MessagesList />
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="profile">
+          <InstallerProfile />
+        </TabsContent>
+      </Tabs>
+    </div>
   );
 };
