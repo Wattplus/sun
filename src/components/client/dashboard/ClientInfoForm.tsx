@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
@@ -8,46 +7,64 @@ import { motion } from "framer-motion";
 import { RoofTypeSelect } from "./RoofTypeSelect";
 import { MonthlyBillInput } from "./MonthlyBillInput";
 import { AddressFields } from "./AddressFields";
+import { Input } from "@/components/ui/input";
 
 interface ClientInfo {
   roofType: string;
   monthlyBillEuros: string;
-  electricPhase: string;
+  electricalType: string;
   address: string;
   postalCode: string;
   city: string;
+  budget: string;
+  projectType: string;
 }
 
-interface ClientInfoFormProps {
+interface Errors {
+  [key: string]: string | undefined;
+}
+
+interface Props {
   onMonthlyBillUpdate: (value: string) => void;
 }
 
-export const ClientInfoForm = ({ onMonthlyBillUpdate }: ClientInfoFormProps) => {
+export const ClientInfoForm = ({ onMonthlyBillUpdate }: Props) => {
   const { toast } = useToast();
   const [clientInfo, setClientInfo] = useState<ClientInfo>({
     roofType: "",
     monthlyBillEuros: "",
-    electricPhase: "mono",
+    electricalType: "monophase",
     address: "",
-    postalCode: "",
-    city: ""
+    postalCode: "75001",
+    city: "",
+    budget: "15000",
+    projectType: "Installation Panneaux Solaires"
   });
 
-  const [errors, setErrors] = useState<Partial<ClientInfo>>({});
+  const [errors, setErrors] = useState<Errors>({});
 
   const validateForm = () => {
-    const newErrors: Partial<ClientInfo> = {};
+    const newErrors: Errors = {};
     
-    if (!clientInfo.roofType) newErrors.roofType = "Le type de toit est requis";
-    if (!clientInfo.monthlyBillEuros) newErrors.monthlyBillEuros = "La facture mensuelle est requise";
-    if (!clientInfo.address) newErrors.address = "L'adresse est requise";
+    if (!clientInfo.roofType) {
+      newErrors.roofType = "Le type de toit est requis";
+    }
+    if (!clientInfo.monthlyBillEuros) {
+      newErrors.monthlyBillEuros = "La facture mensuelle est requise";
+    }
+    if (!clientInfo.address) {
+      newErrors.address = "L'adresse est requise";
+    }
     if (!clientInfo.postalCode) {
       newErrors.postalCode = "Le code postal est requis";
-    } else if (!/^\d{5}$/.test(clientInfo.postalCode)) {
-      newErrors.postalCode = "Format invalide (5 chiffres)";
     }
-    if (!clientInfo.city) newErrors.city = "La ville est requise";
-
+    if (!clientInfo.city) {
+      newErrors.city = "La ville est requise";
+    }
+    if (!clientInfo.budget) {
+      newErrors.budget = "Le budget est requis";
+    }
+    
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -55,20 +72,16 @@ export const ClientInfoForm = ({ onMonthlyBillUpdate }: ClientInfoFormProps) => 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setClientInfo(prev => ({ ...prev, [name]: value }));
-    if (errors[name as keyof ClientInfo]) {
-      setErrors(prev => ({ ...prev, [name]: undefined }));
-    }
+    setErrors(prev => ({ ...prev, [name]: undefined }));
     
     if (name === "monthlyBillEuros") {
       onMonthlyBillUpdate(value);
     }
   };
 
-  const handleSelectChange = (name: string, value: string) => {
+  const handleSelectChange = (value: string, name: string) => {
     setClientInfo(prev => ({ ...prev, [name]: value }));
-    if (errors[name as keyof ClientInfo]) {
-      setErrors(prev => ({ ...prev, [name]: undefined }));
-    }
+    setErrors(prev => ({ ...prev, [name]: undefined }));
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -86,27 +99,24 @@ export const ClientInfoForm = ({ onMonthlyBillUpdate }: ClientInfoFormProps) => 
       toast({
         title: "Informations mises à jour",
         description: "Vos informations ont été enregistrées avec succès.",
-        duration: 3000
       });
     }
   };
 
   return (
-    <Card className="p-6 glass-panel">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-      >
-        <h3 className="text-xl font-semibold mb-4 gradient-text">Complétez vos informations</h3>
-        <p className="text-sm text-gray-400 mb-6">
-          Ces informations nous permettront de mieux évaluer vos besoins en installation solaire
-        </p>
-        
-        <form onSubmit={handleSubmit} className="space-y-6">
+    <Card className="p-6">
+      <form onSubmit={handleSubmit} className="space-y-6">
+        <div className="space-y-2">
+          <h2 className="text-2xl font-semibold">Complétez vos informations</h2>
+          <p className="text-muted-foreground">
+            Ces informations nous permettront de mieux évaluer vos besoins en installation solaire
+          </p>
+        </div>
+
+        <div className="space-y-6">
           <RoofTypeSelect
             value={clientInfo.roofType}
-            onChange={(value) => handleSelectChange("roofType", value)}
+            onChange={(value) => handleSelectChange(value, "roofType")}
             error={errors.roofType}
           />
 
@@ -119,15 +129,15 @@ export const ClientInfoForm = ({ onMonthlyBillUpdate }: ClientInfoFormProps) => 
           <div className="space-y-2">
             <label className="text-sm font-medium text-gray-200">Type d'installation électrique</label>
             <Select
-              value={clientInfo.electricPhase}
-              onValueChange={(value) => handleSelectChange("electricPhase", value)}
+              value={clientInfo.electricalType}
+              onValueChange={(value) => handleSelectChange(value, "electricalType")}
             >
               <SelectTrigger className="w-full bg-background-dark/50 border-gray-700">
                 <SelectValue placeholder="Sélectionnez le type d'installation" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="mono">Monophasé</SelectItem>
-                <SelectItem value="tri">Triphasé</SelectItem>
+                <SelectItem value="monophase">Monophasé</SelectItem>
+                <SelectItem value="triphase">Triphasé</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -146,17 +156,50 @@ export const ClientInfoForm = ({ onMonthlyBillUpdate }: ClientInfoFormProps) => 
             </div>
           </div>
 
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-gray-200">Budget (€)</label>
+            <Input
+              type="number"
+              name="budget"
+              value={clientInfo.budget}
+              onChange={handleChange}
+              className="bg-background-dark/50 border-gray-700"
+              error={errors.budget}
+            />
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-gray-200">Type de projet</label>
+            <Select
+              value={clientInfo.projectType}
+              onValueChange={(value) => handleSelectChange(value, "projectType")}
+            >
+              <SelectTrigger className="w-full bg-background-dark/50 border-gray-700">
+                <SelectValue placeholder="Sélectionnez le type de projet" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="Installation Panneaux Solaires">Installation Panneaux Solaires</SelectItem>
+                <SelectItem value="Rénovation">Rénovation</SelectItem>
+                <SelectItem value="Extension">Extension</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
           <motion.div
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
+            className="flex justify-end"
           >
-            <Button type="submit" className="w-full gap-2 glass-button">
-              <Save className="w-4 h-4" />
-              Enregistrer mes informations
+            <Button
+              type="submit"
+              className="bg-primary hover:bg-primary/90 text-white px-6"
+            >
+              <Save className="mr-2 h-4 w-4" />
+              Enregistrer
             </Button>
           </motion.div>
-        </form>
-      </motion.div>
+        </div>
+      </form>
     </Card>
   );
 };
