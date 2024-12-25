@@ -7,10 +7,11 @@ import { Euro, MapPin, Phone, Mail, User, Building2 } from "lucide-react";
 interface LeadCardProps {
   lead: Lead;
   onPurchase: (lead: Lead) => void;
+  isPurchased?: boolean;
   showFullDetails?: boolean;
 }
 
-export const LeadCard = ({ lead, onPurchase, showFullDetails = false }: LeadCardProps) => {
+export const LeadCard = ({ lead, onPurchase, isPurchased = false, showFullDetails = false }: LeadCardProps) => {
   return (
     <Card className="w-full transition-all duration-300 hover:shadow-lg hover:border-[#33C3F0]/20 bg-background/50 backdrop-blur-md">
       <CardHeader className="pb-2">
@@ -40,7 +41,7 @@ export const LeadCard = ({ lead, onPurchase, showFullDetails = false }: LeadCard
             </div>
           </div>
           
-          {showFullDetails ? (
+          {(showFullDetails || isPurchased) ? (
             <div className="space-y-3 border-t border-[#33C3F0]/20 pt-3 mt-3">
               <div className="flex items-center gap-2">
                 <User className="h-4 w-4 text-[#1EAEDB]" />
@@ -79,7 +80,7 @@ export const LeadCard = ({ lead, onPurchase, showFullDetails = false }: LeadCard
         </div>
       </CardContent>
       <CardFooter>
-        {!showFullDetails && (
+        {!isPurchased ? (
           <Button 
             className="w-full bg-[#1EAEDB] hover:bg-[#0FA0CE]" 
             onClick={() => onPurchase(lead)}
@@ -87,6 +88,10 @@ export const LeadCard = ({ lead, onPurchase, showFullDetails = false }: LeadCard
             <Euro className="h-4 w-4 mr-2" />
             Acheter ce lead
           </Button>
+        ) : (
+          <Badge className="w-full justify-center py-2 bg-emerald-500">
+            Lead acheté
+          </Badge>
         )}
       </CardFooter>
     </Card>
