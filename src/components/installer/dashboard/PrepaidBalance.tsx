@@ -103,56 +103,59 @@ export const PrepaidBalance = ({ balance = 0 }) => {
 
   return (
     <>
-      <Card className="p-6 bg-background/50 backdrop-blur-md border-primary/20">
-        <div className="flex justify-between items-center mb-4">
-          <div>
-            <h3 className="text-lg font-semibold">Mon Portefeuille</h3>
-            <p className="text-2xl font-bold text-primary mt-1">
-              {balance.toLocaleString()}€
-            </p>
+      <Card className="glass-panel">
+        <div className="p-6 space-y-6">
+          <div className="flex justify-between items-center">
+            <div>
+              <h3 className="text-xl font-semibold gradient-text">Mon Portefeuille</h3>
+              <p className="text-3xl font-bold text-primary mt-2">
+                {balance.toLocaleString()}€
+              </p>
+            </div>
+            <div className="flex gap-3">
+              <Button 
+                variant="outline"
+                onClick={() => setShowHistory(true)}
+                className="glass-button"
+              >
+                <History className="h-4 w-4 mr-2" />
+                Historique
+              </Button>
+              <Button 
+                variant="outline"
+                onClick={() => setShowCardDialog(true)}
+                className="glass-button"
+              >
+                <CreditCard className="h-4 w-4 mr-2" />
+                Gérer CB
+              </Button>
+              <Button 
+                onClick={() => handleTopUp(100)}
+                disabled={isLoading}
+                className="glass-button"
+              >
+                <Plus className="h-4 w-4 mr-2" />
+                Recharger
+              </Button>
+            </div>
           </div>
-          <div className="flex gap-2">
-            <Button 
-              variant="outline"
-              onClick={() => setShowHistory(true)}
-              className="flex items-center gap-2"
-            >
-              <History className="h-4 w-4" />
-              Historique
-            </Button>
-            <Button 
-              variant="outline"
-              onClick={() => setShowCardDialog(true)}
-              className="flex items-center gap-2"
-            >
-              <CreditCard className="h-4 w-4" />
-              Gérer CB
-            </Button>
-            <Button 
-              onClick={() => handleTopUp(100)}
-              disabled={isLoading}
-              className="bg-primary hover:bg-primary/90"
-            >
-              <Plus className="h-4 w-4 mr-2" />
-              Recharger
-            </Button>
+          
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <QuickTopUpButtons onTopUp={handleTopUp} isLoading={isLoading} />
+            <CustomAmountInput
+              value={customAmount}
+              onChange={setCustomAmount}
+              onSubmit={handleCustomTopUp}
+              isLoading={isLoading}
+            />
           </div>
-        </div>
-        <div className="grid grid-cols-4 gap-3 mt-4">
-          <QuickTopUpButtons onTopUp={handleTopUp} isLoading={isLoading} />
-          <CustomAmountInput
-            value={customAmount}
-            onChange={setCustomAmount}
-            onSubmit={handleCustomTopUp}
-            isLoading={isLoading}
-          />
         </div>
       </Card>
 
       <Dialog open={showHistory} onOpenChange={setShowHistory}>
-        <DialogContent className="sm:max-w-[600px]">
+        <DialogContent className="glass-panel sm:max-w-[600px]">
           <DialogHeader>
-            <DialogTitle>Historique des transactions</DialogTitle>
+            <DialogTitle className="gradient-text">Historique des transactions</DialogTitle>
             <DialogDescription>
               Consultez l'historique de vos rechargements et dépenses
             </DialogDescription>
@@ -162,27 +165,27 @@ export const PrepaidBalance = ({ balance = 0 }) => {
       </Dialog>
 
       <Dialog open={showCardDialog} onOpenChange={setShowCardDialog}>
-        <DialogContent>
+        <DialogContent className="glass-panel">
           <DialogHeader>
-            <DialogTitle>Gestion des moyens de paiement</DialogTitle>
+            <DialogTitle className="gradient-text">Gestion des moyens de paiement</DialogTitle>
             <DialogDescription>
               Ajoutez ou modifiez vos cartes bancaires
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-4">
-            <div className="flex items-center justify-between p-3 border rounded-lg">
+            <div className="flex items-center justify-between p-4 border rounded-lg glass-panel">
               <div className="flex items-center gap-3">
-                <CreditCard className="h-5 w-5 text-muted-foreground" />
+                <CreditCard className="h-5 w-5 text-primary" />
                 <div>
                   <p className="font-medium">Carte Visa ****4242</p>
                   <p className="text-sm text-muted-foreground">Expire 12/25</p>
                 </div>
               </div>
-              <Button variant="ghost" size="sm">
+              <Button variant="ghost" size="sm" className="hover:text-destructive">
                 Supprimer
               </Button>
             </div>
-            <Button className="w-full">
+            <Button className="w-full glass-button">
               <Plus className="h-4 w-4 mr-2" />
               Ajouter une carte
             </Button>

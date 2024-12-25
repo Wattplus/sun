@@ -74,96 +74,94 @@ export const LeadsList = ({ leads }: LeadsListProps) => {
   });
 
   return (
-    <Card className="bg-background/50 backdrop-blur-md border-primary/20">
-      <div className="p-6">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-lg font-semibold">Leads Disponibles</h2>
-          <div className="flex gap-2">
-            <Select value={paymentMethod} onValueChange={(value: "prepaid" | "direct") => setPaymentMethod(value)}>
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Mode de paiement" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="prepaid">Solde prépayé</SelectItem>
-                <SelectItem value="direct">Paiement direct</SelectItem>
-              </SelectContent>
-            </Select>
-            <Link to="/admin/marketplace">
-              <Button variant="outline" size="sm">
-                Voir tout
-                <ChevronRight className="h-4 w-4 ml-1" />
-              </Button>
-            </Link>
-          </div>
-        </div>
-
-        <div className="flex gap-4 mb-4">
-          <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
-            <Input
-              placeholder="Rechercher un lead..."
-              className="pl-10"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-          </div>
-          <Select value={projectType} onValueChange={setProjectType}>
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Type de projet" />
+    <div>
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-xl font-semibold gradient-text">Leads Disponibles</h2>
+        <div className="flex gap-2">
+          <Select value={paymentMethod} onValueChange={(value: "prepaid" | "direct") => setPaymentMethod(value)}>
+            <SelectTrigger className="w-[180px] glass-button">
+              <SelectValue placeholder="Mode de paiement" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">Tous les projets</SelectItem>
-              <SelectItem value="solar">Panneaux Solaires</SelectItem>
-              <SelectItem value="heat">Pompe à chaleur</SelectItem>
+              <SelectItem value="prepaid">Solde prépayé</SelectItem>
+              <SelectItem value="direct">Paiement direct</SelectItem>
             </SelectContent>
           </Select>
+          <Link to="/admin/marketplace">
+            <Button variant="outline" size="sm" className="glass-button">
+              Voir tout
+              <ChevronRight className="h-4 w-4 ml-1" />
+            </Button>
+          </Link>
         </div>
+      </div>
 
-        <ScrollArea className="h-[300px]">
-          <div className="space-y-4">
-            {filteredLeads.map((lead) => (
-              <Card key={lead.id} className="p-4 border border-primary/10 hover:border-primary/30 transition-all">
-                <div className="flex justify-between items-start">
-                  <div>
-                    <Badge variant="secondary" className="mb-2">
-                      {lead.projectType}
-                    </Badge>
-                    <div className="flex items-center gap-1 text-muted-foreground">
-                      <MapPin className="h-4 w-4" />
-                      <span>{lead.city} ({lead.postalCode})</span>
-                    </div>
-                    <div className="mt-2 text-sm">
-                      Budget estimé: {lead.budget.toLocaleString()}€
-                    </div>
-                    <div className="text-xs text-muted-foreground mt-1">
-                      {lead.createdAt}
-                    </div>
+      <div className="flex gap-4 mb-6">
+        <div className="relative flex-1">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
+          <Input
+            placeholder="Rechercher un lead..."
+            className="pl-10 glass-button"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </div>
+        <Select value={projectType} onValueChange={setProjectType}>
+          <SelectTrigger className="w-[180px] glass-button">
+            <SelectValue placeholder="Type de projet" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">Tous les projets</SelectItem>
+            <SelectItem value="solar">Panneaux Solaires</SelectItem>
+            <SelectItem value="heat">Pompe à chaleur</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+
+      <ScrollArea className="h-[400px] pr-4">
+        <div className="space-y-4">
+          {filteredLeads.map((lead) => (
+            <Card key={lead.id} className="glass-panel p-4 card-hover">
+              <div className="flex justify-between items-start">
+                <div>
+                  <Badge variant="secondary" className="mb-2 glass-button">
+                    {lead.projectType}
+                  </Badge>
+                  <div className="flex items-center gap-2 text-muted-foreground mt-2">
+                    <MapPin className="h-4 w-4" />
+                    <span>{lead.city} ({lead.postalCode})</span>
                   </div>
-                  <div className="flex flex-col gap-2">
-                    <Button 
-                      size="sm"
-                      onClick={() => handleBuyLead(lead.id, "mutualise")}
-                      className="flex items-center gap-1 bg-primary hover:bg-primary/90"
-                    >
-                      <Euro className="h-4 w-4" />
-                      19€ Mutualisé
-                    </Button>
-                    <Button 
-                      size="sm"
-                      variant="secondary"
-                      onClick={() => handleBuyLead(lead.id, "exclusif")}
-                      className="flex items-center gap-1"
-                    >
-                      <Euro className="h-4 w-4" />
-                      35€ Exclusif
-                    </Button>
+                  <div className="mt-2 text-sm font-medium">
+                    Budget estimé: {lead.budget.toLocaleString()}€
+                  </div>
+                  <div className="text-xs text-muted-foreground mt-1">
+                    {lead.createdAt}
                   </div>
                 </div>
-              </Card>
-            ))}
-          </div>
-        </ScrollArea>
-      </div>
-    </Card>
+                <div className="flex flex-col gap-2">
+                  <Button 
+                    size="sm"
+                    onClick={() => handleBuyLead(lead.id, "mutualise")}
+                    className="glass-button"
+                  >
+                    <Euro className="h-4 w-4" />
+                    19€ Mutualisé
+                  </Button>
+                  <Button 
+                    size="sm"
+                    variant="secondary"
+                    onClick={() => handleBuyLead(lead.id, "exclusif")}
+                    className="glass-button"
+                  >
+                    <Euro className="h-4 w-4" />
+                    35€ Exclusif
+                  </Button>
+                </div>
+              </div>
+            </Card>
+          ))}
+        </div>
+      </ScrollArea>
+    </div>
   );
 };
