@@ -10,6 +10,7 @@ import LeadManagement from "./components/admin/LeadManagement";
 import InstallerManagement from "./components/admin/InstallerManagement";
 import { LeadMarketplace } from "./components/admin/marketplace/LeadMarketplace";
 import AdminDashboard from "./components/admin/AdminDashboard";
+import { InstallerDashboard } from "./components/installer/InstallerDashboard";
 
 const queryClient = new QueryClient();
 
@@ -22,7 +23,7 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/client/*" element={<ClientPortal />} />
-          <Route path="/espace-installateur/*" element={<InstallerManagement />} />
+          <Route path="/espace-installateur" element={<InstallerDashboard />} />
           <Route path="/admin" element={<Admin />}>
             <Route index element={<AdminDashboard />} />
             <Route path="leads" element={<LeadManagement />} />
