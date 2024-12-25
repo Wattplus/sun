@@ -1,59 +1,94 @@
+import { Lead } from "@/types/crm";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Phone, Mail, MapPin, Euro } from "lucide-react";
-import { Lead } from "@/types/crm";
-import { useToast } from "@/components/ui/use-toast";
+import { Users, MapPin, Euro, Calendar, Phone, Mail } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { formatDistanceToNow } from "date-fns";
+import { fr } from "date-fns/locale";
 
 interface PurchasedLeadsProps {
   leads: Lead[];
 }
 
 export const PurchasedLeads = ({ leads }: PurchasedLeadsProps) => {
-  const { toast } = useToast();
-
-  const handleContact = (method: "phone" | "email", lead: Lead) => {
-    toast({
-      title: `Contact ${lead.firstName} ${lead.lastName}`,
-      description: `Via ${method}: ${method === "phone" ? lead.phone : lead.email}`,
-    });
-  };
-
   return (
     <Card className="p-4">
-      <h2 className="text-lg font-medium mb-4">Leads Achetés</h2>
-      <ScrollArea className="h-[400px]">
+      <h2 className="text-xl font-bold mb-4">Mes Leads Achetés</h2>
+      <ScrollArea className="h-[600px] pr-4">
         <div className="space-y-4">
           {leads.map((lead) => (
-            <Card key={lead.id} className="p-4 bg-background/50">
-              <div className="flex justify-between items-start">
-                <div className="space-y-2">
-                  <Badge variant="secondary" className="mb-2">
-                    {lead.projectType}
+            <Card key={lead.id} className="p-6 hover:shadow-lg transition-all duration-200">
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h3 className="text-lg font-medium">
+                      {lead.firstName} {lead.lastName}
+                    </h3>
+                    <div className="flex items-center gap-2 text-muted-foreground mt-1">
+                      <MapPin className="h-4 w-4" />
+                      <span>{lead.postalCode} {lead.city}</span>
+                    </div>
+                  </div>
+                  <Badge variant="outline">
+                    {formatDistanceToNow(new Date(lead.createdAt), { 
+                      addSuffix: true,
+                      locale: fr 
+                    })}
                   </Badge>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <p className="text-sm text-muted-foreground">Budget</p>
+                    <p className="font-medium">{lead.budget.toLocaleString()}€</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground">Type de projet</p>
+                    <Badge variant="secondary" className="mt-1">
+                      {lead.projectType}
+                    </Badge>
+                  </div>
+                </div>
+
+                <div className="flex gap-4 mt-4">
+                  <Button 
+                    variant="outline" 
+                    className="flex-1"
+                    onClick={() => window.location.href = `tel:${lead.phone}`}
+                  >
+                    <Phone className="h-4 w-4 mr-2" />
+                    Appeler
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    className="flex-1"
+                    onClick={() => window.location.href = `mailto:${lead.email}`}
+                  >
+                    <Mail className="h-4 w-4 mr-2" />
+                    Envoyer un email
+                  </Button>
+                </div>
+
+                <div className="flex items-center justify-between pt-4 border-t border-border">
                   <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <MapPin className="h-4 w-4" />
-                    {lead.city} ({lead.postalCode})
+                    <Users className="h-4 w-4 text-primary" />
+                    <span>
+                      {lead.purchasedBy?.length || 0} autre{lead.purchasedBy?.length !== 1 ? 's' : ''} installateur{lead.purchasedBy?.length !== 1 ? 's' : ''}
+                    </span>
                   </div>
-                  <div className="flex items-center gap-2 text-sm">
-                    <Euro className="h-4 w-4" />
-                    Budget: {lead.budget.toLocaleString()}€
-                  </div>
-                  <div className="flex gap-2 mt-2">
-                    <Button size="sm" variant="outline" onClick={() => handleContact("phone", lead)}>
-                      <Phone className="h-4 w-4 mr-1" />
-                      {lead.phone}
-                    </Button>
-                    <Button size="sm" variant="outline" onClick={() => handleContact("email", lead)}>
-                      <Mail className="h-4 w-4 mr-1" />
-                      {lead.email}
-                    </Button>
-                  </div>
+                  <Badge variant="outline" className="bg-primary/10">
+                    {lead.purchasedBy?.find(p => p.purchaseType === 'exclusif') ? 'Exclusif' : 'Mutualisé'}
+                  </Badge>
                 </div>
               </div>
             </Card>
           ))}
+          {leads.length === 0 && (
+            <div className="text-center py-8 text-muted-foreground">
+              <p>Vous n'avez pas encore acheté de leads.</p>
+            </div>
+          )}
         </div>
       </ScrollArea>
     </Card>
