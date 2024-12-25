@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
+import { BarChart, Users, FileText, ArrowUpRight } from "lucide-react";
 
 const Admin = () => {
   const [email, setEmail] = useState("");
@@ -34,12 +35,90 @@ const Admin = () => {
 
   if (isLoggedIn) {
     return (
-      <div className="container mx-auto p-8">
-        <h1 className="text-3xl font-bold mb-6">Panneau d'administration</h1>
-        <div className="grid gap-6">
-          <div className="bg-white p-6 rounded-lg shadow">
-            <h2 className="text-xl font-semibold mb-4">Statistiques</h2>
-            <p>Contenu du panneau d'administration à venir...</p>
+      <div className="min-h-screen bg-gray-50">
+        <div className="container mx-auto p-8">
+          <h1 className="text-3xl font-bold mb-8 text-gray-800">
+            Panneau d'administration
+          </h1>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            {/* Statistiques en cartes */}
+            <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+              <div className="flex items-center justify-between mb-4">
+                <div className="p-2 bg-blue-50 rounded-lg">
+                  <Users className="h-6 w-6 text-blue-500" />
+                </div>
+                <ArrowUpRight className="h-4 w-4 text-green-500" />
+              </div>
+              <h3 className="text-sm font-medium text-gray-500">Visiteurs</h3>
+              <p className="text-2xl font-semibold mt-1">1,234</p>
+              <p className="text-xs text-green-500 mt-2">+12% cette semaine</p>
+            </div>
+
+            <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+              <div className="flex items-center justify-between mb-4">
+                <div className="p-2 bg-green-50 rounded-lg">
+                  <FileText className="h-6 w-6 text-green-500" />
+                </div>
+                <ArrowUpRight className="h-4 w-4 text-green-500" />
+              </div>
+              <h3 className="text-sm font-medium text-gray-500">Devis générés</h3>
+              <p className="text-2xl font-semibold mt-1">256</p>
+              <p className="text-xs text-green-500 mt-2">+8% ce mois</p>
+            </div>
+
+            <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+              <div className="flex items-center justify-between mb-4">
+                <div className="p-2 bg-purple-50 rounded-lg">
+                  <BarChart className="h-6 w-6 text-purple-500" />
+                </div>
+                <ArrowUpRight className="h-4 w-4 text-green-500" />
+              </div>
+              <h3 className="text-sm font-medium text-gray-500">Taux de conversion</h3>
+              <p className="text-2xl font-semibold mt-1">4.2%</p>
+              <p className="text-xs text-green-500 mt-2">+2% ce mois</p>
+            </div>
+
+            <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+              <div className="flex items-center justify-between mb-4">
+                <div className="p-2 bg-yellow-50 rounded-lg">
+                  <Users className="h-6 w-6 text-yellow-500" />
+                </div>
+                <ArrowUpRight className="h-4 w-4 text-green-500" />
+              </div>
+              <h3 className="text-sm font-medium text-gray-500">Leads qualifiés</h3>
+              <p className="text-2xl font-semibold mt-1">89</p>
+              <p className="text-xs text-green-500 mt-2">+15% cette semaine</p>
+            </div>
+          </div>
+
+          {/* Section des graphiques */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+              <h2 className="text-xl font-semibold mb-4 text-gray-800">
+                Activité récente
+              </h2>
+              <div className="space-y-4">
+                {[1, 2, 3].map((item) => (
+                  <div key={item} className="flex items-center justify-between py-3 border-b border-gray-100">
+                    <div className="flex items-center space-x-3">
+                      <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                      <p className="text-sm text-gray-600">Nouveau devis généré</p>
+                    </div>
+                    <span className="text-sm text-gray-400">Il y a {item * 2}h</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+              <h2 className="text-xl font-semibold mb-4 text-gray-800">
+                Performances
+              </h2>
+              <div className="h-64 flex items-center justify-center text-gray-400">
+                Graphique des performances à venir...
+              </div>
+            </div>
           </div>
         </div>
       </div>
