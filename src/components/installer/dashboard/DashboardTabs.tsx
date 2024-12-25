@@ -9,8 +9,34 @@ import { InstallerProfile } from "@/pages/InstallerProfile";
 import { Card } from "@/components/ui/card";
 import { mockAvailableLeads } from "./mockAvailableLeads";
 import { mockPurchasedLeads } from "./mockPurchasedLeads";
+import { Button } from "@/components/ui/button";
+import { useState } from "react";
+import { ChevronRight, X } from "lucide-react";
 
 export const DashboardTabs = () => {
+  const [showAllPurchasedLeads, setShowAllPurchasedLeads] = useState(false);
+
+  if (showAllPurchasedLeads) {
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <h2 className="text-2xl font-bold">Tous Mes Leads Achetés</h2>
+          <Button 
+            variant="ghost" 
+            onClick={() => setShowAllPurchasedLeads(false)}
+            className="gap-2"
+          >
+            <X className="h-4 w-4" />
+            Fermer
+          </Button>
+        </div>
+        <Card className="p-6">
+          <PurchasedLeads leads={mockPurchasedLeads} />
+        </Card>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
       <PrepaidBalance balance={150} />
@@ -24,8 +50,18 @@ export const DashboardTabs = () => {
 
         {/* Leads achetés */}
         <Card className="p-6">
-          <h2 className="text-xl font-bold mb-4">Mes Leads Achetés</h2>
-          <PurchasedLeads leads={mockPurchasedLeads} />
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-bold">Mes Leads Achetés</h2>
+            <Button 
+              variant="ghost" 
+              onClick={() => setShowAllPurchasedLeads(true)}
+              className="gap-2"
+            >
+              Voir tout
+              <ChevronRight className="h-4 w-4" />
+            </Button>
+          </div>
+          <PurchasedLeads leads={mockPurchasedLeads.slice(0, 2)} />
         </Card>
       </div>
 
