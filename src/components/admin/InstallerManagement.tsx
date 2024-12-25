@@ -22,7 +22,7 @@ export const mockInstallers: Installer[] = [
     address: "789 Boulevard Haussmann, 75008 Paris",
     zones: ["75", "92", "93", "94"],
     status: "active",
-    commission: 10,
+    commission: 0,
     leadsAssigned: 45,
     conversionRate: 68,
     paymentType: "per_lead"
@@ -36,9 +36,51 @@ export const mockInstallers: Installer[] = [
     address: "456 Rue de la République, 69001 Lyon",
     zones: ["69", "38", "01"],
     status: "active",
-    commission: 12,
+    commission: 0,
     leadsAssigned: 32,
     conversionRate: 72,
+    paymentType: "prepaid"
+  },
+  {
+    id: "3",
+    companyName: "Éco-Énergie Solutions",
+    contactName: "Marc Dubois",
+    email: "contact@eco-energie.fr",
+    phone: "05 61 23 45 67",
+    address: "123 Avenue des Minimes, 31200 Toulouse",
+    zones: ["31", "32", "81", "82"],
+    status: "active",
+    commission: 0,
+    leadsAssigned: 28,
+    conversionRate: 65,
+    paymentType: "per_lead"
+  },
+  {
+    id: "4",
+    companyName: "Bretagne Solaire",
+    contactName: "Yann Le Goff",
+    email: "contact@bretagne-solaire.fr",
+    phone: "02 98 76 54 32",
+    address: "45 Rue de Siam, 29200 Brest",
+    zones: ["29", "22", "56", "35"],
+    status: "pending",
+    commission: 0,
+    leadsAssigned: 0,
+    conversionRate: 0,
+    paymentType: "per_lead"
+  },
+  {
+    id: "5",
+    companyName: "Provence Énergies Vertes",
+    contactName: "Julie Blanc",
+    email: "contact@pev.fr",
+    phone: "04 91 23 45 67",
+    address: "789 Boulevard Périer, 13008 Marseille",
+    zones: ["13", "83", "84"],
+    status: "inactive",
+    commission: 0,
+    leadsAssigned: 15,
+    conversionRate: 45,
     paymentType: "prepaid"
   }
 ];
