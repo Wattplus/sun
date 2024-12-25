@@ -15,16 +15,18 @@ export const LeadsList = ({ leads }: LeadsListProps) => {
   const { toast } = useToast();
   const [searchTerm, setSearchTerm] = useState("");
 
-  const handleContact = async (leadId: string, method: "phone" | "email") => {
+  const handleContact = async (leadId: string, type: 'mutualise' | 'exclusif') => {
     try {
-      const priceId = 'price_1QZyJpFOePj4Hv47sd76eDOz';
-      
+      const priceId = type === 'exclusif' 
+        ? 'price_1QZyKUFOePj4Hv47qEFQ1KzF' 
+        : 'price_1QZyJpFOePj4Hv47sd76eDOz';
+
       toast({
         title: "Achat en cours",
-        description: `Accès aux informations de ${method === "phone" ? "téléphone" : "email"}...`,
+        description: `Accès aux informations du lead...`,
       });
 
-      const response = await fetch(`https://dqzsycxxgltztufrhams.supabase.co/functions/v1/create-contact-checkout`, {
+      const response = await fetch(`https://dqzsycxxgltztufrhams.supabase.co/functions/v1/create-lead-checkout`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -32,7 +34,7 @@ export const LeadsList = ({ leads }: LeadsListProps) => {
         },
         body: JSON.stringify({
           leadId,
-          contactType: method,
+          type,
           priceId
         }),
       });
@@ -44,7 +46,7 @@ export const LeadsList = ({ leads }: LeadsListProps) => {
     } catch (error) {
       toast({
         title: "Erreur",
-        description: `Une erreur est survenue lors de l'achat des informations de contact`,
+        description: `Une erreur est survenue lors de l'achat du lead`,
         variant: "destructive",
       });
     }
@@ -99,33 +101,23 @@ export const LeadsList = ({ leads }: LeadsListProps) => {
                     <Button 
                       size="sm" 
                       variant="outline" 
-                      onClick={() => handleContact(lead.id, "phone")}
+                      onClick={() => handleContact(lead.id, 'mutualise')}
                       className="flex items-center gap-2"
                     >
-                      <Phone className="h-4 w-4" />
-                      <Lock className="h-3 w-3" />
-                      9€ Appeler
+                      <Euro className="h-4 w-4" />
+                      Lead mutualisé - 19€
                     </Button>
                     <Button 
                       size="sm" 
                       variant="outline" 
-                      onClick={() => handleContact(lead.id, "email")}
+                      onClick={() => handleContact(lead.id, 'exclusif')}
                       className="flex items-center gap-2"
                     >
-                      <Mail className="h-4 w-4" />
-                      <Lock className="h-3 w-3" />
-                      9€ Email
+                      <Euro className="h-4 w-4" />
+                      Lead exclusif - 35€
                     </Button>
                   </div>
                 </div>
-
-                <Button
-                  variant="default"
-                  onClick={() => handleContact(lead.id, "phone")}
-                  className="bg-green-600 hover:bg-green-700"
-                >
-                  Acheter ce lead
-                </Button>
               </div>
             </Card>
           ))}
