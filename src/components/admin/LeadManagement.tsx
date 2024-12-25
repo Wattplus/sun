@@ -4,10 +4,11 @@ import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
-import { Lead, LeadStatus, mockLeads } from "@/types/crm";
+import { Lead, LeadStatus, mockLeads, Installer } from "@/types/crm";
 import { Search, Download, Plus, Edit } from "lucide-react";
 import { EditLeadDialog } from "./EditLeadDialog";
 import { useToast } from "@/components/ui/use-toast";
+import { mockInstallers } from "./InstallerManagement";
 import {
   Dialog,
   DialogContent,

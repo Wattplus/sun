@@ -21,7 +21,8 @@ const mockInstallers: Installer[] = [
     status: "active",
     commission: 10,
     leadsAssigned: 45,
-    conversionRate: 68
+    conversionRate: 68,
+    paymentType: "per_lead"
   },
   {
     id: "2",
@@ -34,7 +35,8 @@ const mockInstallers: Installer[] = [
     status: "active",
     commission: 12,
     leadsAssigned: 32,
-    conversionRate: 72
+    conversionRate: 72,
+    paymentType: "prepaid"
   }
 ];
 
@@ -85,7 +87,8 @@ const InstallerManagement = () => {
       status: "pending",
       commission: 0,
       leadsAssigned: 0,
-      conversionRate: 0
+      conversionRate: 0,
+      paymentType: "per_lead"
     };
     setSelectedInstaller(newInstaller);
     setEditDialogOpen(true);
