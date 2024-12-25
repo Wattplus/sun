@@ -1,3 +1,4 @@
+import React from "react";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -6,8 +7,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import { useLocation } from "react-router-dom";
-import { Link } from "react-router-dom";
+import { useLocation, Link } from "react-router-dom";
 
 const breadcrumbTitles: Record<string, string> = {
   "admin": "Administration",
@@ -24,9 +24,9 @@ export const AdminBreadcrumb = () => {
     <Breadcrumb className="mb-6">
       <BreadcrumbList>
         <BreadcrumbItem>
-          <BreadcrumbLink as={Link} to="/">
+          <Link to="/" className="transition-colors hover:text-foreground">
             Accueil
-          </BreadcrumbLink>
+          </Link>
         </BreadcrumbItem>
         
         {pathSegments.map((segment, index) => {
@@ -40,9 +40,9 @@ export const AdminBreadcrumb = () => {
                 {isLast ? (
                   <BreadcrumbPage>{breadcrumbTitles[segment] || segment}</BreadcrumbPage>
                 ) : (
-                  <BreadcrumbLink as={Link} to={path}>
+                  <Link to={path} className="transition-colors hover:text-foreground">
                     {breadcrumbTitles[segment] || segment}
-                  </BreadcrumbLink>
+                  </Link>
                 )}
               </BreadcrumbItem>
             </React.Fragment>
