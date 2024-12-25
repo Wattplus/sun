@@ -4,6 +4,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { EditLeadDialog } from "./EditLeadDialog";
 import { LeadTable } from "./leads/LeadTable";
 import { LeadHeader } from "./leads/LeadHeader";
+import { AdminBreadcrumb } from "./AdminBreadcrumb";
 import {
   Dialog,
   DialogContent,
@@ -111,71 +112,74 @@ const LeadManagement = () => {
   };
 
   return (
-    <div className="glass-panel p-6">
-      <LeadHeader
-        searchTerm={searchTerm}
-        onSearchChange={setSearchTerm}
-        onExportClick={exportToCSV}
-        onNewLeadClick={() => {
-          setSelectedLead(null);
-          setEditDialogOpen(true);
-        }}
-      />
+    <div className="space-y-6">
+      <AdminBreadcrumb />
+      <div className="glass-panel p-6">
+        <LeadHeader
+          searchTerm={searchTerm}
+          onSearchChange={setSearchTerm}
+          onExportClick={exportToCSV}
+          onNewLeadClick={() => {
+            setSelectedLead(null);
+            setEditDialogOpen(true);
+          }}
+        />
 
-      <LeadTable
-        leads={leads}
-        onEditClick={handleEditClick}
-        onAssignClick={handleAssignClick}
-        getStatusColor={getStatusColor}
-        getStatusText={getStatusText}
-      />
+        <LeadTable
+          leads={leads}
+          onEditClick={handleEditClick}
+          onAssignClick={handleAssignClick}
+          getStatusColor={getStatusColor}
+          getStatusText={getStatusText}
+        />
 
-      <EditLeadDialog
-        lead={selectedLead}
-        open={editDialogOpen}
-        onOpenChange={handleEditClose}
-        onSave={handleSaveLead}
-      />
+        <EditLeadDialog
+          lead={selectedLead}
+          open={editDialogOpen}
+          onOpenChange={handleEditClose}
+          onSave={handleSaveLead}
+        />
 
-      <Dialog open={assignDialogOpen} onOpenChange={setAssignDialogOpen}>
-        <DialogContent className="bg-background/95 backdrop-blur-md border-[#33C3F0]/20">
-          <DialogHeader>
-            <DialogTitle>Assigner le lead à un installateur</DialogTitle>
-          </DialogHeader>
-          <div className="py-4">
-            <Select value={selectedInstallerId} onValueChange={setSelectedInstallerId}>
-              <SelectTrigger className="bg-background/50 border-[#33C3F0]/20">
-                <SelectValue placeholder="Sélectionner un installateur" />
-              </SelectTrigger>
-              <SelectContent>
-                {mockInstallers
-                  .filter(installer => installer.status === "active")
-                  .map(installer => (
-                    <SelectItem key={installer.id} value={installer.id}>
-                      {installer.companyName}
-                    </SelectItem>
-                  ))}
-              </SelectContent>
-            </Select>
-          </div>
-          <DialogFooter>
-            <Button
-              variant="outline"
-              onClick={() => setAssignDialogOpen(false)}
-              className="border-[#33C3F0]/20 hover:border-[#33C3F0]/40"
-            >
-              Annuler
-            </Button>
-            <Button
-              onClick={handleAssignSubmit}
-              disabled={!selectedInstallerId}
-              className="bg-[#1EAEDB] hover:bg-[#0FA0CE]"
-            >
-              Confirmer
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+        <Dialog open={assignDialogOpen} onOpenChange={setAssignDialogOpen}>
+          <DialogContent className="bg-background/95 backdrop-blur-md border-[#33C3F0]/20">
+            <DialogHeader>
+              <DialogTitle>Assigner le lead à un installateur</DialogTitle>
+            </DialogHeader>
+            <div className="py-4">
+              <Select value={selectedInstallerId} onValueChange={setSelectedInstallerId}>
+                <SelectTrigger className="bg-background/50 border-[#33C3F0]/20">
+                  <SelectValue placeholder="Sélectionner un installateur" />
+                </SelectTrigger>
+                <SelectContent>
+                  {mockInstallers
+                    .filter(installer => installer.status === "active")
+                    .map(installer => (
+                      <SelectItem key={installer.id} value={installer.id}>
+                        {installer.companyName}
+                      </SelectItem>
+                    ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <DialogFooter>
+              <Button
+                variant="outline"
+                onClick={() => setAssignDialogOpen(false)}
+                className="border-[#33C3F0]/20 hover:border-[#33C3F0]/40"
+              >
+                Annuler
+              </Button>
+              <Button
+                onClick={handleAssignSubmit}
+                disabled={!selectedInstallerId}
+                className="bg-[#1EAEDB] hover:bg-[#0FA0CE]"
+              >
+                Confirmer
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      </div>
     </div>
   );
 };
