@@ -10,6 +10,7 @@ import { TechnicalSpecs } from "@/components/TechnicalSpecs";
 import { SavingsCalculator } from "@/components/SavingsCalculator";
 import { EnvironmentalImpact } from "@/components/EnvironmentalImpact";
 import { Certifications } from "@/components/Certifications";
+import { PrimeRates } from "@/components/PrimeRates";
 
 const Index = () => {
   return (
@@ -19,6 +20,12 @@ const Index = () => {
         <Navbar />
         <main className="space-y-0">
           <HeroSection />
+          <PrimeRates />
+          <div id="lead-form" className="section-spacing container-padding">
+            <div className="mx-auto max-w-7xl">
+              <LeadForm />
+            </div>
+          </div>
           <div className="relative">
             <div className="absolute inset-0 bg-gradient-to-b from-[#0B1221] to-transparent h-32" />
             <Benefits />
@@ -33,11 +40,6 @@ const Index = () => {
           <Certifications />
           <Testimonials />
           <FAQ />
-          <div className="section-spacing container-padding">
-            <div className="mx-auto max-w-7xl">
-              <LeadForm />
-            </div>
-          </div>
         </main>
         <Footer />
       </div>
