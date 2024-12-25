@@ -20,11 +20,11 @@ export default {
     extend: {
       colors: {
         primary: {
-          DEFAULT: "#2E7D32",
+          DEFAULT: "#1a5fb4",
           foreground: "white",
         },
         secondary: {
-          DEFAULT: "#1976D2",
+          DEFAULT: "#0B1221",
           foreground: "white",
         },
         border: "hsl(var(--border))",
@@ -53,6 +53,11 @@ export default {
           foreground: "hsl(var(--card-foreground))",
         },
       },
+      backgroundImage: {
+        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+        'gradient-conic': 'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
+        'blue-gradient': 'linear-gradient(to right, #1a5fb4, #0B1221)',
+      },
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
@@ -71,11 +76,17 @@ export default {
           "0%": { opacity: "0" },
           "100%": { opacity: "1" },
         },
+        shimmer: {
+          "100%": {
+            transform: "translateX(100%)",
+          },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         fadeIn: "fadeIn 0.5s ease-out",
+        shimmer: "shimmer 2s infinite",
       },
     },
   },

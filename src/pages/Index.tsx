@@ -14,11 +14,11 @@ import { Certifications } from "@/components/Certifications";
 
 const Index = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#0B1221] via-white to-[#0B1221]">
-      <Navbar />
-      <main className="relative">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(25,118,210,0.1)_0%,rgba(0,0,0,0.4)_100%)]" />
-        <div className="relative">
+    <div className="min-h-screen bg-[#0B1221] relative overflow-hidden">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(26,95,180,0.15)_0%,rgba(11,18,33,0.4)_100%)]" />
+      <div className="relative z-10">
+        <Navbar />
+        <main>
           <HeroSection />
           <Benefits />
           <SavingsCalculator />
@@ -29,14 +29,14 @@ const Index = () => {
           <Testimonials />
           <Certifications />
           <FAQ />
-          <div className="bg-gradient-to-b from-[#0B1221] to-[#1a5fb4] py-24 sm:py-32">
+          <div className="py-24 sm:py-32">
             <div className="mx-auto max-w-7xl px-6 lg:px-8">
               <LeadForm />
             </div>
           </div>
-        </div>
-      </main>
-      <Footer />
+        </main>
+        <Footer />
+      </div>
     </div>
   );
 };
