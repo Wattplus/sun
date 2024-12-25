@@ -1,7 +1,7 @@
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { MapPin, Star, MessageSquare, Phone, Mail, CheckCircle } from "lucide-react"
+import { MapPin, Star, MessageSquare, CheckCircle } from "lucide-react"
 import { useToast } from "@/components/ui/use-toast"
 import { mockInstallers } from "@/components/admin/InstallerManagement"
 
@@ -52,14 +52,6 @@ export function InstallerDirectory() {
                 
                 <div className="space-y-4">
                   <div className="text-sm space-y-2">
-                    <div className="flex items-center gap-2 text-gray-300">
-                      <Phone className="w-4 h-4" />
-                      <span>{installer.phone}</span>
-                    </div>
-                    <div className="flex items-center gap-2 text-gray-300">
-                      <Mail className="w-4 h-4" />
-                      <span>{installer.email}</span>
-                    </div>
                     <div className="text-gray-300">
                       <strong className="text-white">Projets réalisés:</strong> {installer.leadsAssigned}
                     </div>
