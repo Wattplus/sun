@@ -1,47 +1,62 @@
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Index from "./pages/Index";
-import Admin from "./pages/Admin";
-import ClientPortal from "./pages/ClientPortal";
-import LeadManagement from "./components/admin/LeadManagement";
-import InstallerManagement from "./components/admin/InstallerManagement";
-import { LeadMarketplace } from "./components/admin/marketplace/LeadMarketplace";
-import AdminDashboard from "./components/admin/AdminDashboard";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { InstallerDashboard } from "./components/installer/InstallerDashboard";
-import NotificationsPage from "./components/admin/notifications/NotificationsPage";
-import SettingsPage from "./components/admin/settings/SettingsPage";
-import ProfilePage from "./components/admin/profile/ProfilePage";
-import StatisticsPage from "./components/admin/statistics/StatisticsPage";
+import { ProjectDetails } from "./components/installer/projects/ProjectDetails";
+import { AdminDashboard } from "./components/admin/AdminDashboard";
+import { InstallerManagement } from "./components/admin/InstallerManagement";
+import { LeadManagement } from "./components/admin/LeadManagement";
+import { Login } from "./components/auth/Login";
+import { Register } from "./components/auth/Register";
+import { ForgotPassword } from "./components/auth/ForgotPassword";
+import { ResetPassword } from "./components/auth/ResetPassword";
+import { NotFound } from "./components/NotFound";
+import { PrivateRoute } from "./components/auth/PrivateRoute";
+import { Toaster } from "./components/ui/toaster";
 
-const queryClient = new QueryClient();
+function App() {
+  return (
+    <Router>
+      <Routes>
+        {/* Public routes */}
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
+        {/* Installer routes */}
+        <Route path="/espace-installateur" element={
+          <PrivateRoute role="installer">
+            <InstallerDashboard />
+          </PrivateRoute>
+        } />
+        <Route path="/espace-installateur/projets/:projectId" element={
+          <PrivateRoute role="installer">
+            <ProjectDetails />
+          </PrivateRoute>
+        } />
+
+        {/* Admin routes */}
+        <Route path="/admin" element={
+          <PrivateRoute role="admin">
+            <AdminDashboard />
+          </PrivateRoute>
+        } />
+        <Route path="/admin/installateurs" element={
+          <PrivateRoute role="admin">
+            <InstallerManagement />
+          </PrivateRoute>
+        } />
+        <Route path="/admin/leads" element={
+          <PrivateRoute role="admin">
+            <LeadManagement />
+          </PrivateRoute>
+        } />
+
+        {/* Fallback route */}
+        <Route path="*" element={<NotFound />} />
+      </Routes>
       <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/client/*" element={<ClientPortal />} />
-          <Route path="/espace-installateur" element={<InstallerDashboard />} />
-          <Route path="/admin" element={<Admin />}>
-            <Route index element={<AdminDashboard />} />
-            <Route path="leads" element={<LeadManagement />} />
-            <Route path="installers" element={<InstallerManagement />} />
-            <Route path="marketplace" element={<LeadMarketplace />} />
-            <Route path="notifications" element={<NotificationsPage />} />
-            <Route path="settings" element={<SettingsPage />} />
-            <Route path="profile" element={<ProfilePage />} />
-            <Route path="statistics" element={<StatisticsPage />} />
-          </Route>
-        </Routes>
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
-);
+    </Router>
+  );
+}
 
 export default App;
