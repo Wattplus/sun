@@ -2,9 +2,9 @@ import { useParams } from "react-router-dom";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Calendar, MapPin, Euro, FileText, Phone, Mail, ArrowLeft } from "lucide-react";
+import { Calendar, MapPin, Euro, FileText, ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { mockProjects } from "../dashboard/ProjectsList";
+import { mockProjects, Project } from "../dashboard/ProjectsList";
 
 export const ProjectDetails = () => {
   const { projectId } = useParams();

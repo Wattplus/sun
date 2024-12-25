@@ -15,7 +15,7 @@ import { MessagesList } from "./dashboard/MessagesList";
 import { NotificationsList } from "./dashboard/NotificationsList";
 import { PrepaidBalance } from "./dashboard/PrepaidBalance";
 import { PurchasedLeads } from "./dashboard/PurchasedLeads";
-import { ProjectsList } from "./dashboard/ProjectsList";
+import ProjectsList from "./dashboard/ProjectsList";
 import { InstallerProfile } from "@/pages/InstallerProfile";
 import { SubscriptionPlans } from "./subscription/SubscriptionPlans";
 
