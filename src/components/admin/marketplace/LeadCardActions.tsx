@@ -8,6 +8,7 @@ interface LeadCardActionsProps {
   exclusivePrice: number;
   canPurchaseMutual: boolean;
   canPurchaseExclusive: boolean;
+  isProfessionalProject?: boolean;
 }
 
 export const LeadCardActions = ({
@@ -15,8 +16,26 @@ export const LeadCardActions = ({
   mutualPrice,
   exclusivePrice,
   canPurchaseMutual,
-  canPurchaseExclusive
+  canPurchaseExclusive,
+  isProfessionalProject = false
 }: LeadCardActionsProps) => {
+  if (isProfessionalProject) {
+    return (
+      <div className="flex gap-4 mt-4">
+        <Button 
+          size="lg" 
+          onClick={() => onPurchase('exclusif')}
+          disabled={!canPurchaseExclusive}
+          className="flex-1 bg-primary hover:bg-primary/90"
+        >
+          <Crown className="h-4 w-4 mr-2" />
+          Lead professionnel - {formatPrice(exclusivePrice)}
+          <ArrowRight className="h-4 w-4 ml-2" />
+        </Button>
+      </div>
+    );
+  }
+
   return (
     <div className="flex gap-4 mt-4">
       <Button 

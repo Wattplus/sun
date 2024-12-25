@@ -29,6 +29,7 @@ export const LeadCard = ({
   const hasExclusivePurchase = lead.purchasedBy?.some(p => p.purchaseType === 'exclusif');
   const canPurchaseMutual = purchaseCount < MAX_MUTUAL_PURCHASES && !hasExclusivePurchase;
   const canPurchaseExclusive = !hasExclusivePurchase && purchaseCount === 0;
+  const isProfessionalProject = lead.projectType === 'professional';
 
   const handlePurchase = async (type: 'mutualise' | 'exclusif') => {
     if (type === 'mutualise' && !canPurchaseMutual) {
@@ -50,9 +51,12 @@ export const LeadCard = ({
     }
 
     try {
-      const priceId = type === 'exclusif' 
-        ? 'price_1QZyKUFOePj4Hv47qEFQ1KzF' 
-        : 'price_1QZyJpFOePj4Hv47sd76eDOz';
+      // Pour les projets professionnels, on utilise toujours le même prix et type d'achat
+      const priceId = isProfessionalProject 
+        ? 'price_1Qa0nUFOePj4Hv47Ih00CR8k'
+        : type === 'exclusif' 
+          ? 'price_1QZyKUFOePj4Hv47qEFQ1KzF' 
+          : 'price_1QZyJpFOePj4Hv47sd76eDOz';
 
       const response = await fetch("https://dqzsycxxgltztufrhams.supabase.co/functions/v1/create-lead-checkout", {
         method: "POST",
@@ -62,7 +66,7 @@ export const LeadCard = ({
         },
         body: JSON.stringify({
           leadId: lead.id,
-          type,
+          type: isProfessionalProject ? 'exclusif' : type,
           priceId,
           subscriptionTier
         }),
@@ -101,10 +105,11 @@ export const LeadCard = ({
       {!isPurchased && (
         <LeadCardActions 
           onPurchase={handlePurchase}
-          mutualPrice={prices.mutualPrice}
-          exclusivePrice={prices.exclusivePrice}
-          canPurchaseMutual={canPurchaseMutual}
-          canPurchaseExclusive={canPurchaseExclusive}
+          mutualPrice={isProfessionalProject ? 59 : prices.mutualPrice}
+          exclusivePrice={isProfessionalProject ? 59 : prices.exclusivePrice}
+          canPurchaseMutual={!isProfessionalProject && canPurchaseMutual}
+          canPurchaseExclusive={!isProfessionalProject || canPurchaseExclusive}
+          isProfessionalProject={isProfessionalProject}
         />
       )}
     </Card>
