@@ -1,4 +1,5 @@
-import { Star } from "lucide-react";
+import { Star, ArrowRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 const testimonials = [
   {
@@ -29,7 +30,7 @@ const testimonials = [
 
 export const Testimonials = () => {
   return (
-    <div className="py-24 sm:py-32 bg-gradient-to-b from-white to-gray-50">
+    <div className="py-24 sm:py-32 bg-gradient-to-b from-gray-50 to-white">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="mx-auto max-w-2xl text-center mb-16">
           <h2 className="text-4xl font-bold tracking-tight text-gray-900 mb-6">
@@ -43,7 +44,7 @@ export const Testimonials = () => {
           {testimonials.map((testimonial, index) => (
             <div
               key={index}
-              className="relative group"
+              className="group relative"
             >
               <div className="absolute -inset-1 rounded-3xl bg-gradient-to-r from-green-600 to-blue-600 opacity-25 blur transition duration-200 group-hover:opacity-100" />
               <div className="relative flex h-full flex-col rounded-2xl bg-white p-8 shadow-xl">
@@ -72,6 +73,17 @@ export const Testimonials = () => {
               </div>
             </div>
           ))}
+        </div>
+
+        <div className="mt-16 text-center">
+          <Button 
+            size="lg"
+            className="bg-green-500 hover:bg-green-600 text-white px-8 py-6 text-lg rounded-full shadow-lg shadow-green-500/20"
+            onClick={() => document.getElementById('lead-form')?.scrollIntoView({ behavior: 'smooth' })}
+          >
+            Rejoignez nos clients satisfaits
+            <ArrowRight className="ml-2 h-5 w-5" />
+          </Button>
         </div>
       </div>
     </div>
