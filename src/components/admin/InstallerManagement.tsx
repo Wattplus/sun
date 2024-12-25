@@ -9,7 +9,7 @@ import { Search, Download, Plus, Edit, Eye } from "lucide-react";
 import { EditInstallerDialog } from "./EditInstallerDialog";
 import { useToast } from "@/components/ui/use-toast";
 
-const mockInstallers: Installer[] = [
+export const mockInstallers: Installer[] = [
   {
     id: "1",
     companyName: "Électricité Plus",
