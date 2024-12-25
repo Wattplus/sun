@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Lead, mockLeads } from "@/types/crm";
 import { LeadCard } from "./LeadCard";
 import { useToast } from "@/components/ui/use-toast";
+import { AdminBreadcrumb } from "../AdminBreadcrumb";
 import {
   Dialog,
   DialogContent,
@@ -27,7 +28,6 @@ export const LeadMarketplace = () => {
   const confirmPurchase = () => {
     if (!selectedLead) return;
 
-    // TODO: Intégrer avec le système de paiement réel
     toast({
       title: "Lead acheté avec succès",
       description: "Vous pouvez maintenant voir les coordonnées complètes du contact.",
@@ -43,6 +43,7 @@ export const LeadMarketplace = () => {
 
   return (
     <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+      <AdminBreadcrumb />
       <div className="mb-6">
         <h2 className="text-xl font-semibold text-gray-800">Marketplace des Leads</h2>
         <p className="text-gray-600">Découvrez et achetez des leads qualifiés</p>

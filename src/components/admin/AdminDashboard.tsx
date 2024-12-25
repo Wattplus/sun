@@ -3,6 +3,7 @@ import StatCard from "./StatCard";
 import PerformanceChart from "./PerformanceChart";
 import RecentActivity from "./RecentActivity";
 import { AdminNavigation } from "./AdminNavigation";
+import { AdminBreadcrumb } from "./AdminBreadcrumb";
 
 const AdminDashboard = () => {
   return (
@@ -14,6 +15,7 @@ const AdminDashboard = () => {
         </div>
         
         <div className="flex-1 p-8">
+          <AdminBreadcrumb />
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             <StatCard
               title="Visiteurs"
