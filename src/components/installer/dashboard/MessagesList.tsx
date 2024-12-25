@@ -5,7 +5,7 @@ import { MessageSquare, Send } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 
 const mockMessages = [
   {
@@ -19,13 +19,6 @@ const mockMessages = [
     id: "2",
     date: "2024-03-20",
     content: "Votre achat de lead a été confirmé",
-    read: true,
-    sender: "Support"
-  },
-  {
-    id: "3",
-    date: "2024-03-19",
-    content: "Bienvenue sur la plateforme !",
     read: true,
     sender: "Support"
   }
