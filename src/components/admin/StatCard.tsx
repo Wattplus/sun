@@ -20,7 +20,7 @@ const StatCard = ({ title, value, change, icon: Icon, trendIcon: TrendIcon, tren
   return (
     <motion.div 
       whileHover={{ scale: 1.02 }}
-      className="relative overflow-hidden rounded-xl bg-[#2A2F3C]/50 backdrop-blur-md border border-white/10 p-6 transition-all duration-300 hover:shadow-lg hover:border-white/20"
+      className="relative overflow-hidden rounded-xl bg-[#2A2F3C]/50 backdrop-blur-md border border-[#9b87f5]/20 p-6 transition-all duration-300 hover:shadow-lg hover:border-[#9b87f5]/40"
     >
       <div className="flex items-center justify-between mb-4">
         <div className="p-2 bg-[#9b87f5]/10 rounded-lg">
@@ -34,7 +34,6 @@ const StatCard = ({ title, value, change, icon: Icon, trendIcon: TrendIcon, tren
       </p>
       <p className={`text-xs ${colorMap[trendColor]} mt-2`}>{change}</p>
       
-      {/* Effet de brillance */}
       <div className="absolute -inset-0.5 bg-gradient-to-r from-[#9b87f5]/0 via-[#9b87f5]/10 to-[#9b87f5]/0 opacity-0 group-hover:opacity-100 transition-all duration-1000 animate-shimmer"/>
     </motion.div>
   );

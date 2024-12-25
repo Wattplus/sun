@@ -29,7 +29,7 @@ const AdminDashboard = () => {
           initial={{ x: -100, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
           transition={{ duration: 0.5 }}
-          className="w-64 min-h-screen bg-[#1A1F2C]/50 backdrop-blur-md border-r border-white/10 p-4"
+          className="w-64 min-h-screen bg-[#1A1F2C]/50 backdrop-blur-md border-r border-[#9b87f5]/20 p-4"
         >
           <h1 className="text-xl font-bold mb-6 px-4 bg-gradient-to-r from-[#9b87f5] to-[#D6BCFA] bg-clip-text text-transparent">
             Administration
