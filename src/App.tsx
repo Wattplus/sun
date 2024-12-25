@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import Admin from "./pages/Admin";
+import ClientPortal from "./pages/ClientPortal";
 import LeadManagement from "./components/admin/LeadManagement";
 import InstallerManagement from "./components/admin/InstallerManagement";
 import { LeadMarketplace } from "./components/admin/marketplace/LeadMarketplace";
@@ -20,6 +21,7 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
+          <Route path="/client/*" element={<ClientPortal />} />
           <Route path="/admin" element={<Admin />}>
             <Route index element={<AdminDashboard />} />
             <Route path="leads" element={<LeadManagement />} />
