@@ -25,7 +25,14 @@ export const mockInstallers: Installer[] = [
     commission: 0,
     leadsAssigned: 45,
     conversionRate: 68,
-    paymentType: "per_lead"
+    paymentType: "per_lead",
+    certifications: {
+      qualiPV: true,
+      rge: true,
+      qualibat: true
+    },
+    siret: "123 456 789 00012",
+    siren: "123 456 789"
   },
   {
     id: "2",

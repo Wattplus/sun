@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/select"
 import { Switch } from "@/components/ui/switch"
 import { Label } from "@/components/ui/label"
+import { Checkbox } from "@/components/ui/checkbox"
 
 interface EditInstallerDialogProps {
   installer: Installer | null
@@ -33,7 +34,13 @@ export function EditInstallerDialog({
   onOpenChange,
   onSave,
 }: EditInstallerDialogProps) {
-  const [formData, setFormData] = useState<Partial<Installer>>(installer || {})
+  const [formData, setFormData] = useState<Partial<Installer>>(installer || {
+    certifications: {
+      qualiPV: false,
+      rge: false,
+      qualibat: false
+    }
+  })
   const [isNationwide, setIsNationwide] = useState(false)
 
   useEffect(() => {
@@ -70,6 +77,16 @@ export function EditInstallerDialog({
     } else {
       setFormData({ ...formData, zones: [] })
     }
+  }
+
+  const handleCertificationChange = (certification: keyof Installer['certifications'], checked: boolean) => {
+    setFormData({
+      ...formData,
+      certifications: {
+        ...formData.certifications,
+        [certification]: checked
+      }
+    })
   }
 
   return (
@@ -139,6 +156,33 @@ export function EditInstallerDialog({
                 className="bg-background border-input"
               />
             </div>
+
+            <div>
+              <label htmlFor="siret" className="text-sm font-medium">
+                SIRET
+              </label>
+              <Input
+                id="siret"
+                value={formData.siret || ""}
+                onChange={(e) => setFormData({ ...formData, siret: e.target.value })}
+                className="bg-background border-input"
+                placeholder="123 456 789 00012"
+              />
+            </div>
+
+            <div>
+              <label htmlFor="siren" className="text-sm font-medium">
+                SIREN
+              </label>
+              <Input
+                id="siren"
+                value={formData.siren || ""}
+                onChange={(e) => setFormData({ ...formData, siren: e.target.value })}
+                className="bg-background border-input"
+                placeholder="123 456 789"
+              />
+            </div>
+
             <div className="space-y-4">
               <div className="flex items-center space-x-2">
                 <Switch
@@ -164,6 +208,45 @@ export function EditInstallerDialog({
                 </div>
               )}
             </div>
+
+            <div className="space-y-4">
+              <label className="text-sm font-medium">
+                Certifications
+              </label>
+              <div className="space-y-2">
+                <div className="flex items-center space-x-2">
+                  <Checkbox
+                    id="qualiPV"
+                    checked={formData.certifications?.qualiPV}
+                    onCheckedChange={(checked) => handleCertificationChange('qualiPV', checked as boolean)}
+                  />
+                  <label htmlFor="qualiPV" className="text-sm">
+                    QualiPV
+                  </label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <Checkbox
+                    id="rge"
+                    checked={formData.certifications?.rge}
+                    onCheckedChange={(checked) => handleCertificationChange('rge', checked as boolean)}
+                  />
+                  <label htmlFor="rge" className="text-sm">
+                    RGE
+                  </label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <Checkbox
+                    id="qualibat"
+                    checked={formData.certifications?.qualibat}
+                    onCheckedChange={(checked) => handleCertificationChange('qualibat', checked as boolean)}
+                  />
+                  <label htmlFor="qualibat" className="text-sm">
+                    Qualibat
+                  </label>
+                </div>
+              </div>
+            </div>
+
             <div>
               <label htmlFor="status" className="text-sm font-medium">
                 Statut

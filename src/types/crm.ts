@@ -36,7 +36,13 @@ export interface Installer {
   prepaidBalance?: number;
   paymentType: PaymentType;
   description?: string;
-  certifications?: string[];
+  certifications: {
+    qualiPV: boolean;
+    rge: boolean;
+    qualibat: boolean;
+  };
+  siret?: string;
+  siren?: string;
   specialties?: string[];
   profileImage?: string;
 }
