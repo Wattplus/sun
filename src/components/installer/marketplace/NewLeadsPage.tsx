@@ -1,14 +1,36 @@
+import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { LeadsList } from "../dashboard/LeadsList";
 import { mockAvailableLeads } from "../dashboard/mockAvailableLeads";
 import { PrepaidBalance } from "../dashboard/PrepaidBalance";
-import { TrendingUp, Users, Wallet, ShoppingCart } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { ShoppingCart, AlertTriangle } from "lucide-react";
+import { useToast } from "@/components/ui/use-toast";
+import { Lead } from "@/types/crm";
 
 export const NewLeadsPage = () => {
+  const [selectedLeads, setSelectedLeads] = useState<Lead[]>([]);
+  const { toast } = useToast();
+
+  const handleLeadSelect = (lead: Lead) => {
+    if (selectedLeads.some(l => l.id === lead.id)) {
+      setSelectedLeads(selectedLeads.filter(l => l.id !== lead.id));
+    } else {
+      setSelectedLeads([...selectedLeads, lead]);
+    }
+  };
+
+  const handlePurchaseLeads = () => {
+    const total = selectedLeads.reduce((sum, lead) => sum + lead.price, 0);
+    toast({
+      title: "Achat de leads",
+      description: `Redirection vers le paiement pour ${total}€...`,
+    });
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-background/80">
       <div className="container mx-auto space-y-8 py-8">
-        {/* En-tête amélioré */}
         <div className="glass-panel p-8 space-y-6 animate-fadeIn">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
             <div className="space-y-6">
@@ -27,43 +49,23 @@ export const NewLeadsPage = () => {
                 </p>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <Card className="p-4 bg-background/40 border-primary/20 hover:border-primary/40 transition-colors">
-                  <div className="flex items-center gap-3">
-                    <div className="p-2 rounded-full bg-primary/10">
-                      <Users className="h-5 w-5 text-primary" />
-                    </div>
-                    <div>
-                      <p className="font-medium">Leads qualifiés</p>
-                      <p className="text-sm text-muted-foreground">Vérifiés à 100%</p>
-                    </div>
+              {selectedLeads.length > 0 && (
+                <div className="flex items-center justify-between p-4 bg-primary/10 rounded-lg">
+                  <div className="space-y-1">
+                    <p className="font-medium">{selectedLeads.length} leads sélectionnés</p>
+                    <p className="text-sm text-muted-foreground">
+                      Total: {selectedLeads.reduce((sum, lead) => sum + lead.price, 0)}€
+                    </p>
                   </div>
-                </Card>
-
-                <Card className="p-4 bg-background/40 border-primary/20 hover:border-primary/40 transition-colors">
-                  <div className="flex items-center gap-3">
-                    <div className="p-2 rounded-full bg-primary/10">
-                      <TrendingUp className="h-5 w-5 text-primary" />
-                    </div>
-                    <div>
-                      <p className="font-medium">32% conversion</p>
-                      <p className="text-sm text-muted-foreground">Taux moyen</p>
-                    </div>
-                  </div>
-                </Card>
-
-                <Card className="p-4 bg-background/40 border-primary/20 hover:border-primary/40 transition-colors">
-                  <div className="flex items-center gap-3">
-                    <div className="p-2 rounded-full bg-primary/10">
-                      <Wallet className="h-5 w-5 text-primary" />
-                    </div>
-                    <div>
-                      <p className="font-medium">Garantie satisfait</p>
-                      <p className="text-sm text-muted-foreground">Ou remboursé</p>
-                    </div>
-                  </div>
-                </Card>
-              </div>
+                  <Button 
+                    onClick={handlePurchaseLeads}
+                    className="bg-primary hover:bg-primary-dark"
+                  >
+                    <ShoppingCart className="mr-2 h-4 w-4" />
+                    Acheter les leads
+                  </Button>
+                </div>
+              )}
             </div>
 
             <div className="w-full max-w-md mx-auto lg:ml-auto">
@@ -72,9 +74,12 @@ export const NewLeadsPage = () => {
           </div>
         </div>
 
-        {/* Tableau des leads */}
         <Card className="glass-panel p-6 animate-fadeIn">
-          <LeadsList leads={mockAvailableLeads} />
+          <LeadsList 
+            leads={mockAvailableLeads} 
+            onLeadSelect={handleLeadSelect}
+            selectedLeads={selectedLeads}
+          />
         </Card>
       </div>
     </div>
