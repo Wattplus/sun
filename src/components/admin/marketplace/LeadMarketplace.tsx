@@ -3,11 +3,15 @@ import { LeadCard } from "./LeadCard";
 import { mockLeads, Lead } from "@/types/crm";
 import { useToast } from "@/components/ui/use-toast";
 import { useState } from "react";
+import { SubscriptionTier } from "@/types/subscription";
 
 export const LeadMarketplace = () => {
   const { toast } = useToast();
   const [purchasedLeads, setPurchasedLeads] = useState<string[]>([]);
   const availableLeads = mockLeads.filter(lead => lead.status === "qualified");
+  
+  // TODO: Récupérer le vrai niveau d'abonnement de l'utilisateur depuis l'API
+  const userSubscriptionTier: SubscriptionTier = 'free';
 
   const handlePurchase = (lead: Lead) => {
     setPurchasedLeads(prev => [...prev, lead.id]);
@@ -36,6 +40,7 @@ export const LeadMarketplace = () => {
               lead={lead} 
               onPurchase={handlePurchase}
               isPurchased={purchasedLeads.includes(lead.id)}
+              subscriptionTier={userSubscriptionTier}
             />
           ))}
         </div>

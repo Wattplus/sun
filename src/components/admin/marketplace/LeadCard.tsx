@@ -6,12 +6,14 @@ import { Euro, MapPin, Phone, Mail, User, Building2, Clock } from "lucide-react"
 import { useToast } from "@/components/ui/use-toast";
 import { calculateLeadPrice, formatPrice } from "@/utils/leadPricing";
 import { differenceInDays } from "date-fns";
+import { SubscriptionTier } from "@/types/subscription";
 
 interface LeadCardProps {
   lead: Lead;
   onPurchase: (lead: Lead) => void;
   isPurchased?: boolean;
   showFullDetails?: boolean;
+  subscriptionTier?: SubscriptionTier;
 }
 
 const getAgeLabel = (createdAt: string) => {
@@ -21,9 +23,15 @@ const getAgeLabel = (createdAt: string) => {
   return "Nouveau";
 };
 
-export const LeadCard = ({ lead, onPurchase, isPurchased = false, showFullDetails = false }: LeadCardProps) => {
+export const LeadCard = ({ 
+  lead, 
+  onPurchase, 
+  isPurchased = false, 
+  showFullDetails = false,
+  subscriptionTier = 'free'
+}: LeadCardProps) => {
   const { toast } = useToast();
-  const prices = calculateLeadPrice(lead);
+  const prices = calculateLeadPrice(lead, subscriptionTier);
 
   const handlePurchase = async (type: 'mutualise' | 'exclusif') => {
     try {
@@ -40,7 +48,8 @@ export const LeadCard = ({ lead, onPurchase, isPurchased = false, showFullDetail
         body: JSON.stringify({
           leadId: lead.id,
           type,
-          priceId
+          priceId,
+          subscriptionTier
         }),
       });
 
