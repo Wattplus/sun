@@ -5,9 +5,10 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import Admin from "./pages/Admin";
-import { LeadManagement } from "./components/admin/LeadManagement";
-import { InstallerManagement } from "./components/admin/InstallerManagement";
+import LeadManagement from "./components/admin/LeadManagement";
+import InstallerManagement from "./components/admin/InstallerManagement";
 import { LeadMarketplace } from "./components/admin/marketplace/LeadMarketplace";
+import AdminDashboard from "./components/admin/AdminDashboard";
 
 const queryClient = new QueryClient();
 
