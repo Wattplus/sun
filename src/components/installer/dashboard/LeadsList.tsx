@@ -12,8 +12,8 @@ interface LeadsListProps {
 
 export const LeadsList = ({ leads }: LeadsListProps) => {
   const [postalCodeFilter, setPostalCodeFilter] = useState("");
-  const [projectTypeFilter, setProjectTypeFilter] = useState<string>("");
-  const [priceFilter, setPriceFilter] = useState<"asc" | "desc" | "">("");
+  const [projectTypeFilter, setProjectTypeFilter] = useState<string>("all");
+  const [priceFilter, setPriceFilter] = useState<"all" | "asc" | "desc">("all");
 
   // Filtrer les leads qui n'ont pas encore été achetés
   let availableLeads = leads.filter(lead => !lead.purchasedBy?.length);
@@ -25,13 +25,13 @@ export const LeadsList = ({ leads }: LeadsListProps) => {
     );
   }
 
-  if (projectTypeFilter) {
+  if (projectTypeFilter !== "all") {
     availableLeads = availableLeads.filter(lead => 
       lead.projectType === projectTypeFilter
     );
   }
 
-  if (priceFilter) {
+  if (priceFilter !== "all") {
     availableLeads.sort((a, b) => {
       if (priceFilter === "asc") {
         return a.price - b.price;
@@ -70,7 +70,7 @@ export const LeadsList = ({ leads }: LeadsListProps) => {
                 <SelectValue placeholder="Tous les types" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">Tous les types</SelectItem>
+                <SelectItem value="all">Tous les types</SelectItem>
                 <SelectItem value="residential">Résidentiel</SelectItem>
                 <SelectItem value="commercial">Professionnel</SelectItem>
               </SelectContent>
@@ -86,7 +86,7 @@ export const LeadsList = ({ leads }: LeadsListProps) => {
                 <SelectValue placeholder="Trier par prix" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">Par défaut</SelectItem>
+                <SelectItem value="all">Par défaut</SelectItem>
                 <SelectItem value="asc">Prix croissant</SelectItem>
                 <SelectItem value="desc">Prix décroissant</SelectItem>
               </SelectContent>
