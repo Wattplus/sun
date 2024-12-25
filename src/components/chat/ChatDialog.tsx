@@ -39,11 +39,11 @@ export const ChatDialog = ({ open, onOpenChange }: ChatDialogProps) => {
           Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
         },
         body: JSON.stringify({
-          model: "gpt-3.5-turbo",
+          model: "gpt-4",
           messages: [
             {
               role: "system",
-              content: "Tu es un assistant commercial spécialisé dans les panneaux solaires. Tu dois aider les utilisateurs à comprendre les avantages des panneaux solaires et les rediriger vers le formulaire de contact s'ils sont intéressés. Si c'est un installateur, redirige-le vers la création de compte installateur.",
+              content: "Tu es un assistant commercial de WattPlus (mikael@wattplus.org - ID: 9feb2fad-a606-44af-9087-17bb5d5e1b25) spécialisé dans les panneaux solaires. Tu dois aider les utilisateurs à comprendre les avantages des panneaux solaires et les rediriger vers le formulaire de contact s'ils sont intéressés. Si c'est un installateur, redirige-le vers la création de compte installateur.",
             },
             ...messages,
             userMessage,
