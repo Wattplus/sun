@@ -12,6 +12,7 @@ import { EnvironmentalImpact } from "@/components/EnvironmentalImpact";
 import { Certifications } from "@/components/Certifications";
 import { PrimeRates } from "@/components/PrimeRates";
 import { ChatButton } from "@/components/chat/ChatButton";
+import { ElectricityPriceSection } from "@/components/ElectricityPriceSection";
 
 const Index = () => {
   return (
@@ -21,6 +22,7 @@ const Index = () => {
         <Navbar />
         <main className="space-y-0">
           <HeroSection />
+          <ElectricityPriceSection />
           <PrimeRates />
           <div id="lead-form" className="section-spacing container-padding">
             <div className="mx-auto max-w-7xl">
