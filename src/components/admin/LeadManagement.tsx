@@ -1,27 +1,11 @@
 import { useState } from "react";
 import { Lead, LeadStatus, mockLeads } from "@/types/crm";
 import { useToast } from "@/components/ui/use-toast";
-import { EditLeadDialog } from "./EditLeadDialog";
 import { LeadTable } from "./leads/LeadTable";
 import { LeadHeader } from "./leads/LeadHeader";
 import { LeadStats } from "./leads/LeadStats";
 import { AdminBreadcrumb } from "./AdminBreadcrumb";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-  DialogDescription,
-} from "@/components/ui/dialog";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
+import { LeadDialogs } from "./leads/LeadDialogs";
 import { mockInstallers } from "./InstallerManagement";
 
 const LeadManagement = () => {
@@ -156,78 +140,21 @@ const LeadManagement = () => {
           getStatusText={getStatusText}
         />
 
-        <EditLeadDialog
-          lead={selectedLead}
-          open={editDialogOpen}
-          onOpenChange={handleEditClose}
-          onSave={handleSaveLead}
+        <LeadDialogs
+          selectedLead={selectedLead}
+          editDialogOpen={editDialogOpen}
+          assignDialogOpen={assignDialogOpen}
+          deleteDialogOpen={deleteDialogOpen}
+          selectedInstallerId={selectedInstallerId}
+          leadToAssign={leadToAssign}
+          onEditClose={handleEditClose}
+          onSaveLead={handleSaveLead}
+          setAssignDialogOpen={setAssignDialogOpen}
+          setDeleteDialogOpen={setDeleteDialogOpen}
+          setSelectedInstallerId={setSelectedInstallerId}
+          handleAssignSubmit={handleAssignSubmit}
+          handleConfirmDelete={handleConfirmDelete}
         />
-
-        <Dialog open={assignDialogOpen} onOpenChange={setAssignDialogOpen}>
-          <DialogContent className="bg-background/95 backdrop-blur-md border-[#33C3F0]/20">
-            <DialogHeader>
-              <DialogTitle>Assigner le lead à un installateur</DialogTitle>
-            </DialogHeader>
-            <div className="py-4">
-              <Select value={selectedInstallerId} onValueChange={setSelectedInstallerId}>
-                <SelectTrigger className="bg-background/50 border-[#33C3F0]/20">
-                  <SelectValue placeholder="Sélectionner un installateur" />
-                </SelectTrigger>
-                <SelectContent>
-                  {mockInstallers
-                    .filter(installer => installer.status === "active")
-                    .map(installer => (
-                      <SelectItem key={installer.id} value={installer.id}>
-                        {installer.companyName}
-                      </SelectItem>
-                    ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <DialogFooter>
-              <Button
-                variant="outline"
-                onClick={() => setAssignDialogOpen(false)}
-                className="border-[#33C3F0]/20 hover:border-[#33C3F0]/40"
-              >
-                Annuler
-              </Button>
-              <Button
-                onClick={handleAssignSubmit}
-                disabled={!selectedInstallerId}
-                className="bg-[#1EAEDB] hover:bg-[#0FA0CE]"
-              >
-                Confirmer
-              </Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
-
-        <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
-          <DialogContent className="bg-background/95 backdrop-blur-md border-[#33C3F0]/20">
-            <DialogHeader>
-              <DialogTitle>Supprimer le lead</DialogTitle>
-              <DialogDescription>
-                Êtes-vous sûr de vouloir supprimer ce lead ? Cette action est irréversible.
-              </DialogDescription>
-            </DialogHeader>
-            <DialogFooter>
-              <Button
-                variant="outline"
-                onClick={() => setDeleteDialogOpen(false)}
-                className="border-[#33C3F0]/20 hover:border-[#33C3F0]/40"
-              >
-                Annuler
-              </Button>
-              <Button
-                onClick={handleConfirmDelete}
-                className="bg-red-500 hover:bg-red-600"
-              >
-                Supprimer
-              </Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
       </div>
     </div>
   );
