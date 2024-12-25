@@ -3,6 +3,8 @@ import { DashboardTabs } from "./dashboard/DashboardTabs";
 import { InstallerBreadcrumb } from "./navigation/InstallerBreadcrumb";
 import { LeadsList } from "./dashboard/LeadsList";
 import { PurchasedLeads } from "./dashboard/PurchasedLeads";
+import { Link } from "react-router-dom";
+import { mockAvailableLeads } from "./dashboard/mockAvailableLeads";
 
 export function InstallerDashboard() {
   return (
@@ -18,11 +20,14 @@ export function InstallerDashboard() {
               <h2 className="text-2xl font-bold bg-gradient-to-r from-primary to-primary-light bg-clip-text text-transparent">
                 Nouveaux Leads Disponibles
               </h2>
-              <button className="glass-button text-sm">
+              <Link 
+                to="/espace-installateur/marketplace/nouveaux-leads"
+                className="glass-button text-sm hover:bg-primary/10 transition-colors"
+              >
                 Voir tout
-              </button>
+              </Link>
             </div>
-            <LeadsList leads={[]} />
+            <LeadsList leads={mockAvailableLeads.slice(0, 2)} />
           </div>
           
           {/* Leads Achetés */}
@@ -31,9 +36,12 @@ export function InstallerDashboard() {
               <h2 className="text-2xl font-bold bg-gradient-to-r from-primary to-primary-light bg-clip-text text-transparent">
                 Mes Leads Achetés
               </h2>
-              <button className="glass-button text-sm">
+              <Link 
+                to="/espace-installateur/marketplace/leads-achetes"
+                className="glass-button text-sm hover:bg-primary/10 transition-colors"
+              >
                 Voir tout
-              </button>
+              </Link>
             </div>
             <PurchasedLeads />
           </div>
