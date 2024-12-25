@@ -5,7 +5,7 @@ import { useState, useMemo } from "react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { X, ChevronRight } from "lucide-react";
+import { X } from "lucide-react";
 
 interface LeadsListProps {
   leads: Lead[];
@@ -67,17 +67,7 @@ export const LeadsList = ({ leads }: LeadsListProps) => {
   };
 
   return (
-    <div className="space-y-6 max-w-7xl mx-auto">
-      <div className="flex items-center justify-between">
-        <h2 className="text-3xl font-bold text-[#1EAEDB]">
-          Nouveaux Leads Disponibles
-        </h2>
-        <button className="flex items-center gap-2 px-6 py-2 text-white bg-[#1EAEDB] rounded-lg hover:bg-[#33C3F0] transition-colors duration-200">
-          Voir tout
-          <ChevronRight className="w-5 h-5" />
-        </button>
-      </div>
-
+    <div className="space-y-6 max-w-7xl mx-auto px-4">
       <Card className="p-6 bg-[#0B1221]/80 border-[#1EAEDB]/20">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="space-y-2">
@@ -163,17 +153,19 @@ export const LeadsList = ({ leads }: LeadsListProps) => {
       </Card>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {availableLeads.map((lead) => (
-          <LeadCard
-            key={lead.id}
-            lead={lead}
-            onPurchase={() => {}}
-            subscriptionTier="free"
-          />
-        ))}
+        {availableLeads.length > 0 ? (
+          availableLeads.map((lead) => (
+            <LeadCard
+              key={lead.id}
+              lead={lead}
+              onPurchase={() => {}}
+              subscriptionTier="free"
+            />
+          ))
+        ) : (
+          <EmptyLeadState />
+        )}
       </div>
-
-      {availableLeads.length === 0 && <EmptyLeadState />}
     </div>
   );
 };

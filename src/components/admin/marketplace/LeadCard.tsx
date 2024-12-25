@@ -61,21 +61,15 @@ export const LeadCard = ({
   };
 
   return (
-    <Card className="overflow-hidden bg-[#0B1221] text-white border border-[#1EAEDB]/20 hover:border-[#1EAEDB]/40 transition-all duration-300">
-      <div className="p-6 space-y-4">
+    <Card className="h-full bg-[#0B1221] text-white border border-[#1EAEDB]/20 hover:border-[#1EAEDB]/40 transition-all duration-300">
+      <div className="p-6 space-y-4 h-full flex flex-col">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <input 
-              type="checkbox" 
-              className="w-4 h-4 rounded border-[#1EAEDB]/50 text-[#1EAEDB]"
-            />
-            <div>
-              <h3 className="text-xl font-medium text-[#1EAEDB]">
-                {lead.firstName}
-              </h3>
-              <div className="flex items-center gap-1 text-[#1EAEDB]/60 mt-1">
-                {"★".repeat(5)}
-              </div>
+          <div>
+            <h3 className="text-xl font-medium text-[#1EAEDB]">
+              {lead.firstName} {lead.lastName}
+            </h3>
+            <div className="flex items-center gap-1 text-[#1EAEDB]/60 mt-1">
+              {"★".repeat(5)}
             </div>
           </div>
           <span className="text-sm text-[#1EAEDB]/60">
@@ -88,7 +82,7 @@ export const LeadCard = ({
           <span>{lead.postalCode} {lead.city}</span>
         </div>
 
-        <div className="space-y-2">
+        <div className="space-y-2 flex-grow">
           <div className="flex items-center gap-2 text-[#1EAEDB]/80">
             <span>Budget:</span>
             <span className="font-medium">{lead.budget.toLocaleString()}€</span>
