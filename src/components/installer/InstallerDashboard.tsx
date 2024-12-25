@@ -33,8 +33,8 @@ export function InstallerDashboard() {
         </div>
       </div>
 
-      {/* Solde Prépayé */}
-      <PrepaidBalance balance={250} />
+      {/* Solde Prépayé avec historique */}
+      <PrepaidBalance balance={0} />
 
       {/* Statistiques */}
       <StatsCards />
