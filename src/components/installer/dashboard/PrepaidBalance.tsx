@@ -3,6 +3,8 @@ import { Button } from "@/components/ui/button";
 import { Euro, Plus, History, TrendingDown, AlertTriangle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { motion } from "framer-motion";
+import { CustomAmountInput } from "./prepaid/CustomAmountInput";
+import { QuickTopUpButtons } from "./prepaid/QuickTopUpButtons";
 
 interface PrepaidBalanceProps {
   balance: number;
@@ -14,10 +16,10 @@ export const PrepaidBalance = ({ balance }: PrepaidBalanceProps) => {
   const recommendedBalance = 200;
   const isLowBalance = balance <= lowBalanceThreshold;
 
-  const handleRecharge = () => {
+  const handleRecharge = (amount: number) => {
     toast({
       title: "Rechargement",
-      description: "Redirection vers la page de paiement...",
+      description: `Redirection vers la page de paiement pour ${amount}€...`,
     });
   };
 
@@ -63,14 +65,25 @@ export const PrepaidBalance = ({ balance }: PrepaidBalanceProps) => {
             </motion.div>
           </div>
 
-          <div className="flex flex-wrap gap-3">
-            <Button onClick={handleRecharge} className="flex items-center gap-2 bg-primary hover:bg-primary/90">
-              <Plus className="h-4 w-4" />
-              Recharger
-            </Button>
-            <Button variant="outline" onClick={handleHistory} className="flex items-center gap-2">
+          <div className="space-y-4">
+            <div className="flex flex-wrap gap-3">
+              <QuickTopUpButtons onTopUp={handleRecharge} isLoading={false} />
+            </div>
+            
+            <CustomAmountInput 
+              value=""
+              onChange={() => {}}
+              onSubmit={() => handleRecharge(0)}
+              isLoading={false}
+            />
+
+            <Button 
+              variant="outline" 
+              onClick={handleHistory} 
+              className="flex items-center gap-2 w-full justify-center"
+            >
               <History className="h-4 w-4" />
-              Historique
+              Historique des transactions
             </Button>
           </div>
 

@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { FormField } from "@/components/form/FormField";
+import { Input } from "@/components/ui/input";
 import { Euro } from "lucide-react";
 
 interface CustomAmountInputProps {
@@ -17,14 +17,12 @@ export const CustomAmountInput = ({
 }: CustomAmountInputProps) => {
   return (
     <div className="flex gap-2">
-      <FormField
-        id="customAmount"
+      <Input
         type="number"
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        placeholder="Montant libre"
-        label=""
-        lightMode
+        placeholder="Montant personnalisé"
+        className="flex-1"
       />
       <Button
         variant="outline"

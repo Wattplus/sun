@@ -15,6 +15,7 @@ export const QuickTopUpButtons = ({ onTopUp, isLoading }: QuickTopUpButtonsProps
           variant="outline"
           onClick={() => onTopUp(amount)}
           disabled={isLoading}
+          className="flex-1"
         >
           <Euro className="h-4 w-4 mr-2" />
           {amount}€
