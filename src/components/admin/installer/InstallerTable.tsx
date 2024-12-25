@@ -13,7 +13,7 @@ interface InstallerTableProps {
 export const InstallerTable = ({ installers, onEditInstaller }: InstallerTableProps) => {
   const getStatusColor = (status: InstallerStatus) => {
     const colors = {
-      active: "bg-[#9b87f5]",
+      active: "bg-primary",
       inactive: "bg-gray-500",
       pending: "bg-yellow-500"
     };
@@ -30,23 +30,23 @@ export const InstallerTable = ({ installers, onEditInstaller }: InstallerTablePr
   };
 
   return (
-    <ScrollArea className="h-[600px] rounded-md border border-[#9b87f5]/20">
+    <ScrollArea className="h-[600px] rounded-md border border-primary/20">
       <Table>
         <TableHeader>
-          <TableRow className="bg-[#1A1F2C]/50">
-            <TableHead className="text-[#9b87f5]">Société</TableHead>
-            <TableHead className="text-[#9b87f5]">Contact</TableHead>
-            <TableHead className="text-[#9b87f5]">Zone</TableHead>
-            <TableHead className="text-[#9b87f5]">Commission</TableHead>
-            <TableHead className="text-[#9b87f5]">Leads Assignés</TableHead>
-            <TableHead className="text-[#9b87f5]">Taux de Conversion</TableHead>
-            <TableHead className="text-[#9b87f5]">Statut</TableHead>
-            <TableHead className="text-[#9b87f5]">Actions</TableHead>
+          <TableRow className="bg-background/50">
+            <TableHead className="text-primary">Société</TableHead>
+            <TableHead className="text-primary">Contact</TableHead>
+            <TableHead className="text-primary">Zone</TableHead>
+            <TableHead className="text-primary">Commission</TableHead>
+            <TableHead className="text-primary">Leads Assignés</TableHead>
+            <TableHead className="text-primary">Taux de Conversion</TableHead>
+            <TableHead className="text-primary">Statut</TableHead>
+            <TableHead className="text-primary">Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {installers.map((installer) => (
-            <TableRow key={installer.id} className="hover:bg-[#9b87f5]/5 border-b border-[#9b87f5]/10">
+            <TableRow key={installer.id} className="hover:bg-primary/5 border-b border-primary/10">
               <TableCell className="font-medium text-white">{installer.companyName}</TableCell>
               <TableCell>
                 <div className="text-white">{installer.contactName}</div>
@@ -59,7 +59,7 @@ export const InstallerTable = ({ installers, onEditInstaller }: InstallerTablePr
                     <Badge 
                       key={zone} 
                       variant="outline"
-                      className="border-[#9b87f5]/20 text-white"
+                      className="border-primary/20 text-white"
                     >
                       {zone}
                     </Badge>
@@ -80,17 +80,17 @@ export const InstallerTable = ({ installers, onEditInstaller }: InstallerTablePr
                     variant="outline" 
                     size="sm"
                     onClick={() => onEditInstaller(installer)}
-                    className="border-[#9b87f5]/20 hover:border-[#9b87f5]/40 hover:bg-[#9b87f5]/10"
+                    className="border-primary/20 hover:border-primary/40 hover:bg-primary/10"
                   >
-                    <Edit className="h-4 w-4 mr-2 text-[#9b87f5]" />
+                    <Edit className="h-4 w-4 mr-2 text-primary" />
                     Éditer
                   </Button>
                   <Button 
                     variant="outline" 
                     size="sm"
-                    className="border-[#9b87f5]/20 hover:border-[#9b87f5]/40 hover:bg-[#9b87f5]/10"
+                    className="border-primary/20 hover:border-primary/40 hover:bg-primary/10"
                   >
-                    <Eye className="h-4 w-4 mr-2 text-[#9b87f5]" />
+                    <Eye className="h-4 w-4 mr-2 text-primary" />
                     Détails
                   </Button>
                 </div>

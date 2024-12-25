@@ -89,7 +89,7 @@ const InstallerManagement = () => {
   };
 
   return (
-    <div className="bg-[#1A1F2C]/50 backdrop-blur-md p-6 rounded-xl border border-[#9b87f5]/20">
+    <div className="bg-background/50 backdrop-blur-md p-6 rounded-xl border border-primary/20">
       <InstallerHeader 
         searchTerm={searchTerm}
         onSearchChange={setSearchTerm}
