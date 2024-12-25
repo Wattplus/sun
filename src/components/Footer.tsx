@@ -1,11 +1,11 @@
 import { Link } from "react-router-dom";
-import { Mail, Phone, Sun } from "lucide-react";
+import { Mail, Phone, Sun, User, Key } from "lucide-react";
 
 export const Footer = () => {
   return (
     <footer className="bg-[#0B1221] text-gray-300">
       <div className="mx-auto max-w-7xl px-6 py-12 lg:px-8">
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-4">
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-5">
           {/* Brand Section */}
           <div className="space-y-4">
             <div className="flex items-center gap-2">
@@ -65,6 +65,32 @@ export const Footer = () => {
                 </Link>
               </li>
             </ul>
+          </div>
+
+          {/* Client Space Section */}
+          <div className="space-y-4">
+            <h3 className="text-lg font-semibold text-white">Espace Client</h3>
+            <div className="space-y-4">
+              <Link to="/client" className="block space-y-2">
+                <div className="flex items-center gap-2 text-sm text-blue-400 hover:text-blue-300 transition-colors">
+                  <User className="h-4 w-4" />
+                  <span>Accéder à mon espace</span>
+                </div>
+                <p className="text-xs text-gray-400">
+                  Identifiant admin: ADMIN-2024-001<br />
+                  <span className="flex items-center gap-1">
+                    <Key className="h-3 w-3" />
+                    Mot de passe: WattPlus2024
+                  </span>
+                </p>
+              </Link>
+              <div className="pt-2 border-t border-gray-800">
+                <p className="text-xs text-gray-400">
+                  Suivez l'avancement de votre projet<br />
+                  et accédez à vos documents
+                </p>
+              </div>
+            </div>
           </div>
 
           {/* Pro Section */}
