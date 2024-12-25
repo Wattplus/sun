@@ -19,25 +19,34 @@ export const LeadsList = ({ leads }: LeadsListProps) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [projectType, setProjectType] = useState("all");
 
-  const handleBuyLead = async (leadId: string, price: number, type: "mutualise" | "exclusif") => {
+  const handleBuyLead = async (leadId: string, type: "mutualise" | "exclusif") => {
+    const price = type === "exclusif" ? 35 : 19;
     try {
-      const response = await fetch("/api/create-checkout-session", {
+      const response = await fetch("/api/create-lead-checkout", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": `Bearer ${localStorage.getItem("supabase.auth.token")}`,
         },
         body: JSON.stringify({
           leadId,
-          price,
-          type
+          type,
+          priceId: type === "exclusif" 
+            ? "price_1QZyKUFOePj4Hv47qEFQ1KzF" 
+            : "price_1QZyJpFOePj4Hv47sd76eDOz"
         }),
       });
+
+      if (!response.ok) {
+        throw new Error("Erreur lors de la création de la session de paiement");
+      }
 
       const { url } = await response.json();
       if (url) {
         window.location.href = url;
       }
     } catch (error) {
+      console.error("Erreur d'achat:", error);
       toast({
         title: "Erreur",
         description: "Une erreur est survenue lors de l'achat du lead.",
@@ -45,6 +54,12 @@ export const LeadsList = ({ leads }: LeadsListProps) => {
       });
     }
   };
+
+  const filteredLeads = leads.filter(lead => {
+    if (projectType !== "all" && lead.projectType !== projectType) return false;
+    if (searchTerm && !lead.city.toLowerCase().includes(searchTerm.toLowerCase())) return false;
+    return true;
+  });
 
   return (
     <Card className="bg-background/50 backdrop-blur-md border-primary/20">
@@ -83,7 +98,7 @@ export const LeadsList = ({ leads }: LeadsListProps) => {
 
         <ScrollArea className="h-[300px]">
           <div className="space-y-4">
-            {leads.map((lead) => (
+            {filteredLeads.map((lead) => (
               <Card key={lead.id} className="p-4 border border-primary/10 hover:border-primary/30 transition-all">
                 <div className="flex justify-between items-start">
                   <div>
@@ -104,8 +119,8 @@ export const LeadsList = ({ leads }: LeadsListProps) => {
                   <div className="flex flex-col gap-2">
                     <Button 
                       size="sm"
-                      onClick={() => handleBuyLead(lead.id, 19, "mutualise")}
-                      className="flex items-center gap-1"
+                      onClick={() => handleBuyLead(lead.id, "mutualise")}
+                      className="flex items-center gap-1 bg-primary hover:bg-primary/90"
                     >
                       <Euro className="h-4 w-4" />
                       19€ Mutualisé
@@ -113,7 +128,7 @@ export const LeadsList = ({ leads }: LeadsListProps) => {
                     <Button 
                       size="sm"
                       variant="secondary"
-                      onClick={() => handleBuyLead(lead.id, 35, "exclusif")}
+                      onClick={() => handleBuyLead(lead.id, "exclusif")}
                       className="flex items-center gap-1"
                     >
                       <Euro className="h-4 w-4" />
