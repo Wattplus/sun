@@ -6,7 +6,12 @@ export const HeroSection = () => {
     <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-blue-900 via-blue-800 to-blue-950 text-white">
       <div className="absolute inset-0 z-0">
         <div className="absolute inset-0 bg-gradient-to-b from-blue-900/50 to-blue-950/90" />
-        <div className="absolute inset-0 bg-[url('/solar-panels-bg.jpg')] bg-cover bg-center opacity-30" />
+        <div 
+          className="absolute inset-0 bg-cover bg-center opacity-30"
+          style={{
+            backgroundImage: "url('https://images.unsplash.com/photo-1524230572899-a752b3835840?auto=format&fit=crop&w=2000&q=80')"
+          }}
+        />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(25,118,210,0.1)_0%,rgba(0,0,0,0.4)_100%)]" />
       </div>
       
