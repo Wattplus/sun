@@ -73,14 +73,36 @@ const InstallerManagement = () => {
     setEditDialogOpen(false);
   };
 
+  const handleNewInstaller = () => {
+    const newInstaller: Installer = {
+      id: String(Date.now()),
+      companyName: "",
+      contactName: "",
+      email: "",
+      phone: "",
+      address: "",
+      zones: [],
+      status: "pending",
+      commission: 0,
+      leadsAssigned: 0,
+      conversionRate: 0
+    };
+    setSelectedInstaller(newInstaller);
+    setEditDialogOpen(true);
+  };
+
   const exportToCSV = () => {
     console.log("Exporting to CSV...");
   };
 
   const handleSaveInstaller = (updatedInstaller: Installer) => {
-    setInstallers(installers.map(installer => 
-      installer.id === updatedInstaller.id ? updatedInstaller : installer
-    ));
+    if (installers.find(i => i.id === updatedInstaller.id)) {
+      setInstallers(installers.map(installer => 
+        installer.id === updatedInstaller.id ? updatedInstaller : installer
+      ));
+    } else {
+      setInstallers([...installers, updatedInstaller]);
+    }
     toast({
       title: "Installateur mis à jour",
       description: "Les modifications ont été enregistrées avec succès.",
@@ -106,7 +128,7 @@ const InstallerManagement = () => {
             <Download className="h-4 w-4 mr-2" />
             Exporter CSV
           </Button>
-          <Button>
+          <Button onClick={handleNewInstaller}>
             <Plus className="h-4 w-4 mr-2" />
             Nouvel Installateur
           </Button>
