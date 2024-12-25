@@ -20,27 +20,27 @@ export default {
     extend: {
       colors: {
         primary: {
-          DEFAULT: "#10B981", // Vert pour les boutons principaux
+          DEFAULT: "#10B981",
           light: "#34D399",
           dark: "#059669",
           foreground: "white",
         },
         secondary: {
-          DEFAULT: "#0B1221", // Bleu foncé pour les champs
-          light: "#1E293B",
+          DEFAULT: "#0B1221",
+          light: "#1a5fb4",
           dark: "#020617",
           foreground: "white",
         },
         accent: {
-          DEFAULT: "#60A5FA", // Bleu clair pour les accents
-          light: "#93C5FD",
-          dark: "#3B82F6",
+          DEFAULT: "#1a5fb4",
+          light: "#60A5FA",
+          dark: "#1E40AF",
           foreground: "white",
         },
         background: {
-          DEFAULT: "#F8FAFC", // Fond blanc légèrement bleuté
-          light: "#FFFFFF",
-          dark: "#F1F5F9",
+          DEFAULT: "#0B1221",
+          light: "#1a5fb4",
+          dark: "#020617",
         },
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -66,9 +66,9 @@ export default {
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
         'gradient-conic': 'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
-        'blue-gradient': 'linear-gradient(to bottom, #60A5FA, #F8FAFC)',
-        'glass-gradient': 'linear-gradient(90deg, rgba(96,165,250,0.1) 0%, rgba(11,18,33,0.1) 100%)',
-        'glass-gradient-hover': 'linear-gradient(90deg, rgba(96,165,250,0.2) 0%, rgba(11,18,33,0.2) 100%)',
+        'blue-gradient': 'linear-gradient(to bottom, #0B1221, #1a5fb4)',
+        'glass-gradient': 'linear-gradient(90deg, rgba(11,18,33,0.5) 0%, rgba(26,95,180,0.5) 100%)',
+        'glass-gradient-hover': 'linear-gradient(90deg, rgba(11,18,33,0.7) 0%, rgba(26,95,180,0.7) 100%)',
       },
       borderRadius: {
         lg: "var(--radius)",

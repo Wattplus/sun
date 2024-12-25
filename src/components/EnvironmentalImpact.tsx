@@ -3,13 +3,13 @@ import { Button } from "@/components/ui/button";
 
 export const EnvironmentalImpact = () => {
   return (
-    <div className="py-24 sm:py-32 bg-gradient-to-b from-green-50 to-white">
+    <div className="py-24 sm:py-32 bg-gradient-to-b from-[#0B1221] to-[#1a5fb4]">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="mx-auto max-w-2xl text-center mb-16">
-          <h2 className="text-4xl font-bold tracking-tight text-gray-900 mb-6">
+          <h2 className="text-4xl font-bold tracking-tight text-white mb-6">
             Impact environnemental
           </h2>
-          <p className="text-xl text-gray-600">
+          <p className="text-xl text-blue-200">
             Contribuez à un avenir plus vert avec l'énergie solaire
           </p>
         </div>
@@ -40,12 +40,12 @@ export const EnvironmentalImpact = () => {
               className="relative group"
             >
               <div className="absolute -inset-1 rounded-3xl bg-gradient-to-r from-green-600 to-blue-600 opacity-25 blur transition duration-200 group-hover:opacity-100" />
-              <div className="relative flex flex-col items-center p-8 bg-white rounded-2xl shadow-xl">
+              <div className="relative flex flex-col items-center p-8 bg-[#0B1221]/50 backdrop-blur-sm rounded-2xl border border-white/10">
                 <div className={`rounded-xl bg-gradient-to-br ${item.color} p-4 text-white shadow-lg mb-6`}>
                   <item.icon className="h-8 w-8" />
                 </div>
-                <h3 className="text-2xl font-bold text-gray-900 mb-2">{item.title}</h3>
-                <p className="text-gray-600 text-center">{item.description}</p>
+                <h3 className="text-2xl font-bold text-white mb-2">{item.title}</h3>
+                <p className="text-gray-300 text-center">{item.description}</p>
               </div>
             </div>
           ))}
