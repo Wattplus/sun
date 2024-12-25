@@ -11,7 +11,7 @@ export const Navbar = () => {
       <div className="absolute inset-0 bg-gradient-to-r from-background/80 to-accent/20 backdrop-blur-md border-b border-white/10" />
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-20 items-center">
-          <div className="flex-shrink-0 flex items-center -ml-4">
+          <div className="flex-shrink-0 flex items-center">
             <Sun className="h-8 w-8 text-primary mr-2" />
             <span className="text-2xl font-bold gradient-text">WattPlus</span>
           </div>
@@ -53,13 +53,10 @@ export const Navbar = () => {
               >
                 Demander une étude
               </Button>
-              <a 
-                href="tel:0977774164" 
-                className="flex items-center text-sm font-medium text-blue-100 hover:text-primary transition-colors group"
-              >
-                <Phone className="w-4 h-4 mr-2 group-hover:text-primary transition-colors" />
-                09 77 77 41 64
-              </a>
+              <div className="flex flex-col items-center text-sm font-medium text-blue-100 hover:text-primary transition-colors group">
+                <Phone className="w-4 h-4 mb-1 group-hover:text-primary transition-colors" />
+                <a href="tel:0977774164">09 77 77 41 64</a>
+              </div>
             </div>
           </div>
 
@@ -120,14 +117,15 @@ export const Navbar = () => {
               >
                 Demander une étude
               </Button>
-              <a 
-                href="tel:0977774164" 
-                className="flex items-center text-sm font-medium text-blue-100 hover:text-primary transition-colors group"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                <Phone className="w-4 h-4 mr-2 group-hover:text-primary transition-colors" />
-                09 77 77 41 64
-              </a>
+              <div className="flex flex-col items-center text-sm font-medium text-blue-100 hover:text-primary transition-colors group">
+                <Phone className="w-4 h-4 mb-1 group-hover:text-primary transition-colors" />
+                <a 
+                  href="tel:0977774164"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  09 77 77 41 64
+                </a>
+              </div>
             </div>
           </div>
         )}
