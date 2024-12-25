@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Home, FileText, MessageSquare, Settings } from "lucide-react";
+import { Home, FileText, MessageSquare, Settings, Shield } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ClientNavbar } from "@/components/client/ClientNavbar";
 import { ProjectStatus } from "@/components/client/dashboard/ProjectStatus";
@@ -29,31 +29,31 @@ const ClientPortal = () => {
   });
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-b from-background-dark to-background-light">
       <ClientNavbar />
       
       <main className="container mx-auto px-4 py-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Tableau de bord</h1>
-          <p className="text-gray-600">Bienvenue, {userInfo.name}</p>
+        <div className="mb-8 glass-panel p-6">
+          <h1 className="text-3xl font-bold gradient-text">Tableau de bord</h1>
+          <p className="text-gray-300 mt-2">Bienvenue, {userInfo.name}</p>
         </div>
 
         <Tabs defaultValue="dashboard" className="space-y-6">
-          <TabsList>
-            <TabsTrigger value="dashboard" onClick={() => setActiveTab("dashboard")}>
-              <Home className="w-4 h-4 mr-2" />
+          <TabsList className="glass-panel p-1">
+            <TabsTrigger value="dashboard" onClick={() => setActiveTab("dashboard")} className="gap-2">
+              <Home className="w-4 h-4" />
               Accueil
             </TabsTrigger>
-            <TabsTrigger value="documents" onClick={() => setActiveTab("documents")}>
-              <FileText className="w-4 h-4 mr-2" />
+            <TabsTrigger value="documents" onClick={() => setActiveTab("documents")} className="gap-2">
+              <FileText className="w-4 h-4" />
               Documents
             </TabsTrigger>
-            <TabsTrigger value="messages" onClick={() => setActiveTab("messages")}>
-              <MessageSquare className="w-4 h-4 mr-2" />
+            <TabsTrigger value="messages" onClick={() => setActiveTab("messages")} className="gap-2">
+              <MessageSquare className="w-4 h-4" />
               Messages
             </TabsTrigger>
-            <TabsTrigger value="settings" onClick={() => setActiveTab("settings")}>
-              <Settings className="w-4 h-4 mr-2" />
+            <TabsTrigger value="settings" onClick={() => setActiveTab("settings")} className="gap-2">
+              <Settings className="w-4 h-4" />
               Paramètres
             </TabsTrigger>
           </TabsList>
@@ -82,28 +82,33 @@ const ClientPortal = () => {
           </TabsContent>
 
           <TabsContent value="settings">
-            <Card className="p-6">
-              <h3 className="text-lg font-semibold mb-6">Paramètres du compte</h3>
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">Nom</label>
-                  <input
-                    type="text"
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                    value={userInfo.name}
-                    readOnly
-                  />
+            <Card className="glass-panel">
+              <div className="p-6 space-y-6">
+                <h3 className="text-xl font-semibold gradient-text">Paramètres du compte</h3>
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-300">Nom</label>
+                    <input
+                      type="text"
+                      className="mt-1 block w-full rounded-md bg-background-dark/50 border-gray-600 text-gray-200"
+                      value={userInfo.name}
+                      readOnly
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-300">Email</label>
+                    <input
+                      type="email"
+                      className="mt-1 block w-full rounded-md bg-background-dark/50 border-gray-600 text-gray-200"
+                      value={userInfo.email}
+                      readOnly
+                    />
+                  </div>
+                  <Button className="glass-button w-full">
+                    <Shield className="w-4 h-4 mr-2" />
+                    Modifier le mot de passe
+                  </Button>
                 </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">Email</label>
-                  <input
-                    type="email"
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                    value={userInfo.email}
-                    readOnly
-                  />
-                </div>
-                <Button>Modifier le mot de passe</Button>
               </div>
             </Card>
           </TabsContent>
