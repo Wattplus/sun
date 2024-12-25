@@ -6,6 +6,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { X } from "lucide-react";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface LeadsListProps {
   leads: Lead[];
@@ -62,14 +63,10 @@ export const LeadsList = ({ leads }: LeadsListProps) => {
     setSelectedDepartments(selectedDepartments.filter(d => d !== department));
   };
 
-  const handlePriceFilterChange = (value: string) => {
-    setPriceFilter(value as SortOrder);
-  };
-
   return (
-    <div className="space-y-6 max-w-7xl mx-auto px-4">
-      <Card className="p-6 bg-[#0B1221]/80 border-[#1EAEDB]/20">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div className="space-y-6">
+      <Card className="p-4 bg-[#0B1221]/80 border-[#1EAEDB]/20">
+        <div className="space-y-4">
           <div className="space-y-2">
             <label className="text-sm font-medium text-[#1EAEDB]">
               Départements
@@ -132,7 +129,7 @@ export const LeadsList = ({ leads }: LeadsListProps) => {
             <label className="text-sm font-medium text-[#1EAEDB]">
               Prix
             </label>
-            <Select value={priceFilter} onValueChange={handlePriceFilterChange}>
+            <Select value={priceFilter} onValueChange={setPriceFilter}>
               <SelectTrigger className="bg-[#0B1221] border-[#1EAEDB]/20 text-white">
                 <SelectValue placeholder="Par défaut" />
               </SelectTrigger>
@@ -152,20 +149,22 @@ export const LeadsList = ({ leads }: LeadsListProps) => {
         </div>
       </Card>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {availableLeads.length > 0 ? (
-          availableLeads.map((lead) => (
-            <LeadCard
-              key={lead.id}
-              lead={lead}
-              onPurchase={() => {}}
-              subscriptionTier="free"
-            />
-          ))
-        ) : (
-          <EmptyLeadState />
-        )}
-      </div>
+      <ScrollArea className="h-[600px]">
+        <div className="space-y-4">
+          {availableLeads.length > 0 ? (
+            availableLeads.map((lead) => (
+              <LeadCard
+                key={lead.id}
+                lead={lead}
+                onPurchase={() => {}}
+                subscriptionTier="free"
+              />
+            ))
+          ) : (
+            <EmptyLeadState />
+          )}
+        </div>
+      </ScrollArea>
     </div>
   );
 };
