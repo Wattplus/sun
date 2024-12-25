@@ -1,4 +1,4 @@
-import { PiggyBank, Leaf, Home, ArrowRight, Shield, Clock } from "lucide-react";
+import { PiggyBank, Leaf, Home, ArrowRight, Shield, Clock, Sun } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const benefits = [
@@ -31,6 +31,12 @@ const benefits = [
     description: "Installation complète en 1-2 jours par nos équipes certifiées, avec un suivi personnalisé.",
     icon: Clock,
     color: "from-purple-500 to-purple-600",
+  },
+  {
+    title: "Énergie gratuite et inépuisable",
+    description: "Le soleil est une source d'énergie gratuite et inépuisable. Profitez d'une production d'électricité stable pendant plus de 25 ans.",
+    icon: Sun,
+    color: "from-orange-500 to-orange-600",
   },
 ];
 
