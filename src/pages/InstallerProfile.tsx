@@ -16,7 +16,11 @@ export const InstallerProfile = () => {
     address: "",
     zones: [],
     description: "",
-    certifications: [],
+    certifications: {
+      qualiPV: false,
+      rge: false,
+      qualibat: false
+    },
     specialties: [],
   });
 

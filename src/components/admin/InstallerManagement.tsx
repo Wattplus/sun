@@ -46,7 +46,12 @@ export const mockInstallers: Installer[] = [
     commission: 0,
     leadsAssigned: 32,
     conversionRate: 72,
-    paymentType: "prepaid"
+    paymentType: "prepaid",
+    certifications: {
+      qualiPV: true,
+      rge: false,
+      qualibat: true
+    }
   },
   {
     id: "3",
@@ -60,7 +65,12 @@ export const mockInstallers: Installer[] = [
     commission: 0,
     leadsAssigned: 28,
     conversionRate: 65,
-    paymentType: "per_lead"
+    paymentType: "per_lead",
+    certifications: {
+      qualiPV: false,
+      rge: true,
+      qualibat: true
+    }
   },
   {
     id: "4",
@@ -74,7 +84,12 @@ export const mockInstallers: Installer[] = [
     commission: 0,
     leadsAssigned: 0,
     conversionRate: 0,
-    paymentType: "per_lead"
+    paymentType: "per_lead",
+    certifications: {
+      qualiPV: false,
+      rge: false,
+      qualibat: false
+    }
   },
   {
     id: "5",
@@ -88,7 +103,12 @@ export const mockInstallers: Installer[] = [
     commission: 0,
     leadsAssigned: 15,
     conversionRate: 45,
-    paymentType: "prepaid"
+    paymentType: "prepaid",
+    certifications: {
+      qualiPV: true,
+      rge: true,
+      qualibat: false
+    }
   }
 ];
 
@@ -117,7 +137,12 @@ const InstallerManagement = () => {
       commission: 0,
       leadsAssigned: 0,
       conversionRate: 0,
-      paymentType: "per_lead"
+      paymentType: "per_lead",
+      certifications: {
+        qualiPV: false,
+        rge: false,
+        qualibat: false
+      }
     };
     setSelectedInstaller(newInstaller);
     setEditDialogOpen(true);
