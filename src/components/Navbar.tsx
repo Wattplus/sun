@@ -15,7 +15,7 @@ export const Navbar = () => {
             <span className="text-2xl font-bold text-white">WattPlus</span>
           </div>
           
-          <div className="hidden md:flex items-center space-x-8">
+          <div className="hidden md:flex items-center space-x-12">
             <a href="#why-solar" className="text-blue-100 hover:text-white transition-colors">
               Pourquoi le solaire
             </a>
@@ -25,7 +25,7 @@ export const Navbar = () => {
             <a href="#testimonials" className="text-blue-100 hover:text-white transition-colors">
               Témoignages
             </a>
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-8">
               <Link to="/client" className="flex items-center text-blue-100 hover:text-white transition-colors">
                 <User className="w-4 h-4 mr-2" />
                 Mon compte
@@ -35,16 +35,18 @@ export const Navbar = () => {
                 Compte installateur
               </Link>
             </div>
-            <Button 
-              onClick={() => document.getElementById('lead-form')?.scrollIntoView({ behavior: 'smooth' })}
-              className="bg-green-500 hover:bg-green-600 text-white rounded-full"
-            >
-              Demander une étude
-            </Button>
-            <a href="tel:0977774164" className="flex items-center text-white hover:text-green-400 transition-colors">
-              <Phone className="w-4 h-4 mr-2" />
-              09 77 77 41 64
-            </a>
+            <div className="flex items-center space-x-6">
+              <Button 
+                onClick={() => document.getElementById('lead-form')?.scrollIntoView({ behavior: 'smooth' })}
+                className="bg-green-500 hover:bg-green-600 text-white rounded-full px-6"
+              >
+                Demander une étude
+              </Button>
+              <a href="tel:0977774164" className="flex items-center text-white hover:text-green-400 transition-colors">
+                <Phone className="w-4 h-4 mr-2" />
+                09 77 77 41 64
+              </a>
+            </div>
           </div>
 
           <button className="md:hidden text-white" onClick={() => setIsMenuOpen(!isMenuOpen)}>
@@ -54,7 +56,7 @@ export const Navbar = () => {
 
         {isMenuOpen && (
           <div className="md:hidden py-4 bg-blue-900/95 backdrop-blur-sm rounded-lg mt-2">
-            <div className="flex flex-col space-y-4 p-4">
+            <div className="flex flex-col space-y-6 p-4">
               <a href="#why-solar" className="text-blue-100 hover:text-white" onClick={() => setIsMenuOpen(false)}>
                 Pourquoi le solaire
               </a>
