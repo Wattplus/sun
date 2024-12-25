@@ -36,9 +36,8 @@ export const LeadCardHeader = ({
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <input type="checkbox" className="rounded border-primary/20" />
           <h3 className="text-lg font-medium">
-            {firstName} {lastName.split('').map(() => '•').join('')}
+            {firstName} {lastName}
           </h3>
         </div>
         <Badge variant="outline" className="flex items-center gap-1">
@@ -65,14 +64,14 @@ export const LeadCardHeader = ({
           </Badge>
         </div>
 
-        <div className="flex items-center justify-between mt-4 text-sm text-muted-foreground">
+        <div className="flex items-center justify-between mt-4 text-sm text-muted-foreground border-t pt-4 border-primary/10">
           <div className="flex items-center gap-2">
-            <Users className="h-4 w-4" />
+            <Users className="h-4 w-4 text-primary" />
             <span>{purchaseCount} installateur{purchaseCount > 1 ? 's' : ''}</span>
           </div>
           {!hasExclusivePurchase && remainingPurchases > 0 && (
             <div className="flex items-center gap-2">
-              <UserPlus className="h-4 w-4" />
+              <UserPlus className="h-4 w-4 text-primary" />
               <span>{remainingPurchases} place{remainingPurchases > 1 ? 's' : ''} restante{remainingPurchases > 1 ? 's' : ''}</span>
             </div>
           )}
