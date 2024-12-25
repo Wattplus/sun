@@ -56,23 +56,25 @@ export const LeadForm = () => {
 
     try {
       const templateParams = {
-        from_name: `${formData.firstName} ${formData.lastName}`,
-        from_email: formData.email,
+        first_name: formData.firstName,
+        last_name: formData.lastName,
+        email: formData.email,
         phone: formData.phone,
         postal_code: formData.postalCode,
-        to_name: "Service Commercial",
-        message: `Nouvelle demande d'étude :
-          Nom complet : ${formData.firstName} ${formData.lastName}
-          Email : ${formData.email}
-          Téléphone : ${formData.phone}
-          Code postal : ${formData.postalCode}`
+        date: new Date().toLocaleDateString('fr-FR', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit'
+        })
       };
 
       await emailjs.send(
         'service_611ohbh',
-        'template_id', // Vous devrez créer un template dans EmailJS et utiliser son ID ici
+        'template_id', // Remplacez par l'ID de votre nouveau template
         templateParams,
-        '12Wtu7mylEymnNxyV' // Votre clé publique
+        '12Wtu7mylEymnNxyV'
       );
 
       toast({
