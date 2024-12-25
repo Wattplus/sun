@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Input } from "@/components/ui/input";
 import { MapPin, Euro, Phone, Mail } from "lucide-react";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
 import { Lead } from "@/types/crm";
 
@@ -53,11 +53,39 @@ export const LeadsList = ({ leads }: LeadsListProps) => {
     }
   };
 
-  const handleContact = (method: "phone" | "email") => {
-    toast({
-      title: "Contact",
-      description: `La fonction de ${method === "phone" ? "téléphone" : "email"} sera bientôt disponible`,
-    });
+  const handleContact = async (leadId: string, method: "phone" | "email") => {
+    try {
+      const priceId = 'price_1QZyJpFOePj4Hv47sd76eDOz'; // Prix pour accéder aux contacts
+      
+      toast({
+        title: "Achat en cours",
+        description: `Accès aux informations de ${method === "phone" ? "téléphone" : "email"}...`,
+      });
+
+      const response = await fetch(`https://dqzsycxxgltztufrhams.supabase.co/functions/v1/create-contact-checkout`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${process.env.SUPABASE_ANON_KEY}`,
+        },
+        body: JSON.stringify({
+          leadId,
+          contactType: method,
+          priceId
+        }),
+      });
+
+      if (!response.ok) throw new Error();
+
+      const data = await response.json();
+      if (data.url) window.location.href = data.url;
+    } catch (error) {
+      toast({
+        title: "Erreur",
+        description: `Une erreur est survenue lors de l'achat des informations de contact`,
+        variant: "destructive",
+      });
+    }
   };
 
   const filteredLeads = leads.filter(lead => 
@@ -94,13 +122,23 @@ export const LeadsList = ({ leads }: LeadsListProps) => {
                     Budget: {lead.budget.toLocaleString()}€
                   </div>
                   <div className="flex gap-2 mt-2">
-                    <Button size="sm" variant="outline" onClick={() => handleContact("phone")}>
-                      <Phone className="h-4 w-4 mr-1" />
-                      Appeler
+                    <Button 
+                      size="sm" 
+                      variant="outline" 
+                      onClick={() => handleContact(lead.id, "phone")}
+                      className="flex items-center gap-2"
+                    >
+                      <Phone className="h-4 w-4" />
+                      9€ Appeler
                     </Button>
-                    <Button size="sm" variant="outline" onClick={() => handleContact("email")}>
-                      <Mail className="h-4 w-4 mr-1" />
-                      Email
+                    <Button 
+                      size="sm" 
+                      variant="outline" 
+                      onClick={() => handleContact(lead.id, "email")}
+                      className="flex items-center gap-2"
+                    >
+                      <Mail className="h-4 w-4" />
+                      9€ Email
                     </Button>
                   </div>
                 </div>
