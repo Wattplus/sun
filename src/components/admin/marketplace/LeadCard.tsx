@@ -2,7 +2,7 @@ import { Lead } from "@/types/crm";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Euro, MapPin, Phone, Mail, User, Building2, Clock, Crown, Users } from "lucide-react";
+import { Euro, MapPin, Phone, Mail, User, Building2, Clock, Crown, Users, AlertCircle } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import { calculateLeadPrice, formatPrice } from "@/utils/leadPricing";
 import { differenceInDays } from "date-fns";
@@ -15,6 +15,8 @@ interface LeadCardProps {
   showFullDetails?: boolean;
   subscriptionTier?: SubscriptionTier;
 }
+
+const MAX_MUTUAL_PURCHASES = 3;
 
 const getAgeLabel = (createdAt: string) => {
   const days = differenceInDays(new Date(), new Date(createdAt));
@@ -34,7 +36,30 @@ export const LeadCard = ({
   const prices = calculateLeadPrice(lead, subscriptionTier);
   const isSamePrice = prices.mutualPrice === prices.exclusivePrice;
 
+  const purchaseCount = lead.purchasedBy?.length || 0;
+  const hasExclusivePurchase = lead.purchasedBy?.some(p => p.purchaseType === 'exclusif');
+  const canPurchaseMutual = purchaseCount < MAX_MUTUAL_PURCHASES && !hasExclusivePurchase;
+  const canPurchaseExclusive = !hasExclusivePurchase && purchaseCount === 0;
+
   const handlePurchase = async (type: 'mutualise' | 'exclusif') => {
+    if (type === 'mutualise' && !canPurchaseMutual) {
+      toast({
+        title: "Achat impossible",
+        description: "Ce lead a atteint la limite d'achats mutualisés ou est déjà acheté en exclusivité.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (type === 'exclusif' && !canPurchaseExclusive) {
+      toast({
+        title: "Achat impossible",
+        description: "Ce lead est déjà acheté.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     try {
       const priceId = type === 'exclusif' 
         ? 'price_1QZyKUFOePj4Hv47qEFQ1KzF' 
@@ -92,7 +117,8 @@ export const LeadCard = ({
             </Badge>
             <Badge variant="outline" className="flex items-center gap-1 text-muted-foreground">
               <Users className="h-4 w-4" />
-              {lead.purchasedBy?.length || 0} installateur{lead.purchasedBy?.length !== 1 ? 's' : ''}
+              {purchaseCount} installateur{purchaseCount !== 1 ? 's' : ''}
+              {hasExclusivePurchase && <Crown className="h-3 w-3 ml-1 text-yellow-500" />}
             </Badge>
           </div>
         </div>
@@ -154,34 +180,49 @@ export const LeadCard = ({
       </CardContent>
       <CardFooter>
         {!isPurchased ? (
-          <div className="w-full">
-            {isSamePrice ? (
+          <div className="w-full space-y-2">
+            {hasExclusivePurchase ? (
+              <div className="text-center text-sm text-muted-foreground flex items-center justify-center gap-2">
+                <AlertCircle className="h-4 w-4" />
+                Ce lead a été acheté en exclusivité
+              </div>
+            ) : purchaseCount >= MAX_MUTUAL_PURCHASES ? (
+              <div className="text-center text-sm text-muted-foreground flex items-center justify-center gap-2">
+                <AlertCircle className="h-4 w-4" />
+                Limite d'achats mutualisés atteinte
+              </div>
+            ) : isSamePrice ? (
               <Button 
                 className="w-full bg-[#1EAEDB] hover:bg-[#0FA0CE] flex items-center justify-center gap-2" 
                 onClick={() => handlePurchase('exclusif')}
+                disabled={!canPurchaseExclusive}
               >
                 <Crown className="h-4 w-4" />
                 <Euro className="h-4 w-4" />
                 Acheter ce lead - {formatPrice(prices.exclusivePrice)}
               </Button>
             ) : (
-              <div className="space-y-2">
-                <Button 
-                  className="w-full bg-[#1EAEDB] hover:bg-[#0FA0CE]" 
-                  onClick={() => handlePurchase('mutualise')}
-                >
-                  <Euro className="h-4 w-4 mr-2" />
-                  Lead mutualisé - {formatPrice(prices.mutualPrice)}
-                </Button>
-                <Button 
-                  className="w-full" 
-                  variant="outline"
-                  onClick={() => handlePurchase('exclusif')}
-                >
-                  <Euro className="h-4 w-4 mr-2" />
-                  Lead exclusif - {formatPrice(prices.exclusivePrice)}
-                </Button>
-              </div>
+              <>
+                {canPurchaseMutual && (
+                  <Button 
+                    className="w-full bg-[#1EAEDB] hover:bg-[#0FA0CE]" 
+                    onClick={() => handlePurchase('mutualise')}
+                  >
+                    <Euro className="h-4 w-4 mr-2" />
+                    Lead mutualisé - {formatPrice(prices.mutualPrice)}
+                  </Button>
+                )}
+                {canPurchaseExclusive && (
+                  <Button 
+                    className="w-full" 
+                    variant="outline"
+                    onClick={() => handlePurchase('exclusif')}
+                  >
+                    <Crown className="h-4 w-4 mr-2" />
+                    Lead exclusif - {formatPrice(prices.exclusivePrice)}
+                  </Button>
+                )}
+              </>
             )}
           </div>
         ) : (

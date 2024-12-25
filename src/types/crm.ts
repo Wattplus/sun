@@ -1,6 +1,7 @@
 export type LeadStatus = "new" | "contacted" | "qualified" | "assigned" | "converted" | "lost";
 export type InstallerStatus = "active" | "inactive" | "pending";
 export type PaymentType = "prepaid" | "per_lead";
+export type PurchaseType = "mutualise" | "exclusif";
 
 export interface Lead {
   id: string;
@@ -19,32 +20,11 @@ export interface Lead {
   assignedTo?: string;
   price: number;
   exclusivityPrice?: number;
-}
-
-export interface Installer {
-  id: string;
-  companyName: string;
-  contactName: string;
-  email: string;
-  phone: string;
-  address: string;
-  zones: string[];
-  status: InstallerStatus;
-  commission: number;
-  leadsAssigned: number;
-  conversionRate: number;
-  prepaidBalance?: number;
-  paymentType: PaymentType;
-  description?: string;
-  certifications: {
-    qualiPV: boolean;
-    rge: boolean;
-    qualibat: boolean;
-  };
-  siret?: string;
-  siren?: string;
-  specialties?: string[];
-  profileImage?: string;
+  purchasedBy?: Array<{
+    installerId: string;
+    purchaseType: PurchaseType;
+    purchaseDate: string;
+  }>;
 }
 
 // Mock data for testing
