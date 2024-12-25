@@ -131,24 +131,20 @@ export function EditLeadDialog({ lead, open, onOpenChange, onSave }: EditLeadDia
             </div>
             <div>
               <label htmlFor="projectType" className="text-sm font-medium">
-                Type de projet
+                Type de projet photovoltaïque
               </label>
-              <Input
-                id="projectType"
-                value={formData.projectType || ""}
-                onChange={(e) => setFormData({ ...formData, projectType: e.target.value })}
-              />
-            </div>
-            <div>
-              <label htmlFor="budget" className="text-sm font-medium">
-                Budget
-              </label>
-              <Input
-                id="budget"
-                type="number"
-                value={formData.budget || ""}
-                onChange={(e) => setFormData({ ...formData, budget: Number(e.target.value) })}
-              />
+              <Select
+                value={formData.projectType}
+                onValueChange={(value) => setFormData({ ...formData, projectType: value })}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Sélectionnez le type de projet" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="residential">Résidentiel</SelectItem>
+                  <SelectItem value="professional">Professionnel / Industriel</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
             <div>
               <label htmlFor="status" className="text-sm font-medium">

@@ -22,6 +22,10 @@ export const LeadTable = ({
   getStatusColor,
   getStatusText,
 }: LeadTableProps) => {
+  const getProjectTypeText = (type: string) => {
+    return type === 'residential' ? 'Résidentiel' : 'Professionnel / Industriel';
+  };
+
   return (
     <ScrollArea className="h-[600px] rounded-md border border-[#33C3F0]/20">
       <Table>
@@ -30,8 +34,7 @@ export const LeadTable = ({
             <TableHead>Date</TableHead>
             <TableHead>Contact</TableHead>
             <TableHead>Localisation</TableHead>
-            <TableHead>Projet</TableHead>
-            <TableHead>Budget</TableHead>
+            <TableHead>Type de projet</TableHead>
             <TableHead>Statut</TableHead>
             <TableHead>Assigné à</TableHead>
             <TableHead>Actions</TableHead>
@@ -52,8 +55,7 @@ export const LeadTable = ({
                 <div className="text-sm">{lead.city}</div>
                 <div className="text-sm text-muted-foreground">{lead.postalCode}</div>
               </TableCell>
-              <TableCell>{lead.projectType}</TableCell>
-              <TableCell>{lead.budget.toLocaleString()}€</TableCell>
+              <TableCell>{getProjectTypeText(lead.projectType)}</TableCell>
               <TableCell>
                 <Badge className={`${getStatusColor(lead.status)} text-white`}>
                   {getStatusText(lead.status)}
