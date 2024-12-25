@@ -1,33 +1,33 @@
-import { Cpu, Battery, Clock, ArrowRight } from "lucide-react";
+import { Cpu, Battery, Clock, ArrowRight, Shield, Sun } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const specs = [
   {
-    title: "Technologie",
+    title: "Équipements premium",
     items: [
-      "Panneaux monocristallins",
-      "Rendement 20-22%",
+      "Panneaux SunPower 375Wc",
+      "Design noir élégant",
       "Garantie 25 ans"
     ],
-    icon: Cpu,
+    icon: Sun,
     color: "from-blue-600 to-blue-800"
   },
   {
-    title: "Puissance",
+    title: "Installation sécurisée",
     items: [
-      "3-9 kWc selon surface",
-      "Production optimisée",
-      "Monitoring inclus"
+      "Micro-onduleurs Enphase",
+      "Coffret de protection",
+      "Surimposition toiture"
     ],
-    icon: Battery,
+    icon: Shield,
     color: "from-green-600 to-green-800"
   },
   {
-    title: "Installation",
+    title: "Accompagnement",
     items: [
-      "Pose en 1-2 jours",
-      "Équipe certifiée",
-      "Garantie décennale"
+      "Conseiller dédié",
+      "Gestion des aides",
+      "Suivi personnalisé"
     ],
     icon: Clock,
     color: "from-indigo-600 to-indigo-800"
@@ -40,10 +40,10 @@ export const TechnicalSpecs = () => {
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="mx-auto max-w-2xl text-center mb-16">
           <h2 className="text-4xl font-bold tracking-tight text-white mb-6 bg-gradient-to-r from-white via-blue-100 to-white bg-clip-text text-transparent">
-            Guide de l'installation solaire
+            Une installation solaire performante
           </h2>
           <p className="text-xl text-blue-200">
-            Une technologie de pointe pour une performance optimale
+            Des équipements premium pour une performance optimale
           </p>
         </div>
         <div className="mx-auto grid max-w-2xl grid-cols-1 gap-8 lg:max-w-none lg:grid-cols-3">
@@ -84,7 +84,7 @@ export const TechnicalSpecs = () => {
             className="bg-primary hover:bg-primary-dark text-white px-8 py-6 text-lg rounded-full shadow-lg shadow-primary/20 transform hover:scale-105 transition-transform duration-300"
             onClick={() => document.getElementById('lead-form')?.scrollIntoView({ behavior: 'smooth' })}
           >
-            Obtenez votre devis gratuit
+            Demandez votre devis gratuit
             <ArrowRight className="ml-2 h-5 w-5" />
           </Button>
         </div>

@@ -1,24 +1,36 @@
-import { PiggyBank, Leaf, Home, ArrowRight } from "lucide-react";
+import { PiggyBank, Leaf, Home, ArrowRight, Shield, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const benefits = [
   {
-    title: "Économies importantes",
-    description: "Réduisez vos factures d'électricité et profitez d'un retour sur investissement rapide",
+    title: "Jusqu'à 40% d'économies",
+    description: "L'électricité coûte cher et son prix ne cesse d'augmenter. Prémunissez-vous contre les hausses à venir en produisant votre propre électricité.",
     icon: PiggyBank,
     color: "from-blue-500 to-blue-600",
   },
   {
-    title: "Écologique",
-    description: "Réduisez votre empreinte carbone avec une énergie 100% renouvelable",
-    icon: Leaf,
+    title: "Valorisation immobilière",
+    description: "Équipée de panneaux photovoltaïques, votre maison gagne en valeur et en intérêt auprès de futurs acquéreurs.",
+    icon: Home,
     color: "from-green-500 to-green-600",
   },
   {
-    title: "Valorisation",
-    description: "Augmentez la valeur de votre bien immobilier",
-    icon: Home,
+    title: "Un geste pour la planète",
+    description: "En produisant de l'électricité verte, vous participez activement à la transition écologique du pays !",
+    icon: Leaf,
     color: "from-indigo-500 to-indigo-600",
+  },
+  {
+    title: "Artisans certifiés RGE",
+    description: "Des professionnels soigneusement sélectionnés : solidité financière, avis positifs et qualification RGE contrôlés.",
+    icon: Shield,
+    color: "from-amber-500 to-amber-600",
+  },
+  {
+    title: "Installation rapide",
+    description: "Installation complète en 1-2 jours par nos équipes certifiées, avec un suivi personnalisé.",
+    icon: Clock,
+    color: "from-purple-500 to-purple-600",
   },
 ];
 
@@ -29,10 +41,10 @@ export const Benefits = () => {
       <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
         <div className="mx-auto max-w-2xl text-center mb-16">
           <h2 className="text-4xl font-bold tracking-tight text-white mb-6">
-            Pourquoi choisir l'énergie solaire ?
+            Pourquoi passer au solaire photovoltaïque ?
           </h2>
           <p className="text-xl text-blue-200">
-            Investissez dans votre avenir énergétique
+            Une solution d'avenir pour votre maison
           </p>
         </div>
         <div className="mx-auto mt-16 grid max-w-xl grid-cols-1 gap-x-8 gap-y-16 lg:max-w-none lg:grid-cols-3">
@@ -71,7 +83,7 @@ export const Benefits = () => {
             className="bg-green-500 hover:bg-green-600 text-white px-8 py-6 text-lg rounded-full shadow-lg shadow-green-500/20 transform hover:scale-105 transition-transform duration-300"
             onClick={() => document.getElementById('lead-form')?.scrollIntoView({ behavior: 'smooth' })}
           >
-            Découvrez vos économies
+            Simulation gratuite en 2 minutes
             <ArrowRight className="ml-2 h-5 w-5" />
           </Button>
         </div>

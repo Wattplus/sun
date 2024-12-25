@@ -3,20 +3,20 @@ import { Button } from "@/components/ui/button";
 
 const steps = [
   {
-    title: "Étude gratuite",
-    description: "Analyse complète de vos besoins et de votre toiture",
+    title: "Validation du projet",
+    description: "Un conseiller vous contacte par téléphone et s'assure avec vous de la pertinence de votre projet.",
     icon: ClipboardCheck,
     color: "from-blue-500 to-blue-600",
   },
   {
-    title: "Installation",
-    description: "Pose professionnelle en 1-2 jours",
+    title: "Entretien technique",
+    description: "Nous vérifions ensemble la faisabilité de vos travaux et établissons un plan d'action personnalisé.",
     icon: Wrench,
     color: "from-green-500 to-green-600",
   },
   {
-    title: "Production",
-    description: "Commencez à produire votre propre électricité",
+    title: "Signature du devis",
+    description: "Vous signez votre devis en ligne en toute simplicité, nous nous occupons des démarches administratives.",
     icon: Zap,
     color: "from-amber-500 to-amber-600",
   },

@@ -13,7 +13,8 @@ export const SavingsCalculator = () => {
     const monthly = parseFloat(monthlyBill);
     const size = parseFloat(roofSize);
     if (!isNaN(monthly) && !isNaN(size)) {
-      const annualSavings = monthly * 12 * 0.7; // Estimation simplifiée
+      // Estimation basée sur une réduction de 40% de la facture annuelle
+      const annualSavings = monthly * 12 * 0.4;
       setSavings(annualSavings);
     }
   };
@@ -26,7 +27,7 @@ export const SavingsCalculator = () => {
             Calculez vos économies
           </h2>
           <p className="text-xl text-blue-200">
-            Découvrez combien vous pourriez économiser avec l'énergie solaire
+            Jusqu'à 40% d'économies sur vos factures d'électricité
           </p>
         </div>
 
@@ -75,6 +76,9 @@ export const SavingsCalculator = () => {
                 </div>
                 <p className="text-4xl font-bold text-primary text-center mb-4">
                   {savings.toLocaleString('fr-FR')}€ / an
+                </p>
+                <p className="text-sm text-blue-200 text-center mb-4">
+                  Retour sur investissement moyen : 7 ans
                 </p>
                 <Button 
                   className="w-full bg-primary hover:bg-primary-dark"
