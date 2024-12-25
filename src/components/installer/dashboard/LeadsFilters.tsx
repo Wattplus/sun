@@ -24,7 +24,7 @@ export const LeadsFilters = ({
   onPriceFilterChange
 }: LeadsFiltersProps) => {
   return (
-    <div className="flex flex-wrap gap-4 items-center mb-4">
+    <div className="flex flex-wrap gap-4 items-center">
       <Select value={projectTypeFilter} onValueChange={onProjectTypeChange}>
         <SelectTrigger className="w-[180px] bg-background/60 border-primary/20">
           <SelectValue placeholder="Type de projet" />
@@ -46,17 +46,6 @@ export const LeadsFilters = ({
               Département {dept}
             </SelectItem>
           ))}
-        </SelectContent>
-      </Select>
-
-      <Select value={priceFilter} onValueChange={onPriceFilterChange}>
-        <SelectTrigger className="w-[180px] bg-background/60 border-primary/20">
-          <SelectValue placeholder="Prix" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="default">Par défaut</SelectItem>
-          <SelectItem value="asc">Prix croissant</SelectItem>
-          <SelectItem value="desc">Prix décroissant</SelectItem>
         </SelectContent>
       </Select>
 
