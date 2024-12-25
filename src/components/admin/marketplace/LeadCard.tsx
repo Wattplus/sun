@@ -25,16 +25,17 @@ export const LeadCard = ({
 
   const handlePurchase = async (type: 'mutualise' | 'exclusif', paymentMethod: 'prepaid' | 'direct') => {
     try {
-      const priceId = type === 'exclusif' 
-        ? 'price_1QZyKUFOePj4Hv47qEFQ1KzF' 
-        : 'price_1QZyJpFOePj4Hv47sd76eDOz';
-
       if (paymentMethod === 'prepaid') {
         toast({
           title: "Paiement avec solde prépayé",
           description: "Le lead sera débité de votre solde prépayé.",
         });
+        onPurchase(lead);
       } else {
+        const priceId = type === 'exclusif' 
+          ? 'price_1QZyKUFOePj4Hv47qEFQ1KzF' 
+          : 'price_1QZyJpFOePj4Hv47sd76eDOz';
+
         const response = await fetch("https://dqzsycxxgltztufrhams.supabase.co/functions/v1/create-lead-checkout", {
           method: "POST",
           headers: {
@@ -70,14 +71,15 @@ export const LeadCard = ({
 
   return (
     <Card className="h-full bg-[#0B1221] text-white border border-[#1EAEDB]/20 hover:border-[#1EAEDB]/40 transition-all duration-300">
-      <div className="p-6 space-y-4 h-full flex flex-col">
+      <div className="p-6 space-y-4">
         <div className="flex items-center justify-between">
           <div>
             <h3 className="text-xl font-medium text-[#1EAEDB]">
               {lead.firstName} {lead.lastName}
             </h3>
-            <div className="flex items-center gap-1 text-[#1EAEDB]/60 mt-1">
-              {"★".repeat(5)}
+            <div className="flex items-center gap-2 text-[#1EAEDB]/60 mt-1">
+              <MapPin className="w-4 h-4" />
+              <span>{lead.postalCode} {lead.city}</span>
             </div>
           </div>
           <span className="text-sm text-[#1EAEDB]/60">
@@ -85,12 +87,7 @@ export const LeadCard = ({
           </span>
         </div>
 
-        <div className="flex items-center gap-2 text-[#1EAEDB]/80">
-          <MapPin className="w-4 h-4" />
-          <span>{lead.postalCode} {lead.city}</span>
-        </div>
-
-        <div className="space-y-2 flex-grow">
+        <div className="space-y-3">
           <div className="flex items-center gap-2 text-[#1EAEDB]/80">
             <span>Budget:</span>
             <span className="font-medium">{lead.budget.toLocaleString()}€</span>

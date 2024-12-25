@@ -1,6 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Crown, Euro, ArrowRight, Wallet, CreditCard } from "lucide-react";
-import { formatPrice } from "@/utils/leadPricing";
+import { Wallet, CreditCard } from "lucide-react";
 
 interface LeadCardActionsProps {
   onPurchase: (type: 'mutualise' | 'exclusif', paymentMethod: 'prepaid' | 'direct') => void;
@@ -8,7 +7,7 @@ interface LeadCardActionsProps {
   exclusivePrice: number;
   canPurchaseMutual: boolean;
   canPurchaseExclusive: boolean;
-  isProfessionalProject?: boolean;
+  isProfessionalProject: boolean;
 }
 
 export const LeadCardActions = ({
@@ -17,84 +16,67 @@ export const LeadCardActions = ({
   exclusivePrice,
   canPurchaseMutual,
   canPurchaseExclusive,
-  isProfessionalProject = false
+  isProfessionalProject,
 }: LeadCardActionsProps) => {
-  if (isProfessionalProject) {
-    return (
-      <div className="space-y-3">
-        <div className="grid grid-cols-2 gap-3">
-          <Button 
-            size="lg" 
-            onClick={() => onPurchase('exclusif', 'prepaid')}
-            disabled={!canPurchaseExclusive}
-            className="flex-1 bg-[#0B1221] hover:bg-[#1EAEDB]/10 text-[#1EAEDB] border border-[#1EAEDB]/20 hover:border-[#1EAEDB]/40"
+  return (
+    <div className="space-y-4">
+      {/* Lead Mutualisé */}
+      <div className="space-y-2">
+        <div className="flex items-center justify-between">
+          <span className="text-sm font-medium text-[#1EAEDB]">Lead Mutualisé</span>
+          <span className="text-sm font-bold text-white">{mutualPrice}€</span>
+        </div>
+        <div className="grid grid-cols-2 gap-2">
+          <Button
             variant="outline"
+            className="w-full bg-[#1EAEDB]/10 hover:bg-[#1EAEDB]/20 border-[#1EAEDB]/20 hover:border-[#1EAEDB]/40"
+            onClick={() => onPurchase('mutualise', 'prepaid')}
+            disabled={!canPurchaseMutual}
           >
-            <Wallet className="h-4 w-4 mr-2" />
-            Solde prépayé ({formatPrice(exclusivePrice)}€)
+            <Wallet className="w-4 h-4 mr-2" />
+            Solde prépayé
           </Button>
-          
-          <Button 
-            size="lg" 
-            onClick={() => onPurchase('exclusif', 'direct')}
-            disabled={!canPurchaseExclusive}
-            className="flex-1 bg-[#1EAEDB] hover:bg-[#33C3F0] text-white"
+          <Button
+            variant="outline"
+            className="w-full bg-[#1EAEDB]/10 hover:bg-[#1EAEDB]/20 border-[#1EAEDB]/20 hover:border-[#1EAEDB]/40"
+            onClick={() => onPurchase('mutualise', 'direct')}
+            disabled={!canPurchaseMutual}
           >
-            <CreditCard className="h-4 w-4 mr-2" />
-            Payer ({formatPrice(exclusivePrice)}€)
+            <CreditCard className="w-4 h-4 mr-2" />
+            Payer
           </Button>
         </div>
       </div>
-    );
-  }
 
-  return (
-    <div className="space-y-3">
-      <div className="grid grid-cols-2 gap-3">
-        <Button 
-          size="lg" 
-          onClick={() => onPurchase('mutualise', 'prepaid')}
-          disabled={!canPurchaseMutual}
-          className="flex-1 bg-[#0B1221] hover:bg-[#1EAEDB]/10 text-[#1EAEDB] border border-[#1EAEDB]/20 hover:border-[#1EAEDB]/40"
-          variant="outline"
-        >
-          <Wallet className="h-4 w-4 mr-2" />
-          Solde prépayé ({formatPrice(mutualPrice)}€)
-        </Button>
-        
-        <Button 
-          size="lg" 
-          onClick={() => onPurchase('mutualise', 'direct')}
-          disabled={!canPurchaseMutual}
-          className="flex-1 bg-[#1EAEDB] hover:bg-[#33C3F0] text-white"
-        >
-          <CreditCard className="h-4 w-4 mr-2" />
-          Payer ({formatPrice(mutualPrice)}€)
-        </Button>
-      </div>
-
-      <div className="grid grid-cols-2 gap-3">
-        <Button 
-          size="lg" 
-          onClick={() => onPurchase('exclusif', 'prepaid')}
-          disabled={!canPurchaseExclusive}
-          className="flex-1 bg-[#0B1221] hover:bg-[#1EAEDB]/10 text-[#1EAEDB] border border-[#1EAEDB]/20 hover:border-[#1EAEDB]/40"
-          variant="outline"
-        >
-          <Wallet className="h-4 w-4 mr-2" />
-          Lead exclusif ({formatPrice(exclusivePrice)}€)
-        </Button>
-        
-        <Button 
-          size="lg" 
-          onClick={() => onPurchase('exclusif', 'direct')}
-          disabled={!canPurchaseExclusive}
-          className="flex-1 bg-[#1EAEDB] hover:bg-[#33C3F0] text-white"
-        >
-          <CreditCard className="h-4 w-4 mr-2" />
-          Lead exclusif ({formatPrice(exclusivePrice)}€)
-        </Button>
-      </div>
+      {/* Lead Exclusif */}
+      {!isProfessionalProject && (
+        <div className="space-y-2">
+          <div className="flex items-center justify-between">
+            <span className="text-sm font-medium text-[#1EAEDB]">Lead Exclusif</span>
+            <span className="text-sm font-bold text-white">{exclusivePrice}€</span>
+          </div>
+          <div className="grid grid-cols-2 gap-2">
+            <Button
+              variant="outline"
+              className="w-full bg-[#1EAEDB]/10 hover:bg-[#1EAEDB]/20 border-[#1EAEDB]/20 hover:border-[#1EAEDB]/40"
+              onClick={() => onPurchase('exclusif', 'prepaid')}
+              disabled={!canPurchaseExclusive}
+            >
+              <Wallet className="w-4 h-4 mr-2" />
+              Solde prépayé
+            </Button>
+            <Button
+              variant="outline"
+              className="w-full bg-[#1EAEDB]/10 hover:bg-[#1EAEDB]/20 border-[#1EAEDB]/20 hover:border-[#1EAEDB]/40"
+              onClick={() => onPurchase('exclusif', 'direct')}
+              disabled={!canPurchaseExclusive}
+            >
+              <CreditCard className="w-4 h-4 mr-2" />
+              Payer
+            </Button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
