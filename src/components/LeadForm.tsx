@@ -73,6 +73,14 @@ export const LeadForm = () => {
         })
       };
 
+      // Add console.log to debug the EmailJS parameters
+      console.log('EmailJS Parameters:', {
+        serviceId: 'service_611ohbh',
+        templateId: 'template_0qqwwzj',
+        templateParams,
+        publicKey: '12Wtu7mylEymnNxyV'
+      });
+
       await emailjs.send(
         'service_611ohbh',
         'template_0qqwwzj',
