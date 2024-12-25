@@ -74,6 +74,16 @@ const LeadManagement = () => {
     return texts[status];
   };
 
+  const handleEditClick = (lead: Lead) => {
+    setSelectedLead(lead);
+    setEditDialogOpen(true);
+  };
+
+  const handleEditClose = () => {
+    setSelectedLead(null);
+    setEditDialogOpen(false);
+  };
+
   const exportToCSV = () => {
     console.log("Exporting to CSV...");
   };
@@ -84,6 +94,7 @@ const LeadManagement = () => {
       title: "Lead mis à jour",
       description: "Les modifications ont été enregistrées avec succès.",
     });
+    handleEditClose();
   };
 
   return (
@@ -153,10 +164,7 @@ const LeadManagement = () => {
                     <Button 
                       variant="outline" 
                       size="sm"
-                      onClick={() => {
-                        setSelectedLead(lead);
-                        setEditDialogOpen(true);
-                      }}
+                      onClick={() => handleEditClick(lead)}
                     >
                       <Edit className="h-4 w-4 mr-2" />
                       Éditer
@@ -175,7 +183,7 @@ const LeadManagement = () => {
       <EditLeadDialog
         lead={selectedLead}
         open={editDialogOpen}
-        onOpenChange={setEditDialogOpen}
+        onOpenChange={handleEditClose}
         onSave={handleSaveLead}
       />
     </div>

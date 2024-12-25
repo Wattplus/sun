@@ -63,6 +63,16 @@ const InstallerManagement = () => {
     return texts[status];
   };
 
+  const handleEditClick = (installer: Installer) => {
+    setSelectedInstaller(installer);
+    setEditDialogOpen(true);
+  };
+
+  const handleEditClose = () => {
+    setSelectedInstaller(null);
+    setEditDialogOpen(false);
+  };
+
   const exportToCSV = () => {
     console.log("Exporting to CSV...");
   };
@@ -75,6 +85,7 @@ const InstallerManagement = () => {
       title: "Installateur mis à jour",
       description: "Les modifications ont été enregistrées avec succès.",
     });
+    handleEditClose();
   };
 
   return (
@@ -147,10 +158,7 @@ const InstallerManagement = () => {
                     <Button 
                       variant="outline" 
                       size="sm"
-                      onClick={() => {
-                        setSelectedInstaller(installer);
-                        setEditDialogOpen(true);
-                      }}
+                      onClick={() => handleEditClick(installer)}
                     >
                       <Edit className="h-4 w-4 mr-2" />
                       Éditer
@@ -170,7 +178,7 @@ const InstallerManagement = () => {
       <EditInstallerDialog
         installer={selectedInstaller}
         open={editDialogOpen}
-        onOpenChange={setEditDialogOpen}
+        onOpenChange={handleEditClose}
         onSave={handleSaveInstaller}
       />
     </div>
