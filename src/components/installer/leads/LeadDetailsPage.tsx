@@ -10,6 +10,7 @@ import { LeadContactInfo } from "./LeadContactInfo";
 import { LeadProjectInfo } from "./LeadProjectInfo";
 import { LeadComments } from "./LeadComments";
 import { useLeadsSync } from "@/hooks/useLeadsSync";
+import { Lead, InstallerLeadStatus } from "@/types/crm";
 
 export const LeadDetailsPage = () => {
   const { id } = useParams();
@@ -22,12 +23,14 @@ export const LeadDetailsPage = () => {
   // Utiliser le hook personnalisé pour la synchronisation des leads
   const { leads, isLoading, updateLead } = useLeadsSync();
   const lead = leads.find((l) => l.id === id);
-
   const [editedLead, setEditedLead] = useState(lead);
 
   // Mutation pour mettre à jour le lead
   const mutation = useMutation({
-    mutationFn: updateLead,
+    mutationFn: async (updatedLead: Lead) => {
+      await updateLead(updatedLead);
+      return updatedLead;
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['purchased-leads'] });
       toast({
@@ -46,7 +49,7 @@ export const LeadDetailsPage = () => {
     return <div>Lead non trouvé</div>;
   }
 
-  const handleStatusChange = (newStatus: string) => {
+  const handleStatusChange = (newStatus: InstallerLeadStatus) => {
     if (editedLead) {
       const updatedLead = { ...editedLead, installerStatus: newStatus };
       mutation.mutate(updatedLead);
@@ -97,7 +100,10 @@ export const LeadDetailsPage = () => {
           {lead.firstName} {lead.lastName}
         </h1>
         <div className="flex gap-4 items-center">
-          <Select value={lead.installerStatus} onValueChange={handleStatusChange}>
+          <Select 
+            value={lead.installerStatus} 
+            onValueChange={(value: InstallerLeadStatus) => handleStatusChange(value)}
+          >
             <SelectTrigger className="w-[200px]">
               <SelectValue placeholder="Statut" />
             </SelectTrigger>
