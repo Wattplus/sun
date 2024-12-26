@@ -1,85 +1,91 @@
-import { Bell, Calendar, LayoutDashboard, ChevronRight } from "lucide-react";
+import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { useToast } from "@/hooks/use-toast";
-import { useNavigate } from "react-router-dom";
+import { ChartBar, Users, Target, TrendingUp, Sparkles, ArrowRight } from "lucide-react";
+import { Link } from "react-router-dom";
 
 export const DashboardHeader = () => {
-  const { toast } = useToast();
-  const navigate = useNavigate();
-
-  const handleAction = (action: string) => {
-    if (action === "voir_leads") {
-      navigate("/espace-installateur/marketplace/nouveaux-leads");
-    } else {
-      toast({
-        title: "Action en cours",
-        description: `La fonctionnalité ${action} est en cours de développement`,
-      });
-    }
-  };
-
   return (
-    <div className="space-y-8">
-      {/* En-tête principal */}
-      <div className="glass-panel p-8 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-primary/10 to-background" />
-        
-        <div className="relative z-10">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-6">
-              <div className="p-4 bg-primary/10 rounded-2xl shadow-inner transition-all duration-300 hover:bg-primary/15">
-                <LayoutDashboard className="h-8 w-8 text-primary animate-pulse" />
-              </div>
-              <div className="space-y-2">
-                <h1 className="text-4xl font-bold bg-gradient-to-r from-white to-white/80 bg-clip-text text-transparent">
-                  Tableau de bord
-                </h1>
-                <p className="text-lg text-muted-foreground">
-                  Bienvenue dans votre espace installateur
-                </p>
-              </div>
-            </div>
+    <div className="space-y-6">
+      <div className="flex flex-col gap-2">
+        <h1 className="text-3xl font-bold">
+          Tableau de bord
+        </h1>
+        <p className="text-muted-foreground">
+          Bienvenue dans votre espace installateur
+        </p>
+      </div>
 
-            <div className="flex gap-4">
-              <Button 
-                variant="outline" 
-                size="lg" 
-                onClick={() => handleAction("notifications")} 
-                className="relative bg-background/50 border-primary/20 hover:border-primary/40 hover:bg-primary/5 transition-all duration-300"
-              >
-                <Bell className="h-5 w-5 text-primary" />
-                <Badge 
-                  variant="secondary" 
-                  className="absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center p-0 bg-accent text-white animate-pulse"
-                >
-                  2
-                </Badge>
-              </Button>
-              <Button 
-                variant="outline" 
-                size="lg" 
-                onClick={() => handleAction("calendrier")}
-                className="bg-background/50 border-primary/20 hover:border-primary/40 hover:bg-primary/5 transition-all duration-300"
-              >
-                <Calendar className="h-5 w-5 text-primary" />
-              </Button>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <Card className="p-6 bg-background/50 backdrop-blur-md border-primary/20">
+          <div className="flex items-center gap-4">
+            <div className="p-2 bg-primary/10 rounded-lg">
+              <ChartBar className="h-6 w-6 text-primary" />
+            </div>
+            <div>
+              <p className="text-sm text-muted-foreground">Leads Achetés</p>
+              <p className="text-2xl font-bold">42</p>
             </div>
           </div>
+        </Card>
 
-          {/* Bouton CTA principal */}
-          <Button
-            size="lg"
-            onClick={() => handleAction("voir_leads")}
-            className="mt-8 w-full py-8 text-lg font-semibold bg-gradient-to-r from-primary to-primary-light hover:from-primary-light hover:to-primary text-white shadow-lg transition-all duration-300 hover:scale-[1.02] group"
-          >
-            <span className="flex items-center justify-center gap-3">
-              Découvrir les nouveaux leads disponibles
-              <ChevronRight className="h-6 w-6 transition-transform group-hover:translate-x-1" />
-            </span>
-          </Button>
-        </div>
+        <Card className="p-6 bg-background/50 backdrop-blur-md border-primary/20">
+          <div className="flex items-center gap-4">
+            <div className="p-2 bg-primary/10 rounded-lg">
+              <Target className="h-6 w-6 text-primary" />
+            </div>
+            <div>
+              <p className="text-sm text-muted-foreground">Taux de Conversion</p>
+              <p className="text-2xl font-bold">28%</p>
+            </div>
+          </div>
+        </Card>
+
+        <Card className="p-6 bg-background/50 backdrop-blur-md border-primary/20">
+          <div className="flex items-center gap-4">
+            <div className="p-2 bg-primary/10 rounded-lg">
+              <TrendingUp className="h-6 w-6 text-primary" />
+            </div>
+            <div>
+              <p className="text-sm text-muted-foreground">CA Généré</p>
+              <p className="text-2xl font-bold">125k€</p>
+            </div>
+          </div>
+        </Card>
+
+        <Card className="p-6 bg-background/50 backdrop-blur-md border-primary/20">
+          <div className="flex items-center gap-4">
+            <div className="p-2 bg-primary/10 rounded-lg">
+              <Users className="h-6 w-6 text-primary" />
+            </div>
+            <div>
+              <p className="text-sm text-muted-foreground">Clients Actifs</p>
+              <p className="text-2xl font-bold">18</p>
+            </div>
+          </div>
+        </Card>
       </div>
+
+      <Card className="p-6 border-2 border-primary/20 bg-gradient-to-br from-primary/5 to-primary/10">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <div className="p-3 bg-primary/10 rounded-lg">
+              <Sparkles className="h-8 w-8 text-primary" />
+            </div>
+            <div>
+              <h3 className="text-xl font-semibold">Passez au niveau supérieur</h3>
+              <p className="text-muted-foreground">
+                Débloquez toutes les fonctionnalités avec notre abonnement Premium
+              </p>
+            </div>
+          </div>
+          <Link to="/espace-installateur/marketplace">
+            <Button className="gap-2" size="lg">
+              Voir les offres
+              <ArrowRight className="h-4 w-4" />
+            </Button>
+          </Link>
+        </div>
+      </Card>
     </div>
   );
 };

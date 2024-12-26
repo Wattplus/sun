@@ -5,6 +5,7 @@ import { LeadsList } from "./dashboard/LeadsList";
 import { PurchasedLeads } from "./dashboard/PurchasedLeads";
 import { Link } from "react-router-dom";
 import { mockAvailableLeads } from "./dashboard/mockAvailableLeads";
+import { StatsCards } from "./dashboard/StatsCards";
 
 export function InstallerDashboard() {
   return (
@@ -12,6 +13,7 @@ export function InstallerDashboard() {
       <InstallerBreadcrumb />
       <div className="max-w-[1600px] mx-auto space-y-8">
         <DashboardHeader />
+        <StatsCards />
         
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Nouveaux Leads */}
@@ -46,6 +48,8 @@ export function InstallerDashboard() {
             <PurchasedLeads />
           </div>
         </div>
+
+        <DashboardTabs />
       </div>
     </div>
   );
