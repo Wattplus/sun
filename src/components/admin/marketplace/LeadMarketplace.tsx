@@ -23,19 +23,19 @@ export const LeadMarketplace = () => {
   const { toast } = useToast();
   const [purchasedLeads, setPurchasedLeads] = useState<string[]>([]);
   const [selectedLeads, setSelectedLeads] = useState<Lead[]>([]);
-  const [filters, setFilters] = useState<Filters>({
-    status: 'all',
-    projectType: 'all',
-    city: '',
-  });
+  const [selectedDepartments, setSelectedDepartments] = useState<string[]>([]);
+  const [projectTypeFilter, setProjectTypeFilter] = useState<string>("all");
+  const [priceFilter, setPriceFilter] = useState<"default" | "asc" | "desc">("default");
+
+  const availableDepartments = Array.from(
+    new Set(mockLeads.map(lead => lead.postalCode.substring(0, 2)))
+  ).sort();
 
   const availableLeads = mockLeads.filter(lead => {
-    if (filters.projectType !== 'all' && lead.projectType !== filters.projectType) return false;
-    if (filters.city && !lead.city.toLowerCase().includes(filters.city.toLowerCase())) return false;
+    if (projectTypeFilter !== 'all' && lead.projectType !== projectTypeFilter) return false;
+    if (selectedDepartments.length > 0 && !selectedDepartments.includes(lead.postalCode.substring(0, 2))) return false;
     return lead.status === "qualified";
   });
-  
-  const userSubscriptionTier: SubscriptionTier = 'free';
 
   const handlePurchase = (lead: Lead) => {
     setPurchasedLeads(prev => [...prev, lead.id]);
@@ -50,11 +50,18 @@ export const LeadMarketplace = () => {
     setSelectedLeads([]);
   };
 
-  const handleFilterChange = (key: string, value: string) => {
-    setFilters(prev => ({ ...prev, [key]: value as FilterStatus }));
+  const handleDepartmentSelect = (department: string) => {
+    if (department && !selectedDepartments.includes(department)) {
+      setSelectedDepartments([...selectedDepartments, department]);
+    }
+  };
+
+  const handleDepartmentRemove = (department: string) => {
+    setSelectedDepartments(selectedDepartments.filter(d => d !== department));
   };
 
   const totalPrice = selectedLeads.reduce((sum, lead) => sum + lead.price, 0);
+  const userSubscriptionTier: SubscriptionTier = 'free';
 
   return (
     <div className="space-y-6">
@@ -80,7 +87,16 @@ export const LeadMarketplace = () => {
           </div>
         </div>
 
-        <LeadsFilters filters={filters} onFilterChange={handleFilterChange} />
+        <LeadsFilters
+          availableDepartments={availableDepartments}
+          selectedDepartments={selectedDepartments}
+          projectTypeFilter={projectTypeFilter}
+          priceFilter={priceFilter}
+          onDepartmentSelect={handleDepartmentSelect}
+          onDepartmentRemove={handleDepartmentRemove}
+          onProjectTypeChange={setProjectTypeFilter}
+          onPriceFilterChange={setPriceFilter}
+        />
 
         {selectedLeads.length > 0 && (
           <Card className="p-6 mt-6 bg-primary/5 border-primary/20">
