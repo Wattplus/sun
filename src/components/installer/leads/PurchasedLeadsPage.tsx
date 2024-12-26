@@ -24,7 +24,7 @@ export const PurchasedLeadsPage = () => {
   const filteredLeads = leads.filter(lead => {
     if (filters.status !== 'all' && lead.installerStatus !== filters.status) return false;
     if (filters.projectType !== 'all' && lead.projectType !== filters.projectType) return false;
-    if (filters.city && !lead.city.toLowerCase().includes(filters.city.toLowerCase())) return false;
+    if (filters.city && !lead.city?.toLowerCase().includes(filters.city.toLowerCase())) return false;
     return true;
   });
 
@@ -95,43 +95,56 @@ export const PurchasedLeadsPage = () => {
   };
 
   if (isLoading) {
-    return <div>Chargement...</div>;
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-background/80 to-background p-6">
+        <div className="max-w-[1600px] mx-auto">
+          <div className="flex items-center justify-center h-[60vh]">
+            <div className="animate-pulse text-primary">Chargement...</div>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   return (
-    <div className="space-y-6">
-      <InstallerBreadcrumb />
-      <div className="p-6 space-y-6">
-        <LeadsHeader
-          selectedLeads={selectedLeads}
-          onDeleteSelected={handleDeleteSelected}
-          onExportCSV={exportToCSV}
-          onExportGoogleSheets={exportToGoogleSheets}
-        />
+    <div className="min-h-screen bg-gradient-to-b from-background/80 to-background p-6">
+      <div className="max-w-[1600px] mx-auto space-y-6">
+        <InstallerBreadcrumb />
+        
+        <div className="glass-panel p-6 space-y-6">
+          <LeadsHeader
+            selectedLeads={selectedLeads}
+            onDeleteSelected={handleDeleteSelected}
+            onExportCSV={exportToCSV}
+            onExportGoogleSheets={exportToGoogleSheets}
+          />
 
-        <LeadsFilters
-          filters={filters}
-          onFilterChange={handleFilterChange}
-        />
+          <LeadsFilters
+            filters={filters}
+            onFilterChange={handleFilterChange}
+          />
 
-        <Card className="p-6">
-          <ScrollArea className="h-[calc(100vh-250px)]">
-            <Table>
-              <LeadTableHeader />
-              <TableBody>
-                {filteredLeads.map((lead) => (
-                  <LeadTableRow
-                    key={lead.id}
-                    lead={lead}
-                    isSelected={selectedLeads.some(l => l.id === lead.id)}
-                    onSelect={handleLeadSelect}
-                    onStatusChange={handleStatusChange}
-                  />
-                ))}
-              </TableBody>
-            </Table>
-          </ScrollArea>
-        </Card>
+          <Card className="glass-panel border-0">
+            <ScrollArea className="h-[calc(100vh-350px)]">
+              <div className="p-4">
+                <Table>
+                  <LeadTableHeader />
+                  <TableBody>
+                    {filteredLeads.map((lead) => (
+                      <LeadTableRow
+                        key={lead.id}
+                        lead={lead}
+                        isSelected={selectedLeads.some(l => l.id === lead.id)}
+                        onSelect={handleLeadSelect}
+                        onStatusChange={handleStatusChange}
+                      />
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            </ScrollArea>
+          </Card>
+        </div>
       </div>
     </div>
   );
