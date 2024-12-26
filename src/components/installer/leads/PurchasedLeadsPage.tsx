@@ -1,45 +1,40 @@
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { Table, TableBody } from "@/components/ui/table";
 import { Card } from "@/components/ui/card";
-import { Phone, Mail, MapPin, FileText, MessageSquare, Download, FileSpreadsheet } from "lucide-react";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Button } from "@/components/ui/button";
+import { Download, FileSpreadsheet, Trash2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { mockPurchasedLeads } from "../dashboard/mockPurchasedLeads";
 import { InstallerBreadcrumb } from "../navigation/InstallerBreadcrumb";
+import { LeadTableHeader } from "./table/LeadTableHeader";
+import { LeadTableRow } from "./table/LeadTableRow";
+import { useState } from "react";
+import { Lead } from "@/types/crm";
 
 export const PurchasedLeadsPage = () => {
   const { toast } = useToast();
+  const [selectedLeads, setSelectedLeads] = useState<Lead[]>([]);
 
-  const handleContact = (type: string, value: string) => {
-    if (type === 'phone') {
-      window.location.href = `tel:${value}`;
-    } else if (type === 'email') {
-      window.location.href = `mailto:${value}`;
+  const handleLeadSelect = (lead: Lead) => {
+    if (selectedLeads.find(l => l.id === lead.id)) {
+      setSelectedLeads(selectedLeads.filter(l => l.id !== lead.id));
+    } else {
+      setSelectedLeads([...selectedLeads, lead]);
     }
-    toast({
-      title: "Contact",
-      description: `Contact initié via ${type}`,
-    });
   };
 
-  const handleNotes = (leadId: string) => {
+  const handleDeleteSelected = () => {
     toast({
-      title: "Notes",
-      description: "Fonctionnalité de notes à venir",
+      title: "Suppression",
+      description: `${selectedLeads.length} leads ont été supprimés`,
     });
-  };
-
-  const handleMessage = (leadId: string) => {
-    toast({
-      title: "Message",
-      description: "Fonctionnalité de messagerie à venir",
-    });
+    setSelectedLeads([]);
   };
 
   const exportToCSV = () => {
-    const headers = ['Nom', 'Prénom', 'Email', 'Téléphone', 'Adresse', 'Code Postal', 'Ville', 'Type de projet', 'Budget', 'Statut'];
-    const data = mockPurchasedLeads.map(lead => [
+    const leads = selectedLeads.length > 0 ? selectedLeads : mockPurchasedLeads;
+    const headers = ['Nom', 'Prénom', 'Email', 'Téléphone', 'Adresse', 'Code Postal', 'Ville', 'Type de projet', 'Statut'];
+    const data = leads.map(lead => [
       lead.lastName,
       lead.firstName,
       lead.email,
@@ -48,7 +43,6 @@ export const PurchasedLeadsPage = () => {
       lead.postalCode,
       lead.city,
       lead.projectType === 'residential' ? 'Résidentiel' : 'Professionnel',
-      lead.budget,
       lead.status
     ]);
 
@@ -70,7 +64,6 @@ export const PurchasedLeadsPage = () => {
   };
 
   const exportToGoogleSheets = () => {
-    // Cette fonction serait à implémenter avec l'API Google Sheets
     toast({
       title: "Google Sheets",
       description: "Export vers Google Sheets à venir",
@@ -86,6 +79,16 @@ export const PurchasedLeadsPage = () => {
             Mes Leads Achetés
           </h1>
           <div className="flex gap-4">
+            {selectedLeads.length > 0 && (
+              <Button
+                variant="outline"
+                onClick={handleDeleteSelected}
+                className="gap-2 border-destructive/20 hover:border-destructive/40 hover:bg-destructive/10 text-destructive"
+              >
+                <Trash2 className="h-4 w-4" />
+                Supprimer ({selectedLeads.length})
+              </Button>
+            )}
             <Button
               variant="outline"
               onClick={exportToCSV}
@@ -107,89 +110,15 @@ export const PurchasedLeadsPage = () => {
         <Card className="p-6">
           <ScrollArea className="h-[calc(100vh-250px)]">
             <Table>
-              <TableHeader>
-                <TableRow className="bg-background/40">
-                  <TableHead className="w-[300px]">Contact</TableHead>
-                  <TableHead className="w-[250px]">Localisation</TableHead>
-                  <TableHead className="w-[150px]">Type</TableHead>
-                  <TableHead className="w-[150px]">Budget</TableHead>
-                  <TableHead className="w-[150px]">Statut</TableHead>
-                  <TableHead className="w-[200px]">Actions</TableHead>
-                </TableRow>
-              </TableHeader>
+              <LeadTableHeader />
               <TableBody>
                 {mockPurchasedLeads.map((lead) => (
-                  <TableRow key={lead.id} className="hover:bg-primary/5">
-                    <TableCell>
-                      <div className="space-y-2">
-                        <div className="font-medium">{`${lead.firstName} ${lead.lastName}`}</div>
-                        <div className="flex flex-col gap-2">
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => handleContact('phone', lead.phone)}
-                            className="justify-start gap-2 w-full"
-                          >
-                            <Phone className="h-4 w-4" />
-                            {lead.phone}
-                          </Button>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => handleContact('email', lead.email)}
-                            className="justify-start gap-2 w-full"
-                          >
-                            <Mail className="h-4 w-4" />
-                            {lead.email}
-                          </Button>
-                        </div>
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex items-start gap-2">
-                        <MapPin className="h-4 w-4 mt-1 text-primary" />
-                        <div>
-                          <div>{lead.address}</div>
-                          <div className="text-sm text-muted-foreground">{`${lead.postalCode} ${lead.city}`}</div>
-                        </div>
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <Badge variant="outline" className="bg-primary/10 text-primary border-primary/20">
-                        {lead.projectType === 'residential' ? 'Résidentiel' : 'Professionnel'}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>
-                      <span className="font-medium">{lead.budget.toLocaleString()}€</span>
-                    </TableCell>
-                    <TableCell>
-                      <Badge variant="outline" className="bg-primary/10 text-primary border-primary/20">
-                        {lead.status}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex gap-2">
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => handleNotes(lead.id)}
-                          className="gap-2"
-                        >
-                          <FileText className="h-4 w-4" />
-                          Notes
-                        </Button>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => handleMessage(lead.id)}
-                          className="gap-2"
-                        >
-                          <MessageSquare className="h-4 w-4" />
-                          Message
-                        </Button>
-                      </div>
-                    </TableCell>
-                  </TableRow>
+                  <LeadTableRow
+                    key={lead.id}
+                    lead={lead}
+                    isSelected={selectedLeads.some(l => l.id === lead.id)}
+                    onSelect={handleLeadSelect}
+                  />
                 ))}
               </TableBody>
             </Table>
