@@ -77,7 +77,7 @@ export const LeadTableRow = ({ lead, isSelected, onSelect, onStatusChange }: Lea
   return (
     <>
       <TableRow 
-        className="hover:bg-primary/5 cursor-pointer"
+        className="group hover:bg-primary/5 cursor-pointer transition-all duration-200 border-b"
         onClick={() => setIsDetailsOpen(true)}
       >
         <TableCell className="w-[50px]" onClick={(e) => e.stopPropagation()}>
@@ -88,24 +88,24 @@ export const LeadTableRow = ({ lead, isSelected, onSelect, onStatusChange }: Lea
           />
         </TableCell>
         <TableCell className="w-[120px]">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 text-muted-foreground">
             <Calendar className="h-4 w-4 text-primary" />
-            <span className="text-sm text-muted-foreground">
+            <span className="text-sm">
               {format(new Date(lead.createdAt), 'dd/MM/yyyy', { locale: fr })}
             </span>
           </div>
         </TableCell>
         <TableCell>
-          <div className="space-y-1.5">
+          <div className="space-y-2">
             <div className="flex items-center gap-2">
               <User className="h-4 w-4 text-primary" />
-              <span className="font-medium">
+              <span className="font-medium text-foreground">
                 {lead.firstName || lead.lastName ? 
                   `${lead.firstName || ''} ${lead.lastName || ''}`.trim() : 
                   "Client à contacter"}
               </span>
             </div>
-            <div className="flex flex-col gap-1">
+            <div className="flex flex-col gap-1.5">
               {lead.phone && (
                 <Button
                   variant="outline"
@@ -114,7 +114,7 @@ export const LeadTableRow = ({ lead, isSelected, onSelect, onStatusChange }: Lea
                     e.stopPropagation();
                     handleContact('phone');
                   }}
-                  className="h-8 px-2 justify-start gap-2 text-sm"
+                  className="h-8 px-2 justify-start gap-2 text-sm hover:bg-primary/5 hover:text-primary transition-colors"
                 >
                   <Phone className="h-3 w-3" />
                   {lead.phone}
@@ -128,7 +128,7 @@ export const LeadTableRow = ({ lead, isSelected, onSelect, onStatusChange }: Lea
                     e.stopPropagation();
                     handleContact('email');
                   }}
-                  className="h-8 px-2 justify-start gap-2 text-sm"
+                  className="h-8 px-2 justify-start gap-2 text-sm hover:bg-primary/5 hover:text-primary transition-colors"
                 >
                   <Mail className="h-3 w-3" />
                   {lead.email}
@@ -139,12 +139,12 @@ export const LeadTableRow = ({ lead, isSelected, onSelect, onStatusChange }: Lea
         </TableCell>
         <TableCell>
           <div className="space-y-1">
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 text-foreground">
               <MapPin className="h-4 w-4 text-primary" />
               <span>{lead.city || "Ville non renseignée"}</span>
             </div>
             {lead.postalCode && (
-              <span className="text-sm text-muted-foreground block">
+              <span className="text-sm text-muted-foreground block ml-6">
                 {lead.postalCode}
               </span>
             )}
@@ -153,7 +153,7 @@ export const LeadTableRow = ({ lead, isSelected, onSelect, onStatusChange }: Lea
         <TableCell className="w-[120px]">
           <Badge 
             variant="outline" 
-            className="bg-primary/10 text-primary border-primary/20"
+            className="bg-primary/10 text-primary border-primary/20 font-medium"
           >
             {lead.projectType === 'residential' ? 'Résidentiel' : 'Professionnel'}
           </Badge>
