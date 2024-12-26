@@ -4,6 +4,23 @@ export type InstallerStatus = "active" | "inactive" | "pending";
 export type PaymentType = "prepaid" | "per_lead";
 export type PurchaseType = "mutualise" | "exclusif";
 
+export interface Installer {
+  id: string;
+  companyName: string;
+  email: string;
+  phone: string;
+  address: string;
+  city: string;
+  postalCode: string;
+  status: InstallerStatus;
+  paymentType: PaymentType;
+  balance?: number;
+  rating?: number;
+  completedProjects?: number;
+  certifications?: string[];
+  createdAt: string;
+}
+
 export interface Lead {
   id: string;
   firstName: string;
