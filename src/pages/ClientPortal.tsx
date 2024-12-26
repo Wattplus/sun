@@ -176,6 +176,6 @@ const ClientPortal = () => {
       </main>
     </div>
   )
-}
+};
 
-export default ClientPortal
+export default ClientPortal;
