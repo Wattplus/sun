@@ -7,6 +7,8 @@ import { Lead } from "@/types/crm";
 import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { format } from "date-fns";
+import { fr } from "date-fns/locale";
 
 interface LeadDetailsDialogProps {
   lead: Lead;
@@ -40,7 +42,7 @@ export const LeadDetailsDialog = ({ lead, open, onClose, onOpenChange }: LeadDet
         id: Date.now().toString(),
         text: newComment,
         createdAt: new Date().toISOString(),
-        author: "Installateur", // À remplacer par le nom réel de l'installateur
+        author: "Installateur",
       };
       
       setComments([...comments, comment]);
@@ -58,16 +60,17 @@ export const LeadDetailsDialog = ({ lead, open, onClose, onOpenChange }: LeadDet
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-3xl">
+      <DialogContent className="max-w-3xl max-h-[90vh] flex flex-col">
         <DialogHeader className="flex flex-row items-center justify-between">
           <DialogTitle>Détails du client</DialogTitle>
           <Button variant="ghost" size="icon" onClick={onClose} className="hover:bg-gray-100">
             <X className="h-4 w-4" />
           </Button>
         </DialogHeader>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="space-y-4">
-            <ScrollArea className="h-[600px] pr-4">
+
+        <div className="flex-1 overflow-hidden">
+          <ScrollArea className="h-[calc(90vh-200px)]">
+            <div className="space-y-6 p-1">
               <ClientInfoForm 
                 onMonthlyBillUpdate={handleFormUpdate}
                 initialValues={{
@@ -87,50 +90,44 @@ export const LeadDetailsDialog = ({ lead, open, onClose, onOpenChange }: LeadDet
                   notes: lead.notes || ''
                 }}
               />
-            </ScrollArea>
-          </div>
-          
-          <div className="space-y-4">
-            <h3 className="font-medium text-lg">Suivi client</h3>
-            <ScrollArea className="h-[500px] border rounded-md p-4">
-              <div className="space-y-4">
-                {comments.map((comment) => (
-                  <div key={comment.id} className="bg-primary/5 p-4 rounded-lg space-y-2">
-                    <div className="flex justify-between items-center">
-                      <span className="font-medium text-sm">{comment.author}</span>
-                      <span className="text-xs text-muted-foreground">
-                        {new Date(comment.createdAt).toLocaleDateString('fr-FR', {
-                          day: '2-digit',
-                          month: '2-digit',
-                          year: 'numeric',
-                          hour: '2-digit',
-                          minute: '2-digit'
-                        })}
-                      </span>
+
+              <div className="space-y-4 border-t pt-6">
+                <h3 className="font-medium text-lg">Historique des commentaires</h3>
+                <div className="space-y-4">
+                  {comments.map((comment) => (
+                    <div key={comment.id} className="bg-primary/5 p-4 rounded-lg space-y-2">
+                      <div className="flex justify-between items-center">
+                        <span className="font-medium text-sm">{comment.author}</span>
+                        <span className="text-xs text-muted-foreground">
+                          {format(new Date(comment.createdAt), 'dd/MM/yyyy HH:mm', { locale: fr })}
+                        </span>
+                      </div>
+                      <p className="text-sm text-foreground">{comment.text}</p>
                     </div>
-                    <p className="text-sm">{comment.text}</p>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
-            </ScrollArea>
-            
-            <div className="flex gap-2">
-              <Textarea
-                placeholder="Ajouter un commentaire..."
-                value={newComment}
-                onChange={(e) => setNewComment(e.target.value)}
-                className="min-h-[100px]"
-              />
             </div>
-            <Button 
-              onClick={handleAddComment} 
-              className="w-full"
-              disabled={!newComment.trim()}
-            >
-              <Send className="h-4 w-4 mr-2" />
-              Ajouter un commentaire
-            </Button>
+          </ScrollArea>
+        </div>
+
+        <div className="border-t pt-4 mt-4">
+          <div className="flex gap-2">
+            <Textarea
+              placeholder="Ajouter un commentaire..."
+              value={newComment}
+              onChange={(e) => setNewComment(e.target.value)}
+              className="min-h-[80px]"
+            />
           </div>
+          <Button 
+            onClick={handleAddComment} 
+            className="w-full mt-2"
+            disabled={!newComment.trim()}
+          >
+            <Send className="h-4 w-4 mr-2" />
+            Ajouter un commentaire
+          </Button>
         </div>
       </DialogContent>
     </Dialog>
