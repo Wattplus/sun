@@ -51,6 +51,43 @@ export const PurchasedLeadsPage = () => {
     setSelectedLeads([]);
   };
 
+  const handleExportCSV = () => {
+    const csvContent = [
+      ["Prénom", "Nom", "Email", "Téléphone", "Ville", "Type de projet", "Statut"],
+      ...filteredLeads.map(lead => [
+        lead.firstName,
+        lead.lastName,
+        lead.email,
+        lead.phone,
+        lead.city,
+        lead.projectType,
+        lead.installerStatus
+      ])
+    ].map(row => row.join(",")).join("\n");
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement("a");
+    const url = URL.createObjectURL(blob);
+    link.setAttribute("href", url);
+    link.setAttribute("download", "leads.csv");
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    toast({
+      title: "Export CSV",
+      description: "Le fichier CSV a été téléchargé avec succès",
+    });
+  };
+
+  const handleExportGoogleSheets = () => {
+    toast({
+      title: "Export Google Sheets",
+      description: "Cette fonctionnalité sera bientôt disponible",
+    });
+  };
+
   if (isLoading) {
     return (
       <div className="p-4">
@@ -68,6 +105,8 @@ export const PurchasedLeadsPage = () => {
           <LeadsHeader
             selectedLeads={selectedLeads}
             onDeleteSelected={handleDeleteSelected}
+            onExportCSV={handleExportCSV}
+            onExportGoogleSheets={handleExportGoogleSheets}
           />
 
           <LeadsFilters
