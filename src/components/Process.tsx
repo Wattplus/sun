@@ -23,6 +23,13 @@ const steps = [
 ];
 
 export const Process = () => {
+  const scrollToForm = () => {
+    const formElement = document.getElementById('lead-form');
+    if (formElement) {
+      formElement.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <div className="py-24 sm:py-32 bg-gradient-to-b from-[#0B1221] to-[#1a5fb4]" id="process">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
@@ -50,7 +57,7 @@ export const Process = () => {
                   <Button
                     variant="outline"
                     className="mt-auto group hover:bg-green-500 hover:text-white hover:border-green-500 bg-white/10 border-white/20 text-white w-full"
-                    onClick={() => document.getElementById('lead-form')?.scrollIntoView({ behavior: 'smooth' })}
+                    onClick={scrollToForm}
                   >
                     En savoir plus
                     <ArrowRight className="ml-2 h-4 w-4 transform group-hover:translate-x-1 transition-transform" />
@@ -65,7 +72,7 @@ export const Process = () => {
           <Button 
             size="lg"
             className="bg-green-500 hover:bg-green-600 text-white px-8 py-6 text-lg rounded-full shadow-lg shadow-green-500/20 transform hover:scale-105 transition-transform duration-300"
-            onClick={() => document.getElementById('lead-form')?.scrollIntoView({ behavior: 'smooth' })}
+            onClick={scrollToForm}
           >
             Commencez votre projet
             <ArrowRight className="ml-2 h-5 w-5" />
