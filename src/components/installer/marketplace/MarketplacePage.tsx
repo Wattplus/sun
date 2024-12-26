@@ -4,8 +4,25 @@ import { ShoppingBag, TrendingUp, Users, ArrowRight, Sparkles, Target, BadgePerc
 import { Link } from "react-router-dom";
 import { InstallerBreadcrumb } from "../navigation/InstallerBreadcrumb";
 import { Badge } from "@/components/ui/badge";
+import { mockAvailableLeads } from "../dashboard/mockAvailableLeads";
+import { LeadCard } from "@/components/admin/marketplace/LeadCard";
+import { SubscriptionTier } from "@/types/subscription";
+import { useState } from "react";
+import { useToast } from "@/components/ui/use-toast";
 
 export const MarketplacePage = () => {
+  const [purchasedLeads, setPurchasedLeads] = useState<string[]>([]);
+  const { toast } = useToast();
+  const userSubscriptionTier: SubscriptionTier = 'free';
+
+  const handlePurchase = (leadId: string) => {
+    setPurchasedLeads(prev => [...prev, leadId]);
+    toast({
+      title: "Lead acheté avec succès",
+      description: "Le lead a été ajouté à votre liste.",
+    });
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-background/80 to-background p-6 space-y-8">
       <InstallerBreadcrumb />
@@ -34,83 +51,28 @@ export const MarketplacePage = () => {
           </div>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <Card className="p-6 space-y-4 bg-primary/5 border-primary/20 hover:border-primary/40 transition-all duration-300">
-            <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center">
-              <ShoppingBag className="h-6 w-6 text-primary" />
-            </div>
-            <h2 className="text-xl font-semibold">Nouveaux Leads</h2>
-            <p className="text-muted-foreground">
-              Accédez aux derniers projets qualifiés dans votre zone. Premiers arrivés, premiers servis !
-            </p>
-            <div className="pt-4">
-              <Link to="nouveaux-leads">
-                <Button className="w-full gap-2 bg-primary hover:bg-primary/90">
-                  Voir les leads disponibles
-                  <ArrowRight className="h-4 w-4" />
-                </Button>
-              </Link>
-            </div>
-          </Card>
-
-          <Card className="p-6 space-y-4 bg-primary/5 border-primary/20 hover:border-primary/40 transition-all duration-300">
-            <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center">
-              <Sparkles className="h-6 w-6 text-primary" />
-            </div>
-            <h2 className="text-xl font-semibold">Leads Premium</h2>
-            <p className="text-muted-foreground">
-              Leads exclusifs avec un potentiel de conversion élevé. Accès prioritaire pour nos membres Premium.
-            </p>
-            <div className="pt-4">
-              <Link to="leads-premium">
-                <Button variant="outline" className="w-full gap-2 border-primary/20 hover:bg-primary/10">
-                  Découvrir les leads Premium
-                  <ArrowRight className="h-4 w-4" />
-                </Button>
-              </Link>
-            </div>
-          </Card>
-
-          <Card className="p-6 space-y-4 bg-primary/5 border-primary/20 hover:border-primary/40 transition-all duration-300">
-            <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center">
-              <BadgePercent className="h-6 w-6 text-primary" />
-            </div>
-            <h2 className="text-xl font-semibold">Offres Spéciales</h2>
-            <p className="text-muted-foreground">
-              Packs de leads à prix avantageux. Économisez jusqu'à 30% sur vos achats en masse.
-            </p>
-            <div className="pt-4">
-              <Link to="offres-speciales">
-                <Button variant="outline" className="w-full gap-2 border-primary/20 hover:bg-primary/10">
-                  Voir les offres
-                  <ArrowRight className="h-4 w-4" />
-                </Button>
-              </Link>
-            </div>
-          </Card>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {mockAvailableLeads.map(lead => (
+            <LeadCard
+              key={lead.id}
+              lead={lead}
+              onPurchase={() => handlePurchase(lead.id)}
+              isPurchased={purchasedLeads.includes(lead.id)}
+              subscriptionTier={userSubscriptionTier}
+            />
+          ))}
         </div>
 
-        <Card className="p-8 bg-primary/5 border-primary/20">
-          <div className="grid md:grid-cols-3 gap-8">
-            <div className="text-center space-y-2">
-              <div className="text-3xl font-bold text-primary">95%</div>
-              <p className="text-muted-foreground">Taux de satisfaction client</p>
-            </div>
-            <div className="text-center space-y-2">
-              <div className="text-3xl font-bold text-primary">48h</div>
-              <p className="text-muted-foreground">Délai moyen de réponse</p>
-            </div>
-            <div className="text-center space-y-2">
-              <div className="text-3xl font-bold text-primary">+2000</div>
-              <p className="text-muted-foreground">Projets concrétisés</p>
-            </div>
+        {mockAvailableLeads.length === 0 && (
+          <div className="text-center py-12">
+            <p className="text-muted-foreground">Aucun lead disponible pour le moment.</p>
           </div>
-        </Card>
+        )}
 
         <div className="text-center">
           <Link to="nouveaux-leads">
             <Button size="lg" className="gap-2 bg-primary hover:bg-primary/90 text-lg px-8">
-              Accéder aux leads disponibles
+              Voir tous les leads disponibles
               <ArrowRight className="h-5 w-5" />
             </Button>
           </Link>
