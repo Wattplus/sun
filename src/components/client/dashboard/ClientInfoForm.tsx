@@ -26,6 +26,7 @@ interface ClientInfo {
   city: string;
   budget: string;
   projectType?: string;
+  notes?: string;
 }
 
 export const ClientInfoForm = ({ onMonthlyBillUpdate, initialValues = {} }: ClientInfoFormProps) => {
@@ -43,6 +44,7 @@ export const ClientInfoForm = ({ onMonthlyBillUpdate, initialValues = {} }: Clie
     city: initialValues.city || "",
     budget: initialValues.budget || "",
     projectType: initialValues.projectType,
+    notes: initialValues.notes || "",
   });
 
   const [errors, setErrors] = useState<{ [key: string]: string | undefined }>({});
