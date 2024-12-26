@@ -4,11 +4,12 @@ import { InstallerLayout } from "./components/installer/navigation/InstallerLayo
 import { InstallerDashboard } from "./components/installer/InstallerDashboard";
 import { MessagesPage } from "./components/installer/messages/MessagesPage";
 import { SettingsPage } from "./components/installer/settings/SettingsPage";
-import { HelpPage } from "./components/installer/help/HelpPage";
 import { ClientsPage } from "./components/installer/clients/ClientsPage";
-import { PurchasedLeadsPage } from "./components/installer/leads/PurchasedLeadsPage";
+import { HelpPage } from "./components/installer/help/HelpPage";
 import Admin from "./pages/Admin";
 import ClientPortal from "./pages/ClientPortal";
+import { PurchasedLeadsPage } from "./components/installer/leads/PurchasedLeadsPage";
+import { LeadDetailsPage } from "./components/installer/leads/LeadDetailsPage";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
         <Route path="/espace-installateur" element={<InstallerLayout />}>
           <Route index element={<InstallerDashboard />} />
           <Route path="leads" element={<PurchasedLeadsPage />} />
+          <Route path="leads/:id" element={<LeadDetailsPage />} />
           <Route path="messages" element={<MessagesPage />} />
           <Route path="clients" element={<ClientsPage />} />
           <Route path="parametres" element={<SettingsPage />} />
