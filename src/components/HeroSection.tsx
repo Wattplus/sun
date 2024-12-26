@@ -2,6 +2,13 @@ import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export const HeroSection = () => {
+  const scrollToForm = () => {
+    const formElement = document.getElementById('lead-form');
+    if (formElement) {
+      formElement.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <div className="relative min-h-[90vh] bg-gradient-to-br from-[#0B1221] via-[#1a5fb4] to-[#0B1221] text-white overflow-hidden">
       <div className="absolute inset-0">
@@ -35,7 +42,7 @@ export const HeroSection = () => {
             <Button 
               size="lg"
               className="glass-button group w-full sm:w-auto"
-              onClick={() => document.getElementById('lead-form')?.scrollIntoView({ behavior: 'smooth' })}
+              onClick={scrollToForm}
             >
               Je calcule mes aides
               <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
