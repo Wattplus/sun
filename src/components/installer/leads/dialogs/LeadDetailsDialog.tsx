@@ -3,12 +3,13 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { X, Send, Trash2 } from "lucide-react";
 import { ClientInfoForm } from "@/components/client/dashboard/ClientInfoForm";
-import { Lead } from "@/types/crm";
+import { Lead, InstallerLeadStatus } from "@/types/crm";
 import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 interface Comment {
   id: string;
@@ -22,19 +23,19 @@ interface LeadDetailsDialogProps {
   open: boolean;
   onClose: () => void;
   onOpenChange: (open: boolean) => void;
+  onStatusChange?: (leadId: string, status: InstallerLeadStatus) => void;
 }
 
-export const LeadDetailsDialog = ({ lead, open, onClose, onOpenChange }: LeadDetailsDialogProps) => {
+export const LeadDetailsDialog = ({ 
+  lead, 
+  open, 
+  onClose, 
+  onOpenChange,
+  onStatusChange 
+}: LeadDetailsDialogProps) => {
   const { toast } = useToast();
   const [newComment, setNewComment] = useState("");
   const [comments, setComments] = useState<Comment[]>([]);
-
-  const handleFormUpdate = (value: string) => {
-    toast({
-      title: "Informations mises à jour",
-      description: "Les modifications ont été enregistrées avec succès.",
-    });
-  };
 
   const handleAddComment = () => {
     if (newComment.trim()) {
@@ -63,6 +64,16 @@ export const LeadDetailsDialog = ({ lead, open, onClose, onOpenChange }: LeadDet
     });
   };
 
+  const handleStatusChange = (status: InstallerLeadStatus) => {
+    if (onStatusChange) {
+      onStatusChange(lead.id, status);
+      toast({
+        title: "Statut mis à jour",
+        description: "Le statut du lead a été mis à jour avec succès.",
+      });
+    }
+  };
+
   // Convertir le budget en string pour le formulaire
   const budgetString = lead.budget ? lead.budget.toString() : '';
 
@@ -79,6 +90,27 @@ export const LeadDetailsDialog = ({ lead, open, onClose, onOpenChange }: LeadDet
         <div className="flex-1 overflow-hidden">
           <ScrollArea className="h-[calc(90vh-200px)]">
             <div className="space-y-6 p-1">
+              <div className="flex items-center justify-between bg-primary/5 p-4 rounded-lg">
+                <h3 className="font-medium">Statut du lead</h3>
+                <Select
+                  value={lead.installerStatus || 'nouveau'}
+                  onValueChange={(value: InstallerLeadStatus) => handleStatusChange(value)}
+                >
+                  <SelectTrigger className="w-[200px]">
+                    <SelectValue placeholder="Sélectionner un statut" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="nouveau">Nouveau lead</SelectItem>
+                    <SelectItem value="contacte">Contacté</SelectItem>
+                    <SelectItem value="devis_envoye">Devis envoyé</SelectItem>
+                    <SelectItem value="rdv_planifie">RDV planifié</SelectItem>
+                    <SelectItem value="negociation">En négociation</SelectItem>
+                    <SelectItem value="signe">Signé</SelectItem>
+                    <SelectItem value="perdu">Perdu</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
               <ClientInfoForm 
                 onMonthlyBillUpdate={handleFormUpdate}
                 initialValues={{
