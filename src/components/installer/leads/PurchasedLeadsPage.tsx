@@ -3,9 +3,9 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Card } from "@/components/ui/card";
-import { mockPurchasedLeads } from "../dashboard/mockPurchasedLeads";
 import { Phone, Mail, MapPin, FileText, MessageSquare } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { mockPurchasedLeads } from "../dashboard/mockPurchasedLeads";
 
 export const PurchasedLeadsPage = () => {
   const { toast } = useToast();
@@ -38,18 +38,20 @@ export const PurchasedLeadsPage = () => {
 
   return (
     <div className="p-6 space-y-6">
-      <h1 className="text-3xl font-bold">Mes Leads Achetés</h1>
+      <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-primary-light bg-clip-text text-transparent">
+        Mes Leads Achetés
+      </h1>
       <Card className="p-6">
-        <ScrollArea className="h-[600px]">
+        <ScrollArea className="h-[calc(100vh-250px)]">
           <Table>
             <TableHeader>
-              <TableRow className="bg-primary/5">
-                <TableHead>Contact</TableHead>
-                <TableHead>Localisation</TableHead>
-                <TableHead>Projet</TableHead>
-                <TableHead>Budget</TableHead>
-                <TableHead>Statut</TableHead>
-                <TableHead>Actions</TableHead>
+              <TableRow className="bg-background/40">
+                <TableHead className="w-[300px]">Contact</TableHead>
+                <TableHead className="w-[250px]">Localisation</TableHead>
+                <TableHead className="w-[150px]">Type</TableHead>
+                <TableHead className="w-[150px]">Budget</TableHead>
+                <TableHead className="w-[150px]">Statut</TableHead>
+                <TableHead className="w-[200px]">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -58,12 +60,12 @@ export const PurchasedLeadsPage = () => {
                   <TableCell>
                     <div className="space-y-2">
                       <div className="font-medium">{`${lead.firstName} ${lead.lastName}`}</div>
-                      <div className="flex items-center gap-2">
+                      <div className="flex flex-col gap-2">
                         <Button
                           variant="outline"
                           size="sm"
                           onClick={() => handleContact('phone', lead.phone)}
-                          className="gap-2"
+                          className="justify-start gap-2 w-full"
                         >
                           <Phone className="h-4 w-4" />
                           {lead.phone}
@@ -72,7 +74,7 @@ export const PurchasedLeadsPage = () => {
                           variant="outline"
                           size="sm"
                           onClick={() => handleContact('email', lead.email)}
-                          className="gap-2"
+                          className="justify-start gap-2 w-full"
                         >
                           <Mail className="h-4 w-4" />
                           {lead.email}
@@ -82,17 +84,23 @@ export const PurchasedLeadsPage = () => {
                   </TableCell>
                   <TableCell>
                     <div className="flex items-start gap-2">
-                      <MapPin className="h-4 w-4 mt-1" />
+                      <MapPin className="h-4 w-4 mt-1 text-primary" />
                       <div>
                         <div>{lead.address}</div>
                         <div className="text-sm text-muted-foreground">{`${lead.postalCode} ${lead.city}`}</div>
                       </div>
                     </div>
                   </TableCell>
-                  <TableCell>{lead.projectType}</TableCell>
-                  <TableCell>{lead.budget.toLocaleString()}€</TableCell>
                   <TableCell>
-                    <Badge variant="outline" className="bg-primary/10 text-primary">
+                    <Badge variant="outline" className="bg-primary/10 text-primary border-primary/20">
+                      {lead.projectType === 'residential' ? 'Résidentiel' : 'Professionnel'}
+                    </Badge>
+                  </TableCell>
+                  <TableCell>
+                    <span className="font-medium">{lead.budget.toLocaleString()}€</span>
+                  </TableCell>
+                  <TableCell>
+                    <Badge variant="outline" className="bg-primary/10 text-primary border-primary/20">
                       {lead.status}
                     </Badge>
                   </TableCell>
