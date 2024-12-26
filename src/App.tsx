@@ -11,6 +11,7 @@ import Admin from "./pages/Admin";
 import ClientPortal from "./pages/ClientPortal";
 import { PurchasedLeadsPage } from "./components/installer/leads/PurchasedLeadsPage";
 import { LeadDetailsPage } from "./components/installer/leads/LeadDetailsPage";
+import { NewLeadsPage } from "./components/installer/marketplace/NewLeadsPage";
 
 // Create a client
 const queryClient = new QueryClient();
@@ -25,6 +26,7 @@ function App() {
             <Route index element={<InstallerDashboard />} />
             <Route path="leads" element={<PurchasedLeadsPage />} />
             <Route path="leads/:id" element={<LeadDetailsPage />} />
+            <Route path="marketplace/nouveaux-leads" element={<NewLeadsPage />} />
             <Route path="messages" element={<MessagesPage />} />
             <Route path="clients" element={<ClientsPage />} />
             <Route path="parametres" element={<SettingsPage />} />
