@@ -1,42 +1,36 @@
-import { TableCell, TableRow } from "@/components/ui/table"
-import { Badge } from "@/components/ui/badge"
-import { Checkbox } from "@/components/ui/checkbox"
-import { MapPin, Phone, Mail, User, CalendarDays } from "lucide-react"
-import { Lead, InstallerLeadStatus } from "@/types/crm"
-import { LeadTableActions } from "./LeadTableActions"
-import { Button } from "@/components/ui/button"
-import { useToast } from "@/hooks/use-toast"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
-import { ClientInfoForm } from "@/components/client/dashboard/ClientInfoForm"
-import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from "@/components/ui/hover-card"
-import { formatDistanceToNow } from "date-fns"
-import { fr } from "date-fns/locale"
+import { TableCell, TableRow } from "@/components/ui/table";
+import { Badge } from "@/components/ui/badge";
+import { Checkbox } from "@/components/ui/checkbox";
+import { MapPin, Phone, Mail, User } from "lucide-react";
+import { Lead, InstallerLeadStatus } from "@/types/crm";
+import { LeadTableActions } from "./LeadTableActions";
+import { Button } from "@/components/ui/button";
+import { useToast } from "@/hooks/use-toast";
+import { useState } from "react";
+import { LeadDetailsDialog } from "../dialogs/LeadDetailsDialog";
 
 interface LeadTableRowProps {
-  lead: Lead
-  isSelected: boolean
-  onSelect: (lead: Lead) => void
-  onStatusChange: (leadId: string, status: InstallerLeadStatus) => void
+  lead: Lead;
+  isSelected: boolean;
+  onSelect: (lead: Lead) => void;
+  onStatusChange: (leadId: string, status: InstallerLeadStatus) => void;
 }
 
 export const LeadTableRow = ({ lead, isSelected, onSelect, onStatusChange }: LeadTableRowProps) => {
-  const { toast } = useToast()
+  const { toast } = useToast();
+  const [isDetailsOpen, setIsDetailsOpen] = useState(false);
 
   const handleContact = (type: string) => {
     if (type === 'phone') {
-      window.location.href = `tel:${lead.phone}`
+      window.location.href = `tel:${lead.phone}`;
     } else if (type === 'email') {
-      window.location.href = `mailto:${lead.email}`
+      window.location.href = `mailto:${lead.email}`;
     }
     toast({
       title: "Contact",
       description: `Contact initié via ${type}`,
-    })
-  }
+    });
+  };
 
   const getStatusBadge = (status: InstallerLeadStatus) => {
     const statusConfig: Record<InstallerLeadStatus, { label: string; className: string }> = {
@@ -68,15 +62,15 @@ export const LeadTableRow = ({ lead, isSelected, onSelect, onStatusChange }: Lea
         label: "Perdu", 
         className: "bg-red-500/10 text-red-500 border-red-500/20" 
       }
-    }
+    };
 
-    const config = statusConfig[status || 'nouveau']
+    const config = statusConfig[status || 'nouveau'];
     return (
       <Badge variant="outline" className={config.className}>
         {config.label}
       </Badge>
-    )
-  }
+    );
+  };
 
   return (
     <TableRow className="hover:bg-primary/5">
@@ -88,63 +82,47 @@ export const LeadTableRow = ({ lead, isSelected, onSelect, onStatusChange }: Lea
         />
       </TableCell>
       <TableCell>
-        <Dialog>
-          <DialogTrigger asChild>
-            <div className="space-y-2 cursor-pointer hover:bg-primary/5 p-2 rounded">
-              <div className="flex items-center gap-2">
-                <User className="h-4 w-4 text-primary" />
-                <span className="font-medium">{lead.firstName} {lead.lastName}</span>
-              </div>
-              <div className="flex flex-col gap-1">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleContact('phone');
-                  }}
-                  className="justify-start gap-2"
-                >
-                  <Phone className="h-4 w-4" />
-                  {lead.phone}
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleContact('email');
-                  }}
-                  className="justify-start gap-2"
-                >
-                  <Mail className="h-4 w-4" />
-                  {lead.email}
-                </Button>
-              </div>
-            </div>
-          </DialogTrigger>
-          <DialogContent className="max-w-4xl">
-            <DialogHeader>
-              <DialogTitle>Détails du client</DialogTitle>
-            </DialogHeader>
-            <div className="mt-4">
-              <ClientInfoForm 
-                onMonthlyBillUpdate={() => {}}
-                initialValues={{
-                  clientType: lead.projectType === 'residential' ? 'particulier' : 'professionnel',
-                  roofType: lead.roofType || '',
-                  monthlyBillEuros: lead.monthlyBill || '',
-                  electricalType: lead.electricalType || 'monophase',
-                  address: lead.address,
-                  postalCode: lead.postalCode,
-                  city: lead.city,
-                  budget: lead.budget.toString(),
-                  projectType: lead.projectType
-                }}
-              />
-            </div>
-          </DialogContent>
-        </Dialog>
+        <div 
+          className="space-y-2 cursor-pointer hover:bg-primary/5 p-2 rounded"
+          onClick={() => setIsDetailsOpen(true)}
+        >
+          <div className="flex items-center gap-2">
+            <User className="h-4 w-4 text-primary" />
+            <span className="font-medium">{lead.firstName} {lead.lastName}</span>
+          </div>
+          <div className="flex flex-col gap-1">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={(e) => {
+                e.stopPropagation();
+                handleContact('phone');
+              }}
+              className="justify-start gap-2"
+            >
+              <Phone className="h-4 w-4" />
+              {lead.phone}
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={(e) => {
+                e.stopPropagation();
+                handleContact('email');
+              }}
+              className="justify-start gap-2"
+            >
+              <Mail className="h-4 w-4" />
+              {lead.email}
+            </Button>
+          </div>
+        </div>
+
+        <LeadDetailsDialog 
+          lead={lead}
+          open={isDetailsOpen}
+          onClose={() => setIsDetailsOpen(false)}
+        />
       </TableCell>
       <TableCell>
         <div className="space-y-1">
@@ -179,5 +157,5 @@ export const LeadTableRow = ({ lead, isSelected, onSelect, onStatusChange }: Lea
         />
       </TableCell>
     </TableRow>
-  )
-}
+  );
+};

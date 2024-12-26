@@ -4,29 +4,6 @@ export type InstallerStatus = "active" | "inactive" | "pending";
 export type PaymentType = "prepaid" | "per_lead";
 export type PurchaseType = "mutualise" | "exclusif";
 
-export interface Installer {
-  id: string;
-  companyName: string;
-  contactName: string;
-  email: string;
-  phone: string;
-  address: string;
-  zones: string[];
-  status: InstallerStatus;
-  commission: number;
-  leadsAssigned: number;
-  conversionRate: number;
-  paymentType: PaymentType;
-  certifications: {
-    qualiPV: boolean;
-    rge: boolean;
-    qualibat: boolean;
-  };
-  siret?: string;
-  siren?: string;
-  description?: string;
-}
-
 export interface Lead {
   id: string;
   firstName: string;
@@ -53,6 +30,7 @@ export interface Lead {
   roofType?: string;
   monthlyBill?: string;
   electricalType?: string;
+  lastUpdated?: string;
 }
 
 // Mock data for testing
