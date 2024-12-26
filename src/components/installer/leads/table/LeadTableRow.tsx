@@ -1,11 +1,18 @@
 import { TableCell, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
-import { MapPin, Phone, Mail } from "lucide-react";
+import { MapPin, Phone, Mail, User, CalendarDays, Euro, FileText } from "lucide-react";
 import { Lead } from "@/types/crm";
 import { LeadTableActions } from "./LeadTableActions";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
+import { formatDistanceToNow } from "date-fns";
+import { fr } from "date-fns/locale";
 
 interface LeadTableRowProps {
   lead: Lead;
@@ -16,11 +23,11 @@ interface LeadTableRowProps {
 export const LeadTableRow = ({ lead, isSelected, onSelect }: LeadTableRowProps) => {
   const { toast } = useToast();
 
-  const handleContact = (type: string, value: string) => {
+  const handleContact = (type: string) => {
     if (type === 'phone') {
-      window.location.href = `tel:${value}`;
+      window.location.href = `tel:${lead.phone}`;
     } else if (type === 'email') {
-      window.location.href = `mailto:${value}`;
+      window.location.href = `mailto:${lead.email}`;
     }
     toast({
       title: "Contact",
@@ -71,36 +78,66 @@ export const LeadTableRow = ({ lead, isSelected, onSelect }: LeadTableRowProps) 
         />
       </TableCell>
       <TableCell>
-        <div className="space-y-2">
-          <div className="font-medium">{`${lead.firstName} ${lead.lastName}`}</div>
-          <div className="flex flex-col gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => handleContact('phone', lead.phone)}
-              className="justify-start gap-2 w-full"
-            >
-              <Phone className="h-4 w-4" />
-              {lead.phone}
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => handleContact('email', lead.email)}
-              className="justify-start gap-2 w-full"
-            >
-              <Mail className="h-4 w-4" />
-              {lead.email}
-            </Button>
-          </div>
-        </div>
+        <HoverCard>
+          <HoverCardTrigger asChild>
+            <div className="space-y-2 cursor-pointer">
+              <div className="flex items-center gap-2">
+                <User className="h-4 w-4 text-primary" />
+                <span className="font-medium">{lead.firstName} {lead.lastName}</span>
+              </div>
+              <div className="flex flex-col gap-1">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => handleContact('phone')}
+                  className="justify-start gap-2"
+                >
+                  <Phone className="h-4 w-4" />
+                  {lead.phone}
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => handleContact('email')}
+                  className="justify-start gap-2"
+                >
+                  <Mail className="h-4 w-4" />
+                  {lead.email}
+                </Button>
+              </div>
+            </div>
+          </HoverCardTrigger>
+          <HoverCardContent className="w-80">
+            <div className="space-y-2">
+              <h4 className="font-medium">Détails du projet</h4>
+              <div className="text-sm space-y-1">
+                <p><span className="text-muted-foreground">Budget:</span> {lead.budget}€</p>
+                <p><span className="text-muted-foreground">Notes:</span> {lead.notes}</p>
+                <p className="flex items-center gap-2">
+                  <CalendarDays className="h-4 w-4 text-primary" />
+                  <span>
+                    Créé {formatDistanceToNow(new Date(lead.createdAt), { 
+                      addSuffix: true,
+                      locale: fr 
+                    })}
+                  </span>
+                </p>
+              </div>
+            </div>
+          </HoverCardContent>
+        </HoverCard>
       </TableCell>
       <TableCell>
-        <div className="flex items-start gap-2">
-          <MapPin className="h-4 w-4 mt-1 text-primary" />
-          <div>
-            <div>{lead.address}</div>
-            <div className="text-sm text-muted-foreground">{`${lead.postalCode} ${lead.city}`}</div>
+        <div className="space-y-1">
+          <div className="flex items-center gap-2">
+            <MapPin className="h-4 w-4 text-primary" />
+            {lead.city}
+          </div>
+          <div className="text-sm text-muted-foreground">
+            {lead.address}
+          </div>
+          <div className="text-sm text-muted-foreground">
+            {lead.postalCode}
           </div>
         </div>
       </TableCell>
