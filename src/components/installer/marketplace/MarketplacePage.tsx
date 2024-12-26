@@ -1,14 +1,14 @@
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ShoppingBag, TrendingUp, Users, ArrowRight, Sparkles, Target, BadgePercent, Euro } from "lucide-react";
-import { Link } from "react-router-dom";
+import { ShoppingBag, MapPin, Euro, Building, Home } from "lucide-react";
 import { InstallerBreadcrumb } from "../navigation/InstallerBreadcrumb";
 import { Badge } from "@/components/ui/badge";
 import { mockAvailableLeads } from "../dashboard/mockAvailableLeads";
 import { LeadCard } from "@/components/admin/marketplace/LeadCard";
 import { SubscriptionTier } from "@/types/subscription";
 import { useState } from "react";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 export const MarketplacePage = () => {
   const [purchasedLeads, setPurchasedLeads] = useState<string[]>([]);
@@ -24,43 +24,64 @@ export const MarketplacePage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background/80 to-background p-6 space-y-8">
+    <div className="min-h-screen bg-gradient-to-b from-background/80 to-background p-6">
       <InstallerBreadcrumb />
       
       <div className="max-w-6xl mx-auto space-y-8">
-        <div className="text-center space-y-4">
-          <h1 className="text-4xl font-bold bg-gradient-to-r from-primary via-primary-light to-primary bg-clip-text text-transparent">
-            Marketplace des Leads Qualifiés
-          </h1>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Développez votre activité avec des leads vérifiés et qualifiés, prêts à concrétiser leurs projets
-          </p>
-          <div className="flex flex-wrap items-center justify-center gap-4 mt-4">
-            <Badge variant="secondary" className="px-4 py-2 text-lg">
-              <TrendingUp className="w-5 h-5 mr-2" />
-              Taux de conversion moyen : 65%
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl font-bold">Leads Disponibles</h1>
+            <p className="text-muted-foreground mt-1">
+              Découvrez et achetez les derniers leads qualifiés
+            </p>
+          </div>
+          <div className="flex items-center gap-4">
+            <Badge variant="secondary" className="px-4 py-2">
+              <Euro className="w-4 h-4 mr-2" />
+              Solde: 150€
             </Badge>
-            <Badge variant="secondary" className="px-4 py-2 text-lg">
-              <Target className="w-5 h-5 mr-2" />
-              Leads géolocalisés
-            </Badge>
-            <Badge variant="secondary" className="px-4 py-2 text-lg">
-              <Euro className="w-5 h-5 mr-2" />
-              À partir de 19€
-            </Badge>
+            <Button variant="outline" className="gap-2">
+              <ShoppingBag className="w-4 h-4" />
+              Mes achats
+            </Button>
           </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {mockAvailableLeads.map(lead => (
-            <LeadCard
-              key={lead.id}
-              lead={lead}
-              onPurchase={() => handlePurchase(lead.id)}
-              isPurchased={purchasedLeads.includes(lead.id)}
-              subscriptionTier={userSubscriptionTier}
-            />
-          ))}
+          <Card className="p-6 bg-primary/5 border-primary/20">
+            <div className="space-y-4">
+              <h3 className="font-medium flex items-center gap-2">
+                <MapPin className="h-5 w-5 text-primary" />
+                Filtres
+              </h3>
+              <div className="space-y-2">
+                <Button variant="outline" className="w-full justify-start gap-2">
+                  <Home className="w-4 h-4" />
+                  Résidentiel
+                </Button>
+                <Button variant="outline" className="w-full justify-start gap-2">
+                  <Building className="w-4 h-4" />
+                  Professionnel
+                </Button>
+              </div>
+            </div>
+          </Card>
+
+          <div className="lg:col-span-2">
+            <ScrollArea className="h-[600px] pr-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {mockAvailableLeads.map(lead => (
+                  <LeadCard
+                    key={lead.id}
+                    lead={lead}
+                    onPurchase={() => handlePurchase(lead.id)}
+                    isPurchased={purchasedLeads.includes(lead.id)}
+                    subscriptionTier={userSubscriptionTier}
+                  />
+                ))}
+              </div>
+            </ScrollArea>
+          </div>
         </div>
 
         {mockAvailableLeads.length === 0 && (
@@ -68,15 +89,6 @@ export const MarketplacePage = () => {
             <p className="text-muted-foreground">Aucun lead disponible pour le moment.</p>
           </div>
         )}
-
-        <div className="text-center">
-          <Link to="nouveaux-leads">
-            <Button size="lg" className="gap-2 bg-primary hover:bg-primary/90 text-lg px-8">
-              Voir tous les leads disponibles
-              <ArrowRight className="h-5 w-5" />
-            </Button>
-          </Link>
-        </div>
       </div>
     </div>
   );
