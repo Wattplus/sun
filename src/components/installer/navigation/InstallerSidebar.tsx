@@ -67,22 +67,25 @@ export function InstallerSidebar() {
   const location = useLocation()
 
   return (
-    <Sidebar>
+    <Sidebar className="bg-gradient-to-b from-background/80 to-background border-r border-primary/10">
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>Navigation</SidebarGroupLabel>
+          <SidebarGroupLabel className="text-lg font-semibold text-primary px-4 py-2">
+            Navigation
+          </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {menuItems.map((item) => (
-                <SidebarMenuItem key={item.path}>
+                <SidebarMenuItem key={item.path} className="px-2">
                   <SidebarMenuButton 
                     asChild
                     isActive={location.pathname === item.path}
+                    className="h-12 text-base font-medium hover:bg-primary/10 data-[active=true]:bg-primary/20"
                     tooltip={item.title}
                   >
-                    <Link to={item.path}>
-                      <item.icon className="h-4 w-4" />
-                      <span>{item.title}</span>
+                    <Link to={item.path} className="flex items-center gap-3">
+                      <item.icon className="h-5 w-5" />
+                      <span className="text-base">{item.title}</span>
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
