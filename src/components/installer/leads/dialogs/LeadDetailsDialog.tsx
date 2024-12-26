@@ -37,6 +37,13 @@ export const LeadDetailsDialog = ({
   const [newComment, setNewComment] = useState("");
   const [comments, setComments] = useState<Comment[]>([]);
 
+  const handleFormUpdate = () => {
+    toast({
+      title: "Informations mises à jour",
+      description: "Les modifications ont été enregistrées avec succès.",
+    });
+  };
+
   const handleAddComment = () => {
     if (newComment.trim()) {
       const comment: Comment = {
