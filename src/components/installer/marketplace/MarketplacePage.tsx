@@ -1,6 +1,6 @@
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ShoppingBag, MapPin, Euro } from "lucide-react";
+import { ShoppingBag, MapPin, Euro, Building, Home } from "lucide-react";
 import { InstallerBreadcrumb } from "../navigation/InstallerBreadcrumb";
 import { Badge } from "@/components/ui/badge";
 import { mockAvailableLeads } from "../dashboard/mockAvailableLeads";
@@ -13,6 +13,7 @@ import { Lead } from "@/types/crm";
 
 export const MarketplacePage = () => {
   const [availableLeads, setAvailableLeads] = useState<Lead[]>(mockAvailableLeads);
+  const [filter, setFilter] = useState<'all' | 'residential' | 'professional'>('all');
   const { toast } = useToast();
   const userSubscriptionTier: SubscriptionTier = 'free';
 
@@ -23,6 +24,11 @@ export const MarketplacePage = () => {
       description: "Le lead a été ajouté à votre liste.",
     });
   };
+
+  const filteredLeads = availableLeads.filter(lead => {
+    if (filter === 'all') return true;
+    return lead.projectType === filter;
+  });
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background/80 to-background p-6">
@@ -36,10 +42,16 @@ export const MarketplacePage = () => {
               Découvrez et achetez les derniers leads qualifiés
             </p>
           </div>
-          <Badge variant="secondary" className="px-4 py-2">
-            <Euro className="w-4 h-4 mr-2" />
-            Solde: 150€
-          </Badge>
+          <div className="flex items-center gap-4">
+            <Badge variant="secondary" className="px-4 py-2">
+              <Euro className="w-4 h-4 mr-2" />
+              Solde: 150€
+            </Badge>
+            <Button variant="outline" className="gap-2">
+              <ShoppingBag className="w-4 h-4" />
+              Mes achats
+            </Button>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -49,17 +61,39 @@ export const MarketplacePage = () => {
                 <MapPin className="h-5 w-5 text-primary" />
                 Filtres
               </h3>
-              <Button variant="outline" className="w-full justify-start gap-2">
-                <ShoppingBag className="w-4 h-4" />
-                Tous les leads
-              </Button>
+              <div className="space-y-2">
+                <Button 
+                  variant={filter === 'all' ? "default" : "outline"} 
+                  className="w-full justify-start gap-2"
+                  onClick={() => setFilter('all')}
+                >
+                  <ShoppingBag className="w-4 h-4" />
+                  Tous les leads
+                </Button>
+                <Button 
+                  variant={filter === 'residential' ? "default" : "outline"} 
+                  className="w-full justify-start gap-2"
+                  onClick={() => setFilter('residential')}
+                >
+                  <Home className="w-4 h-4" />
+                  Résidentiel
+                </Button>
+                <Button 
+                  variant={filter === 'professional' ? "default" : "outline"} 
+                  className="w-full justify-start gap-2"
+                  onClick={() => setFilter('professional')}
+                >
+                  <Building className="w-4 h-4" />
+                  Professionnel
+                </Button>
+              </div>
             </div>
           </Card>
 
           <div className="md:col-span-2">
             <ScrollArea className="h-[600px] pr-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {availableLeads.map(lead => (
+                {filteredLeads.map(lead => (
                   <LeadCard
                     key={lead.id}
                     lead={lead}
@@ -73,7 +107,7 @@ export const MarketplacePage = () => {
           </div>
         </div>
 
-        {availableLeads.length === 0 && (
+        {filteredLeads.length === 0 && (
           <div className="text-center py-12">
             <p className="text-muted-foreground">Aucun lead disponible pour le moment.</p>
           </div>
