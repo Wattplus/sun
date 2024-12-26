@@ -7,18 +7,23 @@ export type PurchaseType = "mutualise" | "exclusif";
 export interface Installer {
   id: string;
   companyName: string;
+  contactName: string;
   email: string;
   phone: string;
   address: string;
-  city: string;
-  postalCode: string;
+  zones: string[];
   status: InstallerStatus;
+  commission: number;
+  leadsAssigned: number;
+  conversionRate: number;
   paymentType: PaymentType;
-  balance?: number;
-  rating?: number;
-  completedProjects?: number;
-  certifications?: string[];
-  createdAt: string;
+  certifications: {
+    qualiPV: boolean;
+    rge: boolean;
+    qualibat: boolean;
+  };
+  siret?: string;
+  siren?: string;
 }
 
 export interface Lead {
