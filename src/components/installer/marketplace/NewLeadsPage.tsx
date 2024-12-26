@@ -34,7 +34,7 @@ export const NewLeadsPage = () => {
   };
 
   const handleViewAllLeads = () => {
-    navigate('/espace-installateur/leads');
+    navigate('/espace-installateur/marketplace/nouveaux-leads');
   };
 
   return (
