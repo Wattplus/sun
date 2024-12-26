@@ -29,11 +29,11 @@ export const PurchasedLeadsPage = () => {
   });
 
   const handleLeadSelect = (lead: Lead) => {
-    if (selectedLeads.find(l => l.id === lead.id)) {
-      setSelectedLeads(selectedLeads.filter(l => l.id !== lead.id));
-    } else {
-      setSelectedLeads([...selectedLeads, lead]);
-    }
+    setSelectedLeads(prev => 
+      prev.find(l => l.id === lead.id) 
+        ? prev.filter(l => l.id !== lead.id)
+        : [...prev, lead]
+    );
   };
 
   const handleStatusChange = (leadId: string, status: InstallerLeadStatus) => {
@@ -51,82 +51,33 @@ export const PurchasedLeadsPage = () => {
     setSelectedLeads([]);
   };
 
-  const exportToCSV = () => {
-    const leadsToExport = selectedLeads.length > 0 ? selectedLeads : leads;
-    const headers = ['Nom', 'Prénom', 'Email', 'Téléphone', 'Adresse', 'Code Postal', 'Ville', 'Type de projet', 'Statut'];
-    const data = leadsToExport.map(lead => [
-      lead.lastName || '',
-      lead.firstName || '',
-      lead.email || '',
-      lead.phone || '',
-      lead.address || '',
-      lead.postalCode || '',
-      lead.city || '',
-      lead.projectType === 'residential' ? 'Résidentiel' : 'Professionnel',
-      lead.installerStatus || 'nouveau'
-    ]);
-
-    const csvContent = [
-      headers.join(','),
-      ...data.map(row => row.join(','))
-    ].join('\n');
-
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = 'leads_achetes.csv';
-    link.click();
-    
-    toast({
-      title: "Export réussi",
-      description: "Le fichier CSV a été téléchargé",
-    });
-  };
-
-  const exportToGoogleSheets = () => {
-    toast({
-      title: "Google Sheets",
-      description: "Export vers Google Sheets à venir",
-    });
-  };
-
-  const handleFilterChange = (key: string, value: string) => {
-    setFilters(prev => ({ ...prev, [key]: value }));
-  };
-
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-background/80 to-background p-6">
-        <div className="max-w-[1600px] mx-auto">
-          <div className="flex items-center justify-center h-[60vh]">
-            <div className="animate-pulse text-primary">Chargement...</div>
-          </div>
-        </div>
+      <div className="p-4">
+        <div className="animate-pulse text-primary">Chargement...</div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background/80 to-background p-6">
-      <div className="max-w-[1600px] mx-auto space-y-6">
-        <InstallerBreadcrumb />
-        
-        <div className="glass-panel p-6 space-y-6 bg-background/95 backdrop-blur-sm border border-primary/10 rounded-lg shadow-lg">
+    <div className="space-y-4 p-4">
+      <InstallerBreadcrumb />
+      
+      <div className="bg-background/95 backdrop-blur-sm border border-primary/10 rounded-lg shadow-lg">
+        <div className="p-4 space-y-4">
           <LeadsHeader
             selectedLeads={selectedLeads}
             onDeleteSelected={handleDeleteSelected}
-            onExportCSV={exportToCSV}
-            onExportGoogleSheets={exportToGoogleSheets}
           />
 
           <LeadsFilters
             filters={filters}
-            onFilterChange={handleFilterChange}
+            onFilterChange={(key, value) => setFilters(prev => ({ ...prev, [key]: value }))}
           />
 
-          <Card className="glass-panel border-0 bg-background/60">
-            <ScrollArea className="h-[calc(100vh-350px)]">
-              <div className="p-4">
+          <Card className="border-0 bg-background/60">
+            <ScrollArea className="h-[calc(100vh-280px)]">
+              <div className="p-2">
                 <Table>
                   <LeadTableHeader />
                   <TableBody>

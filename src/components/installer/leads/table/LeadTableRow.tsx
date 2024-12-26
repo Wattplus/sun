@@ -76,32 +76,29 @@ export const LeadTableRow = ({ lead, isSelected, onSelect, onStatusChange }: Lea
 
   return (
     <TableRow className="hover:bg-primary/5">
-      <TableCell>
+      <TableCell className="w-[50px]">
         <Checkbox
           checked={isSelected}
           onCheckedChange={() => onSelect(lead)}
           className="data-[state=checked]:bg-primary data-[state=checked]:border-primary"
         />
       </TableCell>
-      <TableCell>
+      <TableCell className="w-[120px]">
         <div className="flex items-center gap-2">
           <Calendar className="h-4 w-4 text-primary" />
           <span className="text-sm text-muted-foreground">
-            {format(new Date(lead.createdAt), 'dd MMMM yyyy', { locale: fr })}
+            {format(new Date(lead.createdAt), 'dd/MM/yyyy', { locale: fr })}
           </span>
         </div>
       </TableCell>
       <TableCell>
-        <div 
-          className="space-y-2 cursor-pointer hover:bg-primary/5 p-2 rounded"
-          onClick={() => setIsDetailsOpen(true)}
-        >
+        <div className="space-y-1.5">
           <div className="flex items-center gap-2">
             <User className="h-4 w-4 text-primary" />
             <span className="font-medium">
-              {lead.firstName && lead.lastName 
-                ? `${lead.firstName} ${lead.lastName}`
-                : "Client à contacter"}
+              {lead.firstName || lead.lastName ? 
+                `${lead.firstName || ''} ${lead.lastName || ''}`.trim() : 
+                "Client à contacter"}
             </span>
           </div>
           <div className="flex flex-col gap-1">
@@ -109,13 +106,10 @@ export const LeadTableRow = ({ lead, isSelected, onSelect, onStatusChange }: Lea
               <Button
                 variant="outline"
                 size="sm"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleContact('phone');
-                }}
-                className="justify-start gap-2"
+                onClick={() => handleContact('phone')}
+                className="h-8 px-2 justify-start gap-2 text-sm"
               >
-                <Phone className="h-4 w-4" />
+                <Phone className="h-3 w-3" />
                 {lead.phone}
               </Button>
             )}
@@ -123,44 +117,30 @@ export const LeadTableRow = ({ lead, isSelected, onSelect, onStatusChange }: Lea
               <Button
                 variant="outline"
                 size="sm"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleContact('email');
-                }}
-                className="justify-start gap-2"
+                onClick={() => handleContact('email')}
+                className="h-8 px-2 justify-start gap-2 text-sm"
               >
-                <Mail className="h-4 w-4" />
+                <Mail className="h-3 w-3" />
                 {lead.email}
               </Button>
             )}
           </div>
         </div>
-
-        <LeadDetailsDialog 
-          lead={lead}
-          open={isDetailsOpen}
-          onClose={() => setIsDetailsOpen(false)}
-        />
       </TableCell>
       <TableCell>
         <div className="space-y-1">
           <div className="flex items-center gap-2">
             <MapPin className="h-4 w-4 text-primary" />
-            {lead.city || "Ville non renseignée"}
+            <span>{lead.city || "Ville non renseignée"}</span>
           </div>
-          {lead.address && (
-            <div className="text-sm text-muted-foreground">
-              {lead.address}
-            </div>
-          )}
           {lead.postalCode && (
-            <div className="text-sm text-muted-foreground">
+            <span className="text-sm text-muted-foreground block">
               {lead.postalCode}
-            </div>
+            </span>
           )}
         </div>
       </TableCell>
-      <TableCell>
+      <TableCell className="w-[120px]">
         <Badge 
           variant="outline" 
           className="bg-primary/10 text-primary border-primary/20"
@@ -168,10 +148,10 @@ export const LeadTableRow = ({ lead, isSelected, onSelect, onStatusChange }: Lea
           {lead.projectType === 'residential' ? 'Résidentiel' : 'Professionnel'}
         </Badge>
       </TableCell>
-      <TableCell>
+      <TableCell className="w-[120px]">
         {getStatusBadge(lead.installerStatus || 'nouveau')}
       </TableCell>
-      <TableCell>
+      <TableCell className="w-[100px]">
         <LeadTableActions 
           leadId={lead.id} 
           currentStatus={lead.installerStatus || 'nouveau'} 
