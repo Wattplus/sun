@@ -1,14 +1,14 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { mockPurchasedLeads } from "../dashboard/mockPurchasedLeads";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
-import { Input } from "@/components/ui/input";
 import { InstallerBreadcrumb } from "../navigation/InstallerBreadcrumb";
-import { Edit2, Save } from "lucide-react";
+import { Edit2, Save, X } from "lucide-react";
+import { LeadContactInfo } from "./LeadContactInfo";
+import { LeadProjectInfo } from "./LeadProjectInfo";
+import { LeadComments } from "./LeadComments";
 
 export const LeadDetailsPage = () => {
   const { id } = useParams();
@@ -54,6 +54,11 @@ export const LeadDetailsPage = () => {
     });
   };
 
+  const handleCancelEdit = () => {
+    setIsEditing(false);
+    setEditedLead(lead);
+  };
+
   return (
     <div className="space-y-6 p-6">
       <InstallerBreadcrumb />
@@ -77,188 +82,47 @@ export const LeadDetailsPage = () => {
               <SelectItem value="perdu">Perdu</SelectItem>
             </SelectContent>
           </Select>
-          <Button 
-            variant={isEditing ? "default" : "outline"}
-            onClick={() => isEditing ? handleSaveChanges() : setIsEditing(true)}
-          >
-            {isEditing ? (
-              <>
+          {isEditing ? (
+            <div className="flex gap-2">
+              <Button variant="destructive" onClick={handleCancelEdit}>
+                <X className="w-4 h-4 mr-2" />
+                Annuler
+              </Button>
+              <Button onClick={handleSaveChanges}>
                 <Save className="w-4 h-4 mr-2" />
                 Sauvegarder
-              </>
-            ) : (
-              <>
-                <Edit2 className="w-4 h-4 mr-2" />
-                Modifier
-              </>
-            )}
-          </Button>
+              </Button>
+            </div>
+          ) : (
+            <Button onClick={() => setIsEditing(true)}>
+              <Edit2 className="w-4 h-4 mr-2" />
+              Modifier
+            </Button>
+          )}
         </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <Card>
-          <CardHeader>
-            <CardTitle>Informations de contact</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            {isEditing ? (
-              <>
-                <div className="space-y-2">
-                  <label className="text-sm text-muted-foreground">Email</label>
-                  <Input 
-                    value={editedLead?.email} 
-                    onChange={(e) => setEditedLead({...editedLead!, email: e.target.value})}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <label className="text-sm text-muted-foreground">Téléphone</label>
-                  <Input 
-                    value={editedLead?.phone}
-                    onChange={(e) => setEditedLead({...editedLead!, phone: e.target.value})}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <label className="text-sm text-muted-foreground">Adresse</label>
-                  <Input 
-                    value={editedLead?.address}
-                    onChange={(e) => setEditedLead({...editedLead!, address: e.target.value})}
-                  />
-                  <Input 
-                    value={editedLead?.postalCode}
-                    onChange={(e) => setEditedLead({...editedLead!, postalCode: e.target.value})}
-                    className="mt-2"
-                  />
-                  <Input 
-                    value={editedLead?.city}
-                    onChange={(e) => setEditedLead({...editedLead!, city: e.target.value})}
-                    className="mt-2"
-                  />
-                </div>
-              </>
-            ) : (
-              <>
-                <div>
-                  <p className="text-sm text-muted-foreground">Email</p>
-                  <p className="font-medium">{lead.email}</p>
-                </div>
-                <div>
-                  <p className="text-sm text-muted-foreground">Téléphone</p>
-                  <p className="font-medium">{lead.phone}</p>
-                </div>
-                <div>
-                  <p className="text-sm text-muted-foreground">Adresse</p>
-                  <p className="font-medium">
-                    {lead.address}
-                    <br />
-                    {lead.postalCode} {lead.city}
-                  </p>
-                </div>
-              </>
-            )}
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Détails du projet</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            {isEditing ? (
-              <>
-                <div className="space-y-2">
-                  <label className="text-sm text-muted-foreground">Type de projet</label>
-                  <Input 
-                    value={editedLead?.projectType}
-                    onChange={(e) => setEditedLead({...editedLead!, projectType: e.target.value})}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <label className="text-sm text-muted-foreground">Budget</label>
-                  <Input 
-                    type="number"
-                    value={editedLead?.budget}
-                    onChange={(e) => setEditedLead({...editedLead!, budget: Number(e.target.value)})}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <label className="text-sm text-muted-foreground">Type de toit</label>
-                  <Input 
-                    value={editedLead?.roofType || ""}
-                    onChange={(e) => setEditedLead({...editedLead!, roofType: e.target.value})}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <label className="text-sm text-muted-foreground">Facture mensuelle</label>
-                  <Input 
-                    value={editedLead?.monthlyBill || ""}
-                    onChange={(e) => setEditedLead({...editedLead!, monthlyBill: e.target.value})}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <label className="text-sm text-muted-foreground">Type électrique</label>
-                  <Input 
-                    value={editedLead?.electricalType || ""}
-                    onChange={(e) => setEditedLead({...editedLead!, electricalType: e.target.value})}
-                  />
-                </div>
-              </>
-            ) : (
-              <>
-                <div>
-                  <p className="text-sm text-muted-foreground">Type de projet</p>
-                  <p className="font-medium">{lead.projectType}</p>
-                </div>
-                <div>
-                  <p className="text-sm text-muted-foreground">Budget</p>
-                  <p className="font-medium">{lead.budget}€</p>
-                </div>
-                <div>
-                  <p className="text-sm text-muted-foreground">Type de toit</p>
-                  <p className="font-medium">{lead.roofType || "Non spécifié"}</p>
-                </div>
-                <div>
-                  <p className="text-sm text-muted-foreground">Facture mensuelle</p>
-                  <p className="font-medium">{lead.monthlyBill || "Non spécifié"}€</p>
-                </div>
-                <div>
-                  <p className="text-sm text-muted-foreground">Type électrique</p>
-                  <p className="font-medium">{lead.electricalType || "Non spécifié"}</p>
-                </div>
-              </>
-            )}
-          </CardContent>
-        </Card>
+        <LeadContactInfo 
+          lead={lead}
+          isEditing={isEditing}
+          editedLead={editedLead!}
+          setEditedLead={setEditedLead}
+        />
+        <LeadProjectInfo 
+          lead={lead}
+          isEditing={isEditing}
+          editedLead={editedLead!}
+          setEditedLead={setEditedLead}
+        />
       </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Commentaires</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            <div className="flex gap-4">
-              <Textarea
-                placeholder="Ajouter un commentaire..."
-                value={comment}
-                onChange={(e) => setComment(e.target.value)}
-                className="flex-1"
-              />
-              <Button onClick={handleAddComment}>Ajouter</Button>
-            </div>
-            <div className="space-y-4">
-              {comments.map((comment, index) => (
-                <div key={index} className="p-4 rounded-lg bg-muted">
-                  <p className="text-sm text-muted-foreground mb-2">
-                    {comment.date}
-                  </p>
-                  <p>{comment.text}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+      <LeadComments 
+        comment={comment}
+        setComment={setComment}
+        comments={comments}
+        handleAddComment={handleAddComment}
+      />
     </div>
   );
 };
