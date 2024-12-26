@@ -2,7 +2,7 @@ import { Card } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Table, TableBody } from "@/components/ui/table";
 import { useToast } from "@/hooks/use-toast";
-import { Lead } from "@/types/crm";
+import { Lead, InstallerLeadStatus } from "@/types/crm";
 import { useState } from "react";
 import { InstallerBreadcrumb } from "../navigation/InstallerBreadcrumb";
 import { LeadTableHeader } from "./table/LeadTableHeader";
@@ -16,8 +16,8 @@ export const PurchasedLeadsPage = () => {
   const { leads, isLoading, updateLead } = useLeadsSync();
   const [selectedLeads, setSelectedLeads] = useState<Lead[]>([]);
   const [filters, setFilters] = useState({
-    status: 'all',
-    projectType: 'all',
+    status: 'all' as 'all' | InstallerLeadStatus,
+    projectType: 'all' as 'all' | string,
     city: ''
   });
 
@@ -36,7 +36,7 @@ export const PurchasedLeadsPage = () => {
     }
   };
 
-  const handleStatusChange = (leadId: string, status: string) => {
+  const handleStatusChange = (leadId: string, status: InstallerLeadStatus) => {
     const lead = leads.find(l => l.id === leadId);
     if (lead) {
       updateLead({ ...lead, installerStatus: status });
