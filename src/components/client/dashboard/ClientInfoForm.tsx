@@ -1,17 +1,27 @@
 import { useState } from "react";
 import { Card } from "@/components/ui/card";
-import { useToast } from "@/hooks/use-toast";
-import { Save, Lock } from "lucide-react";
-import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
+import { Save } from "lucide-react";
+import { motion } from "framer-motion";
+import { ClientTypeSelect } from "./ClientTypeSelect";
 import { RoofTypeSelect } from "./RoofTypeSelect";
 import { MonthlyBillInput } from "./MonthlyBillInput";
-import { AddressFields } from "./AddressFields";
 import { ElectricalTypeSelect } from "./ElectricalTypeSelect";
+import { AddressFields } from "./AddressFields";
 import { BudgetInput } from "./BudgetInput";
-import { ClientTypeSelect } from "./ClientTypeSelect";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+
+interface ClientInfoFormProps {
+  onMonthlyBillUpdate?: (value: string) => void;
+  initialValues?: Partial<ClientInfo>;
+}
 
 interface ClientInfo {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
   clientType: string;
   roofType: string;
   monthlyBillEuros: string;
@@ -20,26 +30,24 @@ interface ClientInfo {
   postalCode: string;
   city: string;
   budget: string;
-  projectType: string;
+  projectType?: string;
 }
 
-interface Props {
-  onMonthlyBillUpdate: (value: string) => void;
-  initialValues?: Partial<ClientInfo>;
-}
-
-export const ClientInfoForm = ({ onMonthlyBillUpdate, initialValues }: Props) => {
-  const { toast } = useToast();
+export const ClientInfoForm = ({ onMonthlyBillUpdate, initialValues = {} }: ClientInfoFormProps) => {
   const [clientInfo, setClientInfo] = useState<ClientInfo>({
-    clientType: initialValues?.clientType || "",
-    roofType: initialValues?.roofType || "",
-    monthlyBillEuros: initialValues?.monthlyBillEuros || "",
-    electricalType: initialValues?.electricalType || "monophase",
-    address: initialValues?.address || "",
-    postalCode: initialValues?.postalCode || "75001",
-    city: initialValues?.city || "",
-    budget: initialValues?.budget || "15000",
-    projectType: initialValues?.projectType || "Installation Panneaux Solaires"
+    firstName: initialValues.firstName || "",
+    lastName: initialValues.lastName || "",
+    email: initialValues.email || "",
+    phone: initialValues.phone || "",
+    clientType: initialValues.clientType || "",
+    roofType: initialValues.roofType || "",
+    monthlyBillEuros: initialValues.monthlyBillEuros || "",
+    electricalType: initialValues.electricalType || "monophase",
+    address: initialValues.address || "",
+    postalCode: initialValues.postalCode || "",
+    city: initialValues.city || "",
+    budget: initialValues.budget || "",
+    projectType: initialValues.projectType,
   });
 
   const [errors, setErrors] = useState<{ [key: string]: string | undefined }>({});
@@ -47,6 +55,10 @@ export const ClientInfoForm = ({ onMonthlyBillUpdate, initialValues }: Props) =>
   const validateForm = () => {
     const newErrors: { [key: string]: string | undefined } = {};
     
+    if (!clientInfo.firstName) newErrors.firstName = "Le prénom est requis";
+    if (!clientInfo.lastName) newErrors.lastName = "Le nom est requis";
+    if (!clientInfo.email) newErrors.email = "L'email est requis";
+    if (!clientInfo.phone) newErrors.phone = "Le téléphone est requis";
     if (!clientInfo.clientType) newErrors.clientType = "Le type de client est requis";
     if (!clientInfo.roofType) newErrors.roofType = "Le type de toit est requis";
     if (!clientInfo.monthlyBillEuros) newErrors.monthlyBillEuros = "La facture mensuelle est requise";
@@ -61,34 +73,24 @@ export const ClientInfoForm = ({ onMonthlyBillUpdate, initialValues }: Props) =>
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setClientInfo(prev => ({ ...prev, [name]: value }));
-    setErrors(prev => ({ ...prev, [name]: undefined }));
-    
-    if (name === "monthlyBillEuros") {
+    setClientInfo((prev) => ({ ...prev, [name]: value }));
+    setErrors((prev) => ({ ...prev, [name]: undefined }));
+
+    if (name === "monthlyBillEuros" && onMonthlyBillUpdate) {
       onMonthlyBillUpdate(value);
     }
   };
 
-  const handleSelectChange = (value: string, name: string) => {
-    setClientInfo(prev => ({ ...prev, [name]: value }));
-    setErrors(prev => ({ ...prev, [name]: undefined }));
+  const handleSelectChange = (value: string, field: keyof ClientInfo) => {
+    setClientInfo((prev) => ({ ...prev, [field]: value }));
+    setErrors((prev) => ({ ...prev, [field]: undefined }));
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (validateForm()) {
-      const maskedInfo = {
-        ...clientInfo,
-        address: "•".repeat(clientInfo.address.length),
-        city: "•".repeat(clientInfo.city.length),
-      };
-      
-      console.log("Données masquées:", maskedInfo);
-      
-      toast({
-        title: "Informations mises à jour",
-        description: "Vos informations ont été enregistrées avec succès.",
-      });
+      console.log("Form submitted:", clientInfo);
+      // Handle form submission
     }
   };
 
@@ -103,6 +105,58 @@ export const ClientInfoForm = ({ onMonthlyBillUpdate, initialValues }: Props) =>
         </div>
 
         <div className="grid gap-4 md:gap-6">
+          <div className="grid md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="firstName">Prénom</Label>
+              <Input
+                id="firstName"
+                name="firstName"
+                value={clientInfo.firstName}
+                onChange={handleChange}
+                className={errors.firstName ? "border-red-500" : ""}
+              />
+              {errors.firstName && <p className="text-sm text-red-500">{errors.firstName}</p>}
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="lastName">Nom</Label>
+              <Input
+                id="lastName"
+                name="lastName"
+                value={clientInfo.lastName}
+                onChange={handleChange}
+                className={errors.lastName ? "border-red-500" : ""}
+              />
+              {errors.lastName && <p className="text-sm text-red-500">{errors.lastName}</p>}
+            </div>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="email">Email</Label>
+              <Input
+                id="email"
+                name="email"
+                type="email"
+                value={clientInfo.email}
+                onChange={handleChange}
+                className={errors.email ? "border-red-500" : ""}
+              />
+              {errors.email && <p className="text-sm text-red-500">{errors.email}</p>}
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="phone">Téléphone</Label>
+              <Input
+                id="phone"
+                name="phone"
+                type="tel"
+                value={clientInfo.phone}
+                onChange={handleChange}
+                className={errors.phone ? "border-red-500" : ""}
+              />
+              {errors.phone && <p className="text-sm text-red-500">{errors.phone}</p>}
+            </div>
+          </div>
+
           <div className="grid md:grid-cols-2 gap-4">
             <ClientTypeSelect
               value={clientInfo.clientType}
@@ -136,12 +190,12 @@ export const ClientInfoForm = ({ onMonthlyBillUpdate, initialValues }: Props) =>
               postalCode={clientInfo.postalCode}
               city={clientInfo.city}
               onChange={handleChange}
-              errors={errors}
+              errors={{
+                address: errors.address,
+                postalCode: errors.postalCode,
+                city: errors.city,
+              }}
             />
-            <div className="absolute top-0 right-0 flex items-center text-orange-500 gap-1">
-              <Lock className="h-4 w-4" />
-              <span className="text-xs">Données sécurisées</span>
-            </div>
           </div>
 
           <BudgetInput
