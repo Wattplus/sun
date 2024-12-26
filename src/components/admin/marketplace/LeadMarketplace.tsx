@@ -9,12 +9,21 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ShoppingCart, TrendingUp, Sparkles, ArrowRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { InstallerLeadStatus } from "@/types/crm";
+
+type FilterStatus = "all" | InstallerLeadStatus;
+
+interface Filters {
+  status: FilterStatus;
+  projectType: string;
+  city: string;
+}
 
 export const LeadMarketplace = () => {
   const { toast } = useToast();
   const [purchasedLeads, setPurchasedLeads] = useState<string[]>([]);
   const [selectedLeads, setSelectedLeads] = useState<Lead[]>([]);
-  const [filters, setFilters] = useState({
+  const [filters, setFilters] = useState<Filters>({
     status: 'all',
     projectType: 'all',
     city: '',
@@ -42,7 +51,7 @@ export const LeadMarketplace = () => {
   };
 
   const handleFilterChange = (key: string, value: string) => {
-    setFilters(prev => ({ ...prev, [key]: value }));
+    setFilters(prev => ({ ...prev, [key]: value as FilterStatus }));
   };
 
   const totalPrice = selectedLeads.reduce((sum, lead) => sum + lead.price, 0);
