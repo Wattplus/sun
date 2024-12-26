@@ -1,117 +1,139 @@
 import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { ShoppingBag, MapPin, Euro, Building, Home } from "lucide-react";
-import { InstallerBreadcrumb } from "../navigation/InstallerBreadcrumb";
-import { Badge } from "@/components/ui/badge";
+import { LeadsList } from "../dashboard/LeadsList";
 import { mockAvailableLeads } from "../dashboard/mockAvailableLeads";
-import { LeadCard } from "@/components/admin/marketplace/LeadCard";
-import { SubscriptionTier } from "@/types/subscription";
+import { PrepaidBalance } from "../dashboard/PrepaidBalance";
+import { Lead } from "@/types/crm";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Lead } from "@/types/crm";
+import { ShoppingCart, Sparkles, ArrowRight, Info } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { InstallerBreadcrumb } from "../navigation/InstallerBreadcrumb";
 
 export const MarketplacePage = () => {
-  const [availableLeads, setAvailableLeads] = useState<Lead[]>(mockAvailableLeads);
-  const [filter, setFilter] = useState<'all' | 'residential' | 'professional'>('all');
+  const [selectedLeads, setSelectedLeads] = useState<Lead[]>([]);
   const { toast } = useToast();
-  const userSubscriptionTier: SubscriptionTier = 'free';
 
-  const handlePurchase = (lead: Lead) => {
-    setAvailableLeads(prev => prev.filter(l => l.id !== lead.id));
+  const handleLeadSelect = (lead: Lead) => {
+    if (selectedLeads.some(l => l.id === lead.id)) {
+      setSelectedLeads(selectedLeads.filter(l => l.id !== lead.id));
+    } else {
+      setSelectedLeads([...selectedLeads, lead]);
+    }
+  };
+
+  const handlePurchaseLeads = () => {
+    const total = selectedLeads.reduce((sum, lead) => sum + lead.price, 0);
     toast({
-      title: "Lead acheté avec succès",
-      description: "Le lead a été ajouté à votre liste.",
+      title: "Achat de leads",
+      description: `Redirection vers le paiement pour ${total}€...`,
     });
   };
 
-  const filteredLeads = availableLeads.filter(lead => {
-    if (filter === 'all') return true;
-    return lead.projectType === filter;
-  });
-
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background/80 to-background p-6">
+    <div className="container mx-auto py-6 space-y-6">
       <InstallerBreadcrumb />
-      
-      <div className="max-w-6xl mx-auto space-y-8">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-bold">Leads Disponibles</h1>
-            <p className="text-muted-foreground mt-1">
-              Découvrez et achetez les derniers leads qualifiés
-            </p>
-          </div>
-          <div className="flex items-center gap-4">
-            <Badge variant="secondary" className="px-4 py-2">
-              <Euro className="w-4 h-4 mr-2" />
-              Solde: 150€
-            </Badge>
-            <Button variant="outline" className="gap-2">
-              <ShoppingBag className="w-4 h-4" />
-              Mes achats
-            </Button>
-          </div>
-        </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <Card className="p-6 bg-primary/5 border-primary/20 h-fit">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-semibold flex items-center gap-2">
+            Marketplace des Leads
+            <Badge variant="secondary" className="bg-primary/10 text-primary">
+              {mockAvailableLeads.length} leads disponibles
+            </Badge>
+          </h1>
+          <p className="text-muted-foreground mt-1">
+            Découvrez tous les leads disponibles sur la plateforme
+          </p>
+        </div>
+        {selectedLeads.length > 0 && (
+          <Button 
+            onClick={handlePurchaseLeads}
+            className="bg-primary hover:bg-primary/90 text-lg px-6"
+            size="lg"
+          >
+            <ShoppingCart className="mr-2 h-5 w-5" />
+            Acheter {selectedLeads.length} lead{selectedLeads.length > 1 ? 's' : ''} ({selectedLeads.reduce((sum, lead) => sum + lead.price, 0)}€)
+          </Button>
+        )}
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <Card className="md:col-span-2 p-6 relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-r from-primary/5 to-transparent" />
+          <div className="relative">
+            <div className="flex items-center gap-2 mb-6">
+              <Sparkles className="h-5 w-5 text-primary" />
+              <h2 className="text-lg font-medium">Tous les leads disponibles</h2>
+            </div>
+            <LeadsList 
+              leads={mockAvailableLeads} 
+              onLeadSelect={handleLeadSelect}
+              selectedLeads={selectedLeads}
+            />
+          </div>
+        </Card>
+
+        <div className="space-y-6">
+          <PrepaidBalance balance={150} />
+          
+          <Card className="p-6 bg-primary/5 border-primary/20">
             <div className="space-y-4">
-              <h3 className="font-medium flex items-center gap-2">
-                <MapPin className="h-5 w-5 text-primary" />
-                Filtres
-              </h3>
-              <div className="space-y-2">
-                <Button 
-                  variant={filter === 'all' ? "default" : "outline"} 
-                  className="w-full justify-start gap-2"
-                  onClick={() => setFilter('all')}
-                >
-                  <ShoppingBag className="w-4 h-4" />
-                  Tous les leads
-                </Button>
-                <Button 
-                  variant={filter === 'residential' ? "default" : "outline"} 
-                  className="w-full justify-start gap-2"
-                  onClick={() => setFilter('residential')}
-                >
-                  <Home className="w-4 h-4" />
-                  Résidentiel
-                </Button>
-                <Button 
-                  variant={filter === 'professional' ? "default" : "outline"} 
-                  className="w-full justify-start gap-2"
-                  onClick={() => setFilter('professional')}
-                >
-                  <Building className="w-4 h-4" />
-                  Professionnel
-                </Button>
+              <div className="flex items-center gap-2 text-primary">
+                <Info className="h-5 w-5" />
+                <h3 className="font-medium">Pourquoi acheter ces leads ?</h3>
               </div>
+              <ul className="space-y-2 text-sm">
+                <li className="flex items-center gap-2">
+                  <Badge variant="secondary" className="h-6 w-6 rounded-full p-1">1</Badge>
+                  Leads qualifiés et vérifiés
+                </li>
+                <li className="flex items-center gap-2">
+                  <Badge variant="secondary" className="h-6 w-6 rounded-full p-1">2</Badge>
+                  Projets à fort potentiel
+                </li>
+                <li className="flex items-center gap-2">
+                  <Badge variant="secondary" className="h-6 w-6 rounded-full p-1">3</Badge>
+                  Contact rapide recommandé
+                </li>
+              </ul>
+              <Button className="w-full gap-2" size="lg">
+                Recharger mon compte
+                <ArrowRight className="h-4 w-4" />
+              </Button>
             </div>
           </Card>
 
-          <div className="md:col-span-2">
-            <ScrollArea className="h-[600px] pr-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {filteredLeads.map(lead => (
-                  <LeadCard
-                    key={lead.id}
-                    lead={lead}
-                    onPurchase={handlePurchase}
-                    isPurchased={false}
-                    subscriptionTier={userSubscriptionTier}
-                  />
-                ))}
+          {selectedLeads.length > 0 && (
+            <Card className="p-6 bg-primary/5 border-primary/20">
+              <div className="space-y-4">
+                <h3 className="font-medium flex items-center gap-2">
+                  <ShoppingCart className="h-5 w-5" />
+                  Récapitulatif de la sélection
+                </h3>
+                <div className="space-y-2">
+                  {selectedLeads.map(lead => (
+                    <div key={lead.id} className="flex justify-between text-sm">
+                      <span>{lead.firstName} {lead.lastName}</span>
+                      <span className="font-medium">{lead.price}€</span>
+                    </div>
+                  ))}
+                  <div className="border-t pt-2 mt-2 flex justify-between font-medium">
+                    <span>Total</span>
+                    <span>{selectedLeads.reduce((sum, lead) => sum + lead.price, 0)}€</span>
+                  </div>
+                </div>
+                <Button 
+                  onClick={handlePurchaseLeads}
+                  className="w-full"
+                  size="lg"
+                >
+                  Procéder au paiement
+                </Button>
               </div>
-            </ScrollArea>
-          </div>
+            </Card>
+          )}
         </div>
-
-        {filteredLeads.length === 0 && (
-          <div className="text-center py-12">
-            <p className="text-muted-foreground">Aucun lead disponible pour le moment.</p>
-          </div>
-        )}
       </div>
     </div>
   );
