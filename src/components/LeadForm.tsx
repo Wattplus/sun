@@ -106,7 +106,7 @@ export const LeadForm = () => {
   };
 
   return (
-    <div className="relative group my-20">
+    <div className="relative group my-20" id="lead-form">
       <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 to-green-600 rounded-xl blur opacity-25 group-hover:opacity-75 transition duration-1000"></div>
       <div className="relative w-full max-w-2xl mx-auto p-10 rounded-xl bg-gradient-to-br from-[#1a5fb4] to-[#0B1221] text-white border border-white/10 backdrop-blur-sm shadow-2xl">
         <FormHeader />
