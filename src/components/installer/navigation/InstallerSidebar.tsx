@@ -16,7 +16,8 @@ import {
   MessageSquare, 
   Settings, 
   CreditCard,
-  HelpCircle
+  HelpCircle,
+  ShoppingBag
 } from "lucide-react"
 import { Link, useLocation } from "react-router-dom"
 
@@ -30,6 +31,11 @@ const menuItems = [
     title: "Marketplace",
     icon: Store,
     path: "/espace-installateur/marketplace"
+  },
+  {
+    title: "Mes Leads",
+    icon: ShoppingBag,
+    path: "/espace-installateur/leads"
   },
   {
     title: "Mes Projets",
