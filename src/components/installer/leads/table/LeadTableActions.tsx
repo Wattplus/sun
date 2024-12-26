@@ -28,7 +28,7 @@ export const LeadTableActions = ({ leadId }: LeadTableActionsProps) => {
       <Button
         variant="outline"
         size="sm"
-        onClick={() => handleNotes(leadId)}
+        onClick={handleNotes}
         className="gap-2"
       >
         <FileText className="h-4 w-4" />
@@ -37,7 +37,7 @@ export const LeadTableActions = ({ leadId }: LeadTableActionsProps) => {
       <Button
         variant="outline"
         size="sm"
-        onClick={() => handleMessage(leadId)}
+        onClick={handleMessage}
         className="gap-2"
       >
         <MessageSquare className="h-4 w-4" />

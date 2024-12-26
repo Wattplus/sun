@@ -1,10 +1,10 @@
 import { TableCell, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { MapPin, Phone, Mail } from "lucide-react";
 import { Lead } from "@/types/crm";
 import { LeadTableActions } from "./LeadTableActions";
+import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 
 interface LeadTableRowProps {
@@ -26,6 +26,39 @@ export const LeadTableRow = ({ lead, isSelected, onSelect }: LeadTableRowProps) 
       title: "Contact",
       description: `Contact initié via ${type}`,
     });
+  };
+
+  const getStatusBadge = (status: string) => {
+    const statusConfig: Record<string, { label: string; className: string }> = {
+      new: { 
+        label: "Nouveau", 
+        className: "bg-blue-500/10 text-blue-500 border-blue-500/20" 
+      },
+      contacted: { 
+        label: "Contacté", 
+        className: "bg-yellow-500/10 text-yellow-500 border-yellow-500/20" 
+      },
+      qualified: { 
+        label: "Qualifié", 
+        className: "bg-green-500/10 text-green-500 border-green-500/20" 
+      },
+      converted: { 
+        label: "Converti", 
+        className: "bg-primary/10 text-primary border-primary/20" 
+      },
+      lost: { 
+        label: "Perdu", 
+        className: "bg-red-500/10 text-red-500 border-red-500/20" 
+      }
+    };
+
+    const config = statusConfig[status] || statusConfig.new;
+
+    return (
+      <Badge variant="outline" className={config.className}>
+        {config.label}
+      </Badge>
+    );
   };
 
   return (
@@ -72,14 +105,15 @@ export const LeadTableRow = ({ lead, isSelected, onSelect }: LeadTableRowProps) 
         </div>
       </TableCell>
       <TableCell>
-        <Badge variant="outline" className="bg-primary/10 text-primary border-primary/20">
+        <Badge 
+          variant="outline" 
+          className="bg-primary/10 text-primary border-primary/20"
+        >
           {lead.projectType === 'residential' ? 'Résidentiel' : 'Professionnel'}
         </Badge>
       </TableCell>
       <TableCell>
-        <Badge variant="outline" className="bg-primary/10 text-primary border-primary/20">
-          {lead.status}
-        </Badge>
+        {getStatusBadge(lead.status)}
       </TableCell>
       <TableCell>
         <LeadTableActions leadId={lead.id} />
