@@ -3,14 +3,9 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Save } from "lucide-react";
 import { motion } from "framer-motion";
-import { ClientTypeSelect } from "./ClientTypeSelect";
-import { RoofTypeSelect } from "./RoofTypeSelect";
-import { MonthlyBillInput } from "./MonthlyBillInput";
-import { ElectricalTypeSelect } from "./ElectricalTypeSelect";
 import { AddressFields } from "./AddressFields";
-import { BudgetInput } from "./BudgetInput";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { PersonalInfoFields } from "./forms/PersonalInfoFields";
+import { ProjectInfoFields } from "./forms/ProjectInfoFields";
 
 interface ClientInfoFormProps {
   onMonthlyBillUpdate?: (value: string) => void;
@@ -90,7 +85,6 @@ export const ClientInfoForm = ({ onMonthlyBillUpdate, initialValues = {} }: Clie
     e.preventDefault();
     if (validateForm()) {
       console.log("Form submitted:", clientInfo);
-      // Handle form submission
     }
   };
 
@@ -104,106 +98,37 @@ export const ClientInfoForm = ({ onMonthlyBillUpdate, initialValues = {} }: Clie
           </p>
         </div>
 
-        <div className="grid gap-4 md:gap-6">
-          <div className="grid md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="firstName">Prénom</Label>
-              <Input
-                id="firstName"
-                name="firstName"
-                value={clientInfo.firstName}
-                onChange={handleChange}
-                className={errors.firstName ? "border-red-500" : ""}
-              />
-              {errors.firstName && <p className="text-sm text-red-500">{errors.firstName}</p>}
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="lastName">Nom</Label>
-              <Input
-                id="lastName"
-                name="lastName"
-                value={clientInfo.lastName}
-                onChange={handleChange}
-                className={errors.lastName ? "border-red-500" : ""}
-              />
-              {errors.lastName && <p className="text-sm text-red-500">{errors.lastName}</p>}
-            </div>
-          </div>
+        <PersonalInfoFields
+          firstName={clientInfo.firstName}
+          lastName={clientInfo.lastName}
+          email={clientInfo.email}
+          phone={clientInfo.phone}
+          onChange={handleChange}
+          errors={errors}
+        />
 
-          <div className="grid md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                name="email"
-                type="email"
-                value={clientInfo.email}
-                onChange={handleChange}
-                className={errors.email ? "border-red-500" : ""}
-              />
-              {errors.email && <p className="text-sm text-red-500">{errors.email}</p>}
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="phone">Téléphone</Label>
-              <Input
-                id="phone"
-                name="phone"
-                type="tel"
-                value={clientInfo.phone}
-                onChange={handleChange}
-                className={errors.phone ? "border-red-500" : ""}
-              />
-              {errors.phone && <p className="text-sm text-red-500">{errors.phone}</p>}
-            </div>
-          </div>
+        <ProjectInfoFields
+          clientType={clientInfo.clientType}
+          roofType={clientInfo.roofType}
+          monthlyBillEuros={clientInfo.monthlyBillEuros}
+          electricalType={clientInfo.electricalType}
+          budget={clientInfo.budget}
+          onSelectChange={handleSelectChange}
+          onChange={handleChange}
+          errors={errors}
+        />
 
-          <div className="grid md:grid-cols-2 gap-4">
-            <ClientTypeSelect
-              value={clientInfo.clientType}
-              onChange={(value) => handleSelectChange(value, "clientType")}
-              error={errors.clientType}
-            />
-
-            <RoofTypeSelect
-              value={clientInfo.roofType}
-              onChange={(value) => handleSelectChange(value, "roofType")}
-              error={errors.roofType}
-            />
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-4">
-            <MonthlyBillInput
-              value={clientInfo.monthlyBillEuros}
-              onChange={handleChange}
-              error={errors.monthlyBillEuros}
-            />
-
-            <ElectricalTypeSelect
-              value={clientInfo.electricalType}
-              onChange={(value) => handleSelectChange(value, "electricalType")}
-            />
-          </div>
-
-          <div className="relative">
-            <AddressFields
-              address={clientInfo.address}
-              postalCode={clientInfo.postalCode}
-              city={clientInfo.city}
-              onChange={handleChange}
-              errors={{
-                address: errors.address,
-                postalCode: errors.postalCode,
-                city: errors.city,
-              }}
-            />
-          </div>
-
-          <BudgetInput
-            value={clientInfo.budget}
-            onChange={handleChange}
-            error={errors.budget}
-          />
-        </div>
+        <AddressFields
+          address={clientInfo.address}
+          postalCode={clientInfo.postalCode}
+          city={clientInfo.city}
+          onChange={handleChange}
+          errors={{
+            address: errors.address,
+            postalCode: errors.postalCode,
+            city: errors.city,
+          }}
+        />
 
         <div className="flex justify-end pt-2">
           <motion.div
