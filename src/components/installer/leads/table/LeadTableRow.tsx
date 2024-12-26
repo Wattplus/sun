@@ -6,6 +6,8 @@ import { Lead, InstallerLeadStatus } from "@/types/crm"
 import { LeadTableActions } from "./LeadTableActions"
 import { Button } from "@/components/ui/button"
 import { useToast } from "@/hooks/use-toast"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import { ClientInfoForm } from "@/components/client/dashboard/ClientInfoForm"
 import {
   HoverCard,
   HoverCardContent,
@@ -86,9 +88,9 @@ export const LeadTableRow = ({ lead, isSelected, onSelect, onStatusChange }: Lea
         />
       </TableCell>
       <TableCell>
-        <HoverCard>
-          <HoverCardTrigger asChild>
-            <div className="space-y-2 cursor-pointer">
+        <Dialog>
+          <DialogTrigger asChild>
+            <div className="space-y-2 cursor-pointer hover:bg-primary/5 p-2 rounded">
               <div className="flex items-center gap-2">
                 <User className="h-4 w-4 text-primary" />
                 <span className="font-medium">{lead.firstName} {lead.lastName}</span>
@@ -97,7 +99,10 @@ export const LeadTableRow = ({ lead, isSelected, onSelect, onStatusChange }: Lea
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={() => handleContact('phone')}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleContact('phone');
+                  }}
                   className="justify-start gap-2"
                 >
                   <Phone className="h-4 w-4" />
@@ -106,7 +111,10 @@ export const LeadTableRow = ({ lead, isSelected, onSelect, onStatusChange }: Lea
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={() => handleContact('email')}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleContact('email');
+                  }}
                   className="justify-start gap-2"
                 >
                   <Mail className="h-4 w-4" />
@@ -114,26 +122,29 @@ export const LeadTableRow = ({ lead, isSelected, onSelect, onStatusChange }: Lea
                 </Button>
               </div>
             </div>
-          </HoverCardTrigger>
-          <HoverCardContent className="w-80">
-            <div className="space-y-2">
-              <h4 className="font-medium">Détails du projet</h4>
-              <div className="text-sm space-y-1">
-                <p><span className="text-muted-foreground">Budget:</span> {lead.budget}€</p>
-                <p><span className="text-muted-foreground">Notes:</span> {lead.notes}</p>
-                <p className="flex items-center gap-2">
-                  <CalendarDays className="h-4 w-4 text-primary" />
-                  <span>
-                    Créé {formatDistanceToNow(new Date(lead.createdAt), { 
-                      addSuffix: true,
-                      locale: fr 
-                    })}
-                  </span>
-                </p>
-              </div>
+          </DialogTrigger>
+          <DialogContent className="max-w-4xl">
+            <DialogHeader>
+              <DialogTitle>Détails du client</DialogTitle>
+            </DialogHeader>
+            <div className="mt-4">
+              <ClientInfoForm 
+                onMonthlyBillUpdate={() => {}}
+                initialValues={{
+                  clientType: lead.projectType === 'residential' ? 'particulier' : 'professionnel',
+                  roofType: lead.roofType || '',
+                  monthlyBillEuros: lead.monthlyBill || '',
+                  electricalType: lead.electricalType || 'monophase',
+                  address: lead.address,
+                  postalCode: lead.postalCode,
+                  city: lead.city,
+                  budget: lead.budget.toString(),
+                  projectType: lead.projectType
+                }}
+              />
             </div>
-          </HoverCardContent>
-        </HoverCard>
+          </DialogContent>
+        </Dialog>
       </TableCell>
       <TableCell>
         <div className="space-y-1">

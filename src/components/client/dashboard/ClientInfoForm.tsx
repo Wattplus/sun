@@ -23,32 +23,29 @@ interface ClientInfo {
   projectType: string;
 }
 
-interface Errors {
-  [key: string]: string | undefined;
-}
-
 interface Props {
   onMonthlyBillUpdate: (value: string) => void;
+  initialValues?: Partial<ClientInfo>;
 }
 
-export const ClientInfoForm = ({ onMonthlyBillUpdate }: Props) => {
+export const ClientInfoForm = ({ onMonthlyBillUpdate, initialValues }: Props) => {
   const { toast } = useToast();
   const [clientInfo, setClientInfo] = useState<ClientInfo>({
-    clientType: "",
-    roofType: "",
-    monthlyBillEuros: "",
-    electricalType: "monophase",
-    address: "",
-    postalCode: "75001",
-    city: "",
-    budget: "15000",
-    projectType: "Installation Panneaux Solaires" // Valeur par défaut
+    clientType: initialValues?.clientType || "",
+    roofType: initialValues?.roofType || "",
+    monthlyBillEuros: initialValues?.monthlyBillEuros || "",
+    electricalType: initialValues?.electricalType || "monophase",
+    address: initialValues?.address || "",
+    postalCode: initialValues?.postalCode || "75001",
+    city: initialValues?.city || "",
+    budget: initialValues?.budget || "15000",
+    projectType: initialValues?.projectType || "Installation Panneaux Solaires"
   });
 
-  const [errors, setErrors] = useState<Errors>({});
+  const [errors, setErrors] = useState<{ [key: string]: string | undefined }>({});
 
   const validateForm = () => {
-    const newErrors: Errors = {};
+    const newErrors: { [key: string]: string | undefined } = {};
     
     if (!clientInfo.clientType) {
       newErrors.clientType = "Le type de client est requis";
@@ -94,7 +91,6 @@ export const ClientInfoForm = ({ onMonthlyBillUpdate }: Props) => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (validateForm()) {
-      // Masquer les données sensibles avant l'envoi
       const maskedInfo = {
         ...clientInfo,
         address: "•".repeat(clientInfo.address.length),

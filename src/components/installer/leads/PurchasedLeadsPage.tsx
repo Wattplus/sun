@@ -18,6 +18,18 @@ export const PurchasedLeadsPage = () => {
   const [leadStatuses, setLeadStatuses] = useState<Record<string, InstallerLeadStatus>>(
     Object.fromEntries(mockPurchasedLeads.map(lead => [lead.id, lead.installerStatus || 'nouveau']))
   );
+  const [filters, setFilters] = useState({
+    status: 'all',
+    projectType: 'all',
+    city: ''
+  });
+
+  const filteredLeads = leads.filter(lead => {
+    if (filters.status !== 'all' && lead.installerStatus !== filters.status) return false;
+    if (filters.projectType !== 'all' && lead.projectType !== filters.projectType) return false;
+    if (filters.city && !lead.city.toLowerCase().includes(filters.city.toLowerCase())) return false;
+    return true;
+  });
 
   const handleLeadSelect = (lead: Lead) => {
     if (selectedLeads.find(l => l.id === lead.id)) {
@@ -131,12 +143,56 @@ export const PurchasedLeadsPage = () => {
             </Button>
           </div>
         </div>
+
+        <div className="flex gap-4 mb-4">
+          <Select
+            value={filters.status}
+            onValueChange={(value) => setFilters(prev => ({ ...prev, status: value }))}
+          >
+            <SelectTrigger className="w-[200px]">
+              <SelectValue placeholder="Filtrer par statut" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Tous les statuts</SelectItem>
+              <SelectItem value="nouveau">Nouveau lead</SelectItem>
+              <SelectItem value="contacte">Contacté</SelectItem>
+              <SelectItem value="devis_envoye">Devis envoyé</SelectItem>
+              <SelectItem value="rdv_planifie">RDV planifié</SelectItem>
+              <SelectItem value="negociation">En négociation</SelectItem>
+              <SelectItem value="signe">Signé</SelectItem>
+              <SelectItem value="perdu">Perdu</SelectItem>
+            </SelectContent>
+          </Select>
+
+          <Select
+            value={filters.projectType}
+            onValueChange={(value) => setFilters(prev => ({ ...prev, projectType: value }))}
+          >
+            <SelectTrigger className="w-[200px]">
+              <SelectValue placeholder="Type de projet" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Tous les types</SelectItem>
+              <SelectItem value="residential">Résidentiel</SelectItem>
+              <SelectItem value="professional">Professionnel</SelectItem>
+            </SelectContent>
+          </Select>
+
+          <input
+            type="text"
+            placeholder="Rechercher par ville"
+            className="px-3 py-2 rounded-md border border-input bg-background"
+            value={filters.city}
+            onChange={(e) => setFilters(prev => ({ ...prev, city: e.target.value }))}
+          />
+        </div>
+
         <Card className="p-6">
           <ScrollArea className="h-[calc(100vh-250px)]">
             <Table>
               <LeadTableHeader />
               <TableBody>
-                {leads.map((lead) => (
+                {filteredLeads.map((lead) => (
                   <LeadTableRow
                     key={lead.id}
                     lead={lead}
