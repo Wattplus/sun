@@ -14,7 +14,8 @@ import {
   Settings, 
   CreditCard,
   HelpCircle,
-  Users
+  Users,
+  FileText
 } from "lucide-react"
 import { Link, useLocation } from "react-router-dom"
 
@@ -23,6 +24,11 @@ const menuItems = [
     title: "Tableau de bord",
     icon: Home,
     path: "/espace-installateur"
+  },
+  {
+    title: "Mes Leads",
+    icon: FileText,
+    path: "/espace-installateur/leads"
   },
   {
     title: "Messages",
