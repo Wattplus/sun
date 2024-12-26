@@ -9,9 +9,10 @@ interface LeadDetailsDialogProps {
   lead: Lead;
   open: boolean;
   onClose: () => void;
+  onOpenChange: (open: boolean) => void;
 }
 
-export const LeadDetailsDialog = ({ lead, open, onClose }: LeadDetailsDialogProps) => {
+export const LeadDetailsDialog = ({ lead, open, onClose, onOpenChange }: LeadDetailsDialogProps) => {
   const { toast } = useToast();
 
   const handleFormUpdate = (value: string) => {
@@ -22,7 +23,7 @@ export const LeadDetailsDialog = ({ lead, open, onClose }: LeadDetailsDialogProp
   };
 
   return (
-    <Dialog open={open} onOpenChange={onClose}>
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-4xl">
         <DialogHeader className="flex flex-row items-center justify-between">
           <DialogTitle>Détails du client</DialogTitle>

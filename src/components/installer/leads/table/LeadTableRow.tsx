@@ -173,6 +173,7 @@ export const LeadTableRow = ({ lead, isSelected, onSelect, onStatusChange }: Lea
       <LeadDetailsDialog
         lead={lead}
         open={isDetailsOpen}
+        onClose={() => setIsDetailsOpen(false)}
         onOpenChange={setIsDetailsOpen}
       />
     </>
