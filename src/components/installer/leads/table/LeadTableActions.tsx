@@ -42,7 +42,7 @@ export const LeadTableActions = ({
           <DropdownMenuItem
             key={option.value}
             onClick={() => onStatusChange(leadId, option.value)}
-            className={currentStatus === option.value ? "bg-primary/10" : ""}
+            className={`cursor-pointer ${currentStatus === option.value ? "bg-primary/10" : ""}`}
           >
             {option.label}
           </DropdownMenuItem>

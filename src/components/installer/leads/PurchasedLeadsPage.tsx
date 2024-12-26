@@ -14,6 +14,7 @@ import { Lead, InstallerLeadStatus } from "@/types/crm";
 export const PurchasedLeadsPage = () => {
   const { toast } = useToast();
   const [selectedLeads, setSelectedLeads] = useState<Lead[]>([]);
+  const [leads, setLeads] = useState(mockPurchasedLeads);
   const [leadStatuses, setLeadStatuses] = useState<Record<string, InstallerLeadStatus>>(
     Object.fromEntries(mockPurchasedLeads.map(lead => [lead.id, lead.installerStatus || 'nouveau']))
   );
@@ -27,10 +28,22 @@ export const PurchasedLeadsPage = () => {
   };
 
   const handleStatusChange = (leadId: string, status: InstallerLeadStatus) => {
+    // Mettre à jour le statut dans l'état local
     setLeadStatuses(prev => ({ ...prev, [leadId]: status }));
+    
+    // Mettre à jour le lead dans la liste
+    setLeads(prevLeads => 
+      prevLeads.map(lead => 
+        lead.id === leadId 
+          ? { ...lead, installerStatus: status }
+          : lead
+      )
+    );
+
+    // Afficher une notification
     toast({
       title: "Statut mis à jour",
-      description: "Le statut du lead a été mis à jour avec succès",
+      description: `Le statut du lead a été changé en "${status}"`,
     });
   };
 
@@ -43,9 +56,9 @@ export const PurchasedLeadsPage = () => {
   };
 
   const exportToCSV = () => {
-    const leads = selectedLeads.length > 0 ? selectedLeads : mockPurchasedLeads;
+    const leadsToExport = selectedLeads.length > 0 ? selectedLeads : leads;
     const headers = ['Nom', 'Prénom', 'Email', 'Téléphone', 'Adresse', 'Code Postal', 'Ville', 'Type de projet', 'Statut'];
-    const data = leads.map(lead => [
+    const data = leadsToExport.map(lead => [
       lead.lastName,
       lead.firstName,
       lead.email,
@@ -123,7 +136,7 @@ export const PurchasedLeadsPage = () => {
             <Table>
               <LeadTableHeader />
               <TableBody>
-                {mockPurchasedLeads.map((lead) => (
+                {leads.map((lead) => (
                   <LeadTableRow
                     key={lead.id}
                     lead={lead}
