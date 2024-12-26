@@ -4,7 +4,7 @@ import { mockLeads, Lead } from "@/types/crm";
 import { useToast } from "@/components/ui/use-toast";
 import { useState } from "react";
 import { SubscriptionTier } from "@/types/subscription";
-import { LeadsFilters } from "@/components/installer/leads/LeadsFilters";
+import { LeadsFilters } from "@/components/installer/dashboard/LeadsFilters";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ShoppingCart, TrendingUp, Sparkles, ArrowRight } from "lucide-react";
