@@ -1,6 +1,6 @@
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ShoppingBag, TrendingUp, Users, ArrowRight, Sparkles, Target, BadgePercent } from "lucide-react";
+import { ShoppingBag, TrendingUp, Users, ArrowRight, Sparkles, Target, BadgePercent, Euro } from "lucide-react";
 import { Link } from "react-router-dom";
 import { InstallerBreadcrumb } from "../navigation/InstallerBreadcrumb";
 import { Badge } from "@/components/ui/badge";
@@ -18,7 +18,7 @@ export const MarketplacePage = () => {
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
             Développez votre activité avec des leads vérifiés et qualifiés, prêts à concrétiser leurs projets
           </p>
-          <div className="flex items-center justify-center gap-4 mt-4">
+          <div className="flex flex-wrap items-center justify-center gap-4 mt-4">
             <Badge variant="secondary" className="px-4 py-2 text-lg">
               <TrendingUp className="w-5 h-5 mr-2" />
               Taux de conversion moyen : 65%
@@ -26,6 +26,10 @@ export const MarketplacePage = () => {
             <Badge variant="secondary" className="px-4 py-2 text-lg">
               <Target className="w-5 h-5 mr-2" />
               Leads géolocalisés
+            </Badge>
+            <Badge variant="secondary" className="px-4 py-2 text-lg">
+              <Euro className="w-5 h-5 mr-2" />
+              À partir de 19€
             </Badge>
           </div>
         </div>
