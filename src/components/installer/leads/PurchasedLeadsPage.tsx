@@ -10,6 +10,13 @@ import { LeadTableHeader } from "./table/LeadTableHeader";
 import { LeadTableRow } from "./table/LeadTableRow";
 import { useState } from "react";
 import { Lead, InstallerLeadStatus } from "@/types/crm";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export const PurchasedLeadsPage = () => {
   const { toast } = useToast();

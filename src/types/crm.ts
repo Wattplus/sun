@@ -50,6 +50,9 @@ export interface Lead {
     purchaseType: PurchaseType;
     purchaseDate: string;
   }>;
+  roofType?: string;
+  monthlyBill?: string;
+  electricalType?: string;
 }
 
 // Mock data for testing
