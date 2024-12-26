@@ -47,13 +47,13 @@ export const LeadTable = ({
                 {new Date(lead.createdAt).toLocaleDateString()}
               </TableCell>
               <TableCell>
-                <div className="font-medium">{`${lead.firstName} ${lead.lastName}`}</div>
-                <div className="text-sm text-muted-foreground">{lead.email}</div>
-                <div className="text-sm text-muted-foreground">{lead.phone}</div>
+                <div className="font-medium">{`${lead.firstName || ''} ${lead.lastName || ''}`}</div>
+                <div className="text-sm text-muted-foreground">{lead.email || 'Email non renseigné'}</div>
+                <div className="text-sm text-muted-foreground">{lead.phone || 'Téléphone non renseigné'}</div>
               </TableCell>
               <TableCell>
-                <div className="text-sm">{lead.city}</div>
-                <div className="text-sm text-muted-foreground">{lead.postalCode}</div>
+                <div className="text-sm">{lead.city || 'Ville non renseignée'}</div>
+                <div className="text-sm text-muted-foreground">{lead.postalCode || 'Code postal non renseigné'}</div>
               </TableCell>
               <TableCell>{getProjectTypeText(lead.projectType)}</TableCell>
               <TableCell>
