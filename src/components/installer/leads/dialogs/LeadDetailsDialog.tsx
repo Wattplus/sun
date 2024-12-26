@@ -1,7 +1,7 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { X, Send } from "lucide-react";
+import { X, Send, Trash2 } from "lucide-react";
 import { ClientInfoForm } from "@/components/client/dashboard/ClientInfoForm";
 import { Lead } from "@/types/crm";
 import { useToast } from "@/hooks/use-toast";
@@ -10,18 +10,18 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
 
-interface LeadDetailsDialogProps {
-  lead: Lead;
-  open: boolean;
-  onClose: () => void;
-  onOpenChange: (open: boolean) => void;
-}
-
 interface Comment {
   id: string;
   text: string;
   createdAt: string;
   author: string;
+}
+
+interface LeadDetailsDialogProps {
+  lead: Lead;
+  open: boolean;
+  onClose: () => void;
+  onOpenChange: (open: boolean) => void;
 }
 
 export const LeadDetailsDialog = ({ lead, open, onClose, onOpenChange }: LeadDetailsDialogProps) => {
@@ -53,6 +53,14 @@ export const LeadDetailsDialog = ({ lead, open, onClose, onOpenChange }: LeadDet
         description: "Le commentaire a été ajouté avec succès.",
       });
     }
+  };
+
+  const handleDeleteComment = (commentId: string) => {
+    setComments(comments.filter(comment => comment.id !== commentId));
+    toast({
+      title: "Commentaire supprimé",
+      description: "Le commentaire a été supprimé avec succès.",
+    });
   };
 
   // Convertir le budget en string pour le formulaire
@@ -95,12 +103,22 @@ export const LeadDetailsDialog = ({ lead, open, onClose, onOpenChange }: LeadDet
                 <h3 className="font-medium text-lg">Historique des commentaires</h3>
                 <div className="space-y-4">
                   {comments.map((comment) => (
-                    <div key={comment.id} className="bg-primary/5 p-4 rounded-lg space-y-2">
+                    <div key={comment.id} className="bg-primary/5 p-4 rounded-lg space-y-2 relative group">
                       <div className="flex justify-between items-center">
                         <span className="font-medium text-sm">{comment.author}</span>
-                        <span className="text-xs text-muted-foreground">
-                          {format(new Date(comment.createdAt), 'dd/MM/yyyy HH:mm', { locale: fr })}
-                        </span>
+                        <div className="flex items-center gap-2">
+                          <span className="text-xs text-muted-foreground">
+                            {format(new Date(comment.createdAt), 'dd/MM/yyyy HH:mm', { locale: fr })}
+                          </span>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => handleDeleteComment(comment.id)}
+                            className="opacity-0 group-hover:opacity-100 transition-opacity h-8 w-8"
+                          >
+                            <Trash2 className="h-4 w-4 text-red-500" />
+                          </Button>
+                        </div>
                       </div>
                       <p className="text-sm text-foreground">{comment.text}</p>
                     </div>
