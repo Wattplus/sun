@@ -4,6 +4,7 @@ import Admin from "./pages/Admin";
 import ClientPortal from "./pages/ClientPortal";
 import InstallerProfile from "./pages/InstallerProfile";
 import { NewLeadsPage } from "./components/installer/marketplace/NewLeadsPage";
+import { MarketplacePage } from "./components/installer/marketplace/MarketplacePage";
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
         <Route path="/admin/*" element={<Admin />} />
         <Route path="/espace-client/*" element={<ClientPortal />} />
         <Route path="/espace-installateur/*" element={<InstallerProfile />}>
+          <Route path="marketplace" element={<MarketplacePage />} />
           <Route path="marketplace/nouveaux-leads" element={<NewLeadsPage />} />
         </Route>
       </Routes>
