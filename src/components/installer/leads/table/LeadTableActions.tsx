@@ -1,48 +1,53 @@
 import { Button } from "@/components/ui/button";
-import { FileText, MessageSquare } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { MoreHorizontal } from "lucide-react";
+import { InstallerLeadStatus } from "@/types/crm";
 
 interface LeadTableActionsProps {
   leadId: string;
+  currentStatus: InstallerLeadStatus;
+  onStatusChange: (leadId: string, status: InstallerLeadStatus) => void;
 }
 
-export const LeadTableActions = ({ leadId }: LeadTableActionsProps) => {
-  const { toast } = useToast();
-
-  const handleNotes = () => {
-    toast({
-      title: "Notes",
-      description: "Fonctionnalité de notes à venir",
-    });
-  };
-
-  const handleMessage = () => {
-    toast({
-      title: "Message",
-      description: "Fonctionnalité de messagerie à venir",
-    });
-  };
+export const LeadTableActions = ({ 
+  leadId, 
+  currentStatus, 
+  onStatusChange 
+}: LeadTableActionsProps) => {
+  const statusOptions: { value: InstallerLeadStatus; label: string }[] = [
+    { value: "nouveau", label: "Nouveau lead" },
+    { value: "contacte", label: "Contacté" },
+    { value: "devis_envoye", label: "Devis envoyé" },
+    { value: "rdv_planifie", label: "RDV planifié" },
+    { value: "negociation", label: "En négociation" },
+    { value: "signe", label: "Signé" },
+    { value: "perdu", label: "Perdu" }
+  ];
 
   return (
-    <div className="flex gap-2">
-      <Button
-        variant="outline"
-        size="sm"
-        onClick={handleNotes}
-        className="gap-2"
-      >
-        <FileText className="h-4 w-4" />
-        Notes
-      </Button>
-      <Button
-        variant="outline"
-        size="sm"
-        onClick={handleMessage}
-        className="gap-2"
-      >
-        <MessageSquare className="h-4 w-4" />
-        Message
-      </Button>
-    </div>
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="ghost" className="h-8 w-8 p-0">
+          <span className="sr-only">Ouvrir le menu</span>
+          <MoreHorizontal className="h-4 w-4" />
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end">
+        {statusOptions.map((option) => (
+          <DropdownMenuItem
+            key={option.value}
+            onClick={() => onStatusChange(leadId, option.value)}
+            className={currentStatus === option.value ? "bg-primary/10" : ""}
+          >
+            {option.label}
+          </DropdownMenuItem>
+        ))}
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 };

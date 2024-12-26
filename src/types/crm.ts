@@ -1,4 +1,5 @@
 export type LeadStatus = "new" | "contacted" | "qualified" | "assigned" | "converted" | "lost";
+export type InstallerLeadStatus = "nouveau" | "contacte" | "devis_envoye" | "rdv_planifie" | "negociation" | "signe" | "perdu";
 export type InstallerStatus = "active" | "inactive" | "pending";
 export type PaymentType = "prepaid" | "per_lead";
 export type PurchaseType = "mutualise" | "exclusif";
@@ -38,6 +39,7 @@ export interface Lead {
   projectType: string;
   budget: number;
   status: LeadStatus;
+  installerStatus?: InstallerLeadStatus;
   notes: string;
   createdAt: string;
   assignedTo?: string;

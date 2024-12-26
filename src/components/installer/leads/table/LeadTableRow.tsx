@@ -1,8 +1,8 @@
 import { TableCell, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
-import { MapPin, Phone, Mail, User, CalendarDays, Euro, FileText } from "lucide-react";
-import { Lead } from "@/types/crm";
+import { MapPin, Phone, Mail, User, CalendarDays } from "lucide-react";
+import { Lead, InstallerLeadStatus } from "@/types/crm";
 import { LeadTableActions } from "./LeadTableActions";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
@@ -18,9 +18,10 @@ interface LeadTableRowProps {
   lead: Lead;
   isSelected: boolean;
   onSelect: (lead: Lead) => void;
+  onStatusChange: (leadId: string, status: InstallerLeadStatus) => void;
 }
 
-export const LeadTableRow = ({ lead, isSelected, onSelect }: LeadTableRowProps) => {
+export const LeadTableRow = ({ lead, isSelected, onSelect, onStatusChange }: LeadTableRowProps) => {
   const { toast } = useToast();
 
   const handleContact = (type: string) => {
@@ -35,31 +36,39 @@ export const LeadTableRow = ({ lead, isSelected, onSelect }: LeadTableRowProps) 
     });
   };
 
-  const getStatusBadge = (status: string) => {
-    const statusConfig: Record<string, { label: string; className: string }> = {
-      new: { 
-        label: "Nouveau", 
+  const getStatusBadge = (status: InstallerLeadStatus) => {
+    const statusConfig: Record<InstallerLeadStatus, { label: string; className: string }> = {
+      nouveau: { 
+        label: "Nouveau lead", 
         className: "bg-blue-500/10 text-blue-500 border-blue-500/20" 
       },
-      contacted: { 
+      contacte: { 
         label: "Contacté", 
         className: "bg-yellow-500/10 text-yellow-500 border-yellow-500/20" 
       },
-      qualified: { 
-        label: "Qualifié", 
+      devis_envoye: { 
+        label: "Devis envoyé", 
+        className: "bg-orange-500/10 text-orange-500 border-orange-500/20" 
+      },
+      rdv_planifie: { 
+        label: "RDV planifié", 
+        className: "bg-purple-500/10 text-purple-500 border-purple-500/20" 
+      },
+      negociation: { 
+        label: "En négociation", 
+        className: "bg-indigo-500/10 text-indigo-500 border-indigo-500/20" 
+      },
+      signe: { 
+        label: "Signé", 
         className: "bg-green-500/10 text-green-500 border-green-500/20" 
       },
-      converted: { 
-        label: "Converti", 
-        className: "bg-primary/10 text-primary border-primary/20" 
-      },
-      lost: { 
+      perdu: { 
         label: "Perdu", 
         className: "bg-red-500/10 text-red-500 border-red-500/20" 
       }
     };
 
-    const config = statusConfig[status] || statusConfig.new;
+    const config = statusConfig[status];
 
     return (
       <Badge variant="outline" className={config.className}>
@@ -150,10 +159,14 @@ export const LeadTableRow = ({ lead, isSelected, onSelect }: LeadTableRowProps) 
         </Badge>
       </TableCell>
       <TableCell>
-        {getStatusBadge(lead.status)}
+        {getStatusBadge(lead.installerStatus || 'nouveau')}
       </TableCell>
       <TableCell>
-        <LeadTableActions leadId={lead.id} />
+        <LeadTableActions 
+          leadId={lead.id} 
+          currentStatus={lead.installerStatus || 'nouveau'} 
+          onStatusChange={onStatusChange}
+        />
       </TableCell>
     </TableRow>
   );
