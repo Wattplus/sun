@@ -54,7 +54,7 @@ export const Testimonials = () => {
                   ))}
                 </div>
                 <blockquote className="flex-1 text-lg font-medium leading-8 text-white mb-8">
-                  "{testimonial.content}"
+                  {testimonial.content}
                 </blockquote>
                 <div className="mt-auto">
                   <div className="font-semibold text-white text-lg mb-1">{testimonial.author}</div>
