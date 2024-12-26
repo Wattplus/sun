@@ -10,11 +10,12 @@ import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export const NewLeadsPage = () => {
   const [selectedLeads, setSelectedLeads] = useState<Lead[]>([]);
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   const handleLeadSelect = (lead: Lead) => {
     if (selectedLeads.some(l => l.id === lead.id)) {
@@ -30,6 +31,10 @@ export const NewLeadsPage = () => {
       title: "Achat de leads",
       description: `Redirection vers le paiement pour ${total}€...`,
     });
+  };
+
+  const handleViewAllLeads = () => {
+    navigate('/espace-installateur/leads');
   };
 
   return (
@@ -89,7 +94,11 @@ export const NewLeadsPage = () => {
                 <Sparkles className="h-5 w-5 text-primary" />
                 <h2 className="text-lg font-medium">Leads disponibles</h2>
               </div>
-              <Button variant="outline" className="gap-2">
+              <Button 
+                variant="outline" 
+                className="gap-2"
+                onClick={handleViewAllLeads}
+              >
                 Voir tous les leads
                 <ArrowRight className="h-4 w-4" />
               </Button>
