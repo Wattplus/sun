@@ -1,40 +1,40 @@
-import { TableCell, TableRow } from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
-import { Checkbox } from "@/components/ui/checkbox";
-import { MapPin, Phone, Mail, User, CalendarDays } from "lucide-react";
-import { Lead, InstallerLeadStatus } from "@/types/crm";
-import { LeadTableActions } from "./LeadTableActions";
-import { Button } from "@/components/ui/button";
-import { useToast } from "@/hooks/use-toast";
+import { TableCell, TableRow } from "@/components/ui/table"
+import { Badge } from "@/components/ui/badge"
+import { Checkbox } from "@/components/ui/checkbox"
+import { MapPin, Phone, Mail, User, CalendarDays } from "lucide-react"
+import { Lead, InstallerLeadStatus } from "@/types/crm"
+import { LeadTableActions } from "./LeadTableActions"
+import { Button } from "@/components/ui/button"
+import { useToast } from "@/hooks/use-toast"
 import {
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
-} from "@/components/ui/hover-card";
-import { formatDistanceToNow } from "date-fns";
-import { fr } from "date-fns/locale";
+} from "@/components/ui/hover-card"
+import { formatDistanceToNow } from "date-fns"
+import { fr } from "date-fns/locale"
 
 interface LeadTableRowProps {
-  lead: Lead;
-  isSelected: boolean;
-  onSelect: (lead: Lead) => void;
-  onStatusChange: (leadId: string, status: InstallerLeadStatus) => void;
+  lead: Lead
+  isSelected: boolean
+  onSelect: (lead: Lead) => void
+  onStatusChange: (leadId: string, status: InstallerLeadStatus) => void
 }
 
 export const LeadTableRow = ({ lead, isSelected, onSelect, onStatusChange }: LeadTableRowProps) => {
-  const { toast } = useToast();
+  const { toast } = useToast()
 
   const handleContact = (type: string) => {
     if (type === 'phone') {
-      window.location.href = `tel:${lead.phone}`;
+      window.location.href = `tel:${lead.phone}`
     } else if (type === 'email') {
-      window.location.href = `mailto:${lead.email}`;
+      window.location.href = `mailto:${lead.email}`
     }
     toast({
       title: "Contact",
       description: `Contact initié via ${type}`,
-    });
-  };
+    })
+  }
 
   const getStatusBadge = (status: InstallerLeadStatus) => {
     const statusConfig: Record<InstallerLeadStatus, { label: string; className: string }> = {
@@ -66,19 +66,18 @@ export const LeadTableRow = ({ lead, isSelected, onSelect, onStatusChange }: Lea
         label: "Perdu", 
         className: "bg-red-500/10 text-red-500 border-red-500/20" 
       }
-    };
+    }
 
-    const config = statusConfig[status];
-
+    const config = statusConfig[status || 'nouveau']
     return (
       <Badge variant="outline" className={config.className}>
         {config.label}
       </Badge>
-    );
-  };
+    )
+  }
 
   return (
-    <TableRow key={lead.id} className="hover:bg-primary/5">
+    <TableRow className="hover:bg-primary/5">
       <TableCell>
         <Checkbox
           checked={isSelected}
@@ -169,5 +168,5 @@ export const LeadTableRow = ({ lead, isSelected, onSelect, onStatusChange }: Lea
         />
       </TableCell>
     </TableRow>
-  );
-};
+  )
+}

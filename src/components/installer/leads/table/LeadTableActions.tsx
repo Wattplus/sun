@@ -1,17 +1,17 @@
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { MoreHorizontal } from "lucide-react";
-import { InstallerLeadStatus } from "@/types/crm";
+} from "@/components/ui/dropdown-menu"
+import { MoreHorizontal } from "lucide-react"
+import { InstallerLeadStatus } from "@/types/crm"
 
 interface LeadTableActionsProps {
-  leadId: string;
-  currentStatus: InstallerLeadStatus;
-  onStatusChange: (leadId: string, status: InstallerLeadStatus) => void;
+  leadId: string
+  currentStatus: InstallerLeadStatus
+  onStatusChange: (leadId: string, status: InstallerLeadStatus) => void
 }
 
 export const LeadTableActions = ({ 
@@ -27,7 +27,7 @@ export const LeadTableActions = ({
     { value: "negociation", label: "En négociation" },
     { value: "signe", label: "Signé" },
     { value: "perdu", label: "Perdu" }
-  ];
+  ]
 
   return (
     <DropdownMenu>
@@ -49,5 +49,5 @@ export const LeadTableActions = ({
         ))}
       </DropdownMenuContent>
     </DropdownMenu>
-  );
-};
+  )
+}
