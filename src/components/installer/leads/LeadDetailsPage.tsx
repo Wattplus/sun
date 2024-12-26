@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
-import { mockPurchasedLeads } from "../dashboard/mockPurchasedLeads";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
@@ -9,54 +9,83 @@ import { Edit2, Save, X } from "lucide-react";
 import { LeadContactInfo } from "./LeadContactInfo";
 import { LeadProjectInfo } from "./LeadProjectInfo";
 import { LeadComments } from "./LeadComments";
+import { useLeadsSync } from "@/hooks/useLeadsSync";
 
 export const LeadDetailsPage = () => {
   const { id } = useParams();
   const { toast } = useToast();
-  const lead = mockPurchasedLeads.find((l) => l.id === id);
-  const [status, setStatus] = useState(lead?.status || "nouveau");
+  const queryClient = useQueryClient();
+  const [isEditing, setIsEditing] = useState(false);
   const [comment, setComment] = useState("");
   const [comments, setComments] = useState<Array<{ text: string; date: string }>>([]);
-  const [isEditing, setIsEditing] = useState(false);
+
+  // Utiliser le hook personnalisé pour la synchronisation des leads
+  const { leads, isLoading, updateLead } = useLeadsSync();
+  const lead = leads.find((l) => l.id === id);
+
   const [editedLead, setEditedLead] = useState(lead);
+
+  // Mutation pour mettre à jour le lead
+  const mutation = useMutation({
+    mutationFn: updateLead,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['purchased-leads'] });
+      toast({
+        title: "Modifications enregistrées",
+        description: "Les informations du lead ont été mises à jour avec succès.",
+      });
+      setIsEditing(false);
+    },
+  });
+
+  if (isLoading) {
+    return <div>Chargement...</div>;
+  }
 
   if (!lead) {
     return <div>Lead non trouvé</div>;
   }
 
   const handleStatusChange = (newStatus: string) => {
-    setStatus(newStatus);
-    toast({
-      title: "Statut mis à jour",
-      description: "Le statut du lead a été mis à jour avec succès.",
-    });
-  };
-
-  const handleAddComment = () => {
-    if (comment.trim()) {
-      setComments([
-        { text: comment, date: new Date().toLocaleDateString() },
-        ...comments,
-      ]);
-      setComment("");
-      toast({
-        title: "Commentaire ajouté",
-        description: "Votre commentaire a été ajouté avec succès.",
-      });
+    if (editedLead) {
+      const updatedLead = { ...editedLead, installerStatus: newStatus };
+      mutation.mutate(updatedLead);
     }
   };
 
   const handleSaveChanges = () => {
-    setIsEditing(false);
-    toast({
-      title: "Modifications enregistrées",
-      description: "Les informations du lead ont été mises à jour avec succès.",
-    });
+    if (editedLead) {
+      mutation.mutate(editedLead);
+    }
   };
 
   const handleCancelEdit = () => {
     setIsEditing(false);
     setEditedLead(lead);
+  };
+
+  const handleAddComment = () => {
+    if (comment.trim()) {
+      const newComments = [
+        { text: comment, date: new Date().toLocaleDateString() },
+        ...comments,
+      ];
+      setComments(newComments);
+      setComment("");
+      
+      if (editedLead) {
+        const updatedLead = {
+          ...editedLead,
+          comments: newComments,
+        };
+        mutation.mutate(updatedLead);
+      }
+
+      toast({
+        title: "Commentaire ajouté",
+        description: "Votre commentaire a été ajouté avec succès.",
+      });
+    }
   };
 
   return (
@@ -68,7 +97,7 @@ export const LeadDetailsPage = () => {
           {lead.firstName} {lead.lastName}
         </h1>
         <div className="flex gap-4 items-center">
-          <Select value={status} onValueChange={handleStatusChange}>
+          <Select value={lead.installerStatus} onValueChange={handleStatusChange}>
             <SelectTrigger className="w-[200px]">
               <SelectValue placeholder="Statut" />
             </SelectTrigger>
