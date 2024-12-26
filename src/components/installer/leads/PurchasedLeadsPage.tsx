@@ -9,11 +9,14 @@ import { InstallerBreadcrumb } from "../navigation/InstallerBreadcrumb";
 import { LeadTableHeader } from "./table/LeadTableHeader";
 import { LeadTableRow } from "./table/LeadTableRow";
 import { useState } from "react";
-import { Lead } from "@/types/crm";
+import { Lead, InstallerLeadStatus } from "@/types/crm";
 
 export const PurchasedLeadsPage = () => {
   const { toast } = useToast();
   const [selectedLeads, setSelectedLeads] = useState<Lead[]>([]);
+  const [leadStatuses, setLeadStatuses] = useState<Record<string, InstallerLeadStatus>>(
+    Object.fromEntries(mockPurchasedLeads.map(lead => [lead.id, lead.installerStatus || 'nouveau']))
+  );
 
   const handleLeadSelect = (lead: Lead) => {
     if (selectedLeads.find(l => l.id === lead.id)) {
@@ -21,6 +24,14 @@ export const PurchasedLeadsPage = () => {
     } else {
       setSelectedLeads([...selectedLeads, lead]);
     }
+  };
+
+  const handleStatusChange = (leadId: string, status: InstallerLeadStatus) => {
+    setLeadStatuses(prev => ({ ...prev, [leadId]: status }));
+    toast({
+      title: "Statut mis à jour",
+      description: "Le statut du lead a été mis à jour avec succès",
+    });
   };
 
   const handleDeleteSelected = () => {
@@ -43,7 +54,7 @@ export const PurchasedLeadsPage = () => {
       lead.postalCode,
       lead.city,
       lead.projectType === 'residential' ? 'Résidentiel' : 'Professionnel',
-      lead.status
+      leadStatuses[lead.id]
     ]);
 
     const csvContent = [
@@ -118,6 +129,7 @@ export const PurchasedLeadsPage = () => {
                     lead={lead}
                     isSelected={selectedLeads.some(l => l.id === lead.id)}
                     onSelect={handleLeadSelect}
+                    onStatusChange={handleStatusChange}
                   />
                 ))}
               </TableBody>
