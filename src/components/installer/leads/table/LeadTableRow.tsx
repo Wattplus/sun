@@ -1,13 +1,15 @@
 import { TableCell, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
-import { MapPin, Phone, Mail, User } from "lucide-react";
+import { MapPin, Phone, Mail, User, Calendar } from "lucide-react";
 import { Lead, InstallerLeadStatus } from "@/types/crm";
 import { LeadTableActions } from "./LeadTableActions";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
 import { LeadDetailsDialog } from "../dialogs/LeadDetailsDialog";
+import { format } from "date-fns";
+import { fr } from "date-fns/locale";
 
 interface LeadTableRowProps {
   lead: Lead;
@@ -21,9 +23,9 @@ export const LeadTableRow = ({ lead, isSelected, onSelect, onStatusChange }: Lea
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
 
   const handleContact = (type: string) => {
-    if (type === 'phone') {
+    if (type === 'phone' && lead.phone) {
       window.location.href = `tel:${lead.phone}`;
-    } else if (type === 'email') {
+    } else if (type === 'email' && lead.email) {
       window.location.href = `mailto:${lead.email}`;
     }
     toast({
@@ -82,39 +84,55 @@ export const LeadTableRow = ({ lead, isSelected, onSelect, onStatusChange }: Lea
         />
       </TableCell>
       <TableCell>
+        <div className="flex items-center gap-2">
+          <Calendar className="h-4 w-4 text-primary" />
+          <span className="text-sm text-muted-foreground">
+            {format(new Date(lead.createdAt), 'dd MMMM yyyy', { locale: fr })}
+          </span>
+        </div>
+      </TableCell>
+      <TableCell>
         <div 
           className="space-y-2 cursor-pointer hover:bg-primary/5 p-2 rounded"
           onClick={() => setIsDetailsOpen(true)}
         >
           <div className="flex items-center gap-2">
             <User className="h-4 w-4 text-primary" />
-            <span className="font-medium">{lead.firstName} {lead.lastName}</span>
+            <span className="font-medium">
+              {lead.firstName && lead.lastName 
+                ? `${lead.firstName} ${lead.lastName}`
+                : "Client à contacter"}
+            </span>
           </div>
           <div className="flex flex-col gap-1">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={(e) => {
-                e.stopPropagation();
-                handleContact('phone');
-              }}
-              className="justify-start gap-2"
-            >
-              <Phone className="h-4 w-4" />
-              {lead.phone}
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={(e) => {
-                e.stopPropagation();
-                handleContact('email');
-              }}
-              className="justify-start gap-2"
-            >
-              <Mail className="h-4 w-4" />
-              {lead.email}
-            </Button>
+            {lead.phone && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleContact('phone');
+                }}
+                className="justify-start gap-2"
+              >
+                <Phone className="h-4 w-4" />
+                {lead.phone}
+              </Button>
+            )}
+            {lead.email && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleContact('email');
+                }}
+                className="justify-start gap-2"
+              >
+                <Mail className="h-4 w-4" />
+                {lead.email}
+              </Button>
+            )}
           </div>
         </div>
 
@@ -128,14 +146,18 @@ export const LeadTableRow = ({ lead, isSelected, onSelect, onStatusChange }: Lea
         <div className="space-y-1">
           <div className="flex items-center gap-2">
             <MapPin className="h-4 w-4 text-primary" />
-            {lead.city}
+            {lead.city || "Ville non renseignée"}
           </div>
-          <div className="text-sm text-muted-foreground">
-            {lead.address}
-          </div>
-          <div className="text-sm text-muted-foreground">
-            {lead.postalCode}
-          </div>
+          {lead.address && (
+            <div className="text-sm text-muted-foreground">
+              {lead.address}
+            </div>
+          )}
+          {lead.postalCode && (
+            <div className="text-sm text-muted-foreground">
+              {lead.postalCode}
+            </div>
+          )}
         </div>
       </TableCell>
       <TableCell>

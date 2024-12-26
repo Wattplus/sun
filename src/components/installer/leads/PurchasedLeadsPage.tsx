@@ -55,15 +55,15 @@ export const PurchasedLeadsPage = () => {
     const leadsToExport = selectedLeads.length > 0 ? selectedLeads : leads;
     const headers = ['Nom', 'Prénom', 'Email', 'Téléphone', 'Adresse', 'Code Postal', 'Ville', 'Type de projet', 'Statut'];
     const data = leadsToExport.map(lead => [
-      lead.lastName,
-      lead.firstName,
-      lead.email,
-      lead.phone,
-      lead.address,
-      lead.postalCode,
-      lead.city,
+      lead.lastName || '',
+      lead.firstName || '',
+      lead.email || '',
+      lead.phone || '',
+      lead.address || '',
+      lead.postalCode || '',
+      lead.city || '',
       lead.projectType === 'residential' ? 'Résidentiel' : 'Professionnel',
-      lead.installerStatus
+      lead.installerStatus || 'nouveau'
     ]);
 
     const csvContent = [
@@ -111,7 +111,7 @@ export const PurchasedLeadsPage = () => {
       <div className="max-w-[1600px] mx-auto space-y-6">
         <InstallerBreadcrumb />
         
-        <div className="glass-panel p-6 space-y-6">
+        <div className="glass-panel p-6 space-y-6 bg-background/95 backdrop-blur-sm border border-primary/10 rounded-lg shadow-lg">
           <LeadsHeader
             selectedLeads={selectedLeads}
             onDeleteSelected={handleDeleteSelected}
@@ -124,7 +124,7 @@ export const PurchasedLeadsPage = () => {
             onFilterChange={handleFilterChange}
           />
 
-          <Card className="glass-panel border-0">
+          <Card className="glass-panel border-0 bg-background/60">
             <ScrollArea className="h-[calc(100vh-350px)]">
               <div className="p-4">
                 <Table>
