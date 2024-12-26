@@ -4,13 +4,28 @@ import { mockLeads, Lead } from "@/types/crm";
 import { useToast } from "@/components/ui/use-toast";
 import { useState } from "react";
 import { SubscriptionTier } from "@/types/subscription";
+import { LeadsFilters } from "@/components/installer/leads/LeadsFilters";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { ShoppingCart, TrendingUp, Sparkles, ArrowRight } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 
 export const LeadMarketplace = () => {
   const { toast } = useToast();
   const [purchasedLeads, setPurchasedLeads] = useState<string[]>([]);
-  const availableLeads = mockLeads.filter(lead => lead.status === "qualified");
+  const [selectedLeads, setSelectedLeads] = useState<Lead[]>([]);
+  const [filters, setFilters] = useState({
+    status: 'all',
+    projectType: 'all',
+    city: '',
+  });
+
+  const availableLeads = mockLeads.filter(lead => {
+    if (filters.projectType !== 'all' && lead.projectType !== filters.projectType) return false;
+    if (filters.city && !lead.city.toLowerCase().includes(filters.city.toLowerCase())) return false;
+    return lead.status === "qualified";
+  });
   
-  // TODO: Récupérer le vrai niveau d'abonnement de l'utilisateur depuis l'API
   const userSubscriptionTier: SubscriptionTier = 'free';
 
   const handlePurchase = (lead: Lead) => {
@@ -21,19 +36,65 @@ export const LeadMarketplace = () => {
     });
   };
 
+  const handleBulkPurchase = () => {
+    selectedLeads.forEach(lead => handlePurchase(lead));
+    setSelectedLeads([]);
+  };
+
+  const handleFilterChange = (key: string, value: string) => {
+    setFilters(prev => ({ ...prev, [key]: value }));
+  };
+
+  const totalPrice = selectedLeads.reduce((sum, lead) => sum + lead.price, 0);
+
   return (
     <div className="space-y-6">
       <AdminBreadcrumb />
-      <div className="bg-background/50 backdrop-blur-md p-6 rounded-xl border border-primary/20">
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-xl font-semibold bg-gradient-to-r from-[#1EAEDB] to-[#33C3F0] bg-clip-text text-transparent">
-            Marketplace des Leads
-          </h2>
-          <div className="text-sm text-muted-foreground">
-            Leads vendus: {purchasedLeads.length} / {availableLeads.length}
+      
+      <div className="bg-gradient-to-r from-background/90 to-background p-8 rounded-xl border border-primary/20">
+        <div className="max-w-4xl mx-auto text-center space-y-4 mb-8">
+          <h1 className="text-4xl font-bold bg-gradient-to-r from-primary via-primary-light to-primary bg-clip-text text-transparent">
+            Marketplace des Leads Qualifiés
+          </h1>
+          <p className="text-xl text-muted-foreground">
+            Développez votre activité avec des leads vérifiés et qualifiés
+          </p>
+          <div className="flex items-center justify-center gap-4 mt-4">
+            <Badge variant="secondary" className="px-4 py-2 text-lg">
+              <TrendingUp className="w-5 h-5 mr-2" />
+              Taux de conversion moyen : 65%
+            </Badge>
+            <Badge variant="secondary" className="px-4 py-2 text-lg">
+              <Sparkles className="w-5 h-5 mr-2" />
+              {availableLeads.length} leads disponibles
+            </Badge>
           </div>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+        <LeadsFilters filters={filters} onFilterChange={handleFilterChange} />
+
+        {selectedLeads.length > 0 && (
+          <Card className="p-6 mt-6 bg-primary/5 border-primary/20">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-lg font-medium">
+                  {selectedLeads.length} lead{selectedLeads.length > 1 ? 's' : ''} sélectionné{selectedLeads.length > 1 ? 's' : ''}
+                </h3>
+                <p className="text-muted-foreground">Total: {totalPrice}€</p>
+              </div>
+              <Button 
+                onClick={handleBulkPurchase}
+                className="bg-primary hover:bg-primary-dark text-white px-6"
+                size="lg"
+              >
+                <ShoppingCart className="mr-2 h-5 w-5" />
+                Acheter la sélection
+              </Button>
+            </div>
+          </Card>
+        )}
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
           {availableLeads.map(lead => (
             <LeadCard 
               key={lead.id} 
@@ -43,6 +104,19 @@ export const LeadMarketplace = () => {
               subscriptionTier={userSubscriptionTier}
             />
           ))}
+        </div>
+
+        {availableLeads.length === 0 && (
+          <div className="text-center py-12">
+            <p className="text-muted-foreground">Aucun lead ne correspond à vos critères de recherche.</p>
+          </div>
+        )}
+
+        <div className="mt-12 text-center">
+          <Button variant="outline" size="lg" className="gap-2">
+            Voir plus de leads
+            <ArrowRight className="h-4 w-4" />
+          </Button>
         </div>
       </div>
     </div>
