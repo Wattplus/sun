@@ -10,14 +10,11 @@ import {
 } from "@/components/ui/sidebar"
 import { 
   Home, 
-  Store, 
-  Users, 
-  FileText, 
   MessageSquare, 
   Settings, 
   CreditCard,
   HelpCircle,
-  ShoppingBag
+  Users
 } from "lucide-react"
 import { Link, useLocation } from "react-router-dom"
 
@@ -26,21 +23,6 @@ const menuItems = [
     title: "Tableau de bord",
     icon: Home,
     path: "/espace-installateur"
-  },
-  {
-    title: "Marketplace",
-    icon: Store,
-    path: "/espace-installateur/marketplace"
-  },
-  {
-    title: "Mes Leads",
-    icon: ShoppingBag,
-    path: "/espace-installateur/leads"
-  },
-  {
-    title: "Mes Projets",
-    icon: FileText,
-    path: "/espace-installateur/projets"
   },
   {
     title: "Messages",
