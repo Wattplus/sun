@@ -36,7 +36,7 @@ const InstallerProfile = () => {
     <SidebarProvider defaultOpen>
       <div className="min-h-screen flex w-full">
         <InstallerSidebar />
-        <main className="flex-1 overflow-y-auto">
+        <main className="flex-1 overflow-y-auto p-8">
           {renderContent()}
         </main>
       </div>
