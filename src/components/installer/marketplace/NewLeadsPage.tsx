@@ -9,11 +9,19 @@ import { mockAvailableLeads } from "../dashboard/mockAvailableLeads";
 import { toast } from "sonner";
 import { LeadsTable } from "./components/LeadsTable";
 import { LeadsSummaryCards } from "./components/LeadsSummaryCards";
+import { LeadsFilters } from "../dashboard/LeadsFilters";
 
 export const NewLeadsPage = () => {
   const [selectedLeads, setSelectedLeads] = useState<Lead[]>([]);
+  const [showFilters, setShowFilters] = useState(false);
+  const [projectTypeFilter, setProjectTypeFilter] = useState("all");
+  const [selectedDepartments, setSelectedDepartments] = useState<string[]>([]);
+  const [priceFilter, setPriceFilter] = useState<"default" | "asc" | "desc">("default");
+  
   const balance = 150;
   const hasEnoughBalance = balance >= selectedLeads.length * 26;
+
+  const availableDepartments = Array.from(new Set(mockAvailableLeads.map(lead => lead.postalCode.substring(0, 2))));
 
   const handleLeadSelect = (lead: Lead) => {
     if (selectedLeads.some(l => l.id === lead.id)) {
@@ -55,6 +63,38 @@ export const NewLeadsPage = () => {
     toast.success("Redirection vers la page de rechargement...");
   };
 
+  const handleDepartmentSelect = (department: string) => {
+    if (!selectedDepartments.includes(department)) {
+      setSelectedDepartments([...selectedDepartments, department]);
+    }
+  };
+
+  const handleDepartmentRemove = (department: string) => {
+    setSelectedDepartments(selectedDepartments.filter(d => d !== department));
+  };
+
+  const filteredLeads = mockAvailableLeads
+    .filter(lead => {
+      if (projectTypeFilter !== "all") {
+        return lead.projectType === projectTypeFilter;
+      }
+      return true;
+    })
+    .filter(lead => {
+      if (selectedDepartments.length > 0) {
+        return selectedDepartments.includes(lead.postalCode.substring(0, 2));
+      }
+      return true;
+    })
+    .sort((a, b) => {
+      if (priceFilter === "asc") {
+        return a.price - b.price;
+      } else if (priceFilter === "desc") {
+        return b.price - a.price;
+      }
+      return 0;
+    });
+
   return (
     <InstallerLayout>
       <div className="min-h-screen bg-gradient-to-b from-background/95 to-background">
@@ -65,6 +105,7 @@ export const NewLeadsPage = () => {
               <Button 
                 variant="outline" 
                 className="gap-2 bg-primary/10 hover:bg-primary/20 border-primary/20"
+                onClick={() => setShowFilters(!showFilters)}
               >
                 <Filter className="w-4 h-4" />
                 Filtrer
@@ -87,6 +128,21 @@ export const NewLeadsPage = () => {
               </Button>
             </div>
           </div>
+
+          {showFilters && (
+            <Card className="p-4 border border-primary/20 bg-background/50 backdrop-blur-sm">
+              <LeadsFilters
+                availableDepartments={availableDepartments}
+                selectedDepartments={selectedDepartments}
+                projectTypeFilter={projectTypeFilter}
+                priceFilter={priceFilter}
+                onDepartmentSelect={handleDepartmentSelect}
+                onDepartmentRemove={handleDepartmentRemove}
+                onProjectTypeChange={setProjectTypeFilter}
+                onPriceFilterChange={setPriceFilter}
+              />
+            </Card>
+          )}
 
           {selectedLeads.length > 0 && (
             <Card className="p-4 border border-primary/20 bg-background/50 backdrop-blur-sm">
@@ -131,7 +187,7 @@ export const NewLeadsPage = () => {
             <div className="p-6">
               <div className="overflow-x-auto">
                 <LeadsTable 
-                  leads={mockAvailableLeads}
+                  leads={filteredLeads}
                   selectedLeads={selectedLeads}
                   onSelectAll={handleSelectAll}
                   onSelectLead={handleLeadSelect}
