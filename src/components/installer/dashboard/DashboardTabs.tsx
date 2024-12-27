@@ -11,17 +11,18 @@ import { mockAvailableLeads } from "./mockAvailableLeads";
 import { mockPurchasedLeads } from "./mockPurchasedLeads";
 import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
-import { ChevronRight, X, Maximize2, Minimize2, Menu } from "lucide-react";
+import { ChevronRight, X, Maximize2, Minimize2, Menu, PanelLeftClose, PanelLeft } from "lucide-react";
 import { SubscriptionPlans } from "../subscription/SubscriptionPlans";
 import { ClientFAQ } from "@/components/client/faq/ClientFAQ";
 import { SidebarTrigger } from "@/components/ui/sidebar";
+import { useSidebar } from "@/components/ui/sidebar";
 
 export const DashboardTabs = () => {
   const [showAllPurchasedLeads, setShowAllPurchasedLeads] = useState(false);
   const [showAllAvailableLeads, setShowAllAvailableLeads] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const { open, toggleSidebar } = useSidebar();
 
-  // Synchroniser l'état avec le mode plein écran du navigateur
   useEffect(() => {
     const handleFullscreenChange = () => {
       setIsFullscreen(!!document.fullscreenElement);
@@ -94,16 +95,18 @@ export const DashboardTabs = () => {
 
   return (
     <div className="space-y-8">
-      <div className="flex justify-between items-center">
+      <div className="flex justify-between items-center gap-2">
         <Button
           variant="ghost"
           size="icon"
-          className="hover:bg-primary/10"
-          asChild
+          onClick={toggleSidebar}
+          className="hover:bg-primary/10 text-primary"
         >
-          <SidebarTrigger>
-            <Menu className="h-5 w-5 text-primary" />
-          </SidebarTrigger>
+          {open ? (
+            <PanelLeftClose className="h-5 w-5" />
+          ) : (
+            <PanelLeft className="h-5 w-5" />
+          )}
         </Button>
 
         <Button
