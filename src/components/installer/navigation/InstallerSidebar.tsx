@@ -11,29 +11,70 @@ import {
   ShoppingCart,
   LogOut,
   User,
-  CreditCard,
   Wallet,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const navigation = [
-  { name: "Dashboard", href: "/espace-installateur", icon: LayoutDashboard },
-  { name: "Nouveaux Leads", href: "/espace-installateur/leads/nouveaux", icon: UserPlus },
-  { name: "Leads Achetés", href: "/espace-installateur/leads/achetes", icon: ShoppingCart },
-  { name: "Messages", href: "/espace-installateur/messages", icon: MessageSquare },
-  { name: "Rapports", href: "/espace-installateur/rapports", icon: FileText },
-  { name: "Notifications", href: "/espace-installateur/notifications", icon: Bell },
+  { 
+    name: "Dashboard", 
+    href: "/espace-installateur", 
+    icon: LayoutDashboard 
+  },
+  { 
+    name: "Leads", 
+    href: "/espace-installateur/leads/nouveaux", 
+    icon: UserPlus,
+    subItems: [
+      { 
+        name: "Nouveaux", 
+        href: "/espace-installateur/leads/nouveaux", 
+        icon: UserPlus 
+      },
+      { 
+        name: "Achetés", 
+        href: "/espace-installateur/leads/achetes", 
+        icon: ShoppingCart 
+      },
+    ]
+  },
+  { 
+    name: "Messages", 
+    href: "/espace-installateur/messages", 
+    icon: MessageSquare 
+  },
+  { 
+    name: "Rapports", 
+    href: "/espace-installateur/rapports", 
+    icon: FileText 
+  },
+  { 
+    name: "Notifications", 
+    href: "/espace-installateur/notifications", 
+    icon: Bell 
+  },
   { 
     name: "Mon Compte", 
     href: "/espace-installateur/mon-compte", 
     icon: User,
     subItems: [
-      { name: "Profil", href: "/espace-installateur/mon-compte/profil", icon: User },
-      { name: "Moyens de paiement", href: "/espace-installateur/mon-compte/paiement", icon: CreditCard },
-      { name: "Compte prépayé", href: "/espace-installateur/mon-compte/prepaye", icon: Wallet },
+      { 
+        name: "Profil", 
+        href: "/espace-installateur/mon-compte/profil", 
+        icon: User 
+      },
+      { 
+        name: "Compte prépayé", 
+        href: "/espace-installateur/mon-compte/prepaye", 
+        icon: Wallet 
+      },
     ]
   },
-  { name: "Paramètres", href: "/espace-installateur/parametres", icon: Settings },
+  { 
+    name: "Paramètres", 
+    href: "/espace-installateur/parametres", 
+    icon: Settings 
+  },
 ];
 
 export function InstallerSidebar() {
