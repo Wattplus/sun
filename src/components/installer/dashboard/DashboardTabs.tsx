@@ -11,13 +11,25 @@ import { mockAvailableLeads } from "./mockAvailableLeads";
 import { mockPurchasedLeads } from "./mockPurchasedLeads";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
-import { ChevronRight, X } from "lucide-react";
+import { ChevronRight, X, Maximize2, Minimize2 } from "lucide-react";
 import { SubscriptionPlans } from "../subscription/SubscriptionPlans";
 import { ClientFAQ } from "@/components/client/faq/ClientFAQ";
+import { SidebarTrigger } from "@/components/ui/sidebar";
 
 export const DashboardTabs = () => {
   const [showAllPurchasedLeads, setShowAllPurchasedLeads] = useState(false);
   const [showAllAvailableLeads, setShowAllAvailableLeads] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+
+  const toggleFullscreen = () => {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen();
+      setIsFullscreen(true);
+    } else {
+      document.exitFullscreen();
+      setIsFullscreen(false);
+    }
+  };
 
   if (showAllPurchasedLeads) {
     return (
@@ -70,6 +82,26 @@ export const DashboardTabs = () => {
 
   return (
     <div className="space-y-8">
+      <div className="flex justify-end gap-2">
+        <SidebarTrigger asChild>
+          <Button
+            variant="outline"
+            size="icon"
+            className="hover:bg-primary/10"
+          >
+            <Minimize2 className="h-5 w-5" />
+          </Button>
+        </SidebarTrigger>
+        <Button
+          variant="outline"
+          size="icon"
+          className="hover:bg-primary/10"
+          onClick={toggleFullscreen}
+        >
+          <Maximize2 className="h-5 w-5" />
+        </Button>
+      </div>
+
       <div className="grid gap-6">
         <StatsCards />
       </div>
