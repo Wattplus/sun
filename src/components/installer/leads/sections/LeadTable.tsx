@@ -5,6 +5,9 @@ import { motion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import { Lead } from "@/types/crm";
 import { Link } from "react-router-dom";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useLeadsSync } from "@/hooks/useLeadsSync";
+import { toast } from "sonner";
 
 interface LeadTableProps {
   leads: Lead[];
@@ -12,6 +15,17 @@ interface LeadTableProps {
 }
 
 export const LeadTable = ({ leads, getStatusColor }: LeadTableProps) => {
+  const { updateLead } = useLeadsSync();
+
+  const handleStatusChange = async (leadId: string, newStatus: string) => {
+    try {
+      await updateLead({ id: leadId, installerStatus: newStatus });
+      toast.success("Statut mis à jour avec succès");
+    } catch (error) {
+      toast.error("Erreur lors de la mise à jour du statut");
+    }
+  };
+
   return (
     <ScrollArea className="h-[600px]">
       <Table>
@@ -49,9 +63,23 @@ export const LeadTable = ({ leads, getStatusColor }: LeadTableProps) => {
               <TableCell>{lead.roofType || 'Non renseigné'}</TableCell>
               <TableCell>{lead.monthlyBill ? `${lead.monthlyBill}€/mois` : 'Non renseigné'}</TableCell>
               <TableCell>
-                <Badge variant="outline" className={getStatusColor(lead.installerStatus || 'nouveau')}>
-                  {lead.installerStatus || 'Nouveau'}
-                </Badge>
+                <Select
+                  value={lead.installerStatus || 'nouveau'}
+                  onValueChange={(value) => handleStatusChange(lead.id, value)}
+                >
+                  <SelectTrigger className="w-[140px]">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="nouveau">Nouveau</SelectItem>
+                    <SelectItem value="contacte">Contacté</SelectItem>
+                    <SelectItem value="devis_envoye">Devis envoyé</SelectItem>
+                    <SelectItem value="rdv_planifie">RDV planifié</SelectItem>
+                    <SelectItem value="negociation">En négociation</SelectItem>
+                    <SelectItem value="signe">Signé</SelectItem>
+                    <SelectItem value="perdu">Perdu</SelectItem>
+                  </SelectContent>
+                </Select>
               </TableCell>
               <TableCell>
                 <Link to={`/espace-installateur/leads/${lead.id}`}>

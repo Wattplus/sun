@@ -17,17 +17,20 @@ export const useLeadsSync = () => {
   });
 
   const updateLead = useMutation({
-    mutationFn: async (updatedLead: Lead) => {
+    mutationFn: async (updatedLead: Partial<Lead>) => {
       // Simule une mise à jour - à remplacer par une vraie requête API plus tard
-      return updatedLead;
+      const leadIndex = mockPurchasedLeads.findIndex(lead => lead.id === updatedLead.id);
+      if (leadIndex !== -1) {
+        mockPurchasedLeads[leadIndex] = {
+          ...mockPurchasedLeads[leadIndex],
+          ...updatedLead,
+        };
+      }
+      return mockPurchasedLeads[leadIndex];
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['purchased-leads'] });
-      toast({
-        title: "Lead mis à jour",
-        description: "Les modifications ont été enregistrées avec succès.",
-      });
-    }
+    },
   });
 
   return {
