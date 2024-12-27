@@ -26,15 +26,21 @@ export const LeadCard = ({
   const handlePurchase = async (type: 'mutualise' | 'exclusif', paymentMethod: 'prepaid' | 'direct') => {
     try {
       if (paymentMethod === 'prepaid') {
+        // Prix spécial pour compte prépayé
+        const priceId = 'price_1QaAlfFOePj4Hv475LWE2bGQ';
         toast({
           title: "Paiement avec solde prépayé",
           description: "Le lead sera débité de votre solde prépayé.",
         });
         onPurchase(lead);
       } else {
-        const priceId = type === 'exclusif' 
-          ? 'price_1QZyKUFOePj4Hv47qEFQ1KzF' 
-          : 'price_1QZyJpFOePj4Hv47sd76eDOz';
+        // Prix standard pour paiement direct
+        let priceId;
+        if (lead.projectType === 'professional') {
+          priceId = 'price_1Qa0nUFOePj4Hv47Ih00CR8k'; // 59€ pour les leads pro
+        } else {
+          priceId = 'price_1QZyKUFOePj4Hv47qEFQ1KzF'; // Prix standard
+        }
 
         const response = await fetch("https://dqzsycxxgltztufrhams.supabase.co/functions/v1/create-lead-checkout", {
           method: "POST",
