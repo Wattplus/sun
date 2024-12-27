@@ -76,14 +76,17 @@ export const Testimonials = () => {
         </div>
 
         <div className="mt-16 text-center">
-          <Button 
-            size="lg"
-            className="bg-primary hover:bg-primary-dark text-white px-8 py-6 text-lg rounded-full shadow-lg shadow-primary/20"
-            onClick={() => document.getElementById('lead-form')?.scrollIntoView({ behavior: 'smooth' })}
-          >
-            Rejoignez nos clients satisfaits
-            <ArrowRight className="ml-2 h-5 w-5" />
-          </Button>
+          <div className="relative group">
+            <div className="absolute -inset-1 bg-gradient-to-r from-green-600 to-green-400 rounded-full blur opacity-70 group-hover:opacity-100 transition duration-200"></div>
+            <Button 
+              size="lg"
+              className="relative bg-gradient-to-r from-primary via-accent to-primary hover:from-primary/90 hover:via-accent/90 hover:to-primary/90 text-white px-8 py-6 text-lg rounded-full shadow-lg transition-all duration-300 bg-[length:200%_100%] animate-gradient group"
+              onClick={() => document.getElementById('lead-form')?.scrollIntoView({ behavior: 'smooth' })}
+            >
+              Rejoignez nos clients satisfaits
+              <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+            </Button>
+          </div>
         </div>
       </div>
     </div>

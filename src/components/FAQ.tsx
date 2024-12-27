@@ -78,13 +78,13 @@ export const FAQ = () => {
           <div className="inline-flex items-center justify-center p-1 bg-gradient-to-r from-green-500 to-blue-500 rounded-full">
             <Button
               size="lg"
-              className="bg-[#0B1221] hover:bg-[#1a5fb4] text-white px-8 py-6 text-lg rounded-full relative group transition-all duration-300 hover:scale-[0.98]"
+              className="relative bg-gradient-to-r from-primary via-accent to-primary hover:from-primary/90 hover:via-accent/90 hover:to-primary/90 text-white px-8 py-6 text-lg rounded-full shadow-lg transition-all duration-300 bg-[length:200%_100%] animate-gradient group"
               onClick={() => document.getElementById('lead-form')?.scrollIntoView({ behavior: 'smooth' })}
             >
               <span className="text-white">
                 Demandez votre étude gratuite
               </span>
-              <ArrowRight className="ml-2 h-5 w-5 text-green-400 group-hover:translate-x-1 transition-transform" />
+              <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
             </Button>
           </div>
           <p className="mt-4 text-sm text-blue-200">
