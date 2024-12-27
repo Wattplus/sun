@@ -11,7 +11,6 @@ import { InstallerBreadcrumb } from "../navigation/InstallerBreadcrumb";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { InstallerLayout } from "../navigation/InstallerLayout";
-import { PrepaidSection } from "./sections/PrepaidSection";
 
 export const NewLeadsPage = () => {
   const [selectedLeads, setSelectedLeads] = useState<Lead[]>([]);
@@ -86,16 +85,34 @@ export const NewLeadsPage = () => {
                   <div className="p-2 rounded-full bg-[#1EAEDB]/20">
                     <User className="h-4 w-4 text-white" />
                   </div>
-                  <span className="text-white">Lead particulier</span>
+                  <div>
+                    <span className="text-white">Lead particulier</span>
+                    <p className="text-xs text-white/60">Avec compte prépayé</p>
+                  </div>
                 </div>
                 <span className="text-xl font-bold text-white">26€</span>
               </div>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <div className="p-2 rounded-full bg-[#1EAEDB]/20">
+                    <User className="h-4 w-4 text-white" />
+                  </div>
+                  <div>
+                    <span className="text-white">Lead particulier</span>
+                    <p className="text-xs text-white/60">Sans compte prépayé</p>
+                  </div>
+                </div>
+                <span className="text-xl font-bold text-white">35€</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <div className="p-2 rounded-full bg-[#1EAEDB]/20">
                     <Building2 className="h-4 w-4 text-white" />
                   </div>
-                  <span className="text-white">Lead professionnel</span>
+                  <div>
+                    <span className="text-white">Lead professionnel</span>
+                    <p className="text-xs text-white/60">Tous comptes</p>
+                  </div>
                 </div>
                 <span className="text-xl font-bold text-white">59€</span>
               </div>
