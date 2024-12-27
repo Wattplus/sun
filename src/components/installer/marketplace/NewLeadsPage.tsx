@@ -86,6 +86,8 @@ export const NewLeadsPage = () => {
           </div>
         </div>
 
+        <PrepaidSection />
+
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <Card className="md:col-span-2 p-6 relative overflow-hidden bg-gradient-to-br from-background via-background/95 to-background">
             <div className="space-y-6">
@@ -142,8 +144,6 @@ export const NewLeadsPage = () => {
             <WhyBuyLeads />
           </div>
         </div>
-
-        <PrepaidSection />
       </div>
     </InstallerLayout>
   );
