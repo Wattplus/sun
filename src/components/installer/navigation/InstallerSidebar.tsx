@@ -44,7 +44,7 @@ export function InstallerSidebar() {
       <SidebarContent>
         <div className="space-y-4 py-4">
           <div className="px-3 py-2">
-            <h2 className="text-lg font-semibold text-primary px-3 mb-4">Installateur</h2>
+            <h2 className="text-lg font-semibold text-white px-3 mb-4">Installateur</h2>
             <div className="space-y-1">
               {navigation.map((item) => (
                 <div key={item.name}>
@@ -53,7 +53,7 @@ export function InstallerSidebar() {
                     className={cn(
                       location.pathname === item.href
                         ? "bg-primary text-primary-foreground"
-                        : "text-primary hover:bg-primary/10",
+                        : "text-white hover:bg-primary/10",
                       "group flex items-center rounded-md px-3 py-2 text-sm font-medium transition-colors"
                     )}
                   >
@@ -70,7 +70,7 @@ export function InstallerSidebar() {
                           className={cn(
                             location.pathname === subItem.href
                               ? "bg-primary text-primary-foreground"
-                              : "text-primary hover:bg-primary/10",
+                              : "text-white hover:bg-primary/10",
                             "group flex items-center rounded-md px-3 py-2 text-sm font-medium transition-colors"
                           )}
                         >
@@ -89,7 +89,7 @@ export function InstallerSidebar() {
         <div className="mt-auto p-4">
           <Button
             variant="outline"
-            className="w-full justify-start gap-2 bg-primary/5 hover:bg-primary/10 text-primary"
+            className="w-full justify-start gap-2 bg-primary/5 hover:bg-primary/10 text-white"
           >
             <LogOut className="h-4 w-4" />
             <span>Déconnexion</span>
