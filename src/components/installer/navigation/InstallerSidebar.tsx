@@ -1,6 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
-import { Sidebar, SidebarContent } from "@/components/ui/sidebar";
+import { Sidebar, SidebarContent, SidebarTrigger } from "@/components/ui/sidebar";
 import {
   LayoutDashboard,
   MessageSquare,
@@ -11,7 +11,9 @@ import {
   Bell,
   Menu,
   UserPlus,
+  ChevronLeft,
 } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 const navigation = [
   {
@@ -62,11 +64,20 @@ export const InstallerSidebar = () => {
   return (
     <Sidebar>
       <SidebarContent className="flex h-full flex-col bg-gradient-to-b from-background to-primary/20">
-        <div className="flex h-24 items-center justify-center border-b border-white/10 px-6">
+        <div className="flex h-24 items-center justify-between border-b border-white/10 px-6">
           <div className="flex items-center gap-3">
             <Menu className="h-8 w-8 text-primary" />
             <span className="text-xl font-bold text-white">Espace Pro</span>
           </div>
+          <SidebarTrigger asChild>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="hover:bg-primary/10"
+            >
+              <ChevronLeft className="h-5 w-5 text-primary" />
+            </Button>
+          </SidebarTrigger>
         </div>
         <nav className="flex-1 space-y-2 px-4 py-6">
           {navigation.map((item) => {
