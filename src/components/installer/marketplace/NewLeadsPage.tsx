@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Lead } from "@/types/crm";
-import { Filter, Download } from "lucide-react";
+import { Filter, Download, Wallet, ShoppingCart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { InstallerBreadcrumb } from "../navigation/InstallerBreadcrumb";
 import { InstallerLayout } from "../navigation/InstallerLayout";
@@ -9,6 +9,7 @@ import { mockAvailableLeads } from "../dashboard/mockAvailableLeads";
 import { toast } from "sonner";
 import { LeadsTable } from "./components/LeadsTable";
 import { LeadsSummaryCards } from "./components/LeadsSummaryCards";
+import { BottomCTA } from "./sections/BottomCTA";
 
 export const NewLeadsPage = () => {
   const [selectedLeads, setSelectedLeads] = useState<Lead[]>([]);
@@ -33,16 +34,26 @@ export const NewLeadsPage = () => {
 
   const handlePurchase = () => {
     if (!hasEnoughBalance) {
-      toast("Solde insuffisant", {
+      toast.error("Solde insuffisant", {
         description: "Veuillez recharger votre compte pour acheter ces leads.",
       });
       return;
     }
-    toast("Redirection vers le paiement...");
+    toast.success("Redirection vers le paiement...");
   };
 
   const handleExport = () => {
-    toast("Export des leads en cours...");
+    if (selectedLeads.length === 0) {
+      toast.error("Aucun lead sélectionné", {
+        description: "Veuillez sélectionner au moins un lead à exporter.",
+      });
+      return;
+    }
+    toast.success("Export des leads en cours...");
+  };
+
+  const handlePrepaidAccount = () => {
+    toast.success("Redirection vers la page de rechargement...");
   };
 
   return (
@@ -67,6 +78,14 @@ export const NewLeadsPage = () => {
                 <Download className="w-4 h-4" />
                 Exporter
               </Button>
+              <Button
+                variant="outline"
+                className="gap-2 bg-primary/10 hover:bg-primary/20 border-primary/20"
+                onClick={handlePrepaidAccount}
+              >
+                <Wallet className="w-4 h-4" />
+                Recharger
+              </Button>
             </div>
           </div>
           
@@ -74,7 +93,7 @@ export const NewLeadsPage = () => {
             availableLeads={mockAvailableLeads}
             selectedLeads={selectedLeads}
             balance={balance}
-            onPrepaidAccount={() => {}}
+            onPrepaidAccount={handlePrepaidAccount}
           />
 
           <Card className="overflow-hidden border border-primary/10 bg-background/50 backdrop-blur-sm">
@@ -109,16 +128,19 @@ export const NewLeadsPage = () => {
                   </Button>
                   <Button 
                     onClick={handlePurchase}
-                    className="bg-primary hover:bg-primary/90 text-white px-6"
+                    className="bg-primary hover:bg-primary/90 text-white px-6 gap-2"
                     size="lg"
                     disabled={!hasEnoughBalance}
                   >
+                    <ShoppingCart className="w-5 h-5" />
                     {hasEnoughBalance ? "Acheter la sélection" : "Recharger pour acheter"}
                   </Button>
                 </div>
               </div>
             </Card>
           )}
+
+          <BottomCTA onPrepaidAccount={handlePrepaidAccount} />
         </div>
       </div>
     </InstallerLayout>
