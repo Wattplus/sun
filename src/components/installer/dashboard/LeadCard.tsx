@@ -35,11 +35,17 @@ export const LeadCard = ({ lead, status, onStatusChange }: LeadCardProps) => {
           <Select 
             value={status} 
             onValueChange={onStatusChange}
-            onOpenChange={(e) => e.stopPropagation()}
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+            }}
           >
             <SelectTrigger 
               className="w-[140px]"
-              onClick={(e) => e.preventDefault()}
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+              }}
             >
               <SelectValue placeholder="Statut" />
             </SelectTrigger>
