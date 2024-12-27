@@ -9,8 +9,9 @@ import { LeadContactInfo } from "./LeadContactInfo";
 import { LeadProjectInfo } from "./LeadProjectInfo";
 import { LeadComments } from "./LeadComments";
 import { Button } from "@/components/ui/button";
-import { Calendar, MessageSquare, FileText } from "lucide-react";
+import { Calendar, MessageSquare, FileText, Edit2 } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
+import { Lead } from "@/types/crm";
 
 export const LeadDetailsPage = () => {
   const { id } = useParams();
@@ -19,6 +20,8 @@ export const LeadDetailsPage = () => {
   const lead = leads?.find(l => l.id === id);
   const [comment, setComment] = useState("");
   const [comments, setComments] = useState<Array<{ text: string; date: string }>>([]);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedLead, setEditedLead] = useState<Lead | null>(null);
 
   const handleAddComment = () => {
     if (!comment.trim()) return;
@@ -35,6 +38,29 @@ export const LeadDetailsPage = () => {
       title: "Commentaire ajouté",
       description: "Votre commentaire a été ajouté avec succès."
     });
+  };
+
+  const handleEdit = () => {
+    if (lead) {
+      setEditedLead(lead);
+      setIsEditing(true);
+    }
+  };
+
+  const handleSave = () => {
+    if (editedLead) {
+      updateLead(editedLead);
+      setIsEditing(false);
+      toast({
+        title: "Lead mis à jour",
+        description: "Les modifications ont été enregistrées avec succès."
+      });
+    }
+  };
+
+  const handleCancel = () => {
+    setIsEditing(false);
+    setEditedLead(null);
   };
 
   if (!lead) {
@@ -62,18 +88,35 @@ export const LeadDetailsPage = () => {
               </p>
             </div>
             <div className="flex gap-4">
-              <Button variant="outline" className="gap-2">
-                <Calendar className="h-4 w-4" />
-                Planifier RDV
-              </Button>
-              <Button variant="outline" className="gap-2">
-                <MessageSquare className="h-4 w-4" />
-                Envoyer message
-              </Button>
-              <Button variant="outline" className="gap-2">
-                <FileText className="h-4 w-4" />
-                Créer devis
-              </Button>
+              {isEditing ? (
+                <>
+                  <Button onClick={handleSave} variant="default">
+                    Sauvegarder
+                  </Button>
+                  <Button onClick={handleCancel} variant="outline">
+                    Annuler
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <Button variant="outline" className="gap-2" onClick={handleEdit}>
+                    <Edit2 className="h-4 w-4" />
+                    Modifier
+                  </Button>
+                  <Button variant="outline" className="gap-2">
+                    <Calendar className="h-4 w-4" />
+                    Planifier RDV
+                  </Button>
+                  <Button variant="outline" className="gap-2">
+                    <MessageSquare className="h-4 w-4" />
+                    Envoyer message
+                  </Button>
+                  <Button variant="outline" className="gap-2">
+                    <FileText className="h-4 w-4" />
+                    Créer devis
+                  </Button>
+                </>
+              )}
             </div>
           </div>
 
@@ -87,8 +130,18 @@ export const LeadDetailsPage = () => {
 
             <TabsContent value="info" className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <LeadContactInfo lead={lead} />
-                <LeadProjectInfo lead={lead} />
+                <LeadContactInfo 
+                  lead={lead} 
+                  isEditing={isEditing}
+                  editedLead={editedLead || lead}
+                  setEditedLead={(lead) => setEditedLead(lead)}
+                />
+                <LeadProjectInfo 
+                  lead={lead}
+                  isEditing={isEditing}
+                  editedLead={editedLead || lead}
+                  setEditedLead={(lead) => setEditedLead(lead)}
+                />
               </div>
             </TabsContent>
 
