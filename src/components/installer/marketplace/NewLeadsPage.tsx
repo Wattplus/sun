@@ -65,13 +65,13 @@ export const NewLeadsPage = () => {
         />
 
         {needsTopUp && (
-          <Alert className="bg-primary/10 border-primary/20 text-white">
-            <AlertCircle className="h-4 w-4 text-primary" />
+          <Alert className="bg-secondary/10 border-secondary/20 text-white">
+            <AlertCircle className="h-4 w-4 text-secondary" />
             <AlertDescription>
               Nous recommandons de maintenir un solde minimum de {recommendedBalance}€ pour ne pas manquer d'opportunités.{' '}
               <Button 
                 variant="link" 
-                className="text-primary p-0 h-auto font-semibold hover:text-primary/80"
+                className="text-secondary p-0 h-auto font-semibold hover:text-secondary/80"
                 onClick={handlePrepaidAccount}
               >
                 Recharger maintenant
@@ -86,7 +86,7 @@ export const NewLeadsPage = () => {
         />
 
         {selectedLeads.length > 0 && (
-          <Card className="p-6 bg-primary/5 border-primary/20">
+          <Card className="p-6 bg-secondary/5 border-secondary/20">
             <div className="flex items-center justify-between">
               <div>
                 <h3 className="text-lg font-medium text-white">
@@ -96,7 +96,7 @@ export const NewLeadsPage = () => {
               </div>
               <Button 
                 onClick={handlePurchase}
-                className="bg-primary hover:bg-primary/90 text-white px-6"
+                className="bg-secondary hover:bg-secondary/90 text-white px-6"
                 size="lg"
                 disabled={!hasEnoughBalance}
               >
@@ -110,7 +110,7 @@ export const NewLeadsPage = () => {
           {mockAvailableLeads.map((lead) => (
             <Card 
               key={lead.id}
-              className="p-6 bg-white/5 backdrop-blur-sm border-primary/20 hover:border-primary/40 transition-all duration-200"
+              className="p-6 bg-white/5 backdrop-blur-sm border-secondary/20 hover:border-secondary/40 transition-all duration-200"
             >
               <div className="space-y-4">
                 <div>
