@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Expand, Menu, User, Bell, LogOut, Home, MessageSquare, FileText, Settings, Package } from "lucide-react";
+import { Expand, Menu, User, Bell, LogOut, Home, MessageSquare, FileText, Settings, Package, ShoppingCart } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
@@ -19,9 +19,9 @@ export const DashboardControls = ({
 
   const menuItems = [
     { icon: Home, label: "Tableau de bord", path: "/espace-installateur" },
-    { icon: Package, label: "Marketplace", path: "/espace-installateur/marketplace" },
+    { icon: ShoppingCart, label: "Leads", path: "/espace-installateur/leads/nouveaux" },
     { icon: MessageSquare, label: "Messages", path: "/espace-installateur/messages" },
-    { icon: FileText, label: "Documents", path: "/espace-installateur/documents" },
+    { icon: FileText, label: "Rapports", path: "/espace-installateur/rapports" },
     { icon: Settings, label: "Paramètres", path: "/espace-installateur/parametres" },
   ];
 
@@ -38,14 +38,13 @@ export const DashboardControls = ({
     <Card className="border-primary/10">
       <div className="p-2">
         <div className="flex items-center justify-between">
-          {/* Logo */}
           <div className="flex items-center space-x-2">
             <span className="text-lg font-semibold text-primary">
               WattPlus
             </span>
           </div>
 
-          {/* Desktop Navigation Menu */}
+          {/* Navigation Menu - Desktop */}
           <div className="hidden md:flex items-center space-x-4">
             {menuItems.map((item) => (
               <Link
@@ -65,13 +64,20 @@ export const DashboardControls = ({
 
           {/* Right Controls */}
           <div className="flex items-center space-x-2">
-            {/* Desktop User Menu */}
+            {/* User Menu - Desktop */}
             <div className="hidden md:flex items-center space-x-2">
               {userMenuItems.map((item) => (
-                <Link key={item.path} to={item.path}>
-                  <Button variant="ghost" size="icon" className="text-primary">
-                    <item.icon className="h-5 w-5" />
-                  </Button>
+                <Link 
+                  key={item.path} 
+                  to={item.path}
+                  className={`flex items-center space-x-2 px-3 py-2 rounded-md transition-colors ${
+                    isActivePath(item.path)
+                      ? "bg-primary/10 text-primary"
+                      : "text-foreground hover:bg-primary/5"
+                  }`}
+                >
+                  <item.icon className="h-4 w-4" />
+                  <span className="hidden lg:inline">{item.label}</span>
                 </Link>
               ))}
             </div>
@@ -86,7 +92,7 @@ export const DashboardControls = ({
               <Expand className="h-5 w-5" />
             </Button>
 
-            {/* Mobile Menu Button */}
+            {/* Mobile Menu */}
             <div className="md:hidden">
               <Sheet open={isOpen} onOpenChange={setIsOpen}>
                 <SheetTrigger asChild>
@@ -94,13 +100,17 @@ export const DashboardControls = ({
                     <Menu className="h-5 w-5" />
                   </Button>
                 </SheetTrigger>
-                <SheetContent side="top" className="pt-10">
-                  <div className="flex flex-col space-y-4">
+                <SheetContent side="right" className="w-[300px] sm:w-[400px]">
+                  <nav className="flex flex-col gap-4">
                     {[...menuItems, ...userMenuItems].map((item) => (
                       <Link
                         key={item.path}
                         to={item.path}
-                        className="flex items-center space-x-2 text-sm"
+                        className={`flex items-center space-x-2 px-3 py-2 rounded-md transition-colors ${
+                          isActivePath(item.path)
+                            ? "bg-primary/10 text-primary"
+                            : "text-foreground hover:bg-primary/5"
+                        }`}
                         onClick={() => setIsOpen(false)}
                       >
                         <item.icon className="h-4 w-4" />
@@ -109,14 +119,13 @@ export const DashboardControls = ({
                     ))}
                     <Button 
                       variant="destructive" 
-                      size="sm"
-                      className="w-full justify-start"
+                      className="mt-4 w-full justify-start gap-2"
                       onClick={() => setIsOpen(false)}
                     >
-                      <LogOut className="h-4 w-4 mr-2" />
-                      Déconnexion
+                      <LogOut className="h-4 w-4" />
+                      <span>Déconnexion</span>
                     </Button>
-                  </div>
+                  </nav>
                 </SheetContent>
               </Sheet>
             </div>
