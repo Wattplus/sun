@@ -35,44 +35,9 @@ export const DashboardControls = ({
     <Card className="border-primary/10">
       <div className="p-2">
         <div className="flex items-center justify-between">
-          {/* Mobile Menu */}
-          <div className="flex md:hidden">
-            <Sheet open={isOpen} onOpenChange={setIsOpen}>
-              <SheetTrigger asChild>
-                <Button variant="ghost" size="icon" className="text-primary">
-                  <Menu className="h-5 w-5" />
-                </Button>
-              </SheetTrigger>
-              <SheetContent side="top" className="pt-10">
-                <div className="flex flex-col space-y-4">
-                  {menuItems.map((item) => (
-                    <Link
-                      key={item.path}
-                      to={item.path}
-                      className="flex items-center space-x-2 text-sm"
-                      onClick={() => setIsOpen(false)}
-                    >
-                      <item.icon className="h-4 w-4" />
-                      <span>{item.label}</span>
-                    </Link>
-                  ))}
-                  <Button 
-                    variant="destructive" 
-                    size="sm"
-                    className="w-full justify-start"
-                    onClick={() => setIsOpen(false)}
-                  >
-                    <LogOut className="h-4 w-4 mr-2" />
-                    Déconnexion
-                  </Button>
-                </div>
-              </SheetContent>
-            </Sheet>
-          </div>
-
           {/* Logo */}
           <div className="flex items-center space-x-2">
-            <span className="text-lg font-semibold text-primary hidden sm:block">
+            <span className="text-lg font-semibold text-primary">
               WattPlus
             </span>
           </div>
@@ -115,6 +80,41 @@ export const DashboardControls = ({
             >
               <Expand className="h-5 w-5" />
             </Button>
+
+            {/* Mobile Menu Button */}
+            <div className="md:hidden">
+              <Sheet open={isOpen} onOpenChange={setIsOpen}>
+                <SheetTrigger asChild>
+                  <Button variant="ghost" size="icon" className="text-primary">
+                    <Menu className="h-5 w-5" />
+                  </Button>
+                </SheetTrigger>
+                <SheetContent side="top" className="pt-10">
+                  <div className="flex flex-col space-y-4">
+                    {menuItems.map((item) => (
+                      <Link
+                        key={item.path}
+                        to={item.path}
+                        className="flex items-center space-x-2 text-sm"
+                        onClick={() => setIsOpen(false)}
+                      >
+                        <item.icon className="h-4 w-4" />
+                        <span>{item.label}</span>
+                      </Link>
+                    ))}
+                    <Button 
+                      variant="destructive" 
+                      size="sm"
+                      className="w-full justify-start"
+                      onClick={() => setIsOpen(false)}
+                    >
+                      <LogOut className="h-4 w-4 mr-2" />
+                      Déconnexion
+                    </Button>
+                  </div>
+                </SheetContent>
+              </Sheet>
+            </div>
           </div>
         </div>
       </div>
