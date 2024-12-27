@@ -69,7 +69,7 @@ export const LeadsTable = ({ leads, onLeadSelect, selectedLeads = [] }: LeadsTab
                   {lead.projectType === 'professional' ? 'Professionnel' : 'Résidentiel'}
                 </Badge>
               </TableCell>
-              <TableCell>{maskSensitiveInfo(lead.firstName)}</TableCell>
+              <TableCell>{lead.firstName}</TableCell>
               <TableCell>{maskSensitiveInfo(lead.lastName)}</TableCell>
               <TableCell>{maskSensitiveInfo(lead.email)}</TableCell>
               <TableCell>{maskSensitiveInfo(lead.phone)}</TableCell>
