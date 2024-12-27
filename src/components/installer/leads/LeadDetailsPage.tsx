@@ -8,8 +8,11 @@ import { Card } from "@/components/ui/card";
 import { LeadContactInfo } from "./LeadContactInfo";
 import { LeadProjectInfo } from "./LeadProjectInfo";
 import { LeadComments } from "./LeadComments";
+import { LeadAppointments } from "./sections/LeadAppointments";
+import { LeadDocuments } from "./sections/LeadDocuments";
+import { LeadTasks } from "./sections/LeadTasks";
 import { Button } from "@/components/ui/button";
-import { Calendar, MessageSquare, FileText, Edit2 } from "lucide-react";
+import { Calendar, MessageSquare, FileText, Edit2, CheckSquare } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import { Lead } from "@/types/crm";
 
@@ -22,6 +25,7 @@ export const LeadDetailsPage = () => {
   const [comments, setComments] = useState<Array<{ text: string; date: string }>>([]);
   const [isEditing, setIsEditing] = useState(false);
   const [editedLead, setEditedLead] = useState<Lead | null>(null);
+  const [activeTab, setActiveTab] = useState("info");
 
   const handleAddComment = () => {
     if (!comment.trim()) return;
@@ -103,29 +107,34 @@ export const LeadDetailsPage = () => {
                     <Edit2 className="h-4 w-4" />
                     Modifier
                   </Button>
-                  <Button variant="outline" className="gap-2">
+                  <Button variant="outline" className="gap-2" onClick={() => setActiveTab("appointments")}>
                     <Calendar className="h-4 w-4" />
                     Planifier RDV
                   </Button>
-                  <Button variant="outline" className="gap-2">
+                  <Button variant="outline" className="gap-2" onClick={() => setActiveTab("comments")}>
                     <MessageSquare className="h-4 w-4" />
                     Envoyer message
                   </Button>
-                  <Button variant="outline" className="gap-2">
+                  <Button variant="outline" className="gap-2" onClick={() => setActiveTab("documents")}>
                     <FileText className="h-4 w-4" />
                     Créer devis
+                  </Button>
+                  <Button variant="outline" className="gap-2" onClick={() => setActiveTab("tasks")}>
+                    <CheckSquare className="h-4 w-4" />
+                    Tâches
                   </Button>
                 </>
               )}
             </div>
           </div>
 
-          <Tabs defaultValue="info" className="space-y-4">
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
             <TabsList>
               <TabsTrigger value="info">Informations</TabsTrigger>
               <TabsTrigger value="comments">Commentaires</TabsTrigger>
               <TabsTrigger value="appointments">Rendez-vous</TabsTrigger>
               <TabsTrigger value="documents">Documents</TabsTrigger>
+              <TabsTrigger value="tasks">Tâches</TabsTrigger>
             </TabsList>
 
             <TabsContent value="info" className="space-y-4">
@@ -157,19 +166,15 @@ export const LeadDetailsPage = () => {
             </TabsContent>
 
             <TabsContent value="appointments">
-              <Card className="p-6">
-                <p className="text-muted-foreground">
-                  Fonctionnalité de gestion des rendez-vous à venir...
-                </p>
-              </Card>
+              <LeadAppointments lead={lead} />
             </TabsContent>
 
             <TabsContent value="documents">
-              <Card className="p-6">
-                <p className="text-muted-foreground">
-                  Fonctionnalité de gestion des documents à venir...
-                </p>
-              </Card>
+              <LeadDocuments lead={lead} />
+            </TabsContent>
+
+            <TabsContent value="tasks">
+              <LeadTasks lead={lead} />
             </TabsContent>
           </Tabs>
         </div>
