@@ -80,8 +80,13 @@ export const LeadCard = ({
   };
 
   return (
-    <Card className="flex flex-col h-full bg-gradient-to-br from-background/95 to-background border-primary/20 hover:border-primary/40 transition-all duration-300">
-      <div className="p-6 space-y-6">
+    <Card className="group relative overflow-hidden transition-all duration-500 hover:scale-[1.02] bg-white border border-primary/20 hover:border-primary/40 shadow-lg hover:shadow-primary/20">
+      {/* Effet de brillance au survol */}
+      <div className="absolute inset-0 opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-700">
+        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+      </div>
+
+      <div className="relative p-6 space-y-6 bg-gradient-to-br from-white to-primary/5">
         {/* En-tête avec les informations principales */}
         <div className="space-y-4">
           <div className="flex items-start justify-between">
@@ -93,59 +98,59 @@ export const LeadCard = ({
                 Ref: {lead.id.substring(0, 8)}
               </p>
             </div>
-            <Badge variant="outline" className="bg-primary/10 text-primary border-primary/20">
+            <Badge variant="outline" className="bg-primary text-white border-primary/20 shadow-sm">
               {format(new Date(lead.createdAt), 'dd MMM yyyy', { locale: fr })}
             </Badge>
           </div>
         </div>
 
         {/* Informations de localisation */}
-        <div className="space-y-4 p-4 rounded-lg bg-primary/5 border border-primary/10">
-          <div className="flex items-center gap-2 text-muted-foreground">
-            <MapPin className="h-4 w-4 text-primary" />
-            <span>{lead.city} ({lead.postalCode})</span>
+        <div className="space-y-4 p-4 rounded-lg bg-gradient-to-br from-primary/10 to-transparent border border-primary/20 shadow-inner">
+          <div className="flex items-center gap-2 text-primary/80">
+            <MapPin className="h-4 w-4 text-primary animate-pulse" />
+            <span className="font-medium">{lead.city} ({lead.postalCode})</span>
           </div>
           
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-1">
-              <p className="text-sm text-muted-foreground">Budget</p>
-              <p className="font-semibold text-lg flex items-center gap-1">
-                <Euro className="h-4 w-4 text-primary" />
+              <p className="text-sm text-primary/70">Budget</p>
+              <p className="font-semibold text-lg flex items-center gap-1 text-primary">
+                <Euro className="h-4 w-4" />
                 {lead.budget.toLocaleString()}€
               </p>
             </div>
             <div className="space-y-1">
-              <p className="text-sm text-muted-foreground">Type</p>
-              <p className="font-semibold">{lead.projectType === 'professional' ? 'Professionnel' : 'Résidentiel'}</p>
+              <p className="text-sm text-primary/70">Type</p>
+              <p className="font-semibold text-primary">{lead.projectType === 'professional' ? 'Professionnel' : 'Résidentiel'}</p>
             </div>
           </div>
         </div>
 
         {/* Informations de contact masquées */}
-        <div className="space-y-2">
-          <div className="flex items-center gap-2 text-muted-foreground">
+        <div className="space-y-2 p-4 rounded-lg bg-secondary/5 backdrop-blur-sm">
+          <div className="flex items-center gap-2 text-secondary">
             <Phone className="h-4 w-4" />
-            <span>••• ••• •••</span>
+            <span className="font-mono">••• ••• •••</span>
           </div>
-          <div className="flex items-center gap-2 text-muted-foreground">
+          <div className="flex items-center gap-2 text-secondary">
             <Mail className="h-4 w-4" />
-            <span>••••••@•••••.••</span>
+            <span className="font-mono">••••••@•••••.••</span>
           </div>
         </div>
 
         {/* Prix et actions */}
         {!isPurchased && (
           <div className="mt-auto space-y-4">
-            <div className="p-4 bg-primary/5 rounded-lg border border-primary/10">
+            <div className="p-4 bg-gradient-to-r from-primary/5 to-transparent rounded-lg border border-primary/10">
               <h4 className="text-sm font-medium text-primary mb-3">Options d'achat :</h4>
               <div className="space-y-2">
                 <div className="flex justify-between items-center">
-                  <span className="text-sm">Compte prépayé</span>
-                  <span className="font-bold">{prices.mutualPrice}€</span>
+                  <span className="text-sm text-primary/80">Compte prépayé</span>
+                  <span className="font-bold text-primary">{prices.mutualPrice}€</span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-sm">Prix standard</span>
-                  <span className="font-bold">{prices.exclusivePrice}€</span>
+                  <span className="text-sm text-primary/80">Prix standard</span>
+                  <span className="font-bold text-primary">{prices.exclusivePrice}€</span>
                 </div>
               </div>
             </div>
