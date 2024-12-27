@@ -3,7 +3,7 @@ import { Card } from "@/components/ui/card";
 import { useToast } from "@/components/ui/use-toast";
 import { calculateLeadPrice } from "@/utils/leadPricing";
 import { SubscriptionTier } from "@/types/subscription";
-import { MapPin } from "lucide-react";
+import { LeadCardHeader } from "./LeadCardHeader";
 import { LeadCardActions } from "./LeadCardActions";
 
 interface LeadCardProps {
@@ -78,46 +78,41 @@ export const LeadCard = ({
   return (
     <Card className="h-full bg-[#0B1221] text-white border border-[#1EAEDB]/20 hover:border-[#1EAEDB]/40 transition-all duration-300">
       <div className="p-6 space-y-4">
-        <div className="flex items-center justify-between">
-          <div>
-            <h3 className="text-xl font-medium text-[#1EAEDB]">
-              {lead.firstName} {lead.lastName}
-            </h3>
-            <div className="flex items-center gap-2 text-[#1EAEDB]/60 mt-1">
-              <MapPin className="w-4 h-4" />
-              <span>{lead.postalCode} {lead.city}</span>
-            </div>
-          </div>
-          <span className="text-sm text-[#1EAEDB]/60">
-            Plus d'un mois
-          </span>
-        </div>
-
-        <div className="space-y-3">
-          <div className="flex items-center gap-2 text-[#1EAEDB]/80">
-            <span>Budget:</span>
-            <span className="font-medium">{lead.budget.toLocaleString()}€</span>
-          </div>
-
-          <div>
-            <span className="text-[#1EAEDB]/80">Type de projet:</span>
-            <div className="mt-1">
-              <span className="inline-flex px-3 py-1 text-sm font-medium rounded-full bg-[#1EAEDB]/10 text-[#1EAEDB]">
-                {lead.projectType === 'residential' ? 'Résidentiel' : 'Professionnel'}
-              </span>
-            </div>
-          </div>
-        </div>
+        <LeadCardHeader
+          firstName={lead.firstName}
+          lastName={lead.lastName}
+          postalCode={lead.postalCode}
+          createdAt={lead.createdAt}
+          projectType={lead.projectType}
+          budget={lead.budget}
+          purchasedBy={lead.purchasedBy}
+        />
 
         {!isPurchased && (
-          <LeadCardActions
-            onPurchase={handlePurchase}
-            mutualPrice={prices.mutualPrice}
-            exclusivePrice={prices.exclusivePrice}
-            canPurchaseMutual={true}
-            canPurchaseExclusive={true}
-            isProfessionalProject={lead.projectType === 'professional'}
-          />
+          <div className="mt-6 space-y-4">
+            <div className="p-4 bg-[#1EAEDB]/10 rounded-lg">
+              <h4 className="text-sm font-medium text-[#1EAEDB] mb-2">Options de paiement :</h4>
+              <ul className="space-y-2 text-sm">
+                <li className="flex items-center justify-between">
+                  <span>Prix avec compte prépayé :</span>
+                  <span className="font-bold">35€</span>
+                </li>
+                <li className="flex items-center justify-between">
+                  <span>Prix standard {lead.projectType === 'professional' ? '(Pro)' : ''} :</span>
+                  <span className="font-bold">{lead.projectType === 'professional' ? '59€' : '35€'}</span>
+                </li>
+              </ul>
+            </div>
+
+            <LeadCardActions
+              onPurchase={handlePurchase}
+              mutualPrice={prices.mutualPrice}
+              exclusivePrice={prices.exclusivePrice}
+              canPurchaseMutual={true}
+              canPurchaseExclusive={true}
+              isProfessionalProject={lead.projectType === 'professional'}
+            />
+          </div>
         )}
       </div>
     </Card>

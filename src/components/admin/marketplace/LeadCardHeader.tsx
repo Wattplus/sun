@@ -39,6 +39,9 @@ export const LeadCardHeader = ({
           <h3 className="text-lg font-medium">
             {firstName} {lastName}
           </h3>
+          <Badge variant="secondary" className="bg-primary/10 text-primary">
+            {projectType === 'professional' ? 'Professionnel' : 'Résidentiel'}
+          </Badge>
         </div>
         <Badge variant="outline" className="flex items-center gap-1">
           <Clock className="h-3 w-3" />
@@ -55,13 +58,6 @@ export const LeadCardHeader = ({
         <div>
           <span className="text-muted-foreground">Budget:</span>
           <p className="font-medium">{budget.toLocaleString()}€</p>
-        </div>
-        
-        <div>
-          <span className="text-muted-foreground">Type de projet:</span>
-          <Badge variant="secondary" className="mt-1 bg-primary/10 text-primary">
-            {projectType}
-          </Badge>
         </div>
 
         <div className="flex items-center justify-between mt-4 text-sm text-muted-foreground border-t pt-4 border-primary/10">
