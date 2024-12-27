@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Expand } from "lucide-react";
+import { Expand, LogOut } from "lucide-react";
 import { Link } from "react-router-dom";
 
 interface DashboardControlsProps {
@@ -20,9 +20,12 @@ export const DashboardControls = ({
             WattPlus
           </Link>
 
-          {/* Right Controls */}
-          <div className="flex items-center space-x-2">
-            {/* Fullscreen Button */}
+          <div className="flex items-center gap-4">
+            <Button variant="ghost" size="sm" className="text-primary">
+              <LogOut className="h-4 w-4 mr-2" />
+              <span>Déconnexion</span>
+            </Button>
+            
             <Button
               variant="ghost"
               size="icon"
