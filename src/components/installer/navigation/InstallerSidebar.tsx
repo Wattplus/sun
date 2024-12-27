@@ -10,8 +10,11 @@ import {
   Bell,
   ShoppingCart,
   LogOut,
+  PanelLeftClose,
+  PanelLeft,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useSidebar } from "@/components/ui/sidebar";
 
 const navigation = [
   { name: "Dashboard", href: "/espace-installateur", icon: LayoutDashboard },
@@ -25,13 +28,25 @@ const navigation = [
 
 export function InstallerSidebar() {
   const location = useLocation();
+  const { open, toggleSidebar } = useSidebar();
 
   return (
     <Sidebar className="border-r border-primary/10">
       <SidebarContent>
         <div className="space-y-4 py-4">
           <div className="px-3 py-2">
-            <div className="mt-3 space-y-1">
+            <div className="flex justify-between items-center mb-4 px-3">
+              <h2 className="text-lg font-semibold text-primary">Installateur</h2>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={toggleSidebar}
+                className="text-primary hover:text-primary/80"
+              >
+                {open ? <PanelLeftClose className="h-5 w-5" /> : <PanelLeft className="h-5 w-5" />}
+              </Button>
+            </div>
+            <div className="space-y-1">
               {navigation.map((item) => (
                 <Link
                   key={item.name}
@@ -54,7 +69,7 @@ export function InstallerSidebar() {
         <div className="mt-auto p-4">
           <Button
             variant="outline"
-            className="w-full justify-start gap-2 bg-primary/5 hover:bg-primary/10"
+            className="w-full justify-start gap-2 bg-primary/5 hover:bg-primary/10 text-primary"
           >
             <LogOut className="h-4 w-4" />
             <span>Déconnexion</span>
