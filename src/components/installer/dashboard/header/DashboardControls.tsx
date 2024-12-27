@@ -1,9 +1,9 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Expand, Menu, User, Bell, LogOut } from "lucide-react";
+import { Expand, Menu, User, Bell, LogOut, Home, MessageSquare, FileText, Settings, Package } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 interface DashboardControlsProps {
   isFullscreen: boolean;
@@ -15,6 +15,19 @@ export const DashboardControls = ({
   toggleFullscreen,
 }: DashboardControlsProps) => {
   const [isOpen, setIsOpen] = useState(false);
+  const location = useLocation();
+
+  const menuItems = [
+    { icon: Home, label: "Tableau de bord", path: "/espace-installateur" },
+    { icon: Package, label: "Marketplace", path: "/espace-installateur/marketplace" },
+    { icon: MessageSquare, label: "Messages", path: "/espace-installateur/messages" },
+    { icon: FileText, label: "Documents", path: "/espace-installateur/documents" },
+    { icon: Settings, label: "Paramètres", path: "/espace-installateur/parametres" },
+  ];
+
+  const isActivePath = (path: string) => {
+    return location.pathname === path;
+  };
 
   return (
     <Card className="border-primary/10">
@@ -30,6 +43,17 @@ export const DashboardControls = ({
               </SheetTrigger>
               <SheetContent side="top" className="pt-10">
                 <div className="flex flex-col space-y-4">
+                  {menuItems.map((item) => (
+                    <Link
+                      key={item.path}
+                      to={item.path}
+                      className="flex items-center space-x-2 text-sm"
+                      onClick={() => setIsOpen(false)}
+                    >
+                      <item.icon className="h-4 w-4" />
+                      <span>{item.label}</span>
+                    </Link>
+                  ))}
                   <Link 
                     to="/espace-installateur/notifications" 
                     className="flex items-center space-x-2 text-sm"
@@ -65,6 +89,24 @@ export const DashboardControls = ({
             <span className="text-lg font-semibold text-primary hidden sm:block">
               WattPlus
             </span>
+          </div>
+
+          {/* Desktop Navigation Menu */}
+          <div className="hidden md:flex items-center space-x-4">
+            {menuItems.map((item) => (
+              <Link
+                key={item.path}
+                to={item.path}
+                className={`flex items-center space-x-2 px-3 py-2 rounded-md transition-colors ${
+                  isActivePath(item.path)
+                    ? "bg-primary/10 text-primary"
+                    : "text-foreground hover:bg-primary/5"
+                }`}
+              >
+                <item.icon className="h-4 w-4" />
+                <span>{item.label}</span>
+              </Link>
+            ))}
           </div>
 
           {/* Desktop Controls */}
