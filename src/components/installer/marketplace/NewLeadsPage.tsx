@@ -4,7 +4,7 @@ import { mockAvailableLeads } from "../dashboard/mockAvailableLeads";
 import { Lead } from "@/types/crm";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
-import { ShoppingCart, RefreshCw, Search, Filter, Shield, Rocket, Clock } from "lucide-react";
+import { ShoppingCart, RefreshCw, Search, Filter, Shield, Rocket, Clock, Euro, Building2, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { InstallerBreadcrumb } from "../navigation/InstallerBreadcrumb";
@@ -51,6 +51,57 @@ export const NewLeadsPage = () => {
     <InstallerLayout>
       <div className="space-y-6">
         <InstallerBreadcrumb />
+
+        {/* Nouvelle section compte prépayé et prix */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+          {/* Compte prépayé */}
+          <Card className="bg-gradient-to-br from-[#0B1221] to-[#1a5fb4] p-6 border-primary/20">
+            <div className="flex items-center justify-between">
+              <div className="space-y-1">
+                <h3 className="text-lg font-semibold text-white">Compte Prépayé</h3>
+                <p className="text-sm text-white/60">Solde disponible</p>
+              </div>
+              <div className="text-right">
+                <div className="flex items-center gap-2">
+                  <Euro className="h-6 w-6 text-[#1EAEDB]" />
+                  <span className="text-3xl font-bold text-white">150</span>
+                </div>
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="mt-2 bg-white/10 border-white/20 text-white hover:bg-white/20"
+                >
+                  Recharger
+                </Button>
+              </div>
+            </div>
+          </Card>
+
+          {/* Grille de prix */}
+          <Card className="bg-gradient-to-br from-[#0B1221] to-[#1a5fb4] p-6 border-primary/20">
+            <h3 className="text-lg font-semibold text-white mb-4">Tarifs des leads</h3>
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <div className="p-2 rounded-full bg-[#1EAEDB]/20">
+                    <User className="h-4 w-4 text-white" />
+                  </div>
+                  <span className="text-white">Lead particulier</span>
+                </div>
+                <span className="text-xl font-bold text-white">26€</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <div className="p-2 rounded-full bg-[#1EAEDB]/20">
+                    <Building2 className="h-4 w-4 text-white" />
+                  </div>
+                  <span className="text-white">Lead professionnel</span>
+                </div>
+                <span className="text-xl font-bold text-white">59€</span>
+              </div>
+            </div>
+          </Card>
+        </div>
 
         <div className="flex items-center justify-between">
           <div>
@@ -181,12 +232,6 @@ export const NewLeadsPage = () => {
           </Card>
         </div>
 
-        <Button 
-          onClick={() => window.location.href = '/espace-installateur/marketplace/prepaid'}
-          className="w-full gap-2 text-base font-medium py-6 bg-gradient-to-r from-primary via-accent to-primary hover:from-primary/90 hover:via-accent/90 hover:to-primary/90 border-0 transition-all duration-300 bg-[length:200%_100%] animate-gradient text-white shadow-lg"
-        >
-          Recharger mon compte
-        </Button>
       </div>
     </InstallerLayout>
   );
