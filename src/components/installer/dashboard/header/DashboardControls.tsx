@@ -1,6 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { PanelLeftClose, PanelLeft, Maximize2, Minimize2 } from "lucide-react";
-import { useSidebar } from "@/components/ui/sidebar";
+import { Maximize2, Minimize2 } from "lucide-react";
 
 interface DashboardControlsProps {
   isFullscreen: boolean;
@@ -8,23 +7,8 @@ interface DashboardControlsProps {
 }
 
 export const DashboardControls = ({ isFullscreen, toggleFullscreen }: DashboardControlsProps) => {
-  const { open, toggleSidebar } = useSidebar();
-
   return (
-    <div className="flex justify-between items-center gap-2">
-      <Button
-        variant="ghost"
-        size="icon"
-        onClick={toggleSidebar}
-        className="hover:bg-primary/10 text-primary"
-      >
-        {open ? (
-          <PanelLeftClose className="h-5 w-5" />
-        ) : (
-          <PanelLeft className="h-5 w-5" />
-        )}
-      </Button>
-
+    <div className="flex justify-end items-center gap-2">
       <Button
         variant="outline"
         size="icon"
