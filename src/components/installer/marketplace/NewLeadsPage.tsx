@@ -4,7 +4,7 @@ import { mockAvailableLeads } from "../dashboard/mockAvailableLeads";
 import { Lead } from "@/types/crm";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
-import { ShoppingCart, RefreshCw, Search, Filter } from "lucide-react";
+import { ShoppingCart, RefreshCw, Search, Filter, ArrowRight, Wallet, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { InstallerBreadcrumb } from "../navigation/InstallerBreadcrumb";
@@ -54,7 +54,7 @@ export const NewLeadsPage = () => {
         
         <AccountSection />
 
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
           <div>
             <h1 className="text-2xl font-semibold flex items-center gap-2">
               Nouveaux Leads Disponibles
@@ -66,22 +66,31 @@ export const NewLeadsPage = () => {
               Découvrez les derniers leads qualifiés correspondant à votre zone
             </p>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <Button 
               variant="outline" 
               size="icon"
               onClick={handleRefresh}
-              className="shrink-0"
+              className="shrink-0 hover:bg-primary/10 group"
             >
-              <RefreshCw className="h-4 w-4" />
+              <RefreshCw className="h-4 w-4 group-hover:rotate-180 transition-transform duration-500" />
+            </Button>
+            <Button 
+              variant="outline"
+              className="shrink-0 hover:bg-green-500/10 group border-green-500/20"
+              onClick={() => document.getElementById('lead-form')?.scrollIntoView({ behavior: 'smooth' })}
+            >
+              <Plus className="h-4 w-4 mr-2 group-hover:rotate-90 transition-transform" />
+              Nouveau lead
             </Button>
             {selectedLeads.length > 0 && (
               <Button 
                 onClick={handlePurchaseLeads}
-                className="bg-primary hover:bg-primary/90 gap-2"
+                className="bg-gradient-to-r from-primary via-accent to-primary hover:from-primary/90 hover:via-accent/90 hover:to-primary/90 border-0 transition-all duration-300 bg-[length:200%_100%] animate-gradient group gap-2"
               >
-                <ShoppingCart className="h-4 w-4" />
+                <ShoppingCart className="h-4 w-4 group-hover:scale-110 transition-transform" />
                 Acheter {selectedLeads.length} lead{selectedLeads.length > 1 ? 's' : ''} ({selectedLeads.reduce((sum, lead) => sum + lead.price, 0)}€)
+                <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
               </Button>
             )}
           </div>
@@ -89,7 +98,7 @@ export const NewLeadsPage = () => {
 
         <Card className="p-6 relative overflow-hidden bg-gradient-to-br from-background via-background/95 to-background">
           <div className="space-y-6">
-            <div className="flex items-center gap-4">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
               <div className="flex-1">
                 <div className="relative">
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -101,17 +110,27 @@ export const NewLeadsPage = () => {
                   />
                 </div>
               </div>
-              <Button variant="outline" className="gap-2">
-                <Filter className="h-4 w-4" />
-                Filtres
+              <Button variant="outline" className="gap-2 group hover:bg-primary/10">
+                <Filter className="h-4 w-4 group-hover:rotate-180 transition-transform duration-500" />
+                Filtres avancés
+                <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
               </Button>
             </div>
 
             <Tabs defaultValue="all" className="w-full">
               <TabsList className="w-full justify-start">
-                <TabsTrigger value="all">Tous les leads</TabsTrigger>
-                <TabsTrigger value="residential">Résidentiel</TabsTrigger>
-                <TabsTrigger value="professional">Professionnel</TabsTrigger>
+                <TabsTrigger value="all" className="group">
+                  Tous les leads
+                  <ArrowRight className="h-4 w-4 ml-2 opacity-0 group-data-[state=active]:opacity-100 group-data-[state=active]:translate-x-1 transition-all" />
+                </TabsTrigger>
+                <TabsTrigger value="residential" className="group">
+                  Résidentiel
+                  <ArrowRight className="h-4 w-4 ml-2 opacity-0 group-data-[state=active]:opacity-100 group-data-[state=active]:translate-x-1 transition-all" />
+                </TabsTrigger>
+                <TabsTrigger value="professional" className="group">
+                  Professionnel
+                  <ArrowRight className="h-4 w-4 ml-2 opacity-0 group-data-[state=active]:opacity-100 group-data-[state=active]:translate-x-1 transition-all" />
+                </TabsTrigger>
               </TabsList>
               <TabsContent value="all">
                 <LeadsList 
