@@ -13,6 +13,7 @@ import { BalanceSection } from "./sections/BalanceSection";
 import { PricingCards } from "./sections/PricingCards";
 import { BottomCTA } from "./sections/BottomCTA";
 import { mockAvailableLeads } from "../dashboard/mockAvailableLeads";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
 export const NewLeadsPage = () => {
   const [selectedLeads, setSelectedLeads] = useState<Lead[]>([]);
@@ -52,11 +53,9 @@ export const NewLeadsPage = () => {
     });
   };
 
-  const totalPrice = selectedLeads.reduce((sum, lead) => sum + (hasEnoughBalance ? 26 : 35), 0);
-
   return (
     <InstallerLayout>
-      <div className="max-w-6xl mx-auto space-y-6 p-4 min-h-screen">
+      <div className="max-w-7xl mx-auto space-y-6 p-4 min-h-screen bg-background">
         <InstallerBreadcrumb />
         
         <BalanceSection 
@@ -80,10 +79,53 @@ export const NewLeadsPage = () => {
           </Alert>
         )}
 
-        <PricingCards 
-          hasEnoughBalance={hasEnoughBalance}
-          onPurchase={handlePurchase}
-        />
+        <Card className="p-6 bg-background/50 border-secondary/20">
+          <div className="overflow-x-auto">
+            <Table>
+              <TableHeader>
+                <TableRow className="bg-secondary/10">
+                  <TableHead className="text-white">Type de projet</TableHead>
+                  <TableHead className="text-white">Prénom</TableHead>
+                  <TableHead className="text-white">Nom</TableHead>
+                  <TableHead className="text-white">Email</TableHead>
+                  <TableHead className="text-white">Téléphone</TableHead>
+                  <TableHead className="text-white">Code postal</TableHead>
+                  <TableHead className="text-white">Type de toit</TableHead>
+                  <TableHead className="text-white">Facture mensuelle</TableHead>
+                  <TableHead className="text-white">Installation électrique</TableHead>
+                  <TableHead className="text-white">Action</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {mockAvailableLeads.map((lead) => (
+                  <TableRow 
+                    key={lead.id}
+                    className="border-b border-secondary/10 hover:bg-secondary/5"
+                  >
+                    <TableCell className="text-white">{lead.projectType}</TableCell>
+                    <TableCell className="text-white">{lead.firstName}</TableCell>
+                    <TableCell className="text-white">{lead.lastName}</TableCell>
+                    <TableCell className="text-white">{lead.email}</TableCell>
+                    <TableCell className="text-white">{lead.phone}</TableCell>
+                    <TableCell className="text-white">{lead.postalCode}</TableCell>
+                    <TableCell className="text-white">{lead.roofType || "Non spécifié"}</TableCell>
+                    <TableCell className="text-white">{lead.monthlyBill || "Non spécifié"}€</TableCell>
+                    <TableCell className="text-white">{lead.electricalType || "Non spécifié"}</TableCell>
+                    <TableCell>
+                      <Button
+                        onClick={() => handleLeadSelect(lead)}
+                        variant={selectedLeads.some(l => l.id === lead.id) ? "secondary" : "outline"}
+                        className="w-full"
+                      >
+                        {selectedLeads.some(l => l.id === lead.id) ? "Désélectionner" : "Sélectionner"}
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+        </Card>
 
         {selectedLeads.length > 0 && (
           <Card className="p-6 bg-secondary/5 border-secondary/20">
@@ -92,7 +134,7 @@ export const NewLeadsPage = () => {
                 <h3 className="text-lg font-medium text-white">
                   {selectedLeads.length} lead{selectedLeads.length > 1 ? 's' : ''} sélectionné{selectedLeads.length > 1 ? 's' : ''}
                 </h3>
-                <p className="text-white/60">Total: {totalPrice}€</p>
+                <p className="text-white/60">Total: {selectedLeads.length * 26}€</p>
               </div>
               <Button 
                 onClick={handlePurchase}
@@ -105,33 +147,6 @@ export const NewLeadsPage = () => {
             </div>
           </Card>
         )}
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {mockAvailableLeads.map((lead) => (
-            <Card 
-              key={lead.id}
-              className="p-6 bg-white/5 backdrop-blur-sm border-secondary/20 hover:border-secondary/40 transition-all duration-200"
-            >
-              <div className="space-y-4">
-                <div>
-                  <h3 className="text-lg font-medium text-white">{lead.firstName} {lead.lastName}</h3>
-                  <p className="text-white/60">{lead.postalCode}</p>
-                </div>
-                <div>
-                  <p className="text-sm text-white/80">Budget: {lead.budget}€</p>
-                  <p className="text-sm text-white/80">Type: {lead.projectType}</p>
-                </div>
-                <Button
-                  onClick={() => handleLeadSelect(lead)}
-                  variant={selectedLeads.some(l => l.id === lead.id) ? "secondary" : "outline"}
-                  className="w-full"
-                >
-                  {selectedLeads.some(l => l.id === lead.id) ? "Désélectionner" : "Sélectionner"}
-                </Button>
-              </div>
-            </Card>
-          ))}
-        </div>
 
         <BottomCTA onPrepaidAccount={handlePrepaidAccount} />
       </div>
