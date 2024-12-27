@@ -2,8 +2,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { Index } from "@/pages/Index";
-import { ClientPortal } from "@/pages/ClientPortal";
-import { Admin } from "@/pages/Admin";
+import ClientPortal from "@/pages/ClientPortal";
+import Admin from "@/pages/Admin";
 import { InstallerDashboard } from "@/components/installer/InstallerDashboard";
 import "./App.css";
 
