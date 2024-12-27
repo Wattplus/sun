@@ -27,7 +27,12 @@ const InstallerProfile = () => {
         return <HelpPage />;
       case "/espace-installateur/leads":
         return <PurchasedLeadsPage />;
+      case "/espace-installateur":
+        return <InstallerDashboard />;
       default:
+        if (path.startsWith("/espace-installateur/leads/")) {
+          return <PurchasedLeadsPage />;
+        }
         return <InstallerDashboard />;
     }
   };
