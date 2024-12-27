@@ -6,6 +6,7 @@ import { ShoppingCart, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { EmptyLeadState } from "./EmptyLeadState";
 
 interface LeadsTableProps {
   leads: Lead[];
