@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Sidebar, SidebarContent, useSidebar } from "@/components/ui/sidebar";
+import { Link, useLocation } from "react-router-dom";
+import { Sidebar, SidebarContent } from "@/components/ui/sidebar";
 import {
   LayoutDashboard,
   MessageSquare,
@@ -79,13 +79,6 @@ const navigation = [
 
 export function InstallerSidebar() {
   const location = useLocation();
-  const navigate = useNavigate();
-  const { setOpen } = useSidebar();
-
-  const handleNavigation = (href: string) => {
-    navigate(href);
-    setOpen(false); // Ferme le menu après la navigation
-  };
 
   return (
     <Sidebar className="border-r border-primary/10">
@@ -96,35 +89,35 @@ export function InstallerSidebar() {
             <div className="space-y-1">
               {navigation.map((item) => (
                 <div key={item.name}>
-                  <button
-                    onClick={() => handleNavigation(item.href)}
+                  <Link
+                    to={item.href}
                     className={cn(
                       location.pathname === item.href
                         ? "bg-primary text-primary-foreground"
                         : "text-white hover:bg-primary/10",
-                      "group flex w-full items-center rounded-md px-3 py-2 text-sm font-medium transition-colors"
+                      "group flex items-center rounded-md px-3 py-2 text-sm font-medium transition-colors"
                     )}
                   >
                     <item.icon className="mr-3 h-5 w-5" />
                     <span>{item.name}</span>
-                  </button>
+                  </Link>
                   
                   {item.subItems && (
                     <div className="ml-6 mt-1 space-y-1">
                       {item.subItems.map((subItem) => (
-                        <button
+                        <Link
                           key={subItem.name}
-                          onClick={() => handleNavigation(subItem.href)}
+                          to={subItem.href}
                           className={cn(
                             location.pathname === subItem.href
                               ? "bg-primary text-primary-foreground"
                               : "text-white hover:bg-primary/10",
-                            "group flex w-full items-center rounded-md px-3 py-2 text-sm font-medium transition-colors"
+                            "group flex items-center rounded-md px-3 py-2 text-sm font-medium transition-colors"
                           )}
                         >
                           <subItem.icon className="mr-3 h-4 w-4" />
                           <span>{subItem.name}</span>
-                        </button>
+                        </Link>
                       ))}
                     </div>
                   )}
