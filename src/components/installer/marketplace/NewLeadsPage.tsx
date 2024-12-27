@@ -85,8 +85,6 @@ export const NewLeadsPage = () => {
           </div>
         </div>
 
-        <PrepaidSection />
-
         <Card className="p-6 relative overflow-hidden bg-gradient-to-br from-background via-background/95 to-background">
           <div className="space-y-6">
             <div className="flex items-center gap-4">
@@ -184,7 +182,8 @@ export const NewLeadsPage = () => {
         </div>
 
         <Button 
-          className="w-full gap-2 text-base font-medium py-6 bg-gradient-to-r from-primary via-accent to-primary hover:from-primary/90 hover:via-accent/90 hover:to-primary/90 border-0 transition-all duration-300 bg-[length:200%_100%] animate-gradient text-white"
+          onClick={() => window.location.href = '/espace-installateur/marketplace/prepaid'}
+          className="w-full gap-2 text-base font-medium py-6 bg-gradient-to-r from-primary via-accent to-primary hover:from-primary/90 hover:via-accent/90 hover:to-primary/90 border-0 transition-all duration-300 bg-[length:200%_100%] animate-gradient text-white shadow-lg"
         >
           Recharger mon compte
         </Button>
