@@ -55,8 +55,8 @@ export function InstallerSidebar() {
                       to={item.url}
                       className={`${
                         location.pathname.includes(item.url)
-                          ? "bg-[#1EAEDB]/10 text-[#1EAEDB]"
-                          : "hover:bg-[#1EAEDB]/5"
+                          ? "bg-primary/10 text-primary"
+                          : "hover:bg-primary/5 text-foreground hover:text-primary"
                       } text-base`}
                     >
                       <item.icon className="h-5 w-5" />
