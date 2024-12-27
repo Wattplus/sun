@@ -1,6 +1,4 @@
-import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Expand } from "lucide-react";
 import { Link } from "react-router-dom";
 
 interface DashboardControlsProps {
@@ -15,20 +13,9 @@ export const DashboardControls = ({
   return (
     <Card className="border-primary/10">
       <div className="p-2">
-        <div className="flex items-center justify-between">
-          <Link to="/espace-installateur" className="text-lg font-semibold text-primary">
-            WattPlus
-          </Link>
-
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={toggleFullscreen}
-            className="text-primary"
-          >
-            <Expand className="h-5 w-5" />
-          </Button>
-        </div>
+        <Link to="/espace-installateur" className="text-lg font-semibold text-primary">
+          WattPlus
+        </Link>
       </div>
     </Card>
   );
