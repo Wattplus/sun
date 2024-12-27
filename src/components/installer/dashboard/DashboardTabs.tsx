@@ -10,8 +10,8 @@ import { Card } from "@/components/ui/card";
 import { mockAvailableLeads } from "./mockAvailableLeads";
 import { mockPurchasedLeads } from "./mockPurchasedLeads";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
-import { ChevronRight, X, Maximize2, Minimize2 } from "lucide-react";
+import { useState, useEffect } from "react";
+import { ChevronRight, X, Maximize2, Minimize2, Menu } from "lucide-react";
 import { SubscriptionPlans } from "../subscription/SubscriptionPlans";
 import { ClientFAQ } from "@/components/client/faq/ClientFAQ";
 import { SidebarTrigger } from "@/components/ui/sidebar";
@@ -21,13 +21,25 @@ export const DashboardTabs = () => {
   const [showAllAvailableLeads, setShowAllAvailableLeads] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
 
-  const toggleFullscreen = () => {
-    if (!document.fullscreenElement) {
-      document.documentElement.requestFullscreen();
-      setIsFullscreen(true);
-    } else {
-      document.exitFullscreen();
-      setIsFullscreen(false);
+  // Synchroniser l'état avec le mode plein écran du navigateur
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      setIsFullscreen(!!document.fullscreenElement);
+    };
+
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
+  }, []);
+
+  const toggleFullscreen = async () => {
+    try {
+      if (!document.fullscreenElement) {
+        await document.documentElement.requestFullscreen();
+      } else {
+        await document.exitFullscreen();
+      }
+    } catch (err) {
+      console.error("Erreur lors du changement de mode plein écran:", err);
     }
   };
 
@@ -82,23 +94,29 @@ export const DashboardTabs = () => {
 
   return (
     <div className="space-y-8">
-      <div className="flex justify-end gap-2">
-        <SidebarTrigger asChild>
-          <Button
-            variant="outline"
-            size="icon"
-            className="hover:bg-primary/10"
-          >
-            <Minimize2 className="h-5 w-5" />
-          </Button>
-        </SidebarTrigger>
+      <div className="flex justify-between items-center">
+        <Button
+          variant="ghost"
+          size="icon"
+          className="hover:bg-primary/10"
+          asChild
+        >
+          <SidebarTrigger>
+            <Menu className="h-5 w-5 text-primary" />
+          </SidebarTrigger>
+        </Button>
+
         <Button
           variant="outline"
           size="icon"
           className="hover:bg-primary/10"
           onClick={toggleFullscreen}
         >
-          <Maximize2 className="h-5 w-5" />
+          {isFullscreen ? (
+            <Minimize2 className="h-5 w-5" />
+          ) : (
+            <Maximize2 className="h-5 w-5" />
+          )}
         </Button>
       </div>
 
