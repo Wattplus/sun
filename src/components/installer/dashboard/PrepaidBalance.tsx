@@ -1,6 +1,6 @@
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Euro, Plus, History, TrendingDown, AlertTriangle } from "lucide-react";
+import { Euro, Plus, History, CreditCard, Wallet } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { motion } from "framer-motion";
 import { CustomAmountInput } from "./prepaid/CustomAmountInput";
@@ -8,25 +8,11 @@ import { QuickTopUpButtons } from "./prepaid/QuickTopUpButtons";
 import { SavedCards } from "./prepaid/SavedCards";
 
 interface PrepaidBalanceProps {
-  balance: number;
+  balance?: number;
 }
 
-export const PrepaidBalance = ({ balance }: PrepaidBalanceProps) => {
+export const PrepaidBalance = ({ balance = 0 }: PrepaidBalanceProps) => {
   const { toast } = useToast();
-  const lowBalanceThreshold = 50;
-  const recommendedBalance = 200;
-  const isLowBalance = balance <= lowBalanceThreshold;
-
-  // Exemple de cartes enregistrées (à remplacer par des vraies données)
-  const mockCards = [
-    {
-      id: "1",
-      last4: "4242",
-      brand: "Visa",
-      expMonth: 12,
-      expYear: 2024,
-    },
-  ];
 
   const handleRecharge = (amount: number) => {
     toast({
@@ -42,97 +28,82 @@ export const PrepaidBalance = ({ balance }: PrepaidBalanceProps) => {
     });
   };
 
-  const handleDeleteCard = (cardId: string) => {
-    toast({
-      title: "Carte supprimée",
-      description: "La carte a été supprimée avec succès.",
-    });
-  };
-
-  const handleAddCard = () => {
-    toast({
-      title: "Ajouter une carte",
-      description: "Redirection vers le formulaire d'ajout de carte...",
-    });
-  };
-
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
     >
-      <Card className="overflow-hidden bg-gradient-to-br from-background/90 to-background/70 backdrop-blur-lg border-primary/20">
+      <Card className="overflow-hidden bg-gradient-to-br from-[#0B1221] to-[#1A1F2C] backdrop-blur-lg border-[#1EAEDB]/20">
         <div className="p-6 space-y-6">
           <div className="flex justify-between items-start">
             <div className="space-y-1">
-              <h3 className="text-lg font-semibold text-white/90">Solde prépayé</h3>
+              <h3 className="text-lg font-semibold text-white/90">Options de paiement</h3>
               <p className="text-sm text-white/60">
-                Utilisé pour l'achat automatique de leads
+                Choisissez votre mode de paiement préféré
               </p>
             </div>
-            <motion.div 
-              className="text-right"
-              animate={{ scale: isLowBalance ? [1, 1.05, 1] : 1 }}
-              transition={{ duration: 0.5, repeat: isLowBalance ? Infinity : 0, repeatDelay: 2 }}
-            >
+            <motion.div className="text-right">
               <div className="flex items-center gap-2 justify-end">
-                <Euro className="h-6 w-6 text-primary" />
+                <Euro className="h-6 w-6 text-[#1EAEDB]" />
                 <p className="text-3xl font-bold bg-gradient-to-r from-white to-white/80 bg-clip-text text-transparent">
                   {balance}
                 </p>
               </div>
-              <div className="flex items-center gap-1 mt-1">
-                {isLowBalance && <TrendingDown className="h-4 w-4 text-red-400" />}
-                <p className={`text-sm ${isLowBalance ? 'text-red-400' : 'text-white/60'}`}>
-                  Seuil bas: {lowBalanceThreshold}€
-                </p>
-              </div>
+              <p className="text-sm text-white/60 mt-1">
+                Solde prépayé
+              </p>
             </motion.div>
           </div>
 
           <div className="space-y-4">
-            <div className="flex flex-wrap gap-3">
-              <QuickTopUpButtons onTopUp={handleRecharge} isLoading={false} />
-            </div>
-            
-            <CustomAmountInput 
-              value=""
-              onChange={() => {}}
-              onSubmit={() => handleRecharge(0)}
-              isLoading={false}
-            />
+            <div className="grid grid-cols-1 gap-4">
+              {/* Option 1: Paiement direct par carte */}
+              <div className="p-4 rounded-lg bg-[#1EAEDB]/10 border border-[#1EAEDB]/20">
+                <div className="flex items-center gap-3 mb-3">
+                  <CreditCard className="h-5 w-5 text-[#1EAEDB]" />
+                  <h4 className="font-medium text-white">Paiement direct par carte</h4>
+                </div>
+                <p className="text-sm text-white/60 mb-3">
+                  Payez directement avec votre carte bancaire lors de l'achat d'un lead
+                </p>
+                <SavedCards 
+                  cards={[]}
+                  onDeleteCard={() => {}}
+                  onAddCard={() => {}}
+                />
+              </div>
 
-            <SavedCards 
-              cards={mockCards}
-              onDeleteCard={handleDeleteCard}
-              onAddCard={handleAddCard}
-            />
+              {/* Option 2: Solde prépayé */}
+              <div className="p-4 rounded-lg bg-[#1EAEDB]/10 border border-[#1EAEDB]/20">
+                <div className="flex items-center gap-3 mb-3">
+                  <Wallet className="h-5 w-5 text-[#1EAEDB]" />
+                  <h4 className="font-medium text-white">Recharger mon solde prépayé</h4>
+                </div>
+                <p className="text-sm text-white/60 mb-3">
+                  Rechargez votre compte pour des achats plus rapides
+                </p>
+                <div className="space-y-3">
+                  <QuickTopUpButtons onTopUp={handleRecharge} isLoading={false} />
+                  <CustomAmountInput 
+                    value=""
+                    onChange={() => {}}
+                    onSubmit={() => handleRecharge(0)}
+                    isLoading={false}
+                  />
+                </div>
+              </div>
+            </div>
 
             <Button 
               variant="outline" 
               onClick={handleHistory} 
-              className="flex items-center gap-2 w-full justify-center"
+              className="flex items-center gap-2 w-full justify-center bg-[#1EAEDB]/10 hover:bg-[#1EAEDB]/20 border-[#1EAEDB]/20"
             >
               <History className="h-4 w-4" />
               Historique des transactions
             </Button>
           </div>
-
-          {balance < recommendedBalance && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              className="relative overflow-hidden"
-            >
-              <div className="flex gap-2 p-3 rounded-lg bg-yellow-500/10 border border-yellow-500/20">
-                <AlertTriangle className="h-5 w-5 text-yellow-500 flex-shrink-0" />
-                <p className="text-sm text-yellow-500">
-                  Conseil: Maintenez un solde minimum de {recommendedBalance}€ pour ne pas manquer d'opportunités
-                </p>
-              </div>
-            </motion.div>
-          )}
         </div>
       </Card>
     </motion.div>
