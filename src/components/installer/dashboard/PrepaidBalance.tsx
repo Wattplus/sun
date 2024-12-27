@@ -38,9 +38,9 @@ export const PrepaidBalance = ({ balance = 0 }: PrepaidBalanceProps) => {
         <div className="p-6 space-y-6">
           <div className="flex justify-between items-start">
             <div className="space-y-1">
-              <h3 className="text-lg font-semibold text-white/90">Options de paiement</h3>
+              <h3 className="text-lg font-semibold text-white/90">Options de paiement pour vos leads photovoltaïques</h3>
               <p className="text-sm text-white/60">
-                Choisissez votre mode de paiement préféré
+                Choisissez votre mode de paiement préféré pour acquérir des contacts qualifiés
               </p>
             </div>
             <motion.div className="text-right">
@@ -51,21 +51,21 @@ export const PrepaidBalance = ({ balance = 0 }: PrepaidBalanceProps) => {
                 </p>
               </div>
               <p className="text-sm text-white/60 mt-1">
-                Solde prépayé
+                Solde disponible pour l'achat de leads
               </p>
             </motion.div>
           </div>
 
           <div className="space-y-4">
             <div className="grid grid-cols-1 gap-4">
-              {/* Option 1: Paiement direct par carte */}
+              {/* Option 1: Paiement direct */}
               <div className="p-4 rounded-lg bg-[#1EAEDB]/10 border border-[#1EAEDB]/20">
                 <div className="flex items-center gap-3 mb-3">
                   <CreditCard className="h-5 w-5 text-[#1EAEDB]" />
-                  <h4 className="font-medium text-white">Paiement direct par carte</h4>
+                  <h4 className="font-medium text-white">Paiement à l'unité</h4>
                 </div>
                 <p className="text-sm text-white/60 mb-3">
-                  Payez directement avec votre carte bancaire lors de l'achat d'un lead
+                  Payez directement lors de l'achat d'un contact client intéressé par une installation photovoltaïque
                 </p>
                 <SavedCards 
                   cards={[]}
@@ -74,14 +74,14 @@ export const PrepaidBalance = ({ balance = 0 }: PrepaidBalanceProps) => {
                 />
               </div>
 
-              {/* Option 2: Solde prépayé */}
+              {/* Option 2: Compte prépayé */}
               <div className="p-4 rounded-lg bg-[#1EAEDB]/10 border border-[#1EAEDB]/20">
                 <div className="flex items-center gap-3 mb-3">
                   <Wallet className="h-5 w-5 text-[#1EAEDB]" />
-                  <h4 className="font-medium text-white">Recharger mon solde prépayé</h4>
+                  <h4 className="font-medium text-white">Compte prépayé pour vos leads</h4>
                 </div>
                 <p className="text-sm text-white/60 mb-3">
-                  Rechargez votre compte pour des achats plus rapides
+                  Créditez votre compte pour accéder rapidement aux contacts qualifiés en photovoltaïque
                 </p>
                 <div className="space-y-3">
                   <QuickTopUpButtons onTopUp={handleRecharge} isLoading={false} />
@@ -101,7 +101,7 @@ export const PrepaidBalance = ({ balance = 0 }: PrepaidBalanceProps) => {
               className="flex items-center gap-2 w-full justify-center bg-[#1EAEDB]/10 hover:bg-[#1EAEDB]/20 border-[#1EAEDB]/20"
             >
               <History className="h-4 w-4" />
-              Historique des transactions
+              Historique des achats de leads
             </Button>
           </div>
         </div>
