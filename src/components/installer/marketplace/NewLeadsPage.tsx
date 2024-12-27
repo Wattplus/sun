@@ -4,13 +4,14 @@ import { mockAvailableLeads } from "../dashboard/mockAvailableLeads";
 import { Lead } from "@/types/crm";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
-import { ShoppingCart, RefreshCw, Search, Filter, Shield, Rocket, Clock, Euro, Building2, User } from "lucide-react";
+import { ShoppingCart, RefreshCw, Search, Filter } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { InstallerBreadcrumb } from "../navigation/InstallerBreadcrumb";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { InstallerLayout } from "../navigation/InstallerLayout";
+import { AccountSection } from "./sections/AccountSection";
 
 export const NewLeadsPage = () => {
   const [selectedLeads, setSelectedLeads] = useState<Lead[]>([]);
@@ -50,75 +51,8 @@ export const NewLeadsPage = () => {
     <InstallerLayout>
       <div className="space-y-6">
         <InstallerBreadcrumb />
-
-        {/* Nouvelle section compte prépayé et prix */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-          {/* Compte prépayé */}
-          <Card className="bg-gradient-to-br from-[#0B1221] to-[#1a5fb4] p-6 border-primary/20">
-            <div className="flex items-center justify-between">
-              <div className="space-y-1">
-                <h3 className="text-lg font-semibold text-white">Compte Prépayé</h3>
-                <p className="text-sm text-white/60">Solde disponible</p>
-              </div>
-              <div className="text-right">
-                <div className="flex items-center gap-2">
-                  <Euro className="h-6 w-6 text-[#1EAEDB]" />
-                  <span className="text-3xl font-bold text-white">150</span>
-                </div>
-                <Button 
-                  variant="outline" 
-                  size="sm" 
-                  className="mt-2 bg-white/10 border-white/20 text-white hover:bg-white/20"
-                >
-                  Recharger
-                </Button>
-              </div>
-            </div>
-          </Card>
-
-          {/* Grille de prix */}
-          <Card className="bg-gradient-to-br from-[#0B1221] to-[#1a5fb4] p-6 border-primary/20">
-            <h3 className="text-lg font-semibold text-white mb-4">Tarifs des leads</h3>
-            <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <div className="p-2 rounded-full bg-[#1EAEDB]/20">
-                    <User className="h-4 w-4 text-white" />
-                  </div>
-                  <div>
-                    <span className="text-white">Lead particulier</span>
-                    <p className="text-xs text-white/60">Avec compte prépayé</p>
-                  </div>
-                </div>
-                <span className="text-xl font-bold text-white">26€</span>
-              </div>
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <div className="p-2 rounded-full bg-[#1EAEDB]/20">
-                    <User className="h-4 w-4 text-white" />
-                  </div>
-                  <div>
-                    <span className="text-white">Lead particulier</span>
-                    <p className="text-xs text-white/60">Sans compte prépayé</p>
-                  </div>
-                </div>
-                <span className="text-xl font-bold text-white">35€</span>
-              </div>
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <div className="p-2 rounded-full bg-[#1EAEDB]/20">
-                    <Building2 className="h-4 w-4 text-white" />
-                  </div>
-                  <div>
-                    <span className="text-white">Lead professionnel</span>
-                    <p className="text-xs text-white/60">Tous comptes</p>
-                  </div>
-                </div>
-                <span className="text-xl font-bold text-white">59€</span>
-              </div>
-            </div>
-          </Card>
-        </div>
+        
+        <AccountSection />
 
         <div className="flex items-center justify-between">
           <div>
@@ -203,52 +137,6 @@ export const NewLeadsPage = () => {
             </Tabs>
           </div>
         </Card>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <Card className="md:col-span-3 p-6 bg-gradient-to-br from-background via-background/95 to-background">
-            <div className="space-y-6">
-              <div className="flex items-center gap-2 text-primary">
-                <h3 className="font-medium text-lg">Pourquoi acheter ces leads ?</h3>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="flex items-start gap-3">
-                  <div className="bg-primary/10 p-2 rounded-full">
-                    <Shield className="h-5 w-5 text-primary" />
-                  </div>
-                  <div>
-                    <span className="font-medium">Leads qualifiés et vérifiés</span>
-                    <p className="text-sm text-muted-foreground">
-                      Chaque lead est minutieusement vérifié pour garantir sa qualité
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-3">
-                  <div className="bg-primary/10 p-2 rounded-full">
-                    <Rocket className="h-5 w-5 text-primary" />
-                  </div>
-                  <div>
-                    <span className="font-medium">Projets à fort potentiel</span>
-                    <p className="text-sm text-muted-foreground">
-                      Sélectionnés pour leur potentiel de conversion élevé
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-3">
-                  <div className="bg-primary/10 p-2 rounded-full">
-                    <Clock className="h-5 w-5 text-primary" />
-                  </div>
-                  <div>
-                    <span className="font-medium">Contact rapide recommandé</span>
-                    <p className="text-sm text-muted-foreground">
-                      Maximisez vos chances en contactant rapidement les prospects
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </Card>
-        </div>
-
       </div>
     </InstallerLayout>
   );
