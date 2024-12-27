@@ -1,4 +1,3 @@
-```tsx
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import { InstallerDashboard } from "./components/installer/InstallerDashboard";
 import { InstallerProfile } from "./pages/InstallerProfile";
@@ -7,7 +6,7 @@ import { ProfileSection } from "./pages/installer/account/ProfileSection";
 import { PaymentMethodsSection } from "./pages/installer/account/PaymentMethodsSection"; 
 import { PrepaidSection } from "./pages/installer/account/PrepaidSection";
 
-function App() {
+export function App() {
   return (
     <Router>
       <Routes>
@@ -29,4 +28,3 @@ function App() {
 }
 
 export default App;
-```
