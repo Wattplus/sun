@@ -59,43 +59,47 @@ export const LeadCard = ({ lead, status, onStatusChange }: LeadCardProps) => {
           </div>
         </CardHeader>
         <CardContent>
-          <div className="grid gap-3">
-            <div className="flex items-center gap-2 text-sm">
-              <span className="min-w-32 text-muted-foreground">Type de projet:</span>
-              <span>{lead.projectType === 'professional' ? 'Professionnel' : 'Résidentiel'}</span>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-3">
+              <div className="flex items-center gap-2">
+                <span className="text-sm font-medium text-muted-foreground w-28">Type de projet:</span>
+                <span className="text-sm">{lead.projectType === 'professional' ? 'Professionnel' : 'Résidentiel'}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-sm font-medium text-muted-foreground w-28">Prénom:</span>
+                <span className="text-sm">{lead.firstName}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-sm font-medium text-muted-foreground w-28">Nom:</span>
+                <span className="text-sm">{lead.lastName}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-sm font-medium text-muted-foreground w-28">Email:</span>
+                <Mail className="h-4 w-4 text-muted-foreground" />
+                <span className="text-sm">{lead.email}</span>
+              </div>
             </div>
-            <div className="flex items-center gap-2 text-sm">
-              <span className="min-w-32 text-muted-foreground">Prénom:</span>
-              <span>{lead.firstName}</span>
-            </div>
-            <div className="flex items-center gap-2 text-sm">
-              <span className="min-w-32 text-muted-foreground">Nom:</span>
-              <span>{lead.lastName}</span>
-            </div>
-            <div className="flex items-center gap-2 text-sm">
-              <span className="min-w-32 text-muted-foreground">Email:</span>
-              <Mail className="h-4 w-4 text-muted-foreground" />
-              <span>{lead.email}</span>
-            </div>
-            <div className="flex items-center gap-2 text-sm">
-              <span className="min-w-32 text-muted-foreground">Téléphone:</span>
-              <Phone className="h-4 w-4 text-muted-foreground" />
-              <span>{lead.phone}</span>
-            </div>
-            <div className="flex items-center gap-2 text-sm">
-              <span className="min-w-32 text-muted-foreground">Code postal:</span>
-              <MapPin className="h-4 w-4 text-muted-foreground" />
-              <span>{lead.postalCode}</span>
-            </div>
-            <div className="flex items-center gap-2 text-sm">
-              <span className="min-w-32 text-muted-foreground">Type de toit:</span>
-              <Home className="h-4 w-4 text-muted-foreground" />
-              <span>{lead.roofType ? lead.roofType.replace(/-/g, ' ') : 'Non renseigné'}</span>
-            </div>
-            <div className="flex items-center gap-2 text-sm">
-              <span className="min-w-32 text-muted-foreground">Facture mensuelle:</span>
-              <CreditCard className="h-4 w-4 text-muted-foreground" />
-              <span>{lead.monthlyBill ? `${lead.monthlyBill}€/mois` : 'Non renseigné'}</span>
+            <div className="space-y-3">
+              <div className="flex items-center gap-2">
+                <span className="text-sm font-medium text-muted-foreground w-28">Téléphone:</span>
+                <Phone className="h-4 w-4 text-muted-foreground" />
+                <span className="text-sm">{lead.phone}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-sm font-medium text-muted-foreground w-28">Code postal:</span>
+                <MapPin className="h-4 w-4 text-muted-foreground" />
+                <span className="text-sm">{lead.postalCode}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-sm font-medium text-muted-foreground w-28">Type de toit:</span>
+                <Home className="h-4 w-4 text-muted-foreground" />
+                <span className="text-sm">{lead.roofType ? lead.roofType.replace(/-/g, ' ') : 'Non renseigné'}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-sm font-medium text-muted-foreground w-28">Facture:</span>
+                <CreditCard className="h-4 w-4 text-muted-foreground" />
+                <span className="text-sm">{lead.monthlyBill ? `${lead.monthlyBill}€/mois` : 'Non renseigné'}</span>
+              </div>
             </div>
           </div>
         </CardContent>
