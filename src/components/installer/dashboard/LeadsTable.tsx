@@ -2,10 +2,7 @@ import { Lead } from "@/types/crm";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
-import { formatDistanceToNow } from "date-fns";
-import { fr } from "date-fns/locale";
-import { EmptyLeadState } from "./EmptyLeadState";
-import { ShoppingCart } from "lucide-react";
+import { ShoppingCart, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
@@ -18,6 +15,15 @@ interface LeadsTableProps {
 
 export const LeadsTable = ({ leads, onLeadSelect, selectedLeads = [] }: LeadsTableProps) => {
   const { toast } = useToast();
+
+  const maskSensitiveInfo = (text: string) => {
+    return (
+      <div className="flex items-center gap-2 text-muted-foreground">
+        <Lock className="h-4 w-4" />
+        <span>Information masquée</span>
+      </div>
+    );
+  };
 
   if (leads.length === 0) {
     return <EmptyLeadState />;
@@ -62,10 +68,10 @@ export const LeadsTable = ({ leads, onLeadSelect, selectedLeads = [] }: LeadsTab
                   {lead.projectType === 'professional' ? 'Professionnel' : 'Résidentiel'}
                 </Badge>
               </TableCell>
-              <TableCell>{lead.firstName}</TableCell>
-              <TableCell>{lead.lastName}</TableCell>
-              <TableCell>{lead.email}</TableCell>
-              <TableCell>{lead.phone}</TableCell>
+              <TableCell>{maskSensitiveInfo(lead.firstName)}</TableCell>
+              <TableCell>{maskSensitiveInfo(lead.lastName)}</TableCell>
+              <TableCell>{maskSensitiveInfo(lead.email)}</TableCell>
+              <TableCell>{maskSensitiveInfo(lead.phone)}</TableCell>
               <TableCell>{lead.postalCode}</TableCell>
               <TableCell>
                 <Button
