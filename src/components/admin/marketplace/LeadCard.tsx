@@ -141,19 +141,19 @@ export const LeadCard = ({
               <div className="space-y-2">
                 <div className="flex justify-between items-center">
                   <span className="text-sm">Compte prépayé</span>
-                  <span className="font-bold">{prices.prepaidPrice}€</span>
+                  <span className="font-bold">{prices.mutualPrice}€</span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-sm">Prix standard</span>
-                  <span className="font-bold">{prices.standardPrice}€</span>
+                  <span className="font-bold">{prices.exclusivePrice}€</span>
                 </div>
               </div>
             </div>
 
             <LeadCardActions
               onPurchase={handlePurchase}
-              mutualPrice={prices.prepaidPrice}
-              exclusivePrice={prices.standardPrice}
+              mutualPrice={prices.mutualPrice}
+              exclusivePrice={prices.exclusivePrice}
               canPurchaseMutual={true}
               canPurchaseExclusive={true}
               isProfessionalProject={lead.projectType === 'professional'}
