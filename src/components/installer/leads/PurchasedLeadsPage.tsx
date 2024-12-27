@@ -36,9 +36,9 @@ export const PurchasedLeadsPage = () => {
 
   const filteredLeads = mockPurchasedLeads.filter((lead) => {
     const matchesSearch =
-      lead.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      lead.lastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      lead.city.toLowerCase().includes(searchTerm.toLowerCase());
+      (lead.firstName?.toLowerCase().includes(searchTerm.toLowerCase()) || '') ||
+      (lead.lastName?.toLowerCase().includes(searchTerm.toLowerCase()) || '') ||
+      (lead.city?.toLowerCase().includes(searchTerm.toLowerCase()) || '');
 
     const matchesStatus = statusFilter === "all" || lead.status === statusFilter;
 
@@ -104,7 +104,9 @@ export const PurchasedLeadsPage = () => {
                       {lead.firstName} {lead.lastName}
                     </TableCell>
                     <TableCell>{lead.city}</TableCell>
-                    <TableCell>{lead.projectType}</TableCell>
+                    <TableCell>
+                      {lead.projectType === 'residential' ? 'Résidentiel' : 'Professionnel'}
+                    </TableCell>
                     <TableCell>{lead.budget}€</TableCell>
                     <TableCell>
                       <Badge className={statusColors[lead.status as keyof typeof statusColors]}>
