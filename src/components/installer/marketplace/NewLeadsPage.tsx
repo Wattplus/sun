@@ -4,7 +4,7 @@ import { mockAvailableLeads } from "../dashboard/mockAvailableLeads";
 import { Lead } from "@/types/crm";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
-import { ShoppingCart, RefreshCw, Search, Filter, ArrowRight } from "lucide-react";
+import { ShoppingCart, RefreshCw, Search, Filter, ArrowRight, Wallet } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { InstallerBreadcrumb } from "../navigation/InstallerBreadcrumb";
@@ -49,73 +49,94 @@ export const NewLeadsPage = () => {
 
   return (
     <InstallerLayout>
-      <div className="max-w-6xl mx-auto space-y-4">
+      <div className="max-w-6xl mx-auto space-y-4 p-4">
         <InstallerBreadcrumb />
         
-        <AccountSection />
-
-        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-          <div>
-            <h1 className="text-lg font-medium flex items-center gap-2">
-              Nouveaux Leads
-              <Badge variant="secondary" className="bg-primary/10 text-primary text-xs">
-                {filteredLeads.length}
-              </Badge>
-            </h1>
-            <p className="text-sm text-muted-foreground">
-              Découvrez les derniers leads qualifiés
-            </p>
-          </div>
-          <div className="flex flex-wrap items-center gap-2">
-            <Button 
-              variant="outline" 
-              size="sm"
-              onClick={handleRefresh}
-              className="text-xs border-primary/20 hover:bg-primary/5"
-            >
-              <RefreshCw className="h-3 w-3" />
-            </Button>
-            {selectedLeads.length > 0 && (
-              <Button 
-                size="sm"
-                onClick={handlePurchaseLeads}
-                className="text-xs bg-primary hover:bg-primary/90 gap-2"
-              >
-                <ShoppingCart className="h-3 w-3" />
-                Acheter {selectedLeads.length} lead{selectedLeads.length > 1 ? 's' : ''} ({selectedLeads.reduce((sum, lead) => sum + lead.price, 0)}€)
-                <ArrowRight className="h-3 w-3" />
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <Card className="p-4 bg-white/5 backdrop-blur-sm border-primary/10 md:col-span-2">
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <h2 className="text-lg font-medium">Solde disponible</h2>
+                <p className="text-3xl font-bold text-primary">150€</p>
+              </div>
+              <Button className="bg-primary hover:bg-primary/90" size="sm">
+                <Wallet className="mr-2 h-4 w-4" />
+                Recharger
               </Button>
-            )}
-          </div>
+            </div>
+          </Card>
+
+          <Card className="p-4 bg-white/5 backdrop-blur-sm border-primary/10">
+            <div className="text-center">
+              <h2 className="text-lg font-medium mb-2">Paiement direct</h2>
+              <Button variant="outline" className="w-full border-primary/20 hover:bg-primary/5">
+                Voir les tarifs
+              </Button>
+            </div>
+          </Card>
         </div>
 
         <Card className="bg-white/5 backdrop-blur-sm border-primary/10">
           <div className="p-4 space-y-4">
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
-              <div className="flex-1 relative">
-                <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 h-3 w-3 text-muted-foreground" />
+            <div className="flex items-center justify-between">
+              <div>
+                <h1 className="text-lg font-medium flex items-center gap-2">
+                  Nouveaux Leads
+                  <Badge variant="secondary" className="bg-primary/10 text-primary">
+                    {filteredLeads.length}
+                  </Badge>
+                </h1>
+                <p className="text-sm text-muted-foreground">
+                  Leads qualifiés disponibles
+                </p>
+              </div>
+              <div className="flex items-center gap-2">
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={handleRefresh}
+                  className="border-primary/20 hover:bg-primary/5"
+                >
+                  <RefreshCw className="h-4 w-4" />
+                </Button>
+                {selectedLeads.length > 0 && (
+                  <Button 
+                    size="sm"
+                    onClick={handlePurchaseLeads}
+                    className="bg-primary hover:bg-primary/90 gap-2"
+                  >
+                    <ShoppingCart className="h-4 w-4" />
+                    Acheter {selectedLeads.length} lead{selectedLeads.length > 1 ? 's' : ''} ({selectedLeads.reduce((sum, lead) => sum + lead.price, 0)}€)
+                  </Button>
+                )}
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <div className="relative flex-1">
+                <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input 
                   placeholder="Rechercher par ville, code postal..." 
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-8 h-8 text-sm bg-transparent"
+                  className="pl-8 bg-transparent"
                 />
               </div>
               <Button 
                 variant="outline" 
                 size="sm" 
-                className="text-xs gap-2 border-primary/20 hover:bg-primary/5"
+                className="gap-2 border-primary/20 hover:bg-primary/5"
               >
-                <Filter className="h-3 w-3" />
+                <Filter className="h-4 w-4" />
                 Filtres
               </Button>
             </div>
 
             <Tabs defaultValue="all" className="w-full">
-              <TabsList className="w-full justify-start h-8">
-                <TabsTrigger value="all" className="text-xs">Tous</TabsTrigger>
-                <TabsTrigger value="residential" className="text-xs">Résidentiel</TabsTrigger>
-                <TabsTrigger value="professional" className="text-xs">Professionnel</TabsTrigger>
+              <TabsList className="w-full justify-start">
+                <TabsTrigger value="all">Tous</TabsTrigger>
+                <TabsTrigger value="residential">Résidentiel</TabsTrigger>
+                <TabsTrigger value="professional">Professionnel</TabsTrigger>
               </TabsList>
               <TabsContent value="all">
                 <LeadsList 
