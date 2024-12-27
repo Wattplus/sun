@@ -11,7 +11,6 @@ import { InstallerBreadcrumb } from "../navigation/InstallerBreadcrumb";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { InstallerLayout } from "../navigation/InstallerLayout";
-import { PrepaidSection } from "./sections/PrepaidSection";
 
 export const NewLeadsPage = () => {
   const [selectedLeads, setSelectedLeads] = useState<Lead[]>([]);
@@ -49,7 +48,7 @@ export const NewLeadsPage = () => {
 
   return (
     <InstallerLayout>
-      <div className="space-y-6">
+      <div className="space-y-6 min-h-screen bg-gradient-to-b from-background via-primary/30 to-primary/10">
         <InstallerBreadcrumb />
 
         <div className="flex items-center justify-between">
@@ -85,7 +84,7 @@ export const NewLeadsPage = () => {
           </div>
         </div>
 
-        <Card className="p-6 relative overflow-hidden bg-gradient-to-br from-background via-background/95 to-background">
+        <Card className="p-6 relative overflow-hidden bg-white/80 backdrop-blur-sm border-primary/10">
           <div className="space-y-6">
             <div className="flex items-center gap-4">
               <div className="flex-1">
@@ -137,7 +136,7 @@ export const NewLeadsPage = () => {
         </Card>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <Card className="md:col-span-3 p-6 bg-gradient-to-br from-background via-background/95 to-background">
+          <Card className="md:col-span-3 p-6 bg-white/80 backdrop-blur-sm border-primary/10">
             <div className="space-y-6">
               <div className="flex items-center gap-2 text-primary">
                 <h3 className="font-medium text-lg">Pourquoi acheter ces leads ?</h3>
