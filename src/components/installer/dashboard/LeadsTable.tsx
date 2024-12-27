@@ -5,7 +5,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { formatDistanceToNow } from "date-fns";
 import { fr } from "date-fns/locale";
 import { EmptyLeadState } from "./EmptyLeadState";
-import { MapPin, Lock, Euro, Building, Home, ShoppingCart } from "lucide-react";
+import { ShoppingCart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
@@ -18,21 +18,6 @@ interface LeadsTableProps {
 
 export const LeadsTable = ({ leads, onLeadSelect, selectedLeads = [] }: LeadsTableProps) => {
   const { toast } = useToast();
-
-  const getProjectTypeIcon = (type: string) => {
-    return type === "residential" ? <Home className="h-4 w-4" /> : <Building className="h-4 w-4" />;
-  };
-
-  const getProjectTypeLabel = (type: string) => {
-    switch (type) {
-      case "residential":
-        return "Résidentiel";
-      case "professional":
-        return "Professionnel";
-      default:
-        return type;
-    }
-  };
 
   if (leads.length === 0) {
     return <EmptyLeadState />;
@@ -48,11 +33,12 @@ export const LeadsTable = ({ leads, onLeadSelect, selectedLeads = [] }: LeadsTab
                 <span className="sr-only">Sélection</span>
               </TableHead>
             )}
-            <TableHead>Type</TableHead>
-            <TableHead>Localisation</TableHead>
-            <TableHead>Projet</TableHead>
-            <TableHead>Date</TableHead>
-            <TableHead className="text-right">Prix</TableHead>
+            <TableHead>Type de projet photovoltaïque</TableHead>
+            <TableHead>Prénom</TableHead>
+            <TableHead>Nom</TableHead>
+            <TableHead>Email</TableHead>
+            <TableHead>Téléphone</TableHead>
+            <TableHead>Code postal</TableHead>
             <TableHead className="w-[100px]">Action</TableHead>
           </TableRow>
         </TableHeader>
@@ -71,50 +57,16 @@ export const LeadsTable = ({ leads, onLeadSelect, selectedLeads = [] }: LeadsTab
               <TableCell>
                 <Badge 
                   variant="outline" 
-                  className="bg-primary/10 text-primary border-primary/20 flex items-center gap-1"
+                  className="bg-primary/10 text-primary border-primary/20"
                 >
-                  {getProjectTypeIcon(lead.projectType)}
-                  {getProjectTypeLabel(lead.projectType)}
+                  {lead.projectType === 'professional' ? 'Professionnel' : 'Résidentiel'}
                 </Badge>
               </TableCell>
-              <TableCell>
-                <div className="space-y-1">
-                  <div className="flex items-center gap-2">
-                    <MapPin className="h-4 w-4 text-primary" />
-                    {lead.city}
-                  </div>
-                  <div className="text-sm text-muted-foreground">
-                    Dép. {lead.postalCode.substring(0, 2)}
-                  </div>
-                </div>
-              </TableCell>
-              <TableCell>
-                <div className="space-y-1">
-                  <div className="font-medium">Budget: {lead.budget.toLocaleString()}€</div>
-                  <div className="text-sm text-muted-foreground line-clamp-1">
-                    {lead.notes}
-                  </div>
-                </div>
-              </TableCell>
-              <TableCell>
-                <Tooltip>
-                  <TooltipTrigger>
-                    {formatDistanceToNow(new Date(lead.createdAt), { 
-                      addSuffix: true,
-                      locale: fr 
-                    })}
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>Créé le {new Date(lead.createdAt).toLocaleDateString()}</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TableCell>
-              <TableCell className="text-right">
-                <div className="flex items-center justify-end gap-1 font-medium text-primary">
-                  <Euro className="h-4 w-4" />
-                  {lead.price}
-                </div>
-              </TableCell>
+              <TableCell>{lead.firstName}</TableCell>
+              <TableCell>{lead.lastName}</TableCell>
+              <TableCell>{lead.email}</TableCell>
+              <TableCell>{lead.phone}</TableCell>
+              <TableCell>{lead.postalCode}</TableCell>
               <TableCell>
                 <Button
                   size="sm"
