@@ -1,16 +1,15 @@
-import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
-import { Sidebar, SidebarContent, SidebarTrigger } from "@/components/ui/sidebar";
+import { Link, useLocation } from "react-router-dom";
+import { Sidebar, SidebarContent } from "@/components/ui/sidebar";
 import {
   LayoutDashboard,
   MessageSquare,
   Settings,
-  ShoppingCart,
+  UserPlus,
   FileText,
   Bell,
-  Menu,
-  UserPlus,
-  ChevronLeft,
+  ShoppingCart,
+  LogOut,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -18,54 +17,49 @@ const navigation = [
   { name: "Dashboard", href: "/espace-installateur", icon: LayoutDashboard },
   { name: "Nouveaux Leads", href: "/espace-installateur/leads/nouveaux", icon: UserPlus },
   { name: "Leads Achetés", href: "/espace-installateur/leads/achetes", icon: ShoppingCart },
-  { name: "Messages", href: "/messages", icon: MessageSquare },
-  { name: "Rapports", href: "/reports", icon: FileText },
-  { name: "Notifications", href: "/notifications", icon: Bell },
-  { name: "Paramètres", href: "/settings", icon: Settings },
+  { name: "Messages", href: "/espace-installateur/messages", icon: MessageSquare },
+  { name: "Rapports", href: "/espace-installateur/rapports", icon: FileText },
+  { name: "Notifications", href: "/espace-installateur/notifications", icon: Bell },
+  { name: "Paramètres", href: "/espace-installateur/parametres", icon: Settings },
 ];
 
 export function InstallerSidebar() {
   const location = useLocation();
 
   return (
-    <Sidebar>
-      <SidebarContent className="flex h-full flex-col bg-gradient-to-b from-background to-primary/20">
-        <div className="flex h-24 items-center justify-between border-b border-white/10 px-6">
-          <div className="flex items-center gap-3">
-            <Menu className="h-8 w-8 text-primary" />
-            <span className="text-xl font-bold text-white">Espace Pro</span>
+    <Sidebar className="border-r border-primary/10">
+      <SidebarContent>
+        <div className="space-y-4 py-4">
+          <div className="px-3 py-2">
+            <div className="mt-3 space-y-1">
+              {navigation.map((item) => (
+                <Link
+                  key={item.name}
+                  to={item.href}
+                  className={cn(
+                    location.pathname === item.href
+                      ? "bg-primary text-primary-foreground"
+                      : "text-primary hover:bg-primary/10",
+                    "group flex items-center rounded-md px-3 py-2 text-sm font-medium transition-colors"
+                  )}
+                >
+                  <item.icon className="mr-3 h-5 w-5" />
+                  <span>{item.name}</span>
+                </Link>
+              ))}
+            </div>
           </div>
+        </div>
+
+        <div className="mt-auto p-4">
           <Button
-            variant="ghost"
-            size="icon"
-            className="hover:bg-primary/10"
-            asChild
+            variant="outline"
+            className="w-full justify-start gap-2 bg-primary/5 hover:bg-primary/10"
           >
-            <SidebarTrigger>
-              <ChevronLeft className="h-5 w-5 text-primary" />
-            </SidebarTrigger>
+            <LogOut className="h-4 w-4" />
+            <span>Déconnexion</span>
           </Button>
         </div>
-        <nav className="flex-1 space-y-2 px-4 py-6">
-          {navigation.map((item) => {
-            const isActive = location.pathname === item.href;
-            return (
-              <Link
-                key={item.name}
-                to={item.href}
-                className={cn(
-                  "group flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
-                  isActive
-                    ? "bg-primary/10 text-white"
-                    : "text-primary/80 hover:bg-primary/10 hover:text-white"
-                )}
-              >
-                <item.icon className={cn("h-5 w-5 shrink-0")} />
-                {item.name}
-              </Link>
-            );
-          })}
-        </nav>
       </SidebarContent>
     </Sidebar>
   );
