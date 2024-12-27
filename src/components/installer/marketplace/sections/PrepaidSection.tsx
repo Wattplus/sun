@@ -1,9 +1,7 @@
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Euro, Plus, History, CreditCard, Wallet, User, Building2 } from "lucide-react";
+import { Euro, CreditCard, Wallet } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { CustomAmountInput } from "../../dashboard/prepaid/CustomAmountInput";
-import { QuickTopUpButtons } from "../../dashboard/prepaid/QuickTopUpButtons";
 
 export const PrepaidSection = () => {
   const { toast } = useToast();
@@ -16,86 +14,55 @@ export const PrepaidSection = () => {
   };
 
   return (
-    <Card className="mb-6 bg-gradient-to-br from-background via-background/95 to-background border-primary/20">
-      <div className="p-4 space-y-6">
-        <div className="flex flex-wrap items-center gap-4">
+    <Card className="mb-4 bg-white/5 backdrop-blur-sm border-primary/10">
+      <div className="p-4 space-y-4">
+        <div className="flex items-center justify-between">
           {/* Balance */}
-          <div className="flex items-center gap-2 mr-6">
-            <Euro className="h-5 w-5 text-primary" />
-            <span className="text-2xl font-bold text-white">150</span>
-            <span className="text-sm text-white/60">Solde prépayé</span>
+          <div className="flex items-center gap-2">
+            <div className="p-2 rounded-full bg-primary/10">
+              <Euro className="h-4 w-4 text-primary" />
+            </div>
+            <div>
+              <span className="text-sm text-muted-foreground">Solde disponible</span>
+              <p className="text-xl font-semibold bg-gradient-to-r from-primary to-accent text-transparent bg-clip-text">
+                150€
+              </p>
+            </div>
           </div>
 
           {/* Quick Actions */}
-          <div className="flex flex-wrap items-center gap-2 flex-1">
-            <Button variant="outline" size="sm" className="gap-1">
-              <CreditCard className="h-4 w-4" />
+          <div className="flex items-center gap-2">
+            <Button 
+              variant="outline" 
+              size="sm"
+              className="text-xs border-primary/20 hover:bg-primary/5"
+            >
+              <CreditCard className="h-3 w-3 mr-1" />
               Paiement direct
             </Button>
-            <Button variant="outline" size="sm" className="gap-1">
-              <Wallet className="h-4 w-4" />
+            <Button 
+              size="sm"
+              className="text-xs bg-primary/10 hover:bg-primary/20 text-primary border-0"
+            >
+              <Wallet className="h-3 w-3 mr-1" />
               Recharger
             </Button>
-            <div className="flex gap-2">
-              <Button variant="outline" size="sm" onClick={() => handleRecharge(50)}>50€</Button>
-              <Button variant="outline" size="sm" onClick={() => handleRecharge(100)}>100€</Button>
-              <Button variant="outline" size="sm" onClick={() => handleRecharge(200)}>200€</Button>
-            </div>
           </div>
         </div>
 
-        {/* Tarifs des leads en horizontal */}
-        <div className="pt-4 border-t border-primary/10">
-          <h3 className="text-sm font-medium text-primary/80 mb-4">Tarifs des leads</h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {/* Lead Particulier - Compte prépayé */}
-            <div className="bg-primary/5 border border-primary/10 rounded-lg p-4 hover:bg-primary/10 transition-colors">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="bg-gradient-to-r from-primary to-primary-light p-2 rounded-full">
-                    <User className="h-4 w-4 text-white" />
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium text-white">Lead particulier</p>
-                    <p className="text-xs text-primary-foreground/60">Compte prépayé</p>
-                  </div>
-                </div>
-                <span className="text-xl font-bold text-primary">26€</span>
-              </div>
-            </div>
-
-            {/* Lead Particulier - Sans compte prépayé */}
-            <div className="bg-primary/5 border border-primary/10 rounded-lg p-4 hover:bg-primary/10 transition-colors">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="bg-gradient-to-r from-primary to-primary-light p-2 rounded-full">
-                    <User className="h-4 w-4 text-white" />
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium text-white">Lead particulier</p>
-                    <p className="text-xs text-primary-foreground/60">Sans compte prépayé</p>
-                  </div>
-                </div>
-                <span className="text-xl font-bold text-primary">35€</span>
-              </div>
-            </div>
-
-            {/* Lead Professionnel */}
-            <div className="bg-primary/5 border border-primary/10 rounded-lg p-4 hover:bg-primary/10 transition-colors">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="bg-gradient-to-r from-primary to-primary-light p-2 rounded-full">
-                    <Building2 className="h-4 w-4 text-white" />
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium text-white">Lead professionnel</p>
-                    <p className="text-xs text-primary-foreground/60">Tous comptes</p>
-                  </div>
-                </div>
-                <span className="text-xl font-bold text-primary">59€</span>
-              </div>
-            </div>
-          </div>
+        {/* Quick Top-up Amounts */}
+        <div className="flex gap-2 pt-2">
+          {[50, 100, 200].map((amount) => (
+            <Button
+              key={amount}
+              variant="outline"
+              size="sm"
+              onClick={() => handleRecharge(amount)}
+              className="text-xs flex-1 border-primary/10 hover:bg-primary/5"
+            >
+              +{amount}€
+            </Button>
+          ))}
         </div>
       </div>
     </Card>
