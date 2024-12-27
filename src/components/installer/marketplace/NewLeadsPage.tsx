@@ -12,7 +12,7 @@ import { InstallerLayout } from "../navigation/InstallerLayout";
 export const NewLeadsPage = () => {
   const [selectedLeads, setSelectedLeads] = useState<Lead[]>([]);
   const { toast } = useToast();
-  const balance = 150; // TODO: Get this from your actual balance state/API
+  const balance = 150;
 
   const handleLeadSelect = (lead: Lead) => {
     if (selectedLeads.some(l => l.id === lead.id)) {
@@ -40,7 +40,7 @@ export const NewLeadsPage = () => {
 
   return (
     <InstallerLayout>
-      <div className="max-w-6xl mx-auto space-y-6 p-4 min-h-screen bg-gradient-to-br from-[#0B1221] to-[#1a5fb4]">
+      <div className="max-w-6xl mx-auto space-y-6 p-4 min-h-screen bg-secondary-dark">
         <InstallerBreadcrumb />
         
         {/* Solde disponible */}
@@ -144,6 +144,6 @@ export const NewLeadsPage = () => {
           selectedLeads={selectedLeads}
         />
       </div>
-    </InstallerLayout>
+    </InstalterLayout>
   );
 };
