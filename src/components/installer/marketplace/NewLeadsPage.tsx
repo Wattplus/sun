@@ -1,6 +1,5 @@
 import { Card } from "@/components/ui/card";
 import { LeadsList } from "../dashboard/LeadsList";
-import { mockAvailableLeads } from "../dashboard/mockAvailableLeads";
 import { Lead } from "@/types/crm";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
@@ -9,12 +8,14 @@ import { Button } from "@/components/ui/button";
 import { InstallerBreadcrumb } from "../navigation/InstallerBreadcrumb";
 import { InstallerLayout } from "../navigation/InstallerLayout";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { useLeadsSync } from "@/hooks/useLeadsSync";
 
 export const NewLeadsPage = () => {
   const [selectedLeads, setSelectedLeads] = useState<Lead[]>([]);
   const { toast } = useToast();
-  const balance = 150; // Simulation du solde
-  const hasEnoughBalance = balance >= 26; // Vérifie si le solde est suffisant pour un lead
+  const { leads, isLoading } = useLeadsSync();
+  const balance = 150;
+  const hasEnoughBalance = balance >= 26;
   const recommendedBalance = 200;
   const needsTopUp = balance < recommendedBalance;
 
@@ -49,6 +50,16 @@ export const NewLeadsPage = () => {
   };
 
   const totalPrice = selectedLeads.reduce((sum, lead) => sum + (hasEnoughBalance ? 26 : 35), 0);
+
+  if (isLoading) {
+    return (
+      <InstallerLayout>
+        <div className="flex items-center justify-center h-screen">
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary"></div>
+        </div>
+      </InstallerLayout>
+    );
+  }
 
   return (
     <InstallerLayout>
@@ -217,7 +228,7 @@ export const NewLeadsPage = () => {
 
         {/* Liste des leads */}
         <LeadsList
-          leads={mockAvailableLeads}
+          leads={leads}
           onLeadSelect={handleLeadSelect}
           selectedLeads={selectedLeads}
         />

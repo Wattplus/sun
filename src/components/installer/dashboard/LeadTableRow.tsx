@@ -4,7 +4,6 @@ import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { ShoppingCart, Lock } from "lucide-react";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 interface LeadTableRowProps {
   lead: Lead;
@@ -45,7 +44,7 @@ export const LeadTableRow = ({ lead, onLeadSelect, isSelected }: LeadTableRowPro
       <TableCell>{maskSensitiveInfo(lead.phone)}</TableCell>
       <TableCell>{lead.postalCode}</TableCell>
       
-      {/* Nouvelles colonnes */}
+      {/* Nouvelles colonnes synchronisées */}
       <TableCell>
         {lead.roofType ? (
           <span className="text-primary">{lead.roofType.replace(/-/g, ' ')}</span>
