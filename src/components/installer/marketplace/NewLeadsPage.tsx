@@ -88,6 +88,38 @@ export const NewLeadsPage = () => {
               </Button>
             </div>
           </div>
+
+          {selectedLeads.length > 0 && (
+            <Card className="p-4 border border-primary/20 bg-background/50 backdrop-blur-sm">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-muted-foreground">
+                    {selectedLeads.length} lead{selectedLeads.length > 1 ? 's' : ''} sélectionné{selectedLeads.length > 1 ? 's' : ''}
+                  </p>
+                  <p className="text-lg font-medium">Total: {selectedLeads.length * 26}€</p>
+                </div>
+                <div className="flex gap-3">
+                  <Button 
+                    variant="outline"
+                    size="sm"
+                    className="text-sm"
+                    onClick={() => setSelectedLeads([])}
+                  >
+                    Tout désélectionner
+                  </Button>
+                  <Button 
+                    onClick={handlePurchase}
+                    className="bg-primary hover:bg-primary/90 text-white gap-2"
+                    size="sm"
+                    disabled={!hasEnoughBalance}
+                  >
+                    <ShoppingCart className="w-4 h-4" />
+                    {hasEnoughBalance ? "Acheter la sélection" : "Recharger pour acheter"}
+                  </Button>
+                </div>
+              </div>
+            </Card>
+          )}
           
           <LeadsSummaryCards 
             availableLeads={mockAvailableLeads}
@@ -108,37 +140,6 @@ export const NewLeadsPage = () => {
               </div>
             </div>
           </Card>
-
-          {selectedLeads.length > 0 && (
-            <Card className="p-6 border border-primary/20 bg-gradient-to-r from-primary/5 to-primary/10 backdrop-blur-sm">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h3 className="text-lg font-medium text-white">
-                    {selectedLeads.length} lead{selectedLeads.length > 1 ? 's' : ''} sélectionné{selectedLeads.length > 1 ? 's' : ''}
-                  </h3>
-                  <p className="text-primary/80">Total: {selectedLeads.length * 26}€</p>
-                </div>
-                <div className="flex gap-4">
-                  <Button 
-                    variant="outline"
-                    className="bg-primary/10 hover:bg-primary/20 border-primary/20"
-                    onClick={() => setSelectedLeads([])}
-                  >
-                    Tout désélectionner
-                  </Button>
-                  <Button 
-                    onClick={handlePurchase}
-                    className="bg-primary hover:bg-primary/90 text-white px-6 gap-2"
-                    size="lg"
-                    disabled={!hasEnoughBalance}
-                  >
-                    <ShoppingCart className="w-5 h-5" />
-                    {hasEnoughBalance ? "Acheter la sélection" : "Recharger pour acheter"}
-                  </Button>
-                </div>
-              </div>
-            </Card>
-          )}
 
           <BottomCTA onPrepaidAccount={handlePrepaidAccount} />
         </div>
