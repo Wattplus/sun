@@ -2,8 +2,8 @@ import {
   Sidebar,
   SidebarContent,
   SidebarGroup,
-  SidebarGroupLabel,
   SidebarGroupContent,
+  SidebarGroupLabel,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
@@ -55,8 +55,8 @@ export function InstallerSidebar() {
                       to={item.url}
                       className={`${
                         location.pathname.includes(item.url)
-                          ? "bg-primary/10 text-primary"
-                          : "hover:bg-primary/5"
+                          ? "bg-[#1EAEDB]/10 text-[#1EAEDB]"
+                          : "hover:bg-[#1EAEDB]/5"
                       }`}
                     >
                       <item.icon className="h-5 w-5" />
