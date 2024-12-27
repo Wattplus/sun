@@ -4,7 +4,7 @@ import { mockAvailableLeads } from "../dashboard/mockAvailableLeads";
 import { Lead } from "@/types/crm";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
-import { ShoppingCart, Euro, Wallet, CreditCard, Building2 } from "lucide-react";
+import { ShoppingCart, Euro, Wallet, CreditCard, Building2, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { InstallerBreadcrumb } from "../navigation/InstallerBreadcrumb";
 import { InstallerLayout } from "../navigation/InstallerLayout";
@@ -12,6 +12,7 @@ import { InstallerLayout } from "../navigation/InstallerLayout";
 export const NewLeadsPage = () => {
   const [selectedLeads, setSelectedLeads] = useState<Lead[]>([]);
   const { toast } = useToast();
+  const balance = 150; // TODO: Get this from your actual balance state/API
 
   const handleLeadSelect = (lead: Lead) => {
     if (selectedLeads.some(l => l.id === lead.id)) {
@@ -39,22 +40,46 @@ export const NewLeadsPage = () => {
 
   return (
     <InstallerLayout>
-      <div className="max-w-6xl mx-auto space-y-4 p-4 min-h-screen bg-gradient-to-br from-[#0B1221] to-[#1a5fb4]">
+      <div className="max-w-6xl mx-auto space-y-6 p-4 min-h-screen bg-gradient-to-br from-[#0B1221] to-[#1a5fb4]">
         <InstallerBreadcrumb />
         
-        {/* Prix des leads */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-          <Card className="p-6 bg-white/5 backdrop-blur-sm border-primary/10 hover:scale-105 transition-all duration-300">
-            <div className="space-y-3">
-              <div className="flex items-center gap-2">
+        {/* Solde disponible */}
+        <Card className="p-4 bg-white/5 backdrop-blur-sm border-primary/10">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="p-2.5 rounded-full bg-primary/10">
                 <Wallet className="h-5 w-5 text-primary" />
-                <h3 className="text-lg font-medium text-white">Lead Particulier</h3>
               </div>
-              <div className="flex items-baseline gap-1">
-                <span className="text-3xl font-bold text-primary">26€</span>
-                <span className="text-sm text-white/60">avec compte prépayé</span>
+              <div>
+                <p className="text-sm text-white/60">Solde disponible</p>
+                <p className="text-2xl font-bold text-white">{balance}€</p>
               </div>
-              <p className="text-sm text-white/60">35€ sans compte prépayé</p>
+            </div>
+            <Button 
+              onClick={handlePrepaidAccount}
+              className="bg-primary hover:bg-primary/90"
+            >
+              Recharger mon compte
+            </Button>
+          </div>
+        </Card>
+
+        {/* Prix des leads */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {/* Lead Particulier */}
+          <Card className="p-6 bg-white/5 backdrop-blur-sm border-primary/10 hover:scale-105 transition-all duration-300">
+            <div className="space-y-4">
+              <div className="flex items-center gap-2">
+                <User className="h-6 w-6 text-primary" />
+                <h3 className="text-xl font-medium text-white">Lead Particulier</h3>
+              </div>
+              <div className="space-y-2">
+                <div className="flex items-baseline gap-2">
+                  <span className="text-3xl font-bold text-primary">26€</span>
+                  <span className="text-sm text-white/60">avec compte prépayé</span>
+                </div>
+                <p className="text-sm text-white/60">35€ sans compte prépayé</p>
+              </div>
               <Button 
                 onClick={handlePurchase}
                 className="w-full bg-primary hover:bg-primary/90"
@@ -65,44 +90,26 @@ export const NewLeadsPage = () => {
             </div>
           </Card>
 
+          {/* Lead Pro */}
           <Card className="p-6 bg-white/5 backdrop-blur-sm border-primary/10 hover:scale-105 transition-all duration-300">
-            <div className="space-y-3">
+            <div className="space-y-4">
               <div className="flex items-center gap-2">
-                <Building2 className="h-5 w-5 text-primary" />
-                <h3 className="text-lg font-medium text-white">Lead Pro</h3>
+                <Building2 className="h-6 w-6 text-primary" />
+                <h3 className="text-xl font-medium text-white">Lead Pro</h3>
               </div>
-              <div className="flex items-baseline gap-1">
-                <span className="text-3xl font-bold text-primary">49€</span>
-                <span className="text-sm text-white/60">avec compte prépayé</span>
+              <div className="space-y-2">
+                <div className="flex items-baseline gap-2">
+                  <span className="text-3xl font-bold text-primary">49€</span>
+                  <span className="text-sm text-white/60">avec compte prépayé</span>
+                </div>
+                <p className="text-sm text-white/60">59€ sans compte prépayé</p>
               </div>
-              <p className="text-sm text-white/60">59€ sans compte prépayé</p>
               <Button 
                 onClick={handlePurchase}
                 className="w-full bg-primary hover:bg-primary/90"
               >
                 <ShoppingCart className="h-4 w-4 mr-2" />
                 Acheter
-              </Button>
-            </div>
-          </Card>
-
-          <Card className="p-6 bg-white/5 backdrop-blur-sm border-primary/10 hover:scale-105 transition-all duration-300">
-            <div className="space-y-3">
-              <div className="flex items-center gap-2">
-                <CreditCard className="h-5 w-5 text-primary" />
-                <h3 className="text-lg font-medium text-white">Compte Prépayé</h3>
-              </div>
-              <div className="flex items-baseline gap-1">
-                <span className="text-3xl font-bold text-primary">-25%</span>
-                <span className="text-sm text-white/60">sur tous les leads</span>
-              </div>
-              <p className="text-sm text-white/60">Économisez sur chaque achat</p>
-              <Button 
-                onClick={handlePrepaidAccount}
-                className="w-full bg-primary hover:bg-primary/90"
-              >
-                <Euro className="h-4 w-4 mr-2" />
-                Créer un compte
               </Button>
             </div>
           </Card>
@@ -110,7 +117,7 @@ export const NewLeadsPage = () => {
 
         {/* Panier de sélection */}
         {selectedLeads.length > 0 && (
-          <Card className="p-6 mb-6 bg-primary/5 border-primary/20">
+          <Card className="p-6 bg-primary/5 border-primary/20">
             <div className="flex items-center justify-between">
               <div>
                 <h3 className="text-lg font-medium text-white">
