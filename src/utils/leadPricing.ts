@@ -22,10 +22,9 @@ export const calculateLeadPrice = (
   lead: Lead, 
   subscriptionTier: SubscriptionTier = 'free'
 ): PriceCalculationResult => {
-  const basePrice = {
-    mutualPrice: 19,
-    exclusivePrice: 35
-  };
+  const basePrice = lead.projectType === 'professional' 
+    ? { mutualPrice: 49, exclusivePrice: 59 }
+    : { mutualPrice: 26, exclusivePrice: 35 };
 
   const createdAt = new Date(lead.createdAt);
   const today = new Date();

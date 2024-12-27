@@ -3,6 +3,8 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Lock } from "lucide-react";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 interface LeadsTableProps {
   leads: Lead[];
@@ -10,6 +12,22 @@ interface LeadsTableProps {
   onSelectAll: () => void;
   onSelectLead: (lead: Lead) => void;
 }
+
+const MaskedInfo = () => (
+  <TooltipProvider>
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <div className="flex items-center gap-2 text-muted-foreground hover:text-primary/80 transition-colors cursor-help">
+          <Lock className="h-4 w-4" />
+          <span>Information masquée</span>
+        </div>
+      </TooltipTrigger>
+      <TooltipContent>
+        <p>Cette information sera visible après l'achat du lead</p>
+      </TooltipContent>
+    </Tooltip>
+  </TooltipProvider>
+);
 
 export const LeadsTable = ({ leads, selectedLeads, onSelectAll, onSelectLead }: LeadsTableProps) => {
   return (
@@ -54,9 +72,9 @@ export const LeadsTable = ({ leads, selectedLeads, onSelectAll, onSelectLead }: 
               </Badge>
             </TableCell>
             <TableCell className="text-white">{lead.firstName}</TableCell>
-            <TableCell className="text-white">{lead.lastName}</TableCell>
-            <TableCell className="text-white">{lead.email}</TableCell>
-            <TableCell className="text-white">{lead.phone}</TableCell>
+            <TableCell className="text-white"><MaskedInfo /></TableCell>
+            <TableCell className="text-white"><MaskedInfo /></TableCell>
+            <TableCell className="text-white"><MaskedInfo /></TableCell>
             <TableCell className="text-white">
               <Badge variant="outline" className="bg-primary/10">
                 {lead.postalCode}
