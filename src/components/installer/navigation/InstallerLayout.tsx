@@ -23,7 +23,7 @@ export function InstallerLayout({ children }: InstallerLayoutProps) {
             >
               <SidebarTrigger>
                 <Menu className="h-5 w-5" />
-                <span>Menu principal</span>
+                <span>Navigation</span>
               </SidebarTrigger>
             </Button>
           </div>
