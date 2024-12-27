@@ -23,6 +23,8 @@ export const DashboardControls = ({
     { icon: MessageSquare, label: "Messages", path: "/espace-installateur/messages" },
     { icon: FileText, label: "Documents", path: "/espace-installateur/documents" },
     { icon: Settings, label: "Paramètres", path: "/espace-installateur/parametres" },
+    { icon: Bell, label: "Notifications", path: "/espace-installateur/notifications" },
+    { icon: User, label: "Mon profil", path: "/espace-installateur/mon-compte/profil" },
   ];
 
   const isActivePath = (path: string) => {
@@ -54,22 +56,6 @@ export const DashboardControls = ({
                       <span>{item.label}</span>
                     </Link>
                   ))}
-                  <Link 
-                    to="/espace-installateur/notifications" 
-                    className="flex items-center space-x-2 text-sm"
-                    onClick={() => setIsOpen(false)}
-                  >
-                    <Bell className="h-4 w-4" />
-                    <span>Notifications</span>
-                  </Link>
-                  <Link 
-                    to="/espace-installateur/mon-compte/profil" 
-                    className="flex items-center space-x-2 text-sm"
-                    onClick={() => setIsOpen(false)}
-                  >
-                    <User className="h-4 w-4" />
-                    <span>Mon profil</span>
-                  </Link>
                   <Button 
                     variant="destructive" 
                     size="sm"
@@ -93,7 +79,7 @@ export const DashboardControls = ({
 
           {/* Desktop Navigation Menu */}
           <div className="hidden md:flex items-center space-x-4">
-            {menuItems.map((item) => (
+            {menuItems.slice(0, 5).map((item) => (
               <Link
                 key={item.path}
                 to={item.path}
@@ -112,16 +98,13 @@ export const DashboardControls = ({
           {/* Desktop Controls */}
           <div className="flex items-center space-x-2">
             <div className="hidden md:flex items-center space-x-2">
-              <Link to="/espace-installateur/notifications">
-                <Button variant="ghost" size="icon" className="text-primary">
-                  <Bell className="h-5 w-5" />
-                </Button>
-              </Link>
-              <Link to="/espace-installateur/mon-compte/profil">
-                <Button variant="ghost" size="icon" className="text-primary">
-                  <User className="h-5 w-5" />
-                </Button>
-              </Link>
+              {menuItems.slice(5).map((item) => (
+                <Link key={item.path} to={item.path}>
+                  <Button variant="ghost" size="icon" className="text-primary">
+                    <item.icon className="h-5 w-5" />
+                  </Button>
+                </Link>
+              ))}
             </div>
             
             <Button
