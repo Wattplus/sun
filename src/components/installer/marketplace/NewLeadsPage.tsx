@@ -4,18 +4,13 @@ import { mockAvailableLeads } from "../dashboard/mockAvailableLeads";
 import { Lead } from "@/types/crm";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
-import { ShoppingCart, RefreshCw, Search, Filter, ArrowRight, Wallet, Euro } from "lucide-react";
+import { ShoppingCart, Euro } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { InstallerBreadcrumb } from "../navigation/InstallerBreadcrumb";
-import { Input } from "@/components/ui/input";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { InstallerLayout } from "../navigation/InstallerLayout";
-import { AccountSection } from "./sections/AccountSection";
 
 export const NewLeadsPage = () => {
   const [selectedLeads, setSelectedLeads] = useState<Lead[]>([]);
-  const [searchQuery, setSearchQuery] = useState("");
   const { toast } = useToast();
 
   const handleLeadSelect = (lead: Lead) => {
@@ -26,26 +21,14 @@ export const NewLeadsPage = () => {
     }
   };
 
-  const handlePurchaseLeads = () => {
-    const total = selectedLeads.reduce((sum, lead) => sum + lead.price, 0);
+  const handlePurchase = () => {
     toast({
-      title: "Achat de leads",
-      description: `Redirection vers le paiement pour ${total}€...`,
+      title: "Achat de lead",
+      description: "Redirection vers le paiement...",
     });
   };
 
-  const handleRefresh = () => {
-    toast({
-      title: "Mise à jour des leads",
-      description: "La liste des leads a été actualisée.",
-    });
-  };
-
-  const filteredLeads = mockAvailableLeads.filter(lead => 
-    lead.city.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    lead.postalCode.includes(searchQuery) ||
-    lead.projectType.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const totalPrice = selectedLeads.reduce((sum, lead) => sum + lead.price, 0);
 
   return (
     <InstallerLayout>
@@ -97,25 +80,6 @@ export const NewLeadsPage = () => {
           </Card>
         </div>
 
-        {/* Reste du contenu */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-          {/* Reste du contenu ici */}
-        </div>
-
-        {/* Reste du contenu */}
-        <div className="mb-6">
-          <LeadsFilters
-            availableDepartments={availableDepartments}
-            selectedDepartments={selectedDepartments}
-            projectTypeFilter={projectTypeFilter}
-            priceFilter={priceFilter}
-            onDepartmentSelect={handleDepartmentSelect}
-            onDepartmentRemove={handleDepartmentRemove}
-            onProjectTypeChange={setProjectTypeFilter}
-            onPriceFilterChange={setPriceFilter}
-          />
-        </div>
-
         {/* Panier de sélection */}
         {selectedLeads.length > 0 && (
           <Card className="p-6 mb-6 bg-primary/5 border-primary/20">
@@ -127,7 +91,7 @@ export const NewLeadsPage = () => {
                 <p className="text-muted-foreground">Total: {totalPrice}€</p>
               </div>
               <Button 
-                onClick={handleBulkPurchase}
+                onClick={handlePurchase}
                 className="bg-primary hover:bg-primary-dark text-white px-6"
                 size="lg"
               >
@@ -138,33 +102,12 @@ export const NewLeadsPage = () => {
           </Card>
         )}
 
-        {/* Grille de leads */}
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-          {availableLeads.map(lead => (
-            <LeadCard 
-              key={lead.id} 
-              lead={lead} 
-              onPurchase={handlePurchase}
-              isPurchased={purchasedLeads.includes(lead.id)}
-              subscriptionTier={userSubscriptionTier}
-            />
-          ))}
-        </div>
-
-        {/* Message si aucun lead */}
-        {availableLeads.length === 0 && (
-          <div className="text-center py-12">
-            <p className="text-muted-foreground">Aucun lead ne correspond à vos critères de recherche.</p>
-          </div>
-        )}
-
-        {/* Bouton voir plus */}
-        <div className="mt-12 text-center">
-          <Button variant="outline" size="lg" className="gap-2">
-            Voir plus de leads
-            <ArrowRight className="h-4 w-4" />
-          </Button>
-        </div>
+        {/* Liste des leads */}
+        <LeadsList
+          leads={mockAvailableLeads}
+          onLeadSelect={handleLeadSelect}
+          selectedLeads={selectedLeads}
+        />
       </div>
     </InstallerLayout>
   );
