@@ -1,7 +1,8 @@
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Wallet, CreditCard, TrendingUp, Users, ArrowRight } from "lucide-react";
+import { Wallet, CreditCard, TrendingUp, Users, ArrowRight, AlertCircle } from "lucide-react";
 import { Lead } from "@/types/crm";
+import { cn } from "@/lib/utils";
 
 interface LeadsSummaryCardsProps {
   availableLeads: Lead[];
@@ -16,80 +17,97 @@ export const LeadsSummaryCards = ({
   balance,
   onPrepaidAccount,
 }: LeadsSummaryCardsProps) => {
+  const isLowBalance = balance < 200;
+
   return (
-    <div className="grid gap-4 md:grid-cols-2">
-      <Card className="p-6 bg-gradient-to-br from-primary/20 via-primary/10 to-primary/20 border-primary/20">
-        <div className="space-y-4">
+    <div className="grid gap-6 md:grid-cols-2">
+      <Card className="overflow-hidden">
+        <div className="p-6 space-y-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="p-2 rounded-lg bg-primary/20">
-                <Wallet className="h-5 w-5 text-primary" />
+              <div className="p-3 rounded-xl bg-[#1EAEDB]/10">
+                <Wallet className="h-6 w-6 text-[#1EAEDB]" />
               </div>
               <div>
-                <h3 className="font-semibold text-lg text-white">Solde disponible</h3>
-                <p className="text-2xl font-bold text-primary">{balance}€</p>
+                <h3 className="text-lg font-medium text-foreground/80">Solde disponible</h3>
+                <p className={cn(
+                  "text-3xl font-bold",
+                  isLowBalance ? "text-red-500" : "text-[#1EAEDB]"
+                )}>{balance}€</p>
               </div>
             </div>
             <Button 
-              variant="outline" 
-              className="bg-white/10 hover:bg-white/20 border-white/20"
+              size="lg"
               onClick={onPrepaidAccount}
+              className="bg-[#1EAEDB] hover:bg-[#1EAEDB]/90"
             >
-              <CreditCard className="h-4 w-4 mr-2" />
+              <CreditCard className="h-5 w-5 mr-2" />
               Recharger
             </Button>
           </div>
-          <div className="text-sm text-white/80 bg-primary/10 p-3 rounded-lg">
-            Nous recommandons de maintenir un solde minimum de 200€ pour ne pas manquer d'opportunités.
-          </div>
+
+          {isLowBalance && (
+            <div className="flex items-center gap-2 p-4 rounded-lg bg-red-500/10 text-red-500">
+              <AlertCircle className="h-5 w-5 flex-shrink-0" />
+              <p className="text-sm">
+                Nous recommandons de maintenir un solde minimum de 200€ pour ne pas manquer d'opportunités.
+              </p>
+            </div>
+          )}
         </div>
       </Card>
 
-      <Card className="p-6 bg-gradient-to-br from-primary/20 via-primary/10 to-primary/20 border-primary/20">
-        <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="p-2 rounded-lg bg-primary/20">
-                <TrendingUp className="h-5 w-5 text-primary" />
+      <Card className="overflow-hidden">
+        <div className="p-6 space-y-6">
+          <div className="flex items-center gap-3">
+            <div className="p-3 rounded-xl bg-[#1EAEDB]/10">
+              <TrendingUp className="h-6 w-6 text-[#1EAEDB]" />
+            </div>
+            <h3 className="text-lg font-medium text-foreground/80">Tarifs des leads</h3>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div className="p-4 rounded-lg bg-[#1EAEDB]/5 border border-[#1EAEDB]/10">
+              <h4 className="font-medium text-[#1EAEDB] mb-3">Compte prépayé</h4>
+              <div className="space-y-2">
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-muted-foreground">Particulier</span>
+                  <span className="font-bold text-[#1EAEDB]">26€</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-muted-foreground">Professionnel</span>
+                  <span className="font-bold text-[#1EAEDB]">49€</span>
+                </div>
               </div>
-              <div>
-                <h3 className="font-semibold text-lg text-white">Tarifs des leads</h3>
-                <div className="flex gap-4 mt-1">
-                  <span className="text-sm text-white/80">Particulier: 26€-35€</span>
-                  <span className="text-sm text-white/80">Pro: 49€-59€</span>
+            </div>
+
+            <div className="p-4 rounded-lg bg-foreground/5 border border-foreground/10">
+              <h4 className="font-medium text-foreground/80 mb-3">Paiement direct</h4>
+              <div className="space-y-2">
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-muted-foreground">Particulier</span>
+                  <span className="font-semibold">35€</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-muted-foreground">Professionnel</span>
+                  <span className="font-semibold">59€</span>
                 </div>
               </div>
             </div>
           </div>
-          <div className="grid grid-cols-2 gap-4">
-            <div className="bg-white/5 p-3 rounded-lg">
-              <h4 className="text-sm font-medium text-white mb-2">Compte prépayé</h4>
-              <div className="space-y-1">
-                <p className="text-primary">Particulier: 26€</p>
-                <p className="text-primary">Professionnel: 49€</p>
-              </div>
-            </div>
-            <div className="bg-white/5 p-3 rounded-lg">
-              <h4 className="text-sm font-medium text-white mb-2">Paiement direct</h4>
-              <div className="space-y-1">
-                <p className="text-white/80">Particulier: 35€</p>
-                <p className="text-white/80">Professionnel: 59€</p>
-              </div>
-            </div>
-          </div>
-          <div className="flex justify-between items-center">
-            <div className="flex items-center gap-2">
-              <Users className="h-4 w-4 text-primary" />
-              <span className="text-sm text-white/80">{availableLeads.length} leads disponibles</span>
+
+          <div className="flex items-center justify-between pt-2">
+            <div className="flex items-center gap-2 text-[#1EAEDB]">
+              <Users className="h-5 w-5" />
+              <span className="font-medium">{availableLeads.length} leads disponibles</span>
             </div>
             <Button 
               variant="outline" 
-              size="sm"
-              className="bg-white/10 hover:bg-white/20 border-white/20"
+              className="border-[#1EAEDB] text-[#1EAEDB] hover:bg-[#1EAEDB]/10"
               onClick={onPrepaidAccount}
             >
-              <ArrowRight className="h-4 w-4 mr-2" />
               Voir les détails
+              <ArrowRight className="h-4 w-4 ml-2" />
             </Button>
           </div>
         </div>
