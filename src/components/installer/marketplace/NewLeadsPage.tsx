@@ -4,7 +4,7 @@ import { mockAvailableLeads } from "../dashboard/mockAvailableLeads";
 import { Lead } from "@/types/crm";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
-import { ShoppingCart, Euro } from "lucide-react";
+import { ShoppingCart, Euro, Wallet, CreditCard, Building2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { InstallerBreadcrumb } from "../navigation/InstallerBreadcrumb";
 import { InstallerLayout } from "../navigation/InstallerLayout";
@@ -28,54 +28,82 @@ export const NewLeadsPage = () => {
     });
   };
 
+  const handlePrepaidAccount = () => {
+    toast({
+      title: "Compte prépayé",
+      description: "Redirection vers la création de compte prépayé...",
+    });
+  };
+
   const totalPrice = selectedLeads.reduce((sum, lead) => sum + lead.price, 0);
 
   return (
     <InstallerLayout>
-      <div className="max-w-6xl mx-auto space-y-4 p-4">
+      <div className="max-w-6xl mx-auto space-y-4 p-4 min-h-screen bg-gradient-to-br from-[#0B1221] to-[#1a5fb4]">
         <InstallerBreadcrumb />
         
         {/* Prix des leads */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-          <Card className="p-6 bg-gradient-to-br from-white/5 to-primary/5 border border-primary/10 hover:border-primary/20 transition-all duration-300">
+          <Card className="p-6 bg-white/5 backdrop-blur-sm border-primary/10 hover:scale-105 transition-all duration-300">
             <div className="space-y-3">
               <div className="flex items-center gap-2">
-                <Euro className="h-5 w-5 text-primary" />
-                <h3 className="text-lg font-medium">Lead Particulier</h3>
+                <Wallet className="h-5 w-5 text-primary" />
+                <h3 className="text-lg font-medium text-white">Lead Particulier</h3>
               </div>
               <div className="flex items-baseline gap-1">
                 <span className="text-3xl font-bold text-primary">26€</span>
-                <span className="text-sm text-muted-foreground">avec compte prépayé</span>
+                <span className="text-sm text-white/60">avec compte prépayé</span>
               </div>
-              <p className="text-sm text-muted-foreground">35€ sans compte prépayé</p>
+              <p className="text-sm text-white/60">35€ sans compte prépayé</p>
+              <Button 
+                onClick={handlePurchase}
+                className="w-full bg-primary hover:bg-primary/90"
+              >
+                <ShoppingCart className="h-4 w-4 mr-2" />
+                Acheter
+              </Button>
             </div>
           </Card>
 
-          <Card className="p-6 bg-gradient-to-br from-white/5 to-primary/5 border border-primary/10 hover:border-primary/20 transition-all duration-300">
+          <Card className="p-6 bg-white/5 backdrop-blur-sm border-primary/10 hover:scale-105 transition-all duration-300">
             <div className="space-y-3">
               <div className="flex items-center gap-2">
-                <Euro className="h-5 w-5 text-primary" />
-                <h3 className="text-lg font-medium">Lead Pro</h3>
+                <Building2 className="h-5 w-5 text-primary" />
+                <h3 className="text-lg font-medium text-white">Lead Pro</h3>
               </div>
               <div className="flex items-baseline gap-1">
                 <span className="text-3xl font-bold text-primary">49€</span>
-                <span className="text-sm text-muted-foreground">avec compte prépayé</span>
+                <span className="text-sm text-white/60">avec compte prépayé</span>
               </div>
-              <p className="text-sm text-muted-foreground">59€ sans compte prépayé</p>
+              <p className="text-sm text-white/60">59€ sans compte prépayé</p>
+              <Button 
+                onClick={handlePurchase}
+                className="w-full bg-primary hover:bg-primary/90"
+              >
+                <ShoppingCart className="h-4 w-4 mr-2" />
+                Acheter
+              </Button>
             </div>
           </Card>
 
-          <Card className="p-6 bg-gradient-to-br from-white/5 to-primary/5 border border-primary/10 hover:border-primary/20 transition-all duration-300">
+          <Card className="p-6 bg-white/5 backdrop-blur-sm border-primary/10 hover:scale-105 transition-all duration-300">
             <div className="space-y-3">
               <div className="flex items-center gap-2">
-                <ShoppingCart className="h-5 w-5 text-primary" />
-                <h3 className="text-lg font-medium">Lead Exclusif</h3>
+                <CreditCard className="h-5 w-5 text-primary" />
+                <h3 className="text-lg font-medium text-white">Compte Prépayé</h3>
               </div>
               <div className="flex items-baseline gap-1">
-                <span className="text-3xl font-bold text-primary">89€</span>
-                <span className="text-sm text-muted-foreground">accès unique</span>
+                <span className="text-3xl font-bold text-primary">-25%</span>
+                <span className="text-sm text-white/60">sur tous les leads</span>
               </div>
-              <p className="text-sm text-muted-foreground">Contactez-nous pour plus d'infos</p>
+              <p className="text-sm text-white/60">Économisez sur chaque achat</p>
+              <Button 
+                onClick={handlePrepaidAccount}
+                className="w-full bg-primary hover:bg-primary/90"
+              >
+                <Euro className="h-4 w-4 mr-2" />
+                Créer un compte
+              </Button>
             </div>
           </Card>
         </div>
@@ -85,14 +113,14 @@ export const NewLeadsPage = () => {
           <Card className="p-6 mb-6 bg-primary/5 border-primary/20">
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="text-lg font-medium">
+                <h3 className="text-lg font-medium text-white">
                   {selectedLeads.length} lead{selectedLeads.length > 1 ? 's' : ''} sélectionné{selectedLeads.length > 1 ? 's' : ''}
                 </h3>
-                <p className="text-muted-foreground">Total: {totalPrice}€</p>
+                <p className="text-white/60">Total: {totalPrice}€</p>
               </div>
               <Button 
                 onClick={handlePurchase}
-                className="bg-primary hover:bg-primary-dark text-white px-6"
+                className="bg-primary hover:bg-primary/90 text-white px-6"
                 size="lg"
               >
                 <ShoppingCart className="mr-2 h-5 w-5" />
