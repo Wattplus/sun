@@ -1,6 +1,6 @@
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Euro, Plus, History, CreditCard, Wallet } from "lucide-react";
+import { Euro, Plus, History, CreditCard, Wallet, Shield, Award, TrendingUp, Users } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { motion } from "framer-motion";
 import { CustomAmountInput } from "./prepaid/CustomAmountInput";
@@ -36,14 +36,21 @@ export const PrepaidBalance = ({ balance = 0 }: PrepaidBalanceProps) => {
     >
       <Card className="overflow-hidden bg-gradient-to-br from-[#0B1221] to-[#1A1F2C] backdrop-blur-lg border-[#1EAEDB]/20">
         <div className="p-6 space-y-6">
+          {/* Header Section */}
           <div className="flex justify-between items-start">
             <div className="space-y-1">
-              <h3 className="text-lg font-semibold text-white/90">Options de paiement pour vos leads photovoltaïques</h3>
+              <h3 className="text-lg font-semibold text-white/90">
+                Votre compte prépayé premium
+              </h3>
               <p className="text-sm text-white/60">
-                Choisissez votre mode de paiement préféré pour acquérir des contacts qualifiés
+                Accédez aux meilleurs leads photovoltaïques en priorité
               </p>
             </div>
-            <motion.div className="text-right">
+            <motion.div 
+              className="text-right"
+              whileHover={{ scale: 1.05 }}
+              transition={{ type: "spring", stiffness: 300 }}
+            >
               <div className="flex items-center gap-2 justify-end">
                 <Euro className="h-6 w-6 text-[#1EAEDB]" />
                 <p className="text-3xl font-bold bg-gradient-to-r from-white to-white/80 bg-clip-text text-transparent">
@@ -51,14 +58,51 @@ export const PrepaidBalance = ({ balance = 0 }: PrepaidBalanceProps) => {
                 </p>
               </div>
               <p className="text-sm text-white/60 mt-1">
-                Solde disponible pour l'achat de leads
+                Solde disponible
+              </p>
+            </motion.div>
+          </div>
+
+          {/* Benefits Section */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <motion.div 
+              className="p-4 rounded-lg bg-[#1EAEDB]/10 border border-[#1EAEDB]/20"
+              whileHover={{ scale: 1.02 }}
+              transition={{ type: "spring", stiffness: 300 }}
+            >
+              <Award className="h-8 w-8 text-[#1EAEDB] mb-2" />
+              <h4 className="font-medium text-white mb-1">Accès Premium</h4>
+              <p className="text-sm text-white/60">
+                Priorité sur les nouveaux leads qualifiés
+              </p>
+            </motion.div>
+            <motion.div 
+              className="p-4 rounded-lg bg-[#1EAEDB]/10 border border-[#1EAEDB]/20"
+              whileHover={{ scale: 1.02 }}
+              transition={{ type: "spring", stiffness: 300 }}
+            >
+              <TrendingUp className="h-8 w-8 text-[#1EAEDB] mb-2" />
+              <h4 className="font-medium text-white mb-1">Tarifs Préférentiels</h4>
+              <p className="text-sm text-white/60">
+                Jusqu'à -25% sur les leads premium
+              </p>
+            </motion.div>
+            <motion.div 
+              className="p-4 rounded-lg bg-[#1EAEDB]/10 border border-[#1EAEDB]/20"
+              whileHover={{ scale: 1.02 }}
+              transition={{ type: "spring", stiffness: 300 }}
+            >
+              <Shield className="h-8 w-8 text-[#1EAEDB] mb-2" />
+              <h4 className="font-medium text-white mb-1">Garantie Qualité</h4>
+              <p className="text-sm text-white/60">
+                Leads vérifiés et garantis
               </p>
             </motion.div>
           </div>
 
           <div className="space-y-4">
             <div className="grid grid-cols-1 gap-4">
-              {/* Option 1: Paiement direct */}
+              {/* Payment Options */}
               <div className="p-4 rounded-lg bg-[#1EAEDB]/10 border border-[#1EAEDB]/20">
                 <div className="flex items-center gap-3 mb-3">
                   <CreditCard className="h-5 w-5 text-[#1EAEDB]" />
@@ -74,7 +118,7 @@ export const PrepaidBalance = ({ balance = 0 }: PrepaidBalanceProps) => {
                 />
               </div>
 
-              {/* Option 2: Compte prépayé */}
+              {/* Prepaid Account */}
               <div className="p-4 rounded-lg bg-[#1EAEDB]/10 border border-[#1EAEDB]/20">
                 <div className="flex items-center gap-3 mb-3">
                   <Wallet className="h-5 w-5 text-[#1EAEDB]" />
