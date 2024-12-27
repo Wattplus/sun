@@ -23,6 +23,9 @@ export const DashboardControls = ({
     { icon: MessageSquare, label: "Messages", path: "/espace-installateur/messages" },
     { icon: FileText, label: "Documents", path: "/espace-installateur/documents" },
     { icon: Settings, label: "Paramètres", path: "/espace-installateur/parametres" },
+  ];
+
+  const userMenuItems = [
     { icon: Bell, label: "Notifications", path: "/espace-installateur/notifications" },
     { icon: User, label: "Mon profil", path: "/espace-installateur/mon-compte/profil" },
   ];
@@ -44,7 +47,7 @@ export const DashboardControls = ({
 
           {/* Desktop Navigation Menu */}
           <div className="hidden md:flex items-center space-x-4">
-            {menuItems.slice(0, 5).map((item) => (
+            {menuItems.map((item) => (
               <Link
                 key={item.path}
                 to={item.path}
@@ -60,10 +63,11 @@ export const DashboardControls = ({
             ))}
           </div>
 
-          {/* Desktop Controls */}
+          {/* Right Controls */}
           <div className="flex items-center space-x-2">
+            {/* Desktop User Menu */}
             <div className="hidden md:flex items-center space-x-2">
-              {menuItems.slice(5).map((item) => (
+              {userMenuItems.map((item) => (
                 <Link key={item.path} to={item.path}>
                   <Button variant="ghost" size="icon" className="text-primary">
                     <item.icon className="h-5 w-5" />
@@ -72,6 +76,7 @@ export const DashboardControls = ({
               ))}
             </div>
             
+            {/* Fullscreen Button */}
             <Button
               variant="ghost"
               size="icon"
@@ -91,7 +96,7 @@ export const DashboardControls = ({
                 </SheetTrigger>
                 <SheetContent side="top" className="pt-10">
                   <div className="flex flex-col space-y-4">
-                    {menuItems.map((item) => (
+                    {[...menuItems, ...userMenuItems].map((item) => (
                       <Link
                         key={item.path}
                         to={item.path}
