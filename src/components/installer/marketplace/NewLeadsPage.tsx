@@ -9,7 +9,6 @@ import { mockAvailableLeads } from "../dashboard/mockAvailableLeads";
 import { toast } from "sonner";
 import { LeadsTable } from "./components/LeadsTable";
 import { LeadsSummaryCards } from "./components/LeadsSummaryCards";
-import { BottomCTA } from "./sections/BottomCTA";
 
 export const NewLeadsPage = () => {
   const [selectedLeads, setSelectedLeads] = useState<Lead[]>([]);
@@ -140,8 +139,6 @@ export const NewLeadsPage = () => {
               </div>
             </div>
           </Card>
-
-          <BottomCTA onPrepaidAccount={handlePrepaidAccount} />
         </div>
       </div>
     </InstallerLayout>
