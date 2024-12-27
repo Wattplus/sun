@@ -2,8 +2,8 @@ import {
   Sidebar,
   SidebarContent,
   SidebarGroup,
-  SidebarGroupContent,
   SidebarGroupLabel,
+  SidebarGroupContent,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
@@ -16,7 +16,8 @@ import {
   HelpCircle,
   Users,
   FileText,
-  Sparkles
+  Sparkles,
+  Zap
 } from "lucide-react"
 import { Link, useLocation } from "react-router-dom"
 
@@ -71,7 +72,10 @@ export function InstallerSidebar() {
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupLabel className="text-lg font-semibold text-primary px-4 py-2">
-            Navigation
+            <div className="flex items-center gap-1">
+              <Zap className="h-5 w-5 text-primary" />
+              <span>Wattplus</span>
+            </div>
           </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
