@@ -8,6 +8,7 @@ import { ClientsPage } from "@/components/installer/clients/ClientsPage";
 import { SettingsPage } from "@/components/installer/settings/SettingsPage";
 import { HelpPage } from "@/components/installer/help/HelpPage";
 import { PurchasedLeadsPage } from "@/components/installer/leads/PurchasedLeadsPage";
+import { SubscriptionPlans } from "@/components/installer/subscription/SubscriptionPlans";
 
 const InstallerProfile = () => {
   const location = useLocation();
@@ -27,6 +28,12 @@ const InstallerProfile = () => {
         return <HelpPage />;
       case "/espace-installateur/leads":
         return <PurchasedLeadsPage />;
+      case "/espace-installateur/abonnement":
+        return (
+          <div className="p-6">
+            <SubscriptionPlans />
+          </div>
+        );
       default:
         return <InstallerDashboard />;
     }
