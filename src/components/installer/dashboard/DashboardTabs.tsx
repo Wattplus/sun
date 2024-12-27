@@ -5,7 +5,7 @@ import { ProjectsList } from "./ProjectsList";
 import { PurchasedLeads } from "./PurchasedLeads";
 import { LeadsList } from "./LeadsList";
 import { MessagesList } from "./MessagesList";
-import InstallerProfile from "@/pages/InstallerProfile"; // Correction de l'importation ici
+import { InstallerProfile } from "@/pages/InstallerProfile";
 import { Card } from "@/components/ui/card";
 import { mockAvailableLeads } from "./mockAvailableLeads";
 import { mockPurchasedLeads } from "./mockPurchasedLeads";
