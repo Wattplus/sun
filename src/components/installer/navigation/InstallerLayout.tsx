@@ -1,7 +1,7 @@
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
 import { InstallerSidebar } from "./InstallerSidebar"
 import { ReactNode } from "react"
-import { Menu } from "lucide-react"
+import { Menu, Zap } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
 interface InstallerLayoutProps {
@@ -23,7 +23,10 @@ export function InstallerLayout({ children }: InstallerLayoutProps) {
             >
               <SidebarTrigger>
                 <Menu className="h-5 w-5" />
-                <span>Navigation</span>
+                <div className="flex items-center gap-1">
+                  <Zap className="h-5 w-5 text-primary" />
+                  <span className="font-semibold text-primary">Wattplus</span>
+                </div>
               </SidebarTrigger>
             </Button>
           </div>
