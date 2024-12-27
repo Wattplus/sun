@@ -32,33 +32,28 @@ export const LeadCard = ({ lead, status, onStatusChange }: LeadCardProps) => {
               {lead.projectType === 'professional' ? 'Professionnel' : 'Résidentiel'}
             </Badge>
           </div>
-          <Select 
-            value={status} 
-            onValueChange={onStatusChange}
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-            }}
-          >
-            <SelectTrigger 
-              className="w-[140px]"
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-              }}
+          <div onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+          }}>
+            <Select 
+              value={status} 
+              onValueChange={onStatusChange}
             >
-              <SelectValue placeholder="Statut" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="nouveau">Nouveau</SelectItem>
-              <SelectItem value="contacte">Contacté</SelectItem>
-              <SelectItem value="devis_envoye">Devis envoyé</SelectItem>
-              <SelectItem value="rdv_planifie">RDV planifié</SelectItem>
-              <SelectItem value="negociation">En négociation</SelectItem>
-              <SelectItem value="signe">Signé</SelectItem>
-              <SelectItem value="perdu">Perdu</SelectItem>
-            </SelectContent>
-          </Select>
+              <SelectTrigger className="w-[140px]">
+                <SelectValue placeholder="Statut" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="nouveau">Nouveau</SelectItem>
+                <SelectItem value="contacte">Contacté</SelectItem>
+                <SelectItem value="devis_envoye">Devis envoyé</SelectItem>
+                <SelectItem value="rdv_planifie">RDV planifié</SelectItem>
+                <SelectItem value="negociation">En négociation</SelectItem>
+                <SelectItem value="signe">Signé</SelectItem>
+                <SelectItem value="perdu">Perdu</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
         </CardHeader>
         <CardContent>
           <div className="grid gap-3">
