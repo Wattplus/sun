@@ -4,15 +4,19 @@ import { mockAvailableLeads } from "../dashboard/mockAvailableLeads";
 import { Lead } from "@/types/crm";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
-import { ShoppingCart, Euro, Wallet, CreditCard, Building2, User, Plus } from "lucide-react";
+import { ShoppingCart, Euro, Wallet, CreditCard, Building2, User, Plus, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { InstallerBreadcrumb } from "../navigation/InstallerBreadcrumb";
 import { InstallerLayout } from "../navigation/InstallerLayout";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 export const NewLeadsPage = () => {
   const [selectedLeads, setSelectedLeads] = useState<Lead[]>([]);
   const { toast } = useToast();
-  const balance = 150;
+  const balance = 150; // Simulation du solde
+  const hasEnoughBalance = balance >= 26; // Vérifie si le solde est suffisant pour un lead
+  const recommendedBalance = 200;
+  const needsTopUp = balance < recommendedBalance;
 
   const handleLeadSelect = (lead: Lead) => {
     if (selectedLeads.some(l => l.id === lead.id)) {
@@ -23,6 +27,14 @@ export const NewLeadsPage = () => {
   };
 
   const handlePurchase = () => {
+    if (!hasEnoughBalance) {
+      toast({
+        title: "Solde insuffisant",
+        description: "Veuillez recharger votre compte pour acheter ce lead.",
+        variant: "destructive",
+      });
+      return;
+    }
     toast({
       title: "Achat de lead",
       description: "Redirection vers le paiement...",
@@ -32,11 +44,11 @@ export const NewLeadsPage = () => {
   const handlePrepaidAccount = () => {
     toast({
       title: "Compte prépayé",
-      description: "Redirection vers la création de compte prépayé...",
+      description: "Redirection vers la recharge du compte...",
     });
   };
 
-  const totalPrice = selectedLeads.reduce((sum, lead) => sum + lead.price, 0);
+  const totalPrice = selectedLeads.reduce((sum, lead) => sum + (hasEnoughBalance ? 26 : 35), 0);
 
   return (
     <InstallerLayout>
@@ -80,6 +92,22 @@ export const NewLeadsPage = () => {
           </div>
         </Card>
 
+        {needsTopUp && (
+          <Alert className="bg-primary/10 border-primary/20 text-white">
+            <AlertCircle className="h-4 w-4 text-primary" />
+            <AlertDescription>
+              Nous recommandons de maintenir un solde minimum de {recommendedBalance}€ pour ne pas manquer d'opportunités.{' '}
+              <Button 
+                variant="link" 
+                className="text-primary p-0 h-auto font-semibold hover:text-primary/80"
+                onClick={handlePrepaidAccount}
+              >
+                Recharger maintenant
+              </Button>
+            </AlertDescription>
+          </Alert>
+        )}
+
         {/* Prix des leads */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {/* Lead Particulier */}
@@ -91,17 +119,29 @@ export const NewLeadsPage = () => {
               </div>
               <div className="space-y-2">
                 <div className="flex items-baseline gap-2">
-                  <span className="text-3xl font-bold text-primary">26€</span>
-                  <span className="text-sm text-white/60">avec compte prépayé</span>
+                  <span className="text-3xl font-bold text-primary">{hasEnoughBalance ? '26' : '35'}€</span>
+                  <span className="text-sm text-white/60">{hasEnoughBalance ? 'avec compte prépayé' : 'prix standard'}</span>
                 </div>
-                <p className="text-sm text-white/60">35€ sans compte prépayé</p>
+                {!hasEnoughBalance && (
+                  <p className="text-sm text-primary/80">Économisez en rechargeant votre compte !</p>
+                )}
               </div>
               <Button 
                 onClick={handlePurchase}
                 className="w-full bg-primary hover:bg-primary/90"
+                disabled={!hasEnoughBalance}
               >
-                <ShoppingCart className="h-4 w-4 mr-2" />
-                Acheter
+                {hasEnoughBalance ? (
+                  <>
+                    <ShoppingCart className="h-4 w-4 mr-2" />
+                    Acheter
+                  </>
+                ) : (
+                  <>
+                    <Plus className="h-4 w-4 mr-2" />
+                    Recharger pour acheter
+                  </>
+                )}
               </Button>
             </div>
           </Card>
@@ -115,17 +155,29 @@ export const NewLeadsPage = () => {
               </div>
               <div className="space-y-2">
                 <div className="flex items-baseline gap-2">
-                  <span className="text-3xl font-bold text-primary">49€</span>
-                  <span className="text-sm text-white/60">avec compte prépayé</span>
+                  <span className="text-3xl font-bold text-primary">{hasEnoughBalance ? '49' : '59'}€</span>
+                  <span className="text-sm text-white/60">{hasEnoughBalance ? 'avec compte prépayé' : 'prix standard'}</span>
                 </div>
-                <p className="text-sm text-white/60">59€ sans compte prépayé</p>
+                {!hasEnoughBalance && (
+                  <p className="text-sm text-primary/80">Économisez en rechargeant votre compte !</p>
+                )}
               </div>
               <Button 
                 onClick={handlePurchase}
                 className="w-full bg-primary hover:bg-primary/90"
+                disabled={!hasEnoughBalance}
               >
-                <ShoppingCart className="h-4 w-4 mr-2" />
-                Acheter
+                {hasEnoughBalance ? (
+                  <>
+                    <ShoppingCart className="h-4 w-4 mr-2" />
+                    Acheter
+                  </>
+                ) : (
+                  <>
+                    <Plus className="h-4 w-4 mr-2" />
+                    Recharger pour acheter
+                  </>
+                )}
               </Button>
             </div>
           </Card>
@@ -145,9 +197,19 @@ export const NewLeadsPage = () => {
                 onClick={handlePurchase}
                 className="bg-primary hover:bg-primary/90 text-white px-6"
                 size="lg"
+                disabled={!hasEnoughBalance}
               >
-                <ShoppingCart className="mr-2 h-5 w-5" />
-                Acheter la sélection
+                {hasEnoughBalance ? (
+                  <>
+                    <ShoppingCart className="mr-2 h-5 w-5" />
+                    Acheter la sélection
+                  </>
+                ) : (
+                  <>
+                    <Plus className="mr-2 h-5 w-5" />
+                    Recharger pour acheter
+                  </>
+                )}
               </Button>
             </div>
           </Card>
