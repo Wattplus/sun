@@ -17,9 +17,15 @@ export const PricingCards = ({ hasEnoughBalance, onPurchase }: PricingCardsProps
             <h3 className="text-xl font-medium text-white">Lead Particulier</h3>
           </div>
           <div className="space-y-2">
-            <div className="flex items-baseline gap-2">
-              <span className="text-3xl font-bold text-primary">{hasEnoughBalance ? '26' : '35'}€</span>
-              <span className="text-sm text-white/60">{hasEnoughBalance ? 'avec compte prépayé' : 'prix standard'}</span>
+            <div className="flex flex-col gap-2">
+              <div className="flex items-baseline gap-2">
+                <span className="text-3xl font-bold text-primary">26€</span>
+                <span className="text-sm text-white/60">avec compte prépayé</span>
+              </div>
+              <div className="flex items-baseline gap-2">
+                <span className="text-2xl font-semibold text-white/80">35€</span>
+                <span className="text-sm text-white/60">sans compte prépayé</span>
+              </div>
             </div>
             {!hasEnoughBalance && (
               <p className="text-sm text-primary/80">Économisez en rechargeant votre compte !</p>
@@ -52,9 +58,15 @@ export const PricingCards = ({ hasEnoughBalance, onPurchase }: PricingCardsProps
             <h3 className="text-xl font-medium text-white">Lead Pro</h3>
           </div>
           <div className="space-y-2">
-            <div className="flex items-baseline gap-2">
-              <span className="text-3xl font-bold text-primary">{hasEnoughBalance ? '49' : '59'}€</span>
-              <span className="text-sm text-white/60">{hasEnoughBalance ? 'avec compte prépayé' : 'prix standard'}</span>
+            <div className="flex flex-col gap-2">
+              <div className="flex items-baseline gap-2">
+                <span className="text-3xl font-bold text-primary">49€</span>
+                <span className="text-sm text-white/60">avec compte prépayé</span>
+              </div>
+              <div className="flex items-baseline gap-2">
+                <span className="text-2xl font-semibold text-white/80">59€</span>
+                <span className="text-sm text-white/60">sans compte prépayé</span>
+              </div>
             </div>
             {!hasEnoughBalance && (
               <p className="text-sm text-primary/80">Économisez en rechargeant votre compte !</p>
