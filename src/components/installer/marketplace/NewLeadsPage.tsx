@@ -13,6 +13,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { InstallerLayout } from "../navigation/InstallerLayout";
 import { WhyBuyLeads } from "./sections/WhyBuyLeads";
 import { PrepaidSection } from "./sections/PrepaidSection";
+import { PricingSection } from "./sections/PricingSection";
 
 export const NewLeadsPage = () => {
   const [selectedLeads, setSelectedLeads] = useState<Lead[]>([]);
@@ -141,6 +142,7 @@ export const NewLeadsPage = () => {
           </Card>
 
           <div className="space-y-6">
+            <PricingSection />
             <WhyBuyLeads />
           </div>
         </div>
