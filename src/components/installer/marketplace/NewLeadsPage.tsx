@@ -12,11 +12,11 @@ import { Card } from "@/components/ui/card";
 import { BalanceSection } from "./sections/BalanceSection";
 import { PricingCards } from "./sections/PricingCards";
 import { BottomCTA } from "./sections/BottomCTA";
+import { mockAvailableLeads } from "../dashboard/mockAvailableLeads";
 
 export const NewLeadsPage = () => {
   const [selectedLeads, setSelectedLeads] = useState<Lead[]>([]);
   const { toast } = useToast();
-  const { leads, isLoading } = useLeadsSync();
   const balance = 150;
   const hasEnoughBalance = balance >= 26;
   const recommendedBalance = 200;
@@ -54,19 +54,9 @@ export const NewLeadsPage = () => {
 
   const totalPrice = selectedLeads.reduce((sum, lead) => sum + (hasEnoughBalance ? 26 : 35), 0);
 
-  if (isLoading) {
-    return (
-      <InstallerLayout>
-        <div className="flex items-center justify-center h-screen">
-          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary"></div>
-        </div>
-      </InstallerLayout>
-    );
-  }
-
   return (
     <InstallerLayout>
-      <div className="max-w-6xl mx-auto space-y-6 p-4 min-h-screen bg-secondary-dark">
+      <div className="max-w-6xl mx-auto space-y-6 p-4 min-h-screen">
         <InstallerBreadcrumb />
         
         <BalanceSection 
@@ -116,11 +106,32 @@ export const NewLeadsPage = () => {
           </Card>
         )}
 
-        <LeadsList
-          leads={leads}
-          onLeadSelect={handleLeadSelect}
-          selectedLeads={selectedLeads}
-        />
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {mockAvailableLeads.map((lead) => (
+            <Card 
+              key={lead.id}
+              className="p-6 bg-white/5 backdrop-blur-sm border-primary/20 hover:border-primary/40 transition-all duration-200"
+            >
+              <div className="space-y-4">
+                <div>
+                  <h3 className="text-lg font-medium text-white">{lead.firstName} {lead.lastName}</h3>
+                  <p className="text-white/60">{lead.postalCode}</p>
+                </div>
+                <div>
+                  <p className="text-sm text-white/80">Budget: {lead.budget}€</p>
+                  <p className="text-sm text-white/80">Type: {lead.projectType}</p>
+                </div>
+                <Button
+                  onClick={() => handleLeadSelect(lead)}
+                  variant={selectedLeads.some(l => l.id === lead.id) ? "secondary" : "outline"}
+                  className="w-full"
+                >
+                  {selectedLeads.some(l => l.id === lead.id) ? "Désélectionner" : "Sélectionner"}
+                </Button>
+              </div>
+            </Card>
+          ))}
+        </div>
 
         <BottomCTA onPrepaidAccount={handlePrepaidAccount} />
       </div>
