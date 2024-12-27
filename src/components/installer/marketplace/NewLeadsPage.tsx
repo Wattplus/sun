@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Lead } from "@/types/crm";
-import { Filter, Download } from "lucide-react";
+import { Filter, Download, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { InstallerBreadcrumb } from "../navigation/InstallerBreadcrumb";
 import { InstallerLayout } from "../navigation/InstallerLayout";
@@ -9,6 +9,7 @@ import { mockAvailableLeads } from "../dashboard/mockAvailableLeads";
 import { toast } from "sonner";
 import { LeadsTable } from "./components/LeadsTable";
 import { LeadsSummaryCards } from "./components/LeadsSummaryCards";
+import { LeadsNavMenu } from "./components/LeadsNavMenu";
 
 export const NewLeadsPage = () => {
   const [selectedLeads, setSelectedLeads] = useState<Lead[]>([]);
@@ -49,25 +50,28 @@ export const NewLeadsPage = () => {
     <InstallerLayout>
       <div className="min-h-screen bg-gradient-to-b from-background/95 to-background">
         <div className="max-w-[1400px] mx-auto p-6 space-y-8">
-          <div className="flex items-center justify-between">
-            <InstallerBreadcrumb />
-            <div className="flex items-center gap-3">
-              <Button 
-                variant="outline" 
-                className="gap-2 bg-primary/10 hover:bg-primary/20 border-primary/20"
-              >
-                <Filter className="w-4 h-4" />
-                Filtrer
-              </Button>
-              <Button 
-                variant="outline" 
-                className="gap-2 bg-primary/10 hover:bg-primary/20 border-primary/20" 
-                onClick={handleExport}
-              >
-                <Download className="w-4 h-4" />
-                Exporter
-              </Button>
+          <div className="flex flex-col space-y-6">
+            <div className="flex items-center justify-between">
+              <InstallerBreadcrumb />
+              <div className="flex items-center gap-3">
+                <Button 
+                  variant="outline" 
+                  className="gap-2 bg-primary/10 hover:bg-primary/20 border-primary/20"
+                >
+                  <Filter className="w-4 h-4" />
+                  Filtrer
+                </Button>
+                <Button 
+                  variant="outline" 
+                  className="gap-2 bg-primary/10 hover:bg-primary/20 border-primary/20" 
+                  onClick={handleExport}
+                >
+                  <Download className="w-4 h-4" />
+                  Exporter
+                </Button>
+              </div>
             </div>
+            <LeadsNavMenu />
           </div>
           
           <LeadsSummaryCards 
