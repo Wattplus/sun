@@ -14,7 +14,6 @@ function App() {
         <Route path="/" element={<Index />} />
         <Route path="/admin/*" element={<Admin />} />
         <Route path="/espace-client/*" element={<ClientPortal />} />
-        <Route path="/client/*" element={<ClientPortal />} />
         <Route path="/installateur/:id" element={<InstallerProfile />} />
         
         {/* Installer routes with layout */}

@@ -27,25 +27,20 @@ const statusLabels = {
 };
 
 export const PurchasedLeadsPage = () => {
-  console.log("Rendering PurchasedLeadsPage");
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
 
-  console.log("Current leads:", mockPurchasedLeads);
-
   const filteredLeads = mockPurchasedLeads.filter((lead) => {
     const matchesSearch =
-      (lead.firstName?.toLowerCase().includes(searchTerm.toLowerCase()) || '') ||
-      (lead.lastName?.toLowerCase().includes(searchTerm.toLowerCase()) || '') ||
-      (lead.city?.toLowerCase().includes(searchTerm.toLowerCase()) || '');
+      lead.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      lead.lastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      lead.city.toLowerCase().includes(searchTerm.toLowerCase());
 
     const matchesStatus = statusFilter === "all" || lead.status === statusFilter;
 
     return matchesSearch && matchesStatus;
   });
-
-  console.log("Filtered leads:", filteredLeads);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background/80 to-background p-6 space-y-8">
@@ -104,9 +99,7 @@ export const PurchasedLeadsPage = () => {
                       {lead.firstName} {lead.lastName}
                     </TableCell>
                     <TableCell>{lead.city}</TableCell>
-                    <TableCell>
-                      {lead.projectType === 'residential' ? 'Résidentiel' : 'Professionnel'}
-                    </TableCell>
+                    <TableCell>{lead.projectType}</TableCell>
                     <TableCell>{lead.budget}€</TableCell>
                     <TableCell>
                       <Badge className={statusColors[lead.status as keyof typeof statusColors]}>

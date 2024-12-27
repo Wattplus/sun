@@ -10,15 +10,14 @@ export const useLeadsSync = () => {
   const { data: leads = mockPurchasedLeads, isLoading } = useQuery({
     queryKey: ['purchased-leads'],
     queryFn: async () => {
-      // Simule une requête API - à remplacer par une vraie requête API plus tard
+      // Return mock data for now
       return mockPurchasedLeads;
-    },
-    refetchInterval: 30000, // Rafraîchit toutes les 30 secondes
+    }
   });
 
   const updateLead = useMutation({
     mutationFn: async (updatedLead: Lead) => {
-      // Simule une mise à jour - à remplacer par une vraie requête API plus tard
+      // Mock update - just return the updated lead
       return updatedLead;
     },
     onSuccess: () => {
