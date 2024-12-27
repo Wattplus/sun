@@ -4,7 +4,7 @@ import { Euro, Sparkles, Building2, User, Check, Star } from "lucide-react";
 
 export const PricingSection = () => {
   return (
-    <Card className="p-6 bg-white/80 backdrop-blur-sm border-none shadow-xl">
+    <Card className="p-6 bg-white/80 backdrop-blur-sm border border-primary/10 shadow-lg">
       <div className="space-y-4">
         <div className="flex items-center gap-2 border-b border-primary/10 pb-3">
           <div className="bg-gradient-to-r from-primary to-accent p-1.5 rounded-full">
@@ -21,7 +21,7 @@ export const PricingSection = () => {
         <div className="space-y-3">
           <div className="relative transform hover:scale-105 transition-all duration-300">
             <div className="absolute -right-2 -top-2 z-10">
-              <div className="px-4 py-1.5 rounded-full text-xs font-bold text-white shadow-lg bg-gradient-to-r from-primary via-accent to-primary bg-[length:200%_100%] animate-gradient">
+              <div className="px-4 py-1.5 rounded-full text-xs font-bold text-white shadow-lg bg-gradient-to-r from-primary to-accent animate-gradient">
                 RECOMMANDÉ
               </div>
             </div>
