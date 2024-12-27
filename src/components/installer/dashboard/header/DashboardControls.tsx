@@ -34,6 +34,25 @@ export const DashboardControls = ({
     return location.pathname === path;
   };
 
+  const renderNavLink = (item: { icon: any, label: string, path: string }) => {
+    const Icon = item.icon;
+    return (
+      <Link
+        key={item.path}
+        to={item.path}
+        className={`flex items-center space-x-2 px-3 py-2 rounded-md transition-colors ${
+          isActivePath(item.path)
+            ? "bg-primary/10 text-primary"
+            : "text-foreground hover:bg-primary/5"
+        }`}
+        onClick={() => setIsOpen(false)}
+      >
+        <Icon className="h-4 w-4" />
+        <span>{item.label}</span>
+      </Link>
+    );
+  };
+
   return (
     <Card className="border-primary/10">
       <div className="p-2">
@@ -46,40 +65,14 @@ export const DashboardControls = ({
 
           {/* Navigation Menu - Desktop */}
           <div className="hidden md:flex items-center space-x-4">
-            {menuItems.map((item) => (
-              <Link
-                key={item.path}
-                to={item.path}
-                className={`flex items-center space-x-2 px-3 py-2 rounded-md transition-colors ${
-                  isActivePath(item.path)
-                    ? "bg-primary/10 text-primary"
-                    : "text-foreground hover:bg-primary/5"
-                }`}
-              >
-                <item.icon className="h-4 w-4" />
-                <span>{item.label}</span>
-              </Link>
-            ))}
+            {menuItems.map(renderNavLink)}
           </div>
 
           {/* Right Controls */}
           <div className="flex items-center space-x-2">
             {/* User Menu - Desktop */}
             <div className="hidden md:flex items-center space-x-2">
-              {userMenuItems.map((item) => (
-                <Link 
-                  key={item.path} 
-                  to={item.path}
-                  className={`flex items-center space-x-2 px-3 py-2 rounded-md transition-colors ${
-                    isActivePath(item.path)
-                      ? "bg-primary/10 text-primary"
-                      : "text-foreground hover:bg-primary/5"
-                  }`}
-                >
-                  <item.icon className="h-4 w-4" />
-                  <span className="hidden lg:inline">{item.label}</span>
-                </Link>
-              ))}
+              {userMenuItems.map(renderNavLink)}
             </div>
             
             {/* Fullscreen Button */}
@@ -102,21 +95,8 @@ export const DashboardControls = ({
                 </SheetTrigger>
                 <SheetContent side="right" className="w-[300px] sm:w-[400px]">
                   <nav className="flex flex-col gap-4">
-                    {[...menuItems, ...userMenuItems].map((item) => (
-                      <Link
-                        key={item.path}
-                        to={item.path}
-                        className={`flex items-center space-x-2 px-3 py-2 rounded-md transition-colors ${
-                          isActivePath(item.path)
-                            ? "bg-primary/10 text-primary"
-                            : "text-foreground hover:bg-primary/5"
-                        }`}
-                        onClick={() => setIsOpen(false)}
-                      >
-                        <item.icon className="h-4 w-4" />
-                        <span>{item.label}</span>
-                      </Link>
-                    ))}
+                    {menuItems.map(renderNavLink)}
+                    {userMenuItems.map(renderNavLink)}
                     <Button 
                       variant="destructive" 
                       className="mt-4 w-full justify-start gap-2"
