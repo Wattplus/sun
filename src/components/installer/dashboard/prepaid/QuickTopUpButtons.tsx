@@ -11,7 +11,7 @@ export const QuickTopUpButtons = ({ onTopUp, isLoading }: QuickTopUpButtonsProps
   const amounts = [50, 100, 200];
   
   return (
-    <div className="grid grid-cols-3 gap-3">
+    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
       {amounts.map((amount, index) => (
         <motion.div
           key={amount}

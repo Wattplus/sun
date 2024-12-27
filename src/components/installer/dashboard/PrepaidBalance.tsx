@@ -33,12 +33,13 @@ export const PrepaidBalance = ({ balance = 0 }: PrepaidBalanceProps) => {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
+      className="w-full px-2 sm:px-0"
     >
       <Card className="overflow-hidden bg-gradient-to-br from-[#0B1221] to-[#1A1F2C] backdrop-blur-lg border-[#1EAEDB]/20">
-        <div className="p-6 space-y-6">
+        <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
           {/* Header Section */}
-          <div className="flex justify-between items-start">
-            <div className="space-y-1">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <div className="space-y-1 w-full sm:w-auto">
               <h3 className="text-lg font-semibold text-white/90">
                 Votre compte prépayé premium
               </h3>
@@ -47,7 +48,7 @@ export const PrepaidBalance = ({ balance = 0 }: PrepaidBalanceProps) => {
               </p>
             </div>
             <motion.div 
-              className="text-right"
+              className="text-right w-full sm:w-auto"
               whileHover={{ scale: 1.05 }}
               transition={{ type: "spring", stiffness: 300 }}
             >
@@ -64,7 +65,7 @@ export const PrepaidBalance = ({ balance = 0 }: PrepaidBalanceProps) => {
           </div>
 
           {/* Benefits Section */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             <motion.div 
               className="p-4 rounded-lg bg-[#1EAEDB]/10 border border-[#1EAEDB]/20"
               whileHover={{ scale: 1.02 }}
