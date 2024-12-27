@@ -8,6 +8,7 @@ import { ClientsPage } from "@/components/installer/clients/ClientsPage";
 import { SettingsPage } from "@/components/installer/settings/SettingsPage";
 import { HelpPage } from "@/components/installer/help/HelpPage";
 import { PurchasedLeadsPage } from "@/components/installer/leads/PurchasedLeadsPage";
+import { LeadDetailsPage } from "@/components/installer/leads/LeadDetailsPage";
 
 const InstallerProfile = () => {
   const location = useLocation();
@@ -31,7 +32,7 @@ const InstallerProfile = () => {
         return <InstallerDashboard />;
       default:
         if (path.startsWith("/espace-installateur/leads/")) {
-          return <PurchasedLeadsPage />;
+          return <LeadDetailsPage />;
         }
         return <InstallerDashboard />;
     }
