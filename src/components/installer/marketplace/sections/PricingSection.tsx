@@ -4,11 +4,11 @@ import { Euro, Sparkles, Building2, User, Check, Star } from "lucide-react";
 
 export const PricingSection = () => {
   return (
-    <Card className="p-4 bg-white border-none shadow-xl">
+    <Card className="p-6 bg-white border-none shadow-xl">
       <div className="space-y-4">
         <div className="flex items-center gap-2 border-b border-gray-100 pb-3">
-          <div className="bg-orange-500/10 p-1.5 rounded-full">
-            <Euro className="h-4 w-4 text-orange-500" />
+          <div className="bg-gradient-to-r from-orange-500 to-pink-500 p-1.5 rounded-full">
+            <Euro className="h-4 w-4 text-white" />
           </div>
           <div>
             <h3 className="text-lg font-semibold text-gray-900">Tarifs des leads</h3>
@@ -26,14 +26,10 @@ export const PricingSection = () => {
               </div>
             </div>
             
-            <div className="p-4 rounded-lg relative overflow-hidden transition-all duration-300 bg-white border border-orange-200 shadow-lg hover:shadow-orange-200/50">
-              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-700">
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-orange-500/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
-              </div>
-              
+            <div className="p-4 rounded-lg relative overflow-hidden transition-all duration-300 bg-gradient-to-br from-white to-orange-50 border border-orange-100 shadow-lg hover:shadow-orange-200/50">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="bg-gradient-to-r from-orange-500 to-pink-500 p-2.5 rounded-full">
+                  <div className="bg-gradient-to-br from-orange-500 to-pink-500 p-2.5 rounded-full shadow-lg">
                     <User className="h-5 w-5 text-white" />
                   </div>
                   <div>
@@ -57,10 +53,10 @@ export const PricingSection = () => {
             </div>
           </div>
 
-          <div className="p-4 rounded-lg relative overflow-hidden hover:scale-105 transition-all duration-300 bg-white border border-purple-200 shadow-lg hover:shadow-purple-200/50">
+          <div className="p-4 rounded-lg relative overflow-hidden hover:scale-105 transition-all duration-300 bg-gradient-to-br from-white to-purple-50 border border-purple-100 shadow-lg hover:shadow-purple-200/50">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="bg-gradient-to-r from-purple-500 to-blue-500 p-2 rounded-full">
+                <div className="bg-gradient-to-r from-purple-500 to-blue-500 p-2 rounded-full shadow-lg">
                   <User className="h-4 w-4 text-white" />
                 </div>
                 <div>
@@ -80,10 +76,10 @@ export const PricingSection = () => {
             </div>
           </div>
 
-          <div className="p-4 rounded-lg relative overflow-hidden hover:scale-105 transition-all duration-300 bg-white border border-emerald-200 shadow-lg hover:shadow-emerald-200/50">
+          <div className="p-4 rounded-lg relative overflow-hidden hover:scale-105 transition-all duration-300 bg-gradient-to-br from-white to-emerald-50 border border-emerald-100 shadow-lg hover:shadow-emerald-200/50">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="bg-gradient-to-r from-emerald-500 to-teal-500 p-2 rounded-full">
+                <div className="bg-gradient-to-r from-emerald-500 to-teal-500 p-2 rounded-full shadow-lg">
                   <Building2 className="h-4 w-4 text-white" />
                 </div>
                 <div>
