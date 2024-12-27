@@ -1,5 +1,6 @@
 import { PrepaidBalance } from "@/components/installer/dashboard/PrepaidBalance";
-import { Card } from "@/components/ui/card";
+import { PrepaidStats } from "@/components/installer/dashboard/prepaid/PrepaidStats";
+import { PrepaidAdvantages } from "@/components/installer/dashboard/prepaid/PrepaidAdvantages";
 import { motion } from "framer-motion";
 
 export const PrepaidSection = () => {
@@ -13,13 +14,13 @@ export const PrepaidSection = () => {
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-bold text-white">Compte prépayé</h2>
-          <p className="text-white/60">Gérez votre solde et vos moyens de paiement</p>
+          <p className="text-white/60">Gérez votre solde et accédez aux meilleurs leads</p>
         </div>
       </div>
 
-      <Card className="p-6 bg-white/5 backdrop-blur-sm border-primary/20">
-        <PrepaidBalance balance={150} />
-      </Card>
+      <PrepaidBalance balance={150} />
+      <PrepaidStats />
+      <PrepaidAdvantages />
     </motion.div>
   );
 };
