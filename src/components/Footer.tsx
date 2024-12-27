@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Mail, Phone, Sun, User, Key } from "lucide-react";
+import { Mail, Phone, Sun, User, Key, MessageSquare, ArrowRight } from "lucide-react";
 
 export const Footer = () => {
   return (
@@ -45,22 +45,26 @@ export const Footer = () => {
             <h3 className="text-lg font-semibold text-white">Liens utiles</h3>
             <ul className="space-y-2">
               <li>
-                <Link to="#why-solar" className="text-sm hover:text-white transition-colors">
+                <Link to="#why-solar" className="flex items-center gap-2 text-sm hover:text-white transition-colors">
+                  <Sun className="h-4 w-4" />
                   Pourquoi le solaire
                 </Link>
               </li>
               <li>
-                <Link to="#process" className="text-sm hover:text-white transition-colors">
+                <Link to="#process" className="flex items-center gap-2 text-sm hover:text-white transition-colors">
+                  <ArrowRight className="h-4 w-4" />
                   Notre processus
                 </Link>
               </li>
               <li>
-                <Link to="#testimonials" className="text-sm hover:text-white transition-colors">
+                <Link to="#testimonials" className="flex items-center gap-2 text-sm hover:text-white transition-colors">
+                  <MessageSquare className="h-4 w-4" />
                   Témoignages
                 </Link>
               </li>
               <li>
-                <Link to="#contact" className="text-sm hover:text-white transition-colors">
+                <Link to="#contact" className="flex items-center gap-2 text-sm hover:text-white transition-colors">
+                  <Mail className="h-4 w-4" />
                   Contact
                 </Link>
               </li>
