@@ -10,6 +10,7 @@ import {
   Settings,
   Bell,
   Menu,
+  UserPlus,
 } from "lucide-react";
 
 const navigation = [
@@ -17,6 +18,11 @@ const navigation = [
     name: "Tableau de bord",
     href: "/espace-installateur",
     icon: LayoutDashboard,
+  },
+  {
+    name: "Nouveau lead",
+    href: "/espace-installateur/nouveau-lead",
+    icon: UserPlus,
   },
   {
     name: "Messages",
