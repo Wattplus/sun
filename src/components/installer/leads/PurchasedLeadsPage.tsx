@@ -27,9 +27,12 @@ const statusLabels = {
 };
 
 export const PurchasedLeadsPage = () => {
+  console.log("Rendering PurchasedLeadsPage");
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
+
+  console.log("Current leads:", mockPurchasedLeads);
 
   const filteredLeads = mockPurchasedLeads.filter((lead) => {
     const matchesSearch =
@@ -41,6 +44,8 @@ export const PurchasedLeadsPage = () => {
 
     return matchesSearch && matchesStatus;
   });
+
+  console.log("Filtered leads:", filteredLeads);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background/80 to-background p-6 space-y-8">

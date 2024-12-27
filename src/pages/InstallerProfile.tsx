@@ -15,12 +15,13 @@ const InstallerProfile = () => {
   const path = location.pathname;
 
   const renderContent = () => {
-    // Exact match for leads page
-    if (path === "/espace-installateur/leads") {
-      return <PurchasedLeadsPage />;
+    if (path.startsWith("/espace-installateur/leads/") && path !== "/espace-installateur/leads") {
+      return <LeadDetailsPage />;
     }
 
     switch (path) {
+      case "/espace-installateur/leads":
+        return <PurchasedLeadsPage />;
       case "/espace-installateur/projets":
         return <ProjectsPage />;
       case "/espace-installateur/messages":
@@ -34,9 +35,6 @@ const InstallerProfile = () => {
       case "/espace-installateur":
         return <InstallerDashboard />;
       default:
-        if (path.startsWith("/espace-installateur/leads/")) {
-          return <LeadDetailsPage />;
-        }
         return <InstallerDashboard />;
     }
   };
