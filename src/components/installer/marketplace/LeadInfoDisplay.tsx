@@ -1,6 +1,4 @@
 import { Lead } from "@/types/crm";
-import { Card } from "@/components/ui/card";
-import { MapPin, Phone, Mail, User } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
 interface LeadInfoDisplayProps {
@@ -26,9 +24,7 @@ export const LeadInfoDisplay = ({ lead }: LeadInfoDisplayProps) => {
       <div className="grid gap-4 p-4 rounded-lg bg-white/5 backdrop-blur-sm">
         <div className="flex flex-col gap-2">
           <span className="font-medium text-white/80">Type de projet photovoltaïque :</span>
-          <span className="text-white/80">
-            {lead.projectType === 'professional' ? 'Professionnel' : 'Résidentiel'}
-          </span>
+          <span className="text-white/80">Sélectionnez votre type de projet</span>
         </div>
 
         <div className="flex flex-col gap-2">
@@ -43,12 +39,12 @@ export const LeadInfoDisplay = ({ lead }: LeadInfoDisplayProps) => {
 
         <div className="flex flex-col gap-2">
           <span className="font-medium text-white/80">Email :</span>
-          <span className="font-mono text-white/80">••••••@•••••.••</span>
+          <span className="text-white/80">{lead.email}</span>
         </div>
 
         <div className="flex flex-col gap-2">
           <span className="font-medium text-white/80">Téléphone :</span>
-          <span className="font-mono text-white/80">••• ••• •••</span>
+          <span className="text-white/80">{lead.phone}</span>
         </div>
 
         <div className="flex flex-col gap-2">
