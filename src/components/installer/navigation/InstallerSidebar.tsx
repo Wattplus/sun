@@ -4,10 +4,9 @@ import { Sidebar, SidebarContent, SidebarTrigger } from "@/components/ui/sidebar
 import {
   LayoutDashboard,
   MessageSquare,
-  Crown,
-  Users,
-  FileText,
   Settings,
+  ShoppingCart,
+  FileText,
   Bell,
   Menu,
   UserPlus,
@@ -16,49 +15,16 @@ import {
 import { Button } from "@/components/ui/button";
 
 const navigation = [
-  {
-    name: "Tableau de bord",
-    href: "/espace-installateur",
-    icon: LayoutDashboard,
-  },
-  {
-    name: "Nouveau lead",
-    href: "/espace-installateur/nouveau-lead",
-    icon: UserPlus,
-  },
-  {
-    name: "Messages",
-    href: "/espace-installateur/messages",
-    icon: MessageSquare,
-  },
-  {
-    name: "Abonnement",
-    href: "/espace-installateur/abonnement",
-    icon: Crown,
-  },
-  {
-    name: "Leads",
-    href: "/espace-installateur/leads",
-    icon: Users,
-  },
-  {
-    name: "Documents",
-    href: "/espace-installateur/documents",
-    icon: FileText,
-  },
-  {
-    name: "Paramètres",
-    href: "/espace-installateur/parametres",
-    icon: Settings,
-  },
-  {
-    name: "Notifications",
-    href: "/espace-installateur/notifications",
-    icon: Bell,
-  },
+  { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
+  { name: "Messages", href: "/messages", icon: MessageSquare },
+  { name: "Settings", href: "/settings", icon: Settings },
+  { name: "Leads", href: "/leads", icon: UserPlus },
+  { name: "Reports", href: "/reports", icon: FileText },
+  { name: "Notifications", href: "/notifications", icon: Bell },
+  { name: "Purchases", href: "/purchases", icon: ShoppingCart },
 ];
 
-export const InstallerSidebar = () => {
+export function InstallerSidebar() {
   const location = useLocation();
 
   return (
@@ -69,15 +35,16 @@ export const InstallerSidebar = () => {
             <Menu className="h-8 w-8 text-primary" />
             <span className="text-xl font-bold text-white">Espace Pro</span>
           </div>
-          <SidebarTrigger asChild>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="hover:bg-primary/10"
-            >
+          <Button
+            variant="ghost"
+            size="icon"
+            className="hover:bg-primary/10"
+            asChild
+          >
+            <SidebarTrigger>
               <ChevronLeft className="h-5 w-5 text-primary" />
-            </Button>
-          </SidebarTrigger>
+            </SidebarTrigger>
+          </Button>
         </div>
         <nav className="flex-1 space-y-2 px-4 py-6">
           {navigation.map((item) => {
@@ -87,18 +54,13 @@ export const InstallerSidebar = () => {
                 key={item.name}
                 to={item.href}
                 className={cn(
-                  "group flex items-center rounded-lg px-4 py-3 text-base font-medium transition-all duration-200 hover:scale-105",
+                  "group flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
                   isActive
-                    ? "bg-primary text-white shadow-lg"
-                    : "text-white/90 hover:bg-primary/10 hover:text-white"
+                    ? "bg-primary/10 text-white"
+                    : "text-primary/80 hover:bg-primary/10 hover:text-white"
                 )}
               >
-                <item.icon
-                  className={cn(
-                    "mr-4 h-6 w-6",
-                    isActive ? "text-white" : "text-primary group-hover:text-white"
-                  )}
-                />
+                <item.icon className={cn("h-5 w-5 shrink-0")} />
                 {item.name}
               </Link>
             );
@@ -107,4 +69,4 @@ export const InstallerSidebar = () => {
       </SidebarContent>
     </Sidebar>
   );
-};
+}
