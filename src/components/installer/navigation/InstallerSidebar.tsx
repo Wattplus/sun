@@ -15,13 +15,13 @@ import {
 import { Button } from "@/components/ui/button";
 
 const navigation = [
-  { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
+  { name: "Dashboard", href: "/espace-installateur", icon: LayoutDashboard },
+  { name: "Nouveaux Leads", href: "/espace-installateur/leads/nouveaux", icon: UserPlus },
+  { name: "Leads Achetés", href: "/espace-installateur/leads/achetes", icon: ShoppingCart },
   { name: "Messages", href: "/messages", icon: MessageSquare },
-  { name: "Settings", href: "/settings", icon: Settings },
-  { name: "Leads", href: "/leads", icon: UserPlus },
-  { name: "Reports", href: "/reports", icon: FileText },
+  { name: "Rapports", href: "/reports", icon: FileText },
   { name: "Notifications", href: "/notifications", icon: Bell },
-  { name: "Purchases", href: "/purchases", icon: ShoppingCart },
+  { name: "Paramètres", href: "/settings", icon: Settings },
 ];
 
 export function InstallerSidebar() {
