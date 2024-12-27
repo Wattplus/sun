@@ -5,6 +5,10 @@ import { calculateLeadPrice } from "@/utils/leadPricing";
 import { SubscriptionTier } from "@/types/subscription";
 import { LeadCardHeader } from "./LeadCardHeader";
 import { LeadCardActions } from "./LeadCardActions";
+import { Badge } from "@/components/ui/badge";
+import { MapPin, Phone, Mail, Euro, Calendar } from "lucide-react";
+import { format } from "date-fns";
+import { fr } from "date-fns/locale";
 
 interface LeadCardProps {
   lead: Lead;
@@ -76,38 +80,80 @@ export const LeadCard = ({
   };
 
   return (
-    <Card className="h-full bg-[#0B1221] text-white border border-[#1EAEDB]/20 hover:border-[#1EAEDB]/40 transition-all duration-300">
-      <div className="p-6 space-y-4">
-        <LeadCardHeader
-          firstName={lead.firstName}
-          lastName={lead.lastName}
-          postalCode={lead.postalCode}
-          createdAt={lead.createdAt}
-          projectType={lead.projectType}
-          budget={lead.budget}
-          purchasedBy={lead.purchasedBy}
-        />
+    <Card className="flex flex-col h-full bg-gradient-to-br from-background/95 to-background border-primary/20 hover:border-primary/40 transition-all duration-300">
+      <div className="p-6 space-y-6">
+        {/* En-tête avec les informations principales */}
+        <div className="space-y-4">
+          <div className="flex items-start justify-between">
+            <div className="space-y-1">
+              <h3 className="text-xl font-semibold text-primary">
+                {lead.projectType === 'professional' ? 'Projet Pro' : 'Projet Résidentiel'}
+              </h3>
+              <p className="text-sm text-muted-foreground">
+                Ref: {lead.id.substring(0, 8)}
+              </p>
+            </div>
+            <Badge variant="outline" className="bg-primary/10 text-primary border-primary/20">
+              {format(new Date(lead.createdAt), 'dd MMM yyyy', { locale: fr })}
+            </Badge>
+          </div>
+        </div>
 
+        {/* Informations de localisation */}
+        <div className="space-y-4 p-4 rounded-lg bg-primary/5 border border-primary/10">
+          <div className="flex items-center gap-2 text-muted-foreground">
+            <MapPin className="h-4 w-4 text-primary" />
+            <span>{lead.city} ({lead.postalCode})</span>
+          </div>
+          
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-1">
+              <p className="text-sm text-muted-foreground">Budget</p>
+              <p className="font-semibold text-lg flex items-center gap-1">
+                <Euro className="h-4 w-4 text-primary" />
+                {lead.budget.toLocaleString()}€
+              </p>
+            </div>
+            <div className="space-y-1">
+              <p className="text-sm text-muted-foreground">Type</p>
+              <p className="font-semibold">{lead.projectType === 'professional' ? 'Professionnel' : 'Résidentiel'}</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Informations de contact masquées */}
+        <div className="space-y-2">
+          <div className="flex items-center gap-2 text-muted-foreground">
+            <Phone className="h-4 w-4" />
+            <span>••• ••• •••</span>
+          </div>
+          <div className="flex items-center gap-2 text-muted-foreground">
+            <Mail className="h-4 w-4" />
+            <span>••••••@•••••.••</span>
+          </div>
+        </div>
+
+        {/* Prix et actions */}
         {!isPurchased && (
-          <div className="mt-6 space-y-4">
-            <div className="p-4 bg-[#1EAEDB]/10 rounded-lg">
-              <h4 className="text-sm font-medium text-[#1EAEDB] mb-2">Options de paiement :</h4>
-              <ul className="space-y-2 text-sm">
-                <li className="flex items-center justify-between">
-                  <span>Prix avec compte prépayé :</span>
-                  <span className="font-bold">35€</span>
-                </li>
-                <li className="flex items-center justify-between">
-                  <span>Prix standard {lead.projectType === 'professional' ? '(Pro)' : ''} :</span>
-                  <span className="font-bold">{lead.projectType === 'professional' ? '59€' : '35€'}</span>
-                </li>
-              </ul>
+          <div className="mt-auto space-y-4">
+            <div className="p-4 bg-primary/5 rounded-lg border border-primary/10">
+              <h4 className="text-sm font-medium text-primary mb-3">Options d'achat :</h4>
+              <div className="space-y-2">
+                <div className="flex justify-between items-center">
+                  <span className="text-sm">Compte prépayé</span>
+                  <span className="font-bold">{prices.prepaidPrice}€</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-sm">Prix standard</span>
+                  <span className="font-bold">{prices.standardPrice}€</span>
+                </div>
+              </div>
             </div>
 
             <LeadCardActions
               onPurchase={handlePurchase}
-              mutualPrice={prices.mutualPrice}
-              exclusivePrice={prices.exclusivePrice}
+              mutualPrice={prices.prepaidPrice}
+              exclusivePrice={prices.standardPrice}
               canPurchaseMutual={true}
               canPurchaseExclusive={true}
               isProfessionalProject={lead.projectType === 'professional'}

@@ -68,6 +68,7 @@ export const LeadMarketplace = () => {
       <AdminBreadcrumb />
       
       <div className="bg-gradient-to-r from-background/90 to-background p-8 rounded-xl border border-primary/20">
+        {/* En-tête et description */}
         <div className="max-w-4xl mx-auto text-center space-y-4 mb-8">
           <h1 className="text-4xl font-bold bg-gradient-to-r from-primary via-primary-light to-primary bg-clip-text text-transparent">
             Marketplace des Leads Qualifiés
@@ -87,19 +88,23 @@ export const LeadMarketplace = () => {
           </div>
         </div>
 
-        <LeadsFilters
-          availableDepartments={availableDepartments}
-          selectedDepartments={selectedDepartments}
-          projectTypeFilter={projectTypeFilter}
-          priceFilter={priceFilter}
-          onDepartmentSelect={handleDepartmentSelect}
-          onDepartmentRemove={handleDepartmentRemove}
-          onProjectTypeChange={setProjectTypeFilter}
-          onPriceFilterChange={setPriceFilter}
-        />
+        {/* Filtres */}
+        <div className="mb-6">
+          <LeadsFilters
+            availableDepartments={availableDepartments}
+            selectedDepartments={selectedDepartments}
+            projectTypeFilter={projectTypeFilter}
+            priceFilter={priceFilter}
+            onDepartmentSelect={handleDepartmentSelect}
+            onDepartmentRemove={handleDepartmentRemove}
+            onProjectTypeChange={setProjectTypeFilter}
+            onPriceFilterChange={setPriceFilter}
+          />
+        </div>
 
+        {/* Panier de sélection */}
         {selectedLeads.length > 0 && (
-          <Card className="p-6 mt-6 bg-primary/5 border-primary/20">
+          <Card className="p-6 mb-6 bg-primary/5 border-primary/20">
             <div className="flex items-center justify-between">
               <div>
                 <h3 className="text-lg font-medium">
@@ -119,7 +124,8 @@ export const LeadMarketplace = () => {
           </Card>
         )}
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
+        {/* Grille de leads */}
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
           {availableLeads.map(lead => (
             <LeadCard 
               key={lead.id} 
@@ -131,12 +137,14 @@ export const LeadMarketplace = () => {
           ))}
         </div>
 
+        {/* Message si aucun lead */}
         {availableLeads.length === 0 && (
           <div className="text-center py-12">
             <p className="text-muted-foreground">Aucun lead ne correspond à vos critères de recherche.</p>
           </div>
         )}
 
+        {/* Bouton voir plus */}
         <div className="mt-12 text-center">
           <Button variant="outline" size="lg" className="gap-2">
             Voir plus de leads
