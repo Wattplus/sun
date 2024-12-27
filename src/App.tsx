@@ -5,6 +5,7 @@ import ClientPortal from './pages/ClientPortal';
 import InstallerProfile from './pages/InstallerProfile';
 import { MarketplacePage } from './components/installer/marketplace/MarketplacePage';
 import { NewLeadsPage } from './components/installer/marketplace/NewLeadsPage';
+import { InstallerDashboard } from './components/installer/InstallerDashboard';
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
         <Route path="/admin/*" element={<Admin />} />
         <Route path="/espace-client/*" element={<ClientPortal />} />
         <Route path="/installateur/:id" element={<InstallerProfile />} />
+        <Route path="/espace-installateur" element={<InstallerDashboard />} />
         <Route path="/espace-installateur/marketplace" element={<MarketplacePage />} />
         <Route path="/espace-installateur/marketplace/nouveaux-leads" element={<NewLeadsPage />} />
       </Routes>
