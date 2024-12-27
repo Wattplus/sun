@@ -14,18 +14,16 @@ export function InstallerLayout({ children }: InstallerLayoutProps) {
       <div className="min-h-screen flex w-full">
         <InstallerSidebar />
         <main className="flex-1 overflow-y-auto">
-          <div className="p-4">
-            <Button
-              variant="ghost"
-              size="icon"
-              className="fixed top-4 left-4 z-50"
-              asChild
-            >
-              <SidebarTrigger>
-                <Menu className="h-5 w-5" />
-              </SidebarTrigger>
-            </Button>
-          </div>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="absolute top-6 left-6 z-50 hover:bg-primary/10"
+            asChild
+          >
+            <SidebarTrigger>
+              <Menu className="h-5 w-5" />
+            </SidebarTrigger>
+          </Button>
           <div className="p-8">
             {children}
           </div>
