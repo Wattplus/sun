@@ -23,16 +23,16 @@ export const LeadsTable = ({ leads, onLeadSelect, selectedLeads = [] }: LeadsTab
               <span className="sr-only">Sélection</span>
             </TableHead>
           )}
-          <TableHead>Type de projet</TableHead>
-          <TableHead>Prénom</TableHead>
-          <TableHead>Nom</TableHead>
-          <TableHead>Email</TableHead>
-          <TableHead>Téléphone</TableHead>
-          <TableHead>Code postal</TableHead>
-          <TableHead>Type de toit</TableHead>
-          <TableHead>Facture mensuelle</TableHead>
-          <TableHead>Installation électrique</TableHead>
-          <TableHead className="w-[100px]">Action</TableHead>
+          <TableHead className="font-semibold">Type de projet</TableHead>
+          <TableHead className="font-semibold">Prénom</TableHead>
+          <TableHead className="font-semibold">Nom</TableHead>
+          <TableHead className="font-semibold">Email</TableHead>
+          <TableHead className="font-semibold">Téléphone</TableHead>
+          <TableHead className="font-semibold">Code postal</TableHead>
+          <TableHead className="font-semibold">Type de toit</TableHead>
+          <TableHead className="font-semibold">Facture mensuelle</TableHead>
+          <TableHead className="font-semibold">Installation électrique</TableHead>
+          <TableHead className="w-[100px] font-semibold">Action</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
