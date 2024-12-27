@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Euro, User, Building2 } from "lucide-react";
+import { Euro, User, Building2, Wallet, ArrowRight } from "lucide-react";
 
 export const AccountSection = () => {
   return (
@@ -18,11 +18,13 @@ export const AccountSection = () => {
               <span className="text-2xl font-bold text-white">150</span>
             </div>
             <Button 
-              variant="outline" 
-              size="sm" 
-              className="mt-2 bg-primary/10 border-primary/20 text-white hover:bg-primary/20"
+              variant="default" 
+              size="lg" 
+              className="mt-4 w-full bg-gradient-to-r from-primary via-accent to-primary hover:from-primary/90 hover:via-accent/90 hover:to-primary/90 border-0 transition-all duration-300 bg-[length:200%_100%] animate-gradient group"
             >
-              Recharger
+              <Wallet className="h-4 w-4 mr-2 group-hover:animate-pulse" />
+              Recharger mon compte
+              <ArrowRight className="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform" />
             </Button>
           </div>
         </div>
