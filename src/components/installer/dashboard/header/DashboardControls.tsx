@@ -19,7 +19,8 @@ export const DashboardControls = ({
 
   const menuItems = [
     { icon: Home, label: "Tableau de bord", path: "/espace-installateur" },
-    { icon: ShoppingCart, label: "Leads", path: "/espace-installateur/leads/nouveaux" },
+    { icon: ShoppingCart, label: "Nouveaux leads", path: "/espace-installateur/leads/nouveaux" },
+    { icon: Package, label: "Leads achetés", path: "/espace-installateur/leads/achetes" },
     { icon: MessageSquare, label: "Messages", path: "/espace-installateur/messages" },
     { icon: FileText, label: "Rapports", path: "/espace-installateur/rapports" },
     { icon: Settings, label: "Paramètres", path: "/espace-installateur/parametres" },
