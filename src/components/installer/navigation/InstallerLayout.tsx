@@ -16,13 +16,14 @@ export function InstallerLayout({ children }: InstallerLayoutProps) {
         <main className="flex-1 relative">
           <div className="sticky top-0 z-50 p-4 bg-background/80 backdrop-blur-sm border-b border-primary/10">
             <Button
-              variant="ghost"
-              size="icon"
-              className="hover:bg-primary/10"
+              variant="outline"
+              size="default"
+              className="hover:bg-primary/10 gap-2"
               asChild
             >
               <SidebarTrigger>
                 <Menu className="h-5 w-5" />
+                <span>Menu principal</span>
               </SidebarTrigger>
             </Button>
           </div>
