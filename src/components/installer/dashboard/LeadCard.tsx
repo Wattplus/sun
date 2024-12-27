@@ -32,10 +32,13 @@ export const LeadCard = ({ lead, status, onStatusChange }: LeadCardProps) => {
               {lead.projectType === 'professional' ? 'Professionnel' : 'Résidentiel'}
             </Badge>
           </div>
-          <div onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-          }}>
+          <div 
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+            }}
+            className="relative z-10"
+          >
             <Select 
               value={status} 
               onValueChange={onStatusChange}
@@ -43,7 +46,7 @@ export const LeadCard = ({ lead, status, onStatusChange }: LeadCardProps) => {
               <SelectTrigger className="w-[140px]">
                 <SelectValue placeholder="Statut" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent position="popper" sideOffset={5}>
                 <SelectItem value="nouveau">Nouveau</SelectItem>
                 <SelectItem value="contacte">Contacté</SelectItem>
                 <SelectItem value="devis_envoye">Devis envoyé</SelectItem>
