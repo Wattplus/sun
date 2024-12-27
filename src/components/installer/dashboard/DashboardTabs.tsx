@@ -8,11 +8,10 @@ import { Card } from "@/components/ui/card";
 import { mockAvailableLeads } from "./mockAvailableLeads";
 import { mockPurchasedLeads } from "./mockPurchasedLeads";
 import { Button } from "@/components/ui/button";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { ChevronRight } from "lucide-react";
 import { SubscriptionPlans } from "../subscription/SubscriptionPlans";
 import { ClientFAQ } from "@/components/client/faq/ClientFAQ";
-import { DashboardControls } from "./header/DashboardControls";
 import { LeadsOverview } from "./leads/LeadsOverview";
 import { AllPurchasedLeads } from "./leads/AllPurchasedLeads";
 import { AllAvailableLeads } from "./leads/AllAvailableLeads";
@@ -20,28 +19,6 @@ import { AllAvailableLeads } from "./leads/AllAvailableLeads";
 export const DashboardTabs = () => {
   const [showAllPurchasedLeads, setShowAllPurchasedLeads] = useState(false);
   const [showAllAvailableLeads, setShowAllAvailableLeads] = useState(false);
-  const [isFullscreen, setIsFullscreen] = useState(false);
-
-  useEffect(() => {
-    const handleFullscreenChange = () => {
-      setIsFullscreen(!!document.fullscreenElement);
-    };
-
-    document.addEventListener('fullscreenchange', handleFullscreenChange);
-    return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
-  }, []);
-
-  const toggleFullscreen = async () => {
-    try {
-      if (!document.fullscreenElement) {
-        await document.documentElement.requestFullscreen();
-      } else {
-        await document.exitFullscreen();
-      }
-    } catch (err) {
-      console.error("Erreur lors du changement de mode plein écran:", err);
-    }
-  };
 
   if (showAllPurchasedLeads) {
     return (
@@ -63,11 +40,6 @@ export const DashboardTabs = () => {
 
   return (
     <div className="space-y-8">
-      <DashboardControls
-        isFullscreen={isFullscreen}
-        toggleFullscreen={toggleFullscreen}
-      />
-
       <div className="grid gap-6">
         <StatsCards />
       </div>
