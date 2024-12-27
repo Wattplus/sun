@@ -3,7 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { motion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
-import { Lead } from "@/types/crm";
+import { Lead, InstallerLeadStatus } from "@/types/crm";
 import { Link } from "react-router-dom";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useLeadsSync } from "@/hooks/useLeadsSync";
@@ -17,7 +17,7 @@ interface LeadTableProps {
 export const LeadTable = ({ leads, getStatusColor }: LeadTableProps) => {
   const { updateLead } = useLeadsSync();
 
-  const handleStatusChange = async (leadId: string, newStatus: string) => {
+  const handleStatusChange = async (leadId: string, newStatus: InstallerLeadStatus) => {
     try {
       await updateLead({ id: leadId, installerStatus: newStatus });
       toast.success("Statut mis à jour avec succès");
@@ -65,7 +65,7 @@ export const LeadTable = ({ leads, getStatusColor }: LeadTableProps) => {
               <TableCell>
                 <Select
                   value={lead.installerStatus || 'nouveau'}
-                  onValueChange={(value) => handleStatusChange(lead.id, value)}
+                  onValueChange={(value: InstallerLeadStatus) => handleStatusChange(lead.id, value)}
                 >
                   <SelectTrigger className="w-[140px]">
                     <SelectValue />
