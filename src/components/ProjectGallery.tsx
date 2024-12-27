@@ -19,6 +19,14 @@ export const ProjectGallery = () => {
       savings: "1250€/an",
       description: "Système bi-directionnel avec stockage d'énergie",
     },
+    {
+      image: "/lovable-uploads/dbc910f6-7ea8-4b5b-99c5-9e8500203595.png",
+      title: "Résidence Moderne",
+      location: "Lyon",
+      power: "12.4 kWc",
+      savings: "1580€/an",
+      description: "Installation premium sur toiture complète avec système d'optimisation intelligent",
+    },
   ];
 
   return (
