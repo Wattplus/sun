@@ -1,4 +1,4 @@
-import { Outlet, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { InstallerDashboard } from "@/components/installer/InstallerDashboard";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { InstallerSidebar } from "@/components/installer/navigation/InstallerSidebar";
@@ -15,6 +15,11 @@ const InstallerProfile = () => {
   const path = location.pathname;
 
   const renderContent = () => {
+    // Exact match for leads page
+    if (path === "/espace-installateur/leads") {
+      return <PurchasedLeadsPage />;
+    }
+
     switch (path) {
       case "/espace-installateur/projets":
         return <ProjectsPage />;
@@ -26,8 +31,6 @@ const InstallerProfile = () => {
         return <SettingsPage />;
       case "/espace-installateur/aide":
         return <HelpPage />;
-      case "/espace-installateur/leads":
-        return <PurchasedLeadsPage />;
       case "/espace-installateur":
         return <InstallerDashboard />;
       default:
