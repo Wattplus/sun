@@ -1,5 +1,5 @@
 import { Save, Settings, Bell, Shield, Palette, Globe, CreditCard, Lock } from "lucide-react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
@@ -12,13 +12,35 @@ export const SettingsPage = () => {
   };
 
   const SettingsSection = ({ icon: Icon, title, children }: { icon: any, title: string, children: React.ReactNode }) => (
-    <div className="glass-panel p-6 rounded-xl space-y-6">
-      <div className="flex items-center gap-2 mb-2">
-        <Icon className="h-5 w-5 text-primary" />
-        <h2 className="text-lg font-semibold">{title}</h2>
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }}
+      className="glass-panel p-6 rounded-xl space-y-6 hover:shadow-lg transition-all duration-300"
+    >
+      <div className="flex items-center gap-3 mb-4">
+        <div className="p-2 rounded-full bg-primary/10">
+          <Icon className="h-5 w-5 text-primary" />
+        </div>
+        <h2 className="text-lg font-semibold gradient-text">{title}</h2>
+      </div>
+      <div className="space-y-6">
+        {children}
+      </div>
+    </motion.div>
+  );
+
+  const SettingItem = ({ label, description, children }: { label: string, description: string, children: React.ReactNode }) => (
+    <motion.div
+      whileHover={{ scale: 1.01 }}
+      className="flex items-center justify-between p-4 rounded-lg bg-background/50 backdrop-blur-sm border border-primary/10"
+    >
+      <div>
+        <Label className="text-base">{label}</Label>
+        <p className="text-sm text-muted-foreground">{description}</p>
       </div>
       {children}
-    </div>
+    </motion.div>
   );
 
   return (
@@ -26,13 +48,18 @@ export const SettingsPage = () => {
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="flex justify-between items-center mb-6"
+        className="flex justify-between items-center mb-8"
       >
-        <h1 className="text-2xl font-bold flex items-center gap-2">
-          <Settings className="h-6 w-6 text-primary" />
-          Paramètres
-        </h1>
-        <Button onClick={handleSave} className="hover:scale-105 transition-transform">
+        <div className="flex items-center gap-3">
+          <div className="p-2 rounded-full bg-primary/10">
+            <Settings className="h-6 w-6 text-primary" />
+          </div>
+          <h1 className="text-2xl font-bold gradient-text">Paramètres</h1>
+        </div>
+        <Button 
+          onClick={handleSave}
+          className="glass-button"
+        >
           <Save className="mr-2 h-4 w-4" />
           Sauvegarder
         </Button>
@@ -45,85 +72,66 @@ export const SettingsPage = () => {
         className="space-y-6"
       >
         <SettingsSection icon={Bell} title="Notifications">
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <Label htmlFor="email-notifs">Notifications par email</Label>
-                <p className="text-sm text-muted-foreground">Recevez des mises à jour par email</p>
-              </div>
-              <Switch id="email-notifs" />
-            </div>
-            <div className="flex items-center justify-between">
-              <div>
-                <Label htmlFor="push-notifs">Notifications push</Label>
-                <p className="text-sm text-muted-foreground">Activez les notifications push</p>
-              </div>
-              <Switch id="push-notifs" />
-            </div>
-          </div>
+          <SettingItem 
+            label="Notifications par email"
+            description="Recevez des mises à jour par email"
+          >
+            <Switch />
+          </SettingItem>
+          <SettingItem
+            label="Notifications push"
+            description="Activez les notifications push"
+          >
+            <Switch />
+          </SettingItem>
         </SettingsSection>
 
         <SettingsSection icon={Shield} title="Sécurité">
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <Label htmlFor="two-factor">Authentification à deux facteurs</Label>
-                <p className="text-sm text-muted-foreground">Renforcez la sécurité de votre compte</p>
-              </div>
-              <Switch id="two-factor" />
-            </div>
-          </div>
+          <SettingItem
+            label="Authentification à deux facteurs"
+            description="Renforcez la sécurité de votre compte"
+          >
+            <Switch />
+          </SettingItem>
         </SettingsSection>
 
         <SettingsSection icon={Palette} title="Apparence">
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <Label htmlFor="dark-mode">Mode sombre</Label>
-                <p className="text-sm text-muted-foreground">Ajustez le thème de l'interface</p>
-              </div>
-              <Switch id="dark-mode" />
-            </div>
-          </div>
+          <SettingItem
+            label="Mode sombre"
+            description="Ajustez le thème de l'interface"
+          >
+            <Switch />
+          </SettingItem>
         </SettingsSection>
 
         <SettingsSection icon={Globe} title="Langue et Région">
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <Label htmlFor="language">Langue de l'interface</Label>
-                <p className="text-sm text-muted-foreground">Choisissez votre langue préférée</p>
-              </div>
-              <select id="language" className="bg-background border border-input rounded-md px-3 py-2">
-                <option value="fr">Français</option>
-                <option value="en">English</option>
-              </select>
-            </div>
-          </div>
+          <SettingItem
+            label="Langue de l'interface"
+            description="Choisissez votre langue préférée"
+          >
+            <select className="bg-background/50 border border-input rounded-md px-3 py-2">
+              <option value="fr">Français</option>
+              <option value="en">English</option>
+            </select>
+          </SettingItem>
         </SettingsSection>
 
         <SettingsSection icon={CreditCard} title="Facturation">
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <Label htmlFor="invoice-email">Emails de facturation</Label>
-                <p className="text-sm text-muted-foreground">Recevez vos factures par email</p>
-              </div>
-              <Switch id="invoice-email" />
-            </div>
-          </div>
+          <SettingItem
+            label="Emails de facturation"
+            description="Recevez vos factures par email"
+          >
+            <Switch />
+          </SettingItem>
         </SettingsSection>
 
         <SettingsSection icon={Lock} title="Confidentialité">
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <Label htmlFor="analytics">Partager les analytics</Label>
-                <p className="text-sm text-muted-foreground">Aidez-nous à améliorer nos services</p>
-              </div>
-              <Switch id="analytics" />
-            </div>
-          </div>
+          <SettingItem
+            label="Partager les analytics"
+            description="Aidez-nous à améliorer nos services"
+          >
+            <Switch />
+          </SettingItem>
         </SettingsSection>
       </motion.div>
     </div>
