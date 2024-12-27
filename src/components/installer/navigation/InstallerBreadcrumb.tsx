@@ -28,14 +28,14 @@ export const InstallerBreadcrumb = () => {
 
   return (
     <Breadcrumb>
-      <BreadcrumbList className="bg-background/50 backdrop-blur-md px-4 py-2 rounded-lg border border-primary/20">
+      <BreadcrumbList className="bg-background/50 backdrop-blur-md px-3 sm:px-4 py-2 rounded-lg border border-primary/20 overflow-x-auto whitespace-nowrap">
         <BreadcrumbItem>
           <Link 
             to="/" 
             className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors"
           >
             <Home className="h-4 w-4" />
-            Accueil
+            <span className="hidden sm:inline">Accueil</span>
           </Link>
         </BreadcrumbItem>
         
