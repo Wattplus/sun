@@ -1,48 +1,47 @@
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Search, Filter } from "lucide-react";
+import { Search, SlidersHorizontal } from "lucide-react";
 
-interface LeadFiltersProps {
-  searchTerm: string;
-  statusFilter: string;
-  onSearchChange: (value: string) => void;
-  onStatusFilterChange: (value: string) => void;
-}
-
-export const LeadFilters = ({
-  searchTerm,
-  statusFilter,
-  onSearchChange,
-  onStatusFilterChange
-}: LeadFiltersProps) => {
+export const LeadFilters = () => {
   return (
-    <div className="flex flex-col sm:flex-row gap-4 mb-6">
-      <div className="relative flex-1">
-        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
-        <Input
-          placeholder="Rechercher par nom, email ou ville..."
-          className="pl-10"
-          value={searchTerm}
-          onChange={(e) => onSearchChange(e.target.value)}
-        />
+    <div className="flex flex-col sm:flex-row gap-4 items-end sm:items-center">
+      <div className="flex-1">
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
+          <Input
+            placeholder="Rechercher un lead..."
+            className="pl-10"
+          />
+        </div>
       </div>
-      <div className="flex items-center gap-2">
-        <Filter className="h-4 w-4 text-muted-foreground" />
-        <Select value={statusFilter} onValueChange={onStatusFilterChange}>
+      
+      <div className="flex gap-2 items-center">
+        <Select>
           <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Filtrer par statut" />
+            <SelectValue placeholder="Type de projet" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">Tous les statuts</SelectItem>
-            <SelectItem value="nouveau">Nouveau</SelectItem>
-            <SelectItem value="contacte">Contacté</SelectItem>
-            <SelectItem value="devis_envoye">Devis envoyé</SelectItem>
-            <SelectItem value="rdv_planifie">RDV planifié</SelectItem>
-            <SelectItem value="negociation">En négociation</SelectItem>
-            <SelectItem value="signe">Signé</SelectItem>
-            <SelectItem value="perdu">Perdu</SelectItem>
+            <SelectItem value="all">Tous les types</SelectItem>
+            <SelectItem value="residential">Résidentiel</SelectItem>
+            <SelectItem value="professional">Professionnel</SelectItem>
           </SelectContent>
         </Select>
+
+        <Select>
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="Département" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="75">Paris (75)</SelectItem>
+            <SelectItem value="69">Rhône (69)</SelectItem>
+            <SelectItem value="13">Bouches-du-Rhône (13)</SelectItem>
+          </SelectContent>
+        </Select>
+
+        <Button variant="outline" size="icon">
+          <SlidersHorizontal className="h-4 w-4" />
+        </Button>
       </div>
     </div>
   );

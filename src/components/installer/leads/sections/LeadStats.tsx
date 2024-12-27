@@ -1,89 +1,84 @@
-import { Card } from "@/components/ui/card";
-import { Users, CheckCircle2, TrendingUp, Clock } from "lucide-react";
-import { motion } from "framer-motion";
+import { Card, CardContent } from "@/components/ui/card";
 import { Lead } from "@/types/crm";
+import { Users, Phone, FileCheck, Ban } from "lucide-react";
 
 interface LeadStatsProps {
   leads: Lead[];
 }
 
 export const LeadStats = ({ leads }: LeadStatsProps) => {
-  const totalLeads = leads?.length || 0;
-  const completedLeads = leads?.filter(lead => 
-    lead.firstName && 
-    lead.lastName && 
-    lead.email && 
-    lead.phone && 
-    lead.postalCode && 
-    lead.roofType && 
-    lead.monthlyBill
-  ).length || 0;
-  const conversionRate = totalLeads > 0 ? Math.round((completedLeads / totalLeads) * 100) : 0;
-  const averageMonthlyBill = leads?.reduce((acc, lead) => {
-    const bill = parseInt(lead.monthlyBill || '0');
-    return acc + bill;
-  }, 0) / totalLeads || 0;
+  const stats = {
+    total: leads.length,
+    contacted: leads.filter(lead => lead.installerStatus === 'contacte').length,
+    converted: leads.filter(lead => lead.installerStatus === 'signe').length,
+    lost: leads.filter(lead => lead.installerStatus === 'perdu').length,
+  };
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-      <motion.div whileHover={{ scale: 1.02 }} transition={{ duration: 0.2 }}>
-        <Card className="p-6 bg-primary/5 border-primary/20">
-          <div className="flex items-center gap-4">
-            <div className="p-3 bg-primary/10 rounded-lg">
-              <Users className="h-6 w-6 text-primary" />
-            </div>
-            <div>
-              <p className="text-sm font-medium text-muted-foreground">Total Leads</p>
-              <h3 className="text-2xl font-bold">{totalLeads}</h3>
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <Card>
+        <CardContent className="pt-6">
+          <div className="flex items-center justify-between space-x-4">
+            <div className="flex items-center space-x-4">
+              <div className="p-2 bg-primary/10 rounded-full">
+                <Users className="h-6 w-6 text-primary" />
+              </div>
+              <div>
+                <p className="text-sm font-medium text-muted-foreground">Total Leads</p>
+                <p className="text-2xl font-bold">{stats.total}</p>
+              </div>
             </div>
           </div>
-        </Card>
-      </motion.div>
+        </CardContent>
+      </Card>
 
-      <motion.div whileHover={{ scale: 1.02 }} transition={{ duration: 0.2 }}>
-        <Card className="p-6 bg-primary/5 border-primary/20">
-          <div className="flex items-center gap-4">
-            <div className="p-3 bg-primary/10 rounded-lg">
-              <CheckCircle2 className="h-6 w-6 text-primary" />
-            </div>
-            <div>
-              <p className="text-sm font-medium text-muted-foreground">Leads Complets</p>
-              <h3 className="text-2xl font-bold">{completedLeads}</h3>
-              <p className="text-xs text-muted-foreground">{conversionRate}% de complétion</p>
+      <Card>
+        <CardContent className="pt-6">
+          <div className="flex items-center justify-between space-x-4">
+            <div className="flex items-center space-x-4">
+              <div className="p-2 bg-yellow-500/10 rounded-full">
+                <Phone className="h-6 w-6 text-yellow-600" />
+              </div>
+              <div>
+                <p className="text-sm font-medium text-muted-foreground">Contactés</p>
+                <p className="text-2xl font-bold">{stats.contacted}</p>
+              </div>
             </div>
           </div>
-        </Card>
-      </motion.div>
+        </CardContent>
+      </Card>
 
-      <motion.div whileHover={{ scale: 1.02 }} transition={{ duration: 0.2 }}>
-        <Card className="p-6 bg-primary/5 border-primary/20">
-          <div className="flex items-center gap-4">
-            <div className="p-3 bg-primary/10 rounded-lg">
-              <TrendingUp className="h-6 w-6 text-primary" />
-            </div>
-            <div>
-              <p className="text-sm font-medium text-muted-foreground">Facture Moyenne</p>
-              <h3 className="text-2xl font-bold">{Math.round(averageMonthlyBill)}€/mois</h3>
+      <Card>
+        <CardContent className="pt-6">
+          <div className="flex items-center justify-between space-x-4">
+            <div className="flex items-center space-x-4">
+              <div className="p-2 bg-green-500/10 rounded-full">
+                <FileCheck className="h-6 w-6 text-green-600" />
+              </div>
+              <div>
+                <p className="text-sm font-medium text-muted-foreground">Convertis</p>
+                <p className="text-2xl font-bold">{stats.converted}</p>
+              </div>
             </div>
           </div>
-        </Card>
-      </motion.div>
+        </CardContent>
+      </Card>
 
-      <motion.div whileHover={{ scale: 1.02 }} transition={{ duration: 0.2 }}>
-        <Card className="p-6 bg-primary/5 border-primary/20">
-          <div className="flex items-center gap-4">
-            <div className="p-3 bg-primary/10 rounded-lg">
-              <Clock className="h-6 w-6 text-primary" />
-            </div>
-            <div>
-              <p className="text-sm font-medium text-muted-foreground">En Négociation</p>
-              <h3 className="text-2xl font-bold">
-                {leads?.filter(lead => lead.installerStatus === 'negociation').length || 0}
-              </h3>
+      <Card>
+        <CardContent className="pt-6">
+          <div className="flex items-center justify-between space-x-4">
+            <div className="flex items-center space-x-4">
+              <div className="p-2 bg-red-500/10 rounded-full">
+                <Ban className="h-6 w-6 text-red-600" />
+              </div>
+              <div>
+                <p className="text-sm font-medium text-muted-foreground">Perdus</p>
+                <p className="text-2xl font-bold">{stats.lost}</p>
+              </div>
             </div>
           </div>
-        </Card>
-      </motion.div>
+        </CardContent>
+      </Card>
     </div>
   );
 };
