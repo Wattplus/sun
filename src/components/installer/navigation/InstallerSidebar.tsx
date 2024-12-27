@@ -57,7 +57,7 @@ export function InstallerSidebar() {
                         location.pathname.includes(item.url)
                           ? "bg-[#1EAEDB]/10 text-[#1EAEDB]"
                           : "hover:bg-[#1EAEDB]/5"
-                      }`}
+                      } text-base`}
                     >
                       <item.icon className="h-5 w-5" />
                       <span>{item.title}</span>
