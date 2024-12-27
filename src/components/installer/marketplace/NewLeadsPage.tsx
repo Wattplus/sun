@@ -48,15 +48,22 @@ export const NewLeadsPage = () => {
   return (
     <InstallerLayout>
       <div className="min-h-screen bg-gradient-to-b from-background/95 to-background">
-        <div className="max-w-[1400px] mx-auto p-6 space-y-6">
+        <div className="max-w-[1400px] mx-auto p-6 space-y-8">
           <div className="flex items-center justify-between">
             <InstallerBreadcrumb />
             <div className="flex items-center gap-3">
-              <Button variant="outline" className="gap-2">
+              <Button 
+                variant="outline" 
+                className="gap-2 bg-primary/10 hover:bg-primary/20 border-primary/20"
+              >
                 <Filter className="w-4 h-4" />
                 Filtrer
               </Button>
-              <Button variant="outline" className="gap-2" onClick={handleExport}>
+              <Button 
+                variant="outline" 
+                className="gap-2 bg-primary/10 hover:bg-primary/20 border-primary/20" 
+                onClick={handleExport}
+              >
                 <Download className="w-4 h-4" />
                 Exporter
               </Button>
