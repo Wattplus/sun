@@ -4,7 +4,7 @@ import { mockAvailableLeads } from "../dashboard/mockAvailableLeads";
 import { Lead } from "@/types/crm";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
-import { ShoppingCart, RefreshCw, Search, Filter, ArrowRight, Wallet } from "lucide-react";
+import { ShoppingCart, RefreshCw, Search, Filter, ArrowRight, Wallet, Euro } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { InstallerBreadcrumb } from "../navigation/InstallerBreadcrumb";
@@ -52,116 +52,119 @@ export const NewLeadsPage = () => {
       <div className="max-w-6xl mx-auto space-y-4 p-4">
         <InstallerBreadcrumb />
         
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <Card className="p-4 bg-white/5 backdrop-blur-sm border-primary/10 md:col-span-2">
-            <div className="flex items-center justify-between mb-4">
-              <div>
-                <h2 className="text-lg font-medium">Solde disponible</h2>
-                <p className="text-3xl font-bold text-primary">150€</p>
+        {/* Prix des leads */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+          <Card className="p-6 bg-gradient-to-br from-white/5 to-primary/5 border border-primary/10 hover:border-primary/20 transition-all duration-300">
+            <div className="space-y-3">
+              <div className="flex items-center gap-2">
+                <Euro className="h-5 w-5 text-primary" />
+                <h3 className="text-lg font-medium">Lead Particulier</h3>
               </div>
-              <Button className="bg-primary hover:bg-primary/90" size="sm">
-                <Wallet className="mr-2 h-4 w-4" />
-                Recharger
-              </Button>
+              <div className="flex items-baseline gap-1">
+                <span className="text-3xl font-bold text-primary">26€</span>
+                <span className="text-sm text-muted-foreground">avec compte prépayé</span>
+              </div>
+              <p className="text-sm text-muted-foreground">35€ sans compte prépayé</p>
             </div>
           </Card>
 
-          <Card className="p-4 bg-white/5 backdrop-blur-sm border-primary/10">
-            <div className="text-center">
-              <h2 className="text-lg font-medium mb-2">Paiement direct</h2>
-              <Button variant="outline" className="w-full border-primary/20 hover:bg-primary/5">
-                Voir les tarifs
-              </Button>
+          <Card className="p-6 bg-gradient-to-br from-white/5 to-primary/5 border border-primary/10 hover:border-primary/20 transition-all duration-300">
+            <div className="space-y-3">
+              <div className="flex items-center gap-2">
+                <Euro className="h-5 w-5 text-primary" />
+                <h3 className="text-lg font-medium">Lead Pro</h3>
+              </div>
+              <div className="flex items-baseline gap-1">
+                <span className="text-3xl font-bold text-primary">49€</span>
+                <span className="text-sm text-muted-foreground">avec compte prépayé</span>
+              </div>
+              <p className="text-sm text-muted-foreground">59€ sans compte prépayé</p>
+            </div>
+          </Card>
+
+          <Card className="p-6 bg-gradient-to-br from-white/5 to-primary/5 border border-primary/10 hover:border-primary/20 transition-all duration-300">
+            <div className="space-y-3">
+              <div className="flex items-center gap-2">
+                <ShoppingCart className="h-5 w-5 text-primary" />
+                <h3 className="text-lg font-medium">Lead Exclusif</h3>
+              </div>
+              <div className="flex items-baseline gap-1">
+                <span className="text-3xl font-bold text-primary">89€</span>
+                <span className="text-sm text-muted-foreground">accès unique</span>
+              </div>
+              <p className="text-sm text-muted-foreground">Contactez-nous pour plus d'infos</p>
             </div>
           </Card>
         </div>
 
-        <Card className="bg-white/5 backdrop-blur-sm border-primary/10">
-          <div className="p-4 space-y-4">
+        {/* Reste du contenu */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+          {/* Reste du contenu ici */}
+        </div>
+
+        {/* Reste du contenu */}
+        <div className="mb-6">
+          <LeadsFilters
+            availableDepartments={availableDepartments}
+            selectedDepartments={selectedDepartments}
+            projectTypeFilter={projectTypeFilter}
+            priceFilter={priceFilter}
+            onDepartmentSelect={handleDepartmentSelect}
+            onDepartmentRemove={handleDepartmentRemove}
+            onProjectTypeChange={setProjectTypeFilter}
+            onPriceFilterChange={setPriceFilter}
+          />
+        </div>
+
+        {/* Panier de sélection */}
+        {selectedLeads.length > 0 && (
+          <Card className="p-6 mb-6 bg-primary/5 border-primary/20">
             <div className="flex items-center justify-between">
               <div>
-                <h1 className="text-lg font-medium flex items-center gap-2">
-                  Nouveaux Leads
-                  <Badge variant="secondary" className="bg-primary/10 text-primary">
-                    {filteredLeads.length}
-                  </Badge>
-                </h1>
-                <p className="text-sm text-muted-foreground">
-                  Leads qualifiés disponibles
-                </p>
-              </div>
-              <div className="flex items-center gap-2">
-                <Button 
-                  variant="outline" 
-                  size="sm"
-                  onClick={handleRefresh}
-                  className="border-primary/20 hover:bg-primary/5"
-                >
-                  <RefreshCw className="h-4 w-4" />
-                </Button>
-                {selectedLeads.length > 0 && (
-                  <Button 
-                    size="sm"
-                    onClick={handlePurchaseLeads}
-                    className="bg-primary hover:bg-primary/90 gap-2"
-                  >
-                    <ShoppingCart className="h-4 w-4" />
-                    Acheter {selectedLeads.length} lead{selectedLeads.length > 1 ? 's' : ''} ({selectedLeads.reduce((sum, lead) => sum + lead.price, 0)}€)
-                  </Button>
-                )}
-              </div>
-            </div>
-
-            <div className="flex items-center gap-2">
-              <div className="relative flex-1">
-                <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                <Input 
-                  placeholder="Rechercher par ville, code postal..." 
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-8 bg-transparent"
-                />
+                <h3 className="text-lg font-medium">
+                  {selectedLeads.length} lead{selectedLeads.length > 1 ? 's' : ''} sélectionné{selectedLeads.length > 1 ? 's' : ''}
+                </h3>
+                <p className="text-muted-foreground">Total: {totalPrice}€</p>
               </div>
               <Button 
-                variant="outline" 
-                size="sm" 
-                className="gap-2 border-primary/20 hover:bg-primary/5"
+                onClick={handleBulkPurchase}
+                className="bg-primary hover:bg-primary-dark text-white px-6"
+                size="lg"
               >
-                <Filter className="h-4 w-4" />
-                Filtres
+                <ShoppingCart className="mr-2 h-5 w-5" />
+                Acheter la sélection
               </Button>
             </div>
+          </Card>
+        )}
 
-            <Tabs defaultValue="all" className="w-full">
-              <TabsList className="w-full justify-start">
-                <TabsTrigger value="all">Tous</TabsTrigger>
-                <TabsTrigger value="residential">Résidentiel</TabsTrigger>
-                <TabsTrigger value="professional">Professionnel</TabsTrigger>
-              </TabsList>
-              <TabsContent value="all">
-                <LeadsList 
-                  leads={filteredLeads} 
-                  onLeadSelect={handleLeadSelect}
-                  selectedLeads={selectedLeads}
-                />
-              </TabsContent>
-              <TabsContent value="residential">
-                <LeadsList 
-                  leads={filteredLeads.filter(lead => lead.projectType === 'residential')} 
-                  onLeadSelect={handleLeadSelect}
-                  selectedLeads={selectedLeads}
-                />
-              </TabsContent>
-              <TabsContent value="professional">
-                <LeadsList 
-                  leads={filteredLeads.filter(lead => lead.projectType === 'professional')} 
-                  onLeadSelect={handleLeadSelect}
-                  selectedLeads={selectedLeads}
-                />
-              </TabsContent>
-            </Tabs>
+        {/* Grille de leads */}
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+          {availableLeads.map(lead => (
+            <LeadCard 
+              key={lead.id} 
+              lead={lead} 
+              onPurchase={handlePurchase}
+              isPurchased={purchasedLeads.includes(lead.id)}
+              subscriptionTier={userSubscriptionTier}
+            />
+          ))}
+        </div>
+
+        {/* Message si aucun lead */}
+        {availableLeads.length === 0 && (
+          <div className="text-center py-12">
+            <p className="text-muted-foreground">Aucun lead ne correspond à vos critères de recherche.</p>
           </div>
-        </Card>
+        )}
+
+        {/* Bouton voir plus */}
+        <div className="mt-12 text-center">
+          <Button variant="outline" size="lg" className="gap-2">
+            Voir plus de leads
+            <ArrowRight className="h-4 w-4" />
+          </Button>
+        </div>
       </div>
     </InstallerLayout>
   );
