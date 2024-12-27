@@ -1,6 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
-import { useSidebarContext } from "@/components/ui/sidebar";
+import { useSidebar } from "@/components/ui/sidebar";
 import {
   LayoutDashboard,
   MessageSquare,
@@ -57,7 +57,7 @@ const menuItems = [
 
 export const InstallerSidebar = () => {
   const location = useLocation();
-  const { isOpen } = useSidebarContext();
+  const { open: isOpen } = useSidebar();
 
   return (
     <aside
