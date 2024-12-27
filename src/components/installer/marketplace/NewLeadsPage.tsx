@@ -144,6 +144,6 @@ export const NewLeadsPage = () => {
           selectedLeads={selectedLeads}
         />
       </div>
-    </InstalterLayout>
+    </InstallerLayout>
   );
 };
