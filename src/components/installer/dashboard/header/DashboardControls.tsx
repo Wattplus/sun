@@ -43,7 +43,7 @@ export const DashboardControls = ({
         to={item.path}
         className={`flex items-center space-x-2 px-3 py-2 rounded-md transition-colors ${
           isActivePath(item.path)
-            ? "bg-primary/10 text-primary"
+            ? "bg-primary text-primary-foreground"
             : "text-foreground hover:bg-primary/5"
         }`}
         onClick={() => setIsOpen(false)}
@@ -58,11 +58,9 @@ export const DashboardControls = ({
     <Card className="border-primary/10">
       <div className="p-2">
         <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-2">
-            <span className="text-lg font-semibold text-primary">
-              WattPlus
-            </span>
-          </div>
+          <Link to="/espace-installateur" className="text-lg font-semibold text-primary">
+            WattPlus
+          </Link>
 
           {/* Navigation Menu - Desktop */}
           <div className="hidden md:flex items-center space-x-4">
