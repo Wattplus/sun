@@ -1,8 +1,5 @@
 import { useState } from "react";
 import { Lead } from "@/types/crm";
-import { Filter, Download, Wallet, ShoppingCart } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { InstallerBreadcrumb } from "../navigation/InstallerBreadcrumb";
 import { InstallerLayout } from "../navigation/InstallerLayout";
 import { Card } from "@/components/ui/card";
 import { mockAvailableLeads } from "../dashboard/mockAvailableLeads";
@@ -10,6 +7,8 @@ import { toast } from "sonner";
 import { LeadsTable } from "./components/LeadsTable";
 import { LeadsSummaryCards } from "./components/LeadsSummaryCards";
 import { LeadsFilters } from "../dashboard/LeadsFilters";
+import { LeadsHeader } from "./components/LeadsHeader";
+import { LeadsSelection } from "./components/LeadsSelection";
 
 export const NewLeadsPage = () => {
   const [selectedLeads, setSelectedLeads] = useState<Lead[]>([]);
@@ -20,23 +19,20 @@ export const NewLeadsPage = () => {
   
   const balance = 150;
   const hasEnoughBalance = balance >= selectedLeads.length * 26;
-
   const availableDepartments = Array.from(new Set(mockAvailableLeads.map(lead => lead.postalCode.substring(0, 2))));
 
   const handleLeadSelect = (lead: Lead) => {
-    if (selectedLeads.some(l => l.id === lead.id)) {
-      setSelectedLeads(selectedLeads.filter(l => l.id !== lead.id));
-    } else {
-      setSelectedLeads([...selectedLeads, lead]);
-    }
+    setSelectedLeads(prev => 
+      prev.some(l => l.id === lead.id)
+        ? prev.filter(l => l.id !== lead.id)
+        : [...prev, lead]
+    );
   };
 
   const handleSelectAll = () => {
-    if (selectedLeads.length === mockAvailableLeads.length) {
-      setSelectedLeads([]);
-    } else {
-      setSelectedLeads([...mockAvailableLeads]);
-    }
+    setSelectedLeads(prev => 
+      prev.length === mockAvailableLeads.length ? [] : [...mockAvailableLeads]
+    );
   };
 
   const handlePurchase = () => {
@@ -63,35 +59,12 @@ export const NewLeadsPage = () => {
     toast.success("Redirection vers la page de rechargement...");
   };
 
-  const handleDepartmentSelect = (department: string) => {
-    if (!selectedDepartments.includes(department)) {
-      setSelectedDepartments([...selectedDepartments, department]);
-    }
-  };
-
-  const handleDepartmentRemove = (department: string) => {
-    setSelectedDepartments(selectedDepartments.filter(d => d !== department));
-  };
-
   const filteredLeads = mockAvailableLeads
-    .filter(lead => {
-      if (projectTypeFilter !== "all") {
-        return lead.projectType === projectTypeFilter;
-      }
-      return true;
-    })
-    .filter(lead => {
-      if (selectedDepartments.length > 0) {
-        return selectedDepartments.includes(lead.postalCode.substring(0, 2));
-      }
-      return true;
-    })
+    .filter(lead => projectTypeFilter === "all" || lead.projectType === projectTypeFilter)
+    .filter(lead => selectedDepartments.length === 0 || selectedDepartments.includes(lead.postalCode.substring(0, 2)))
     .sort((a, b) => {
-      if (priceFilter === "asc") {
-        return a.price - b.price;
-      } else if (priceFilter === "desc") {
-        return b.price - a.price;
-      }
+      if (priceFilter === "asc") return a.price - b.price;
+      if (priceFilter === "desc") return b.price - a.price;
       return 0;
     });
 
@@ -99,35 +72,11 @@ export const NewLeadsPage = () => {
     <InstallerLayout>
       <div className="min-h-screen bg-gradient-to-b from-background/95 to-background">
         <div className="max-w-[1400px] mx-auto p-6 space-y-8">
-          <div className="flex items-center justify-between">
-            <InstallerBreadcrumb />
-            <div className="flex items-center gap-3">
-              <Button 
-                variant="outline" 
-                className="gap-2 bg-primary/10 hover:bg-primary/20 border-primary/20"
-                onClick={() => setShowFilters(!showFilters)}
-              >
-                <Filter className="w-4 h-4" />
-                Filtrer
-              </Button>
-              <Button 
-                variant="outline" 
-                className="gap-2 bg-primary/10 hover:bg-primary/20 border-primary/20" 
-                onClick={handleExport}
-              >
-                <Download className="w-4 h-4" />
-                Exporter
-              </Button>
-              <Button
-                variant="outline"
-                className="gap-2 bg-primary/10 hover:bg-primary/20 border-primary/20"
-                onClick={handlePrepaidAccount}
-              >
-                <Wallet className="w-4 h-4" />
-                Recharger
-              </Button>
-            </div>
-          </div>
+          <LeadsHeader 
+            onToggleFilters={() => setShowFilters(!showFilters)}
+            onExport={handleExport}
+            onPrepaidAccount={handlePrepaidAccount}
+          />
 
           {showFilters && (
             <Card className="p-4 border border-primary/20 bg-background/50 backdrop-blur-sm">
@@ -136,45 +85,20 @@ export const NewLeadsPage = () => {
                 selectedDepartments={selectedDepartments}
                 projectTypeFilter={projectTypeFilter}
                 priceFilter={priceFilter}
-                onDepartmentSelect={handleDepartmentSelect}
-                onDepartmentRemove={handleDepartmentRemove}
+                onDepartmentSelect={(dept) => setSelectedDepartments(prev => [...prev, dept])}
+                onDepartmentRemove={(dept) => setSelectedDepartments(prev => prev.filter(d => d !== dept))}
                 onProjectTypeChange={setProjectTypeFilter}
                 onPriceFilterChange={setPriceFilter}
               />
             </Card>
           )}
 
-          {selectedLeads.length > 0 && (
-            <Card className="p-4 border border-primary/20 bg-background/50 backdrop-blur-sm">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-muted-foreground">
-                    {selectedLeads.length} lead{selectedLeads.length > 1 ? 's' : ''} sélectionné{selectedLeads.length > 1 ? 's' : ''}
-                  </p>
-                  <p className="text-lg font-medium">Total: {selectedLeads.length * 26}€</p>
-                </div>
-                <div className="flex gap-3">
-                  <Button 
-                    variant="outline"
-                    size="sm"
-                    className="text-sm"
-                    onClick={() => setSelectedLeads([])}
-                  >
-                    Tout désélectionner
-                  </Button>
-                  <Button 
-                    onClick={handlePurchase}
-                    className="bg-primary hover:bg-primary/90 text-white gap-2"
-                    size="sm"
-                    disabled={!hasEnoughBalance}
-                  >
-                    <ShoppingCart className="w-4 h-4" />
-                    {hasEnoughBalance ? "Acheter la sélection" : "Recharger pour acheter"}
-                  </Button>
-                </div>
-              </div>
-            </Card>
-          )}
+          <LeadsSelection 
+            selectedLeads={selectedLeads}
+            onClearSelection={() => setSelectedLeads([])}
+            onPurchase={handlePurchase}
+            hasEnoughBalance={hasEnoughBalance}
+          />
           
           <LeadsSummaryCards 
             availableLeads={mockAvailableLeads}
@@ -183,7 +107,7 @@ export const NewLeadsPage = () => {
             onPrepaidAccount={handlePrepaidAccount}
           />
 
-          <Card className="overflow-hidden border border-primary/10 bg-background/50 backdrop-blur-sm">
+          <Card className="overflow-hidden border border-primary/20 bg-background/50 backdrop-blur-sm">
             <div className="p-6">
               <div className="overflow-x-auto">
                 <LeadsTable 
