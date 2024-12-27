@@ -4,16 +4,14 @@ import { mockAvailableLeads } from "../dashboard/mockAvailableLeads";
 import { Lead } from "@/types/crm";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
-import { ShoppingCart, RefreshCw, Search, Filter } from "lucide-react";
+import { ShoppingCart, RefreshCw, Search, Filter, Shield, Rocket, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { InstallerBreadcrumb } from "../navigation/InstallerBreadcrumb";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { InstallerLayout } from "../navigation/InstallerLayout";
-import { WhyBuyLeads } from "./sections/WhyBuyLeads";
 import { PrepaidSection } from "./sections/PrepaidSection";
-import { PricingSection } from "./sections/PricingSection";
 
 export const NewLeadsPage = () => {
   const [selectedLeads, setSelectedLeads] = useState<Lead[]>([]);
@@ -87,65 +85,108 @@ export const NewLeadsPage = () => {
           </div>
         </div>
 
-        <PrepaidSection />
+        <Card className="p-6 relative overflow-hidden bg-gradient-to-br from-background via-background/95 to-background">
+          <div className="space-y-6">
+            <div className="flex items-center gap-4">
+              <div className="flex-1">
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  <Input 
+                    placeholder="Rechercher par ville, code postal ou type de projet..." 
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="pl-10"
+                  />
+                </div>
+              </div>
+              <Button variant="outline" className="gap-2">
+                <Filter className="h-4 w-4" />
+                Filtres
+              </Button>
+            </div>
+
+            <Tabs defaultValue="all" className="w-full">
+              <TabsList className="w-full justify-start">
+                <TabsTrigger value="all">Tous les leads</TabsTrigger>
+                <TabsTrigger value="residential">Résidentiel</TabsTrigger>
+                <TabsTrigger value="professional">Professionnel</TabsTrigger>
+              </TabsList>
+              <TabsContent value="all">
+                <LeadsList 
+                  leads={filteredLeads} 
+                  onLeadSelect={handleLeadSelect}
+                  selectedLeads={selectedLeads}
+                />
+              </TabsContent>
+              <TabsContent value="residential">
+                <LeadsList 
+                  leads={filteredLeads.filter(lead => lead.projectType === 'residential')} 
+                  onLeadSelect={handleLeadSelect}
+                  selectedLeads={selectedLeads}
+                />
+              </TabsContent>
+              <TabsContent value="professional">
+                <LeadsList 
+                  leads={filteredLeads.filter(lead => lead.projectType === 'professional')} 
+                  onLeadSelect={handleLeadSelect}
+                  selectedLeads={selectedLeads}
+                />
+              </TabsContent>
+            </Tabs>
+          </div>
+        </Card>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <Card className="md:col-span-2 p-6 relative overflow-hidden bg-gradient-to-br from-background via-background/95 to-background">
+          <Card className="md:col-span-3 p-6 bg-gradient-to-br from-background via-background/95 to-background">
             <div className="space-y-6">
-              <div className="flex items-center gap-4">
-                <div className="flex-1">
-                  <div className="relative">
-                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                    <Input 
-                      placeholder="Rechercher par ville, code postal ou type de projet..." 
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      className="pl-10"
-                    />
+              <div className="flex items-center gap-2 text-primary">
+                <h3 className="font-medium text-lg">Pourquoi acheter ces leads ?</h3>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="flex items-start gap-3">
+                  <div className="bg-primary/10 p-2 rounded-full">
+                    <Shield className="h-5 w-5 text-primary" />
+                  </div>
+                  <div>
+                    <span className="font-medium">Leads qualifiés et vérifiés</span>
+                    <p className="text-sm text-muted-foreground">
+                      Chaque lead est minutieusement vérifié pour garantir sa qualité
+                    </p>
                   </div>
                 </div>
-                <Button variant="outline" className="gap-2">
-                  <Filter className="h-4 w-4" />
-                  Filtres
-                </Button>
+                <div className="flex items-start gap-3">
+                  <div className="bg-primary/10 p-2 rounded-full">
+                    <Rocket className="h-5 w-5 text-primary" />
+                  </div>
+                  <div>
+                    <span className="font-medium">Projets à fort potentiel</span>
+                    <p className="text-sm text-muted-foreground">
+                      Sélectionnés pour leur potentiel de conversion élevé
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <div className="bg-primary/10 p-2 rounded-full">
+                    <Clock className="h-5 w-5 text-primary" />
+                  </div>
+                  <div>
+                    <span className="font-medium">Contact rapide recommandé</span>
+                    <p className="text-sm text-muted-foreground">
+                      Maximisez vos chances en contactant rapidement les prospects
+                    </p>
+                  </div>
+                </div>
               </div>
-
-              <Tabs defaultValue="all" className="w-full">
-                <TabsList className="w-full justify-start">
-                  <TabsTrigger value="all">Tous les leads</TabsTrigger>
-                  <TabsTrigger value="residential">Résidentiel</TabsTrigger>
-                  <TabsTrigger value="professional">Professionnel</TabsTrigger>
-                </TabsList>
-                <TabsContent value="all">
-                  <LeadsList 
-                    leads={filteredLeads} 
-                    onLeadSelect={handleLeadSelect}
-                    selectedLeads={selectedLeads}
-                  />
-                </TabsContent>
-                <TabsContent value="residential">
-                  <LeadsList 
-                    leads={filteredLeads.filter(lead => lead.projectType === 'residential')} 
-                    onLeadSelect={handleLeadSelect}
-                    selectedLeads={selectedLeads}
-                  />
-                </TabsContent>
-                <TabsContent value="professional">
-                  <LeadsList 
-                    leads={filteredLeads.filter(lead => lead.projectType === 'professional')} 
-                    onLeadSelect={handleLeadSelect}
-                    selectedLeads={selectedLeads}
-                  />
-                </TabsContent>
-              </Tabs>
             </div>
           </Card>
-
-          <div className="space-y-6">
-            <PricingSection />
-            <WhyBuyLeads />
-          </div>
         </div>
+
+        <Button 
+          onClick={() => window.location.href = '/espace-installateur/marketplace/prepaid'}
+          className="w-full gap-2 text-base font-medium py-6 bg-gradient-to-r from-primary via-accent to-primary hover:from-primary/90 hover:via-accent/90 hover:to-primary/90 border-0 transition-all duration-300 bg-[length:200%_100%] animate-gradient text-white shadow-lg"
+        >
+          Recharger mon compte
+        </Button>
       </div>
     </InstallerLayout>
   );

@@ -80,59 +80,59 @@ export const LeadCard = ({
   };
 
   return (
-    <Card className="group relative overflow-hidden transition-all duration-500 hover:scale-[1.02] bg-white border border-primary/20 hover:border-primary/40 shadow-lg hover:shadow-primary/20">
+    <Card className="group relative overflow-hidden transition-all duration-500 hover:scale-[1.02] bg-white/80 backdrop-blur-sm border border-primary/10 hover:border-primary/20 shadow-lg hover:shadow-primary/10">
       {/* Effet de brillance au survol */}
       <div className="absolute inset-0 opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-700">
         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
       </div>
 
-      <div className="relative p-6 space-y-6 bg-gradient-to-br from-white to-primary/5">
+      <div className="relative p-6 space-y-6">
         {/* En-tête avec les informations principales */}
         <div className="space-y-4">
           <div className="flex items-start justify-between">
             <div className="space-y-1">
-              <h3 className="text-xl font-semibold text-primary">
+              <h3 className="text-xl font-semibold bg-gradient-to-r from-primary to-accent text-transparent bg-clip-text">
                 {lead.projectType === 'professional' ? 'Projet Pro' : 'Projet Résidentiel'}
               </h3>
               <p className="text-sm text-muted-foreground">
                 Ref: {lead.id.substring(0, 8)}
               </p>
             </div>
-            <Badge variant="outline" className="bg-primary text-white border-primary/20 shadow-sm">
+            <Badge variant="outline" className="bg-gradient-to-r from-primary to-accent text-white border-none shadow-sm">
               {format(new Date(lead.createdAt), 'dd MMM yyyy', { locale: fr })}
             </Badge>
           </div>
         </div>
 
         {/* Informations de localisation */}
-        <div className="space-y-4 p-4 rounded-lg bg-gradient-to-br from-primary/10 to-transparent border border-primary/20 shadow-inner">
-          <div className="flex items-center gap-2 text-primary/80">
+        <div className="space-y-4 p-4 rounded-lg bg-gradient-to-br from-white to-primary/5 border border-primary/10 shadow-inner">
+          <div className="flex items-center gap-2 text-secondary">
             <MapPin className="h-4 w-4 text-primary animate-pulse" />
             <span className="font-medium">{lead.city} ({lead.postalCode})</span>
           </div>
           
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-1">
-              <p className="text-sm text-primary/70">Budget</p>
-              <p className="font-semibold text-lg flex items-center gap-1 text-primary">
-                <Euro className="h-4 w-4" />
+              <p className="text-sm text-muted-foreground">Budget</p>
+              <p className="font-semibold text-lg flex items-center gap-1 bg-gradient-to-r from-primary to-accent text-transparent bg-clip-text">
+                <Euro className="h-4 w-4 text-primary" />
                 {lead.budget.toLocaleString()}€
               </p>
             </div>
             <div className="space-y-1">
-              <p className="text-sm text-primary/70">Type</p>
-              <p className="font-semibold text-primary">{lead.projectType === 'professional' ? 'Professionnel' : 'Résidentiel'}</p>
+              <p className="text-sm text-muted-foreground">Type</p>
+              <p className="font-semibold text-secondary">{lead.projectType === 'professional' ? 'Professionnel' : 'Résidentiel'}</p>
             </div>
           </div>
         </div>
 
         {/* Informations de contact masquées */}
         <div className="space-y-2 p-4 rounded-lg bg-secondary/5 backdrop-blur-sm">
-          <div className="flex items-center gap-2 text-secondary">
+          <div className="flex items-center gap-2 text-muted-foreground">
             <Phone className="h-4 w-4" />
             <span className="font-mono">••• ••• •••</span>
           </div>
-          <div className="flex items-center gap-2 text-secondary">
+          <div className="flex items-center gap-2 text-muted-foreground">
             <Mail className="h-4 w-4" />
             <span className="font-mono">••••••@•••••.••</span>
           </div>
@@ -141,16 +141,16 @@ export const LeadCard = ({
         {/* Prix et actions */}
         {!isPurchased && (
           <div className="mt-auto space-y-4">
-            <div className="p-4 bg-gradient-to-r from-primary/5 to-transparent rounded-lg border border-primary/10">
-              <h4 className="text-sm font-medium text-primary mb-3">Options d'achat :</h4>
+            <div className="p-4 bg-gradient-to-br from-white to-primary/5 rounded-lg border border-primary/10">
+              <h4 className="text-sm font-medium text-secondary mb-3">Options d'achat :</h4>
               <div className="space-y-2">
                 <div className="flex justify-between items-center">
-                  <span className="text-sm text-primary/80">Compte prépayé</span>
-                  <span className="font-bold text-primary">{prices.mutualPrice}€</span>
+                  <span className="text-sm text-muted-foreground">Compte prépayé</span>
+                  <span className="font-bold bg-gradient-to-r from-primary to-accent text-transparent bg-clip-text">{prices.mutualPrice}€</span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-sm text-primary/80">Prix standard</span>
-                  <span className="font-bold text-primary">{prices.exclusivePrice}€</span>
+                  <span className="text-sm text-muted-foreground">Prix standard</span>
+                  <span className="font-bold bg-gradient-to-r from-primary to-accent text-transparent bg-clip-text">{prices.exclusivePrice}€</span>
                 </div>
               </div>
             </div>
