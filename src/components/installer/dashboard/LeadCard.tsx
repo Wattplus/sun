@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Link } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
-import { Phone, Mail, MapPin } from "lucide-react";
+import { Phone, Mail, MapPin, Home, CreditCard } from "lucide-react";
 
 interface LeadCardProps {
   lead: Lead;
@@ -70,7 +70,15 @@ export const LeadCard = ({ lead, status, onStatusChange }: LeadCardProps) => {
             </div>
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <MapPin className="h-4 w-4" />
-              <span>{lead.city} ({lead.postalCode})</span>
+              <span>{lead.postalCode}</span>
+            </div>
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <Home className="h-4 w-4" />
+              <span>{lead.roofType ? lead.roofType.replace(/-/g, ' ') : 'Non renseigné'}</span>
+            </div>
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <CreditCard className="h-4 w-4" />
+              <span>{lead.monthlyBill ? `${lead.monthlyBill}€/mois` : 'Non renseigné'}</span>
             </div>
           </div>
         </CardContent>
