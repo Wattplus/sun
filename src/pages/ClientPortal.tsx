@@ -16,6 +16,7 @@ import { Helmet } from "react-helmet";
 import { motion } from "framer-motion";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList } from "@/components/ui/breadcrumb";
 import { DashboardStats } from "@/components/client/dashboard/DashboardStats";
+import { Card } from "@/components/ui/card";
 
 const mockContacts = [
   {
