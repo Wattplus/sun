@@ -1,7 +1,7 @@
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { MapPin, Star, MessageSquare, CheckCircle, TrendingUp, Search, Filter } from "lucide-react"
+import { MapPin, Star, MessageSquare, CheckCircle, TrendingUp, Search, Filter, CreditCard } from "lucide-react"
 import { useToast } from "@/components/ui/use-toast"
 import { mockInstallers } from "@/components/admin/InstallerManagement"
 import { Input } from "@/components/ui/input"
@@ -40,6 +40,15 @@ export function InstallerDirectory() {
       duration: 5000,
     })
   }, [toast])
+
+  const handleInstallerSignup = () => {
+    toast({
+      title: "Inscription Installateur",
+      description: "Vous allez être redirigé vers le formulaire d'inscription installateur.",
+      duration: 5000,
+    })
+    // Add navigation logic here when the installer signup page is ready
+  }
 
   // Filter installers based on search criteria
   const filteredInstallers = useMemo(() => {
@@ -106,14 +115,24 @@ export function InstallerDirectory() {
   return (
     <div className="space-y-8 animate-fade-in">
       <div className="glass-panel p-8">
-        <div className="flex items-center gap-3 mb-6">
-          <CheckCircle className="w-8 h-8 text-primary" />
-          <div>
-            <h2 className="text-3xl font-bold gradient-text">Annuaire des Installateurs</h2>
-            <p className="text-gray-300 mt-2">
-              Découvrez nos installateurs certifiés. Vous pouvez demander à être mis en relation avec eux directement depuis cette page.
-            </p>
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 mb-8">
+          <div className="flex items-center gap-3">
+            <CheckCircle className="w-8 h-8 text-primary" />
+            <div>
+              <h2 className="text-3xl font-bold gradient-text">Annuaire des Installateurs</h2>
+              <p className="text-gray-300 mt-2">
+                Découvrez nos installateurs certifiés. Vous pouvez demander à être mis en relation avec eux directement depuis cette page.
+              </p>
+            </div>
           </div>
+          
+          <Button 
+            onClick={handleInstallerSignup}
+            className="bg-primary hover:bg-primary-dark text-white font-semibold py-2 px-6 rounded-lg shadow-lg transform transition-all duration-300 hover:scale-105 flex items-center gap-2"
+          >
+            <CreditCard className="w-5 h-5" />
+            Devenir Installateur Certifié
+          </Button>
         </div>
 
         <div className="flex flex-wrap gap-4 mb-8">
