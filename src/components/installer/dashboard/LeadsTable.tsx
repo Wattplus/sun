@@ -1,48 +1,94 @@
 import { Lead } from "@/types/crm";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { EmptyLeadState } from "./EmptyLeadState";
-import { LeadTableRow } from "./LeadTableRow";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Lock } from "lucide-react";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 interface LeadsTableProps {
   leads: Lead[];
-  onLeadSelect?: (lead: Lead) => void;
-  selectedLeads?: Lead[];
+  selectedLeads: Lead[];
+  onSelectAll: () => void;
+  onSelectLead: (lead: Lead) => void;
 }
 
-export const LeadsTable = ({ leads, onLeadSelect, selectedLeads = [] }: LeadsTableProps) => {
-  if (leads.length === 0) {
-    return <EmptyLeadState />;
-  }
+const MaskedInfo = () => (
+  <TooltipProvider>
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <div className="flex items-center gap-2 text-muted-foreground hover:text-primary/80 transition-colors cursor-help">
+          <Lock className="h-4 w-4" />
+          <span>Information masquée</span>
+        </div>
+      </TooltipTrigger>
+      <TooltipContent>
+        <p>Cette information sera visible après l'achat du lead</p>
+      </TooltipContent>
+    </Tooltip>
+  </TooltipProvider>
+);
 
+export const LeadsTable = ({ leads, selectedLeads, onSelectAll, onSelectLead }: LeadsTableProps) => {
   return (
     <Table>
       <TableHeader>
-        <TableRow className="bg-primary/5 hover:bg-primary/10">
-          {onLeadSelect && (
-            <TableHead className="w-[50px]">
-              <span className="sr-only">Sélection</span>
-            </TableHead>
-          )}
-          <TableHead className="font-semibold">Type de projet</TableHead>
-          <TableHead className="font-semibold">Prénom</TableHead>
-          <TableHead className="font-semibold">Nom</TableHead>
-          <TableHead className="font-semibold">Email</TableHead>
-          <TableHead className="font-semibold">Téléphone</TableHead>
-          <TableHead className="font-semibold">Code postal</TableHead>
-          <TableHead className="font-semibold">Type de toit</TableHead>
-          <TableHead className="font-semibold">Facture mensuelle</TableHead>
-          <TableHead className="font-semibold">Installation électrique</TableHead>
-          <TableHead className="w-[100px] font-semibold">Action</TableHead>
+        <TableRow className="hover:bg-primary/5">
+          <TableHead className="w-[50px]">
+            <Checkbox
+              checked={selectedLeads.length === leads.length && leads.length > 0}
+              onCheckedChange={onSelectAll}
+              className="border-primary/50"
+            />
+          </TableHead>
+          <TableHead>Type de projet</TableHead>
+          <TableHead>Prénom</TableHead>
+          <TableHead>Nom</TableHead>
+          <TableHead>Email</TableHead>
+          <TableHead>Téléphone</TableHead>
+          <TableHead>Code postal</TableHead>
+          <TableHead>Type de toit</TableHead>
+          <TableHead>Facture mensuelle</TableHead>
+          <TableHead>Installation électrique</TableHead>
+          <TableHead className="w-[100px]">Prix</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
         {leads.map((lead) => (
-          <LeadTableRow
+          <TableRow 
             key={lead.id}
-            lead={lead}
-            onLeadSelect={onLeadSelect}
-            isSelected={selectedLeads.some(l => l.id === lead.id)}
-          />
+            className="hover:bg-primary/5 transition-colors"
+          >
+            <TableCell>
+              <Checkbox
+                checked={selectedLeads.some(l => l.id === lead.id)}
+                onCheckedChange={() => onSelectLead(lead)}
+                className="border-primary/50"
+              />
+            </TableCell>
+            <TableCell>
+              <Badge variant="outline" className={lead.projectType === 'professional' ? 'bg-amber-500/10 text-amber-600' : 'bg-emerald-500/10 text-emerald-600'}>
+                {lead.projectType === 'professional' ? 'Professionnel' : 'Résidentiel'}
+              </Badge>
+            </TableCell>
+            <TableCell>{lead.firstName}</TableCell>
+            <TableCell><MaskedInfo /></TableCell>
+            <TableCell><MaskedInfo /></TableCell>
+            <TableCell><MaskedInfo /></TableCell>
+            <TableCell>
+              <Badge variant="outline" className="bg-primary/10">
+                {lead.postalCode}
+              </Badge>
+            </TableCell>
+            <TableCell>{lead.roofType || "Non spécifié"}</TableCell>
+            <TableCell>{lead.monthlyBill ? `${lead.monthlyBill}€` : "Non spécifié"}</TableCell>
+            <TableCell>{lead.electricalType || "Non spécifié"}</TableCell>
+            <TableCell>
+              <Badge variant="outline" className="bg-primary/10">
+                {lead.price}€
+              </Badge>
+            </TableCell>
+          </TableRow>
         ))}
       </TableBody>
     </Table>
