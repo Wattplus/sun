@@ -9,10 +9,12 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<Index />} />
-        <Route path="/espace-installateur" element={<InstallerLayout />}>
-          <Route path="compte" element={<AccountPage />} />
-          <Route path="paiement/nouvelle-carte" element={<NewCardPage />} />
-        </Route>
+        <Route path="/espace-installateur" element={<InstallerLayout>
+          <Routes>
+            <Route path="compte" element={<AccountPage />} />
+            <Route path="paiement/nouvelle-carte" element={<NewCardPage />} />
+          </Routes>
+        </InstallerLayout>} />
       </Routes>
     </Router>
   );
