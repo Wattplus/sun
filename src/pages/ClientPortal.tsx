@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Home, FileText, MessageSquare, Settings, Users } from "lucide-react";
+import { Home, FileText, MessageSquare, Settings, Users, Sun, ChartBar, Calendar, ArrowUp } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ClientNavbar } from "@/components/client/ClientNavbar";
 import { ProjectStatus } from "@/components/client/dashboard/ProjectStatus";
@@ -15,6 +15,7 @@ import { InstallerDirectory } from "@/components/client/directory/InstallerDirec
 import { Helmet } from "react-helmet";
 import { motion } from "framer-motion";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList } from "@/components/ui/breadcrumb";
+import { Card } from "@/components/ui/card";
 
 // Exemple de données de contact (à remplacer par les vraies données)
 const mockContacts = [
@@ -100,18 +101,23 @@ const ClientPortal = () => {
           </Breadcrumb>
 
           <motion.div 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
             className="mb-8"
           >
-            <h1 className="text-3xl font-bold mb-2">Tableau de bord</h1>
-            <p className="text-muted-foreground">
-              Bienvenue, {userInfo.name}
+            <div className="flex items-center gap-3 mb-2">
+              <Sun className="h-8 w-8 text-yellow-500" />
+              <h1 className="text-3xl font-bold">Tableau de bord</h1>
+            </div>
+            <p className="text-muted-foreground flex items-center gap-2">
+              <Calendar className="h-4 w-4" />
+              Bienvenue, {userInfo.name} | Dernière connexion : {new Date().toLocaleDateString('fr-FR')}
             </p>
           </motion.div>
 
           <Tabs defaultValue="dashboard" className="space-y-6">
-            <TabsList>
+            <TabsList className="grid w-full grid-cols-5 lg:w-auto">
               <TabsTrigger value="dashboard" onClick={() => setActiveTab("dashboard")} className="gap-2">
                 <Home className="w-4 h-4" />
                 Accueil
@@ -135,20 +141,64 @@ const ClientPortal = () => {
             </TabsList>
 
             <TabsContent value="dashboard">
-              <div className="space-y-6">
-                <ClientInfoForm onMonthlyBillUpdate={handleMonthlyBillUpdate} />
-                
-                <ContactsList contacts={mockContacts} />
-
-                <div className="grid gap-6 md:grid-cols-2">
-                  <ProjectStatus 
-                    status={userInfo.projectStatus}
-                    lastUpdate={userInfo.lastUpdate}
-                  />
-                  <SavingsEstimate monthlyBill={monthlyBill} />
+              <div className="grid gap-6">
+                {/* Section Résumé */}
+                <div className="grid gap-6 md:grid-cols-3">
+                  <Card className="p-6 bg-green-500/10">
+                    <div className="flex items-center gap-4">
+                      <div className="p-3 bg-green-500/20 rounded-lg">
+                        <ArrowUp className="h-6 w-6 text-green-500" />
+                      </div>
+                      <div>
+                        <p className="text-sm text-muted-foreground">Production Aujourd'hui</p>
+                        <p className="text-2xl font-bold">12.5 kWh</p>
+                        <p className="text-sm text-green-500">+15% vs hier</p>
+                      </div>
+                    </div>
+                  </Card>
+                  <Card className="p-6 bg-blue-500/10">
+                    <div className="flex items-center gap-4">
+                      <div className="p-3 bg-blue-500/20 rounded-lg">
+                        <ChartBar className="h-6 w-6 text-blue-500" />
+                      </div>
+                      <div>
+                        <p className="text-sm text-muted-foreground">Économies Réalisées</p>
+                        <p className="text-2xl font-bold">256 €</p>
+                        <p className="text-sm text-blue-500">Ce mois-ci</p>
+                      </div>
+                    </div>
+                  </Card>
+                  <Card className="p-6 bg-yellow-500/10">
+                    <div className="flex items-center gap-4">
+                      <div className="p-3 bg-yellow-500/20 rounded-lg">
+                        <Sun className="h-6 w-6 text-yellow-500" />
+                      </div>
+                      <div>
+                        <p className="text-sm text-muted-foreground">Puissance Installée</p>
+                        <p className="text-2xl font-bold">6 kWc</p>
+                        <p className="text-sm text-yellow-500">16 panneaux</p>
+                      </div>
+                    </div>
+                  </Card>
                 </div>
 
-                <div className="grid gap-6 md:grid-cols-2">
+                {/* Section Formulaire et Contacts */}
+                <div className="grid gap-6 lg:grid-cols-2">
+                  <div className="space-y-6">
+                    <ClientInfoForm onMonthlyBillUpdate={handleMonthlyBillUpdate} />
+                    <ProjectStatus 
+                      status={userInfo.projectStatus}
+                      lastUpdate={userInfo.lastUpdate}
+                    />
+                  </div>
+                  <div className="space-y-6">
+                    <ContactsList contacts={mockContacts} />
+                    <SavingsEstimate monthlyBill={monthlyBill} />
+                  </div>
+                </div>
+
+                {/* Section Graphiques et Étapes */}
+                <div className="grid gap-6 lg:grid-cols-2">
                   <ConsumptionChart />
                   <NextSteps />
                 </div>
@@ -170,23 +220,23 @@ const ClientPortal = () => {
             </TabsContent>
 
             <TabsContent value="settings">
-              <div className="space-y-6">
-                <h2 className="text-2xl font-semibold">Paramètres du compte</h2>
-                <div className="grid gap-4">
-                  <div>
+              <Card className="p-6">
+                <h2 className="text-2xl font-semibold mb-6">Paramètres du compte</h2>
+                <div className="grid gap-6">
+                  <div className="space-y-2">
                     <label className="text-sm font-medium">Nom</label>
-                    <p className="mt-1">{userInfo.name}</p>
+                    <p className="p-2 bg-muted rounded-md">{userInfo.name}</p>
                   </div>
-                  <div>
+                  <div className="space-y-2">
                     <label className="text-sm font-medium">Email</label>
-                    <p className="mt-1">{userInfo.email}</p>
+                    <p className="p-2 bg-muted rounded-md">{userInfo.email}</p>
                   </div>
-                  <div>
+                  <div className="space-y-2">
                     <label className="text-sm font-medium">Téléphone</label>
-                    <p className="mt-1">{userInfo.phone}</p>
+                    <p className="p-2 bg-muted rounded-md">{userInfo.phone}</p>
                   </div>
                 </div>
-              </div>
+              </Card>
             </TabsContent>
           </Tabs>
         </main>
