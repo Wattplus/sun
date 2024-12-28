@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Home, FileText, MessageSquare, Settings, Users, Sun, Calendar } from "lucide-react";
+import { Home, FileText, MessageSquare, Settings, Users, Sun, Calendar, ChevronRight } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ClientNavbar } from "@/components/client/ClientNavbar";
 import { DocumentsList } from "@/components/client/documents/DocumentsList";
@@ -11,7 +11,7 @@ import { ClientFAQ } from "@/components/client/faq/ClientFAQ";
 import { InstallerDirectory } from "@/components/client/directory/InstallerDirectory";
 import { Helmet } from "react-helmet";
 import { motion } from "framer-motion";
-import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList } from "@/components/ui/breadcrumb";
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 import { DashboardStats } from "@/components/client/dashboard/DashboardStats";
 import { SettingsSection } from "@/components/client/settings/SettingsSection";
 import { Button } from "@/components/ui/button";
@@ -69,10 +69,18 @@ const ClientPortal = () => {
     }
   };
 
+  const navigationLinks = [
+    { icon: Home, label: "Accueil", tab: "dashboard" },
+    { icon: FileText, label: "Documents", tab: "documents" },
+    { icon: MessageSquare, label: "Messages", tab: "messages" },
+    { icon: Users, label: "Annuaire", tab: "directory" },
+    { icon: Settings, label: "Paramètres", tab: "settings" },
+  ];
+
   return (
     <>
       <Helmet>
-        <title>Espace Client - Suivi de Projet Photovoltaïque</title>
+        <title>Espace Client - {getBreadcrumbText()}</title>
         <meta
           name="description"
           content="Accédez à votre espace client pour suivre l'avancement de votre projet d'installation solaire, consulter vos documents et communiquer avec votre installateur."
@@ -84,71 +92,54 @@ const ClientPortal = () => {
         <ClientNavbar />
         
         <main className="container mx-auto px-4 py-8">
-          <Breadcrumb className="mb-4">
-            <BreadcrumbList>
-              <BreadcrumbItem>
-                <BreadcrumbLink href="/">Accueil</BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbItem>
-                <BreadcrumbLink href="/client">Espace Client</BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbItem>
-                <span className="text-muted-foreground">{getBreadcrumbText()}</span>
-              </BreadcrumbItem>
-            </BreadcrumbList>
-          </Breadcrumb>
+          <div className="mb-8 space-y-6">
+            <div className="flex flex-col space-y-4">
+              <Breadcrumb>
+                <BreadcrumbList className="bg-background/50 backdrop-blur-md px-4 py-2 rounded-lg border border-border">
+                  <BreadcrumbItem>
+                    <BreadcrumbLink onClick={() => setActiveTab("dashboard")} className="text-muted-foreground hover:text-foreground transition-colors">
+                      Espace Client
+                    </BreadcrumbLink>
+                  </BreadcrumbItem>
+                  <BreadcrumbSeparator>
+                    <ChevronRight className="h-4 w-4" />
+                  </BreadcrumbSeparator>
+                  <BreadcrumbItem>
+                    <span className="font-medium">{getBreadcrumbText()}</span>
+                  </BreadcrumbItem>
+                </BreadcrumbList>
+              </Breadcrumb>
 
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="mb-8"
-          >
-            <div className="flex items-center justify-between gap-3 mb-2">
-              <div className="flex items-center gap-3">
-                <Sun className="h-8 w-8 text-yellow-500" />
-                <h1 className="text-3xl font-bold">Tableau de bord</h1>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <Sun className="h-8 w-8 text-yellow-500" />
+                  <div>
+                    <h1 className="text-3xl font-bold">{getBreadcrumbText()}</h1>
+                    <p className="text-muted-foreground flex items-center gap-2 mt-1">
+                      <Calendar className="h-4 w-4" />
+                      Bienvenue, {userInfo.name} | Dernière connexion : {new Date().toLocaleDateString('fr-FR')}
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-4">
+                  {navigationLinks.map((link) => (
+                    <Button
+                      key={link.tab}
+                      variant={activeTab === link.tab ? "default" : "ghost"}
+                      size="sm"
+                      onClick={() => setActiveTab(link.tab)}
+                      className="flex items-center gap-2"
+                    >
+                      <link.icon className="w-4 h-4" />
+                      {link.label}
+                    </Button>
+                  ))}
+                </div>
               </div>
-              <Button
-                variant="default"
-                size="lg"
-                onClick={() => setActiveTab("directory")}
-                className="bg-primary hover:bg-primary-dark text-white font-semibold shadow-lg transform transition-all duration-300 hover:scale-105 flex items-center gap-2"
-              >
-                <Users className="w-5 h-5" />
-                Consulter l'Annuaire des Installateurs
-              </Button>
             </div>
-            <p className="text-muted-foreground flex items-center gap-2">
-              <Calendar className="h-4 w-4" />
-              Bienvenue, {userInfo.name} | Dernière connexion : {new Date().toLocaleDateString('fr-FR')}
-            </p>
-          </motion.div>
+          </div>
 
-          <Tabs defaultValue="dashboard" className="space-y-6">
-            <TabsList className="grid w-full grid-cols-5 lg:w-auto">
-              <TabsTrigger value="dashboard" onClick={() => setActiveTab("dashboard")} className="gap-2">
-                <Home className="w-4 h-4" />
-                Accueil
-              </TabsTrigger>
-              <TabsTrigger value="directory" onClick={() => setActiveTab("directory")} className="gap-2">
-                <Users className="w-4 h-4" />
-                Annuaire
-              </TabsTrigger>
-              <TabsTrigger value="documents" onClick={() => setActiveTab("documents")} className="gap-2">
-                <FileText className="w-4 h-4" />
-                Documents
-              </TabsTrigger>
-              <TabsTrigger value="messages" onClick={() => setActiveTab("messages")} className="gap-2">
-                <MessageSquare className="w-4 h-4" />
-                Messages
-              </TabsTrigger>
-              <TabsTrigger value="settings" onClick={() => setActiveTab("settings")} className="gap-2">
-                <Settings className="w-4 h-4" />
-                Paramètres
-              </TabsTrigger>
-            </TabsList>
-
+          <Tabs value={activeTab} className="space-y-6">
             <TabsContent value="dashboard">
               <div className="grid gap-6">
                 <DashboardStats />
