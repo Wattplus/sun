@@ -31,6 +31,7 @@ export const mockInstallers: Installer[] = [
       rge: true,
       qualibat: true
     },
+    yearFounded: "2015",
     siret: "123 456 789 00012",
     siren: "123 456 789"
   },
@@ -51,7 +52,8 @@ export const mockInstallers: Installer[] = [
       qualiPV: true,
       rge: false,
       qualibat: true
-    }
+    },
+    yearFounded: "2018"
   },
   {
     id: "3",
@@ -70,7 +72,8 @@ export const mockInstallers: Installer[] = [
       qualiPV: false,
       rge: true,
       qualibat: true
-    }
+    },
+    yearFounded: "2019"
   },
   {
     id: "4",
@@ -89,7 +92,8 @@ export const mockInstallers: Installer[] = [
       qualiPV: false,
       rge: false,
       qualibat: false
-    }
+    },
+    yearFounded: "2023"
   },
   {
     id: "5",
@@ -108,7 +112,8 @@ export const mockInstallers: Installer[] = [
       qualiPV: true,
       rge: true,
       qualibat: false
-    }
+    },
+    yearFounded: "2020"
   }
 ];
 

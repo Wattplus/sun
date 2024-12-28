@@ -29,6 +29,14 @@ export const InstallerProfile = () => {
     toast.success("Ouverture de votre messagerie...");
   };
 
+  const getCertifications = () => {
+    const certs = [];
+    if (installer.certifications.qualiPV) certs.push("QualiPV");
+    if (installer.certifications.rge) certs.push("RGE");
+    if (installer.certifications.qualibat) certs.push("Qualibat");
+    return certs;
+  };
+
   return (
     <div className="container mx-auto p-6 space-y-6 animate-fade-in">
       <Card className="p-8 bg-background/95 backdrop-blur-sm">
@@ -72,7 +80,7 @@ export const InstallerProfile = () => {
                 Certifications
               </h3>
               <div className="grid grid-cols-2 gap-3">
-                {installer.certifications.map((cert, index) => (
+                {getCertifications().map((cert, index) => (
                   <Badge key={index} variant="outline" className="justify-center">
                     {cert}
                   </Badge>
