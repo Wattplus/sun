@@ -59,6 +59,10 @@ export const LeadsList = ({ leads, onLeadSelect, selectedLeads = [] }: LeadsList
     setSelectedDepartments(selectedDepartments.filter(d => d !== department));
   };
 
+  const handleSelectAll = () => {
+    // Implementation of select all functionality
+  };
+
   return (
     <div className="space-y-4">
       <LeadsFilters
@@ -75,8 +79,9 @@ export const LeadsList = ({ leads, onLeadSelect, selectedLeads = [] }: LeadsList
       <ScrollArea className="h-[500px] pr-4">
         <LeadsTable
           leads={availableLeads}
-          onLeadSelect={onLeadSelect}
           selectedLeads={selectedLeads}
+          onSelectAll={handleSelectAll}
+          onSelectLead={onLeadSelect}
         />
       </ScrollArea>
     </div>

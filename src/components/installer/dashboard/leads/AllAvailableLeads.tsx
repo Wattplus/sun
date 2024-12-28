@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Lead } from "@/types/crm";
 import { Card } from "@/components/ui/card";
-import { mockAvailableLeads } from "../mockAvailableLeads";
 import { toast } from "sonner";
 import { LeadsTable } from "../LeadsTable";
 import { LeadsFilters } from "../LeadsFilters";
@@ -10,14 +9,19 @@ import { ShoppingCart, X } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { LeadCard } from "../LeadCard";
 
-export const AllAvailableLeads = () => {
+interface AllAvailableLeadsProps {
+  leads: Lead[];
+  onClose: () => void;
+}
+
+export const AllAvailableLeads = ({ leads = [], onClose }: AllAvailableLeadsProps) => {
   const [selectedLeads, setSelectedLeads] = useState<Lead[]>([]);
   const [projectTypeFilter, setProjectTypeFilter] = useState("all");
   const [selectedDepartments, setSelectedDepartments] = useState<string[]>([]);
   const [priceFilter, setPriceFilter] = useState<"default" | "asc" | "desc">("default");
   const isMobile = useIsMobile();
   
-  const availableDepartments = Array.from(new Set(mockAvailableLeads.map(lead => lead.postalCode.substring(0, 2))));
+  const availableDepartments = Array.from(new Set(leads.map(lead => lead.postalCode.substring(0, 2))));
 
   const handleLeadSelect = (lead: Lead) => {
     setSelectedLeads(prev => 
@@ -29,7 +33,7 @@ export const AllAvailableLeads = () => {
 
   const handleSelectAll = () => {
     setSelectedLeads(prev => 
-      prev.length === mockAvailableLeads.length ? [] : [...mockAvailableLeads]
+      prev.length === leads.length ? [] : [...leads]
     );
   };
 
@@ -43,7 +47,7 @@ export const AllAvailableLeads = () => {
     toast.success(`Redirection vers le paiement pour ${selectedLeads.length} leads (${totalPrice}€)`);
   };
 
-  const filteredLeads = mockAvailableLeads
+  const filteredLeads = leads
     .filter(lead => projectTypeFilter === "all" || lead.projectType === projectTypeFilter)
     .filter(lead => selectedDepartments.length === 0 || selectedDepartments.includes(lead.postalCode.substring(0, 2)))
     .sort((a, b) => {
