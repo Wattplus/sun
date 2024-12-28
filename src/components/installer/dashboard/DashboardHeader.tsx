@@ -11,7 +11,7 @@ export const DashboardHeader = () => {
           Tableau de bord
         </h1>
         <p className="text-sm sm:text-base text-muted-foreground">
-          Bienvenue dans votre espace installateur
+          Bienvenue dans votre espace installateur premium - Gérez vos leads et développez votre activité
         </p>
       </div>
 
