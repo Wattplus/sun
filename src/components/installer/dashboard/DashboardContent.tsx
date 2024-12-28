@@ -1,19 +1,16 @@
 import { DashboardTabs } from "./DashboardTabs";
-import { LeadsOverview } from "./leads/LeadsOverview";
-import { mockAvailableLeads } from "./mockAvailableLeads";
-import { mockPurchasedLeads } from "./mockPurchasedLeads";
 import { motion } from "framer-motion";
 
 export const DashboardContent = () => {
   return (
-    <div className="space-y-12 px-4 sm:px-6 py-8">
+    <div className="space-y-8 px-4 sm:px-6 py-8">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
         className="max-w-7xl mx-auto"
       >
-        <h1 className="text-2xl sm:text-3xl font-bold mb-2 text-white">
+        <h1 className="text-2xl sm:text-3xl font-bold mb-2 gradient-text">
           Tableau de bord
         </h1>
         <p className="text-muted-foreground">

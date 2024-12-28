@@ -27,7 +27,7 @@ export function DashboardTabs() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.3 }}
       >
-        <Card className="p-6 glass-panel border-2 border-primary/20 hover:border-primary/30 transition-all duration-300">
+        <Card className="p-6 glass-panel">
           <PrepaidBalance />
         </Card>
       </motion.div>
