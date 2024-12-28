@@ -5,7 +5,7 @@ import { NewLeadsPage } from "@/components/installer/marketplace/NewLeadsPage";
 import { Toaster } from "@/components/ui/toaster";
 import { ThemeProvider } from "@/components/theme-provider";
 
-export default function App() {
+const App = () => {
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
       <Router>
@@ -19,3 +19,5 @@ export default function App() {
     </ThemeProvider>
   );
 }
+
+export default App;
