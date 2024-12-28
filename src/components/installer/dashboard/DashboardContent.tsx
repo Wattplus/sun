@@ -10,9 +10,6 @@ export const DashboardContent = () => {
         transition={{ duration: 0.5 }}
         className="max-w-7xl mx-auto"
       >
-        <h1 className="text-2xl sm:text-3xl font-bold mb-2 gradient-text">
-          Tableau de bord
-        </h1>
         <p className="text-muted-foreground">
           {new Date().toLocaleDateString('fr-FR', { 
             weekday: 'long', 

@@ -82,12 +82,9 @@ export const DashboardHeader = () => {
     <div className="space-y-4">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-primary to-primary-light bg-clip-text text-transparent">
+          <h1 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-primary to-primary-light bg-clip-text text-transparent">
             Tableau de bord
           </h1>
-          <p className="text-sm sm:text-base text-muted-foreground capitalize">
-            {currentDate}
-          </p>
         </div>
 
         <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
