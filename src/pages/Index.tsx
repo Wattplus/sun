@@ -36,22 +36,22 @@ export const Index = () => {
         
         <main>
           <article>
+            <HeroSection />
+            
             <div className="container mx-auto px-4 py-12">
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-                <div className="glass-panel p-8 rounded-2xl border border-primary/20 backdrop-blur-md">
-                  <div className="mb-6 space-y-3">
-                    <h2 className="text-2xl font-bold bg-gradient-to-r from-white to-white/80 bg-clip-text text-transparent">
-                      Demandez votre étude gratuite
-                    </h2>
-                    <p className="text-white/80">
-                      Découvrez votre potentiel d'économies en 2 minutes. Notre équipe d'experts analysera votre situation et vous proposera la meilleure solution pour votre installation photovoltaïque.
-                    </p>
-                  </div>
-                  <LeadForm />
+              <div className="glass-panel p-8 rounded-2xl border border-primary/20 backdrop-blur-md">
+                <div className="mb-6 space-y-3">
+                  <h2 className="text-2xl font-bold bg-gradient-to-r from-white to-white/80 bg-clip-text text-transparent">
+                    Demandez votre étude gratuite
+                  </h2>
+                  <p className="text-white/80">
+                    Découvrez votre potentiel d'économies en 2 minutes. Notre équipe d'experts analysera votre situation et vous proposera la meilleure solution pour votre installation photovoltaïque.
+                  </p>
                 </div>
-                <HeroSection />
+                <LeadForm />
               </div>
             </div>
+
             <Benefits />
             <Process />
             <ElectricityPriceSection />
