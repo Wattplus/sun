@@ -38,7 +38,6 @@ export const Index = () => {
           <article>
             <div className="container mx-auto px-4 py-12">
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-                <HeroSection />
                 <div className="glass-panel p-8 rounded-2xl border border-primary/20 backdrop-blur-md">
                   <div className="mb-6 space-y-3">
                     <h2 className="text-2xl font-bold bg-gradient-to-r from-white to-white/80 bg-clip-text text-transparent">
@@ -50,6 +49,7 @@ export const Index = () => {
                   </div>
                   <LeadForm />
                 </div>
+                <HeroSection />
               </div>
             </div>
             <Benefits />
