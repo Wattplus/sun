@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { Home, FileText, MessageSquare, Settings, Shield, MapPin, Phone, Mail, Users } from "lucide-react"
+import { Home, FileText, MessageSquare, Settings, Shield, MapPin, Phone, Mail, Users, Sun, Battery, TrendingUp, Leaf } from "lucide-react"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { ClientNavbar } from "@/components/client/ClientNavbar"
 import { ProjectStatus } from "@/components/client/dashboard/ProjectStatus"
@@ -16,6 +16,7 @@ import { ClientFAQ } from "@/components/client/faq/ClientFAQ"
 import { InstallerDirectory } from "@/components/client/directory/InstallerDirectory"
 import { PurchasedContactsList } from "@/components/client/dashboard/PurchasedContactsList"
 import { Helmet } from "react-helmet"
+import { motion } from "framer-motion"
 
 const ClientPortal = () => {
   const [activeTab, setActiveTab] = useState("dashboard")
@@ -57,15 +58,30 @@ const ClientPortal = () => {
     setMonthlyBill(value)
   }
 
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1
+      }
+    }
+  }
+
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1
+    }
+  }
+
   return (
     <>
       <Helmet>
         <title>Espace Client - Suivi de Projet Photovoltaïque</title>
         <meta name="description" content="Accédez à votre espace client pour suivre l'avancement de votre projet d'installation solaire, consulter vos documents et communiquer avec votre installateur." />
         <meta name="robots" content="noindex, nofollow" />
-        <meta property="og:title" content="Espace Client - Suivi de Projet Photovoltaïque" />
-        <meta property="og:description" content="Suivez l'avancement de votre projet d'installation solaire et gérez vos documents dans votre espace client personnalisé." />
-        <meta property="og:type" content="website" />
       </Helmet>
 
       <div className="min-h-screen bg-gradient-to-b from-background-dark to-background-light">
@@ -86,10 +102,36 @@ const ClientPortal = () => {
             </BreadcrumbList>
           </Breadcrumb>
 
-          <div className="mb-8 glass-panel p-6">
-            <h1 className="text-3xl font-bold gradient-text">Tableau de bord</h1>
-            <p className="text-gray-300 mt-2">Bienvenue, {userInfo.name}</p>
-          </div>
+          <motion.div 
+            initial="hidden"
+            animate="visible"
+            variants={containerVariants}
+            className="mb-8 glass-panel p-6 rounded-lg border border-white/10"
+          >
+            <motion.h1 variants={itemVariants} className="text-3xl font-bold gradient-text mb-2">
+              Tableau de bord
+            </motion.h1>
+            <motion.div variants={itemVariants} className="flex items-center gap-4">
+              <div className="flex-1">
+                <p className="text-gray-300">Bienvenue, {userInfo.name}</p>
+                <p className="text-sm text-gray-400">Dernière connexion : {new Date().toLocaleDateString()}</p>
+              </div>
+              <div className="flex gap-2">
+                <Card className="p-3 bg-green-500/10 text-green-400">
+                  <Battery className="h-5 w-5" />
+                </Card>
+                <Card className="p-3 bg-yellow-500/10 text-yellow-400">
+                  <Sun className="h-5 w-5" />
+                </Card>
+                <Card className="p-3 bg-blue-500/10 text-blue-400">
+                  <TrendingUp className="h-5 w-5" />
+                </Card>
+                <Card className="p-3 bg-emerald-500/10 text-emerald-400">
+                  <Leaf className="h-5 w-5" />
+                </Card>
+              </div>
+            </motion.div>
+          </motion.div>
 
           <Tabs defaultValue="dashboard" className="space-y-6">
             <TabsList className="glass-panel p-1">
@@ -116,27 +158,45 @@ const ClientPortal = () => {
             </TabsList>
 
             <TabsContent value="dashboard">
-              <ClientInfoForm onMonthlyBillUpdate={handleMonthlyBillUpdate} />
-              <PurchasedContactsList />
-              <div className="grid gap-6 md:grid-cols-2 mt-6">
-                <ProjectStatus 
-                  status={userInfo.projectStatus}
-                  lastUpdate={userInfo.lastUpdate}
-                />
-                <SavingsEstimate monthlyBill={monthlyBill} />
-              </div>
-              <div className="grid gap-6 md:grid-cols-2">
-                <ConsumptionChart />
-                <NextSteps />
-              </div>
+              <motion.div
+                initial="hidden"
+                animate="visible"
+                variants={containerVariants}
+                className="space-y-6"
+              >
+                <motion.div variants={itemVariants}>
+                  <ClientInfoForm onMonthlyBillUpdate={handleMonthlyBillUpdate} />
+                </motion.div>
 
-              <InstallerRequests
-                requests={userInfo.installerRequests}
-                onAccept={(id) => console.log('Accept request:', id)}
-                onReject={(id) => console.log('Reject request:', id)}
-              />
+                <motion.div variants={itemVariants}>
+                  <PurchasedContactsList />
+                </motion.div>
 
-              <ClientFAQ />
+                <motion.div variants={itemVariants} className="grid gap-6 md:grid-cols-2">
+                  <ProjectStatus 
+                    status={userInfo.projectStatus}
+                    lastUpdate={userInfo.lastUpdate}
+                  />
+                  <SavingsEstimate monthlyBill={monthlyBill} />
+                </motion.div>
+
+                <motion.div variants={itemVariants} className="grid gap-6 md:grid-cols-2">
+                  <ConsumptionChart />
+                  <NextSteps />
+                </motion.div>
+
+                <motion.div variants={itemVariants}>
+                  <InstallerRequests
+                    requests={userInfo.installerRequests}
+                    onAccept={(id) => console.log('Accept request:', id)}
+                    onReject={(id) => console.log('Reject request:', id)}
+                  />
+                </motion.div>
+
+                <motion.div variants={itemVariants}>
+                  <ClientFAQ />
+                </motion.div>
+              </motion.div>
             </TabsContent>
 
             <TabsContent value="directory">
@@ -183,6 +243,6 @@ const ClientPortal = () => {
       </div>
     </>
   )
-};
+}
 
 export default ClientPortal;
