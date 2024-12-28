@@ -80,15 +80,16 @@ export const StatsCards = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3, delay: index * 0.1 }}
+            className="col-span-2 sm:col-span-2 lg:col-span-1"
           >
-            <Card className="p-6 bg-white/5 backdrop-blur-sm border-primary/20 hover:border-primary/40 transition-all duration-300">
-              <div className="flex items-center gap-4">
-                <div className={`p-3 rounded-xl ${stat.bgColor}`}>
-                  <Icon className={`h-6 w-6 ${stat.color}`} />
+            <Card className="p-4 bg-white/5 backdrop-blur-sm border-primary/20 hover:border-primary/40 transition-all duration-300">
+              <div className="flex flex-col gap-2">
+                <div className={`p-2 rounded-lg ${stat.bgColor} w-fit`}>
+                  <Icon className={`h-4 w-4 ${stat.color}`} />
                 </div>
-                <div className="space-y-1">
-                  <p className="text-sm text-white/60">{stat.title}</p>
-                  <p className="text-2xl font-bold bg-gradient-to-r from-white to-white/80 bg-clip-text text-transparent">
+                <div>
+                  <p className="text-xs text-muted-foreground">{stat.title}</p>
+                  <p className="text-xl font-bold bg-gradient-to-r from-white to-white/80 bg-clip-text text-transparent">
                     {stat.value}
                   </p>
                   <p className={`text-xs ${stat.change.includes('+') ? 'text-green-500' : 'text-red-500'}`}>
