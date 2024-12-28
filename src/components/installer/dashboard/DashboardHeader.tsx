@@ -18,6 +18,7 @@ export function DashboardHeader() {
     toast({
       title: "Notifications",
       description: "Vous avez 3 nouvelles notifications",
+      duration: 3000,
     });
   };
 
@@ -25,17 +26,21 @@ export function DashboardHeader() {
     toast({
       title: "Paramètres",
       description: "Accès aux paramètres du compte",
+      duration: 3000,
     });
   };
 
   const handleSearch = () => {
-    setIsSearchOpen(!isSearchOpen);
+    if (!isSearchOpen) {
+      setIsSearchOpen(true);
+    }
   };
 
   const handleExport = () => {
     toast({
       title: "Export des données",
       description: "L'export de vos données est en cours...",
+      duration: 3000,
     });
   };
 
@@ -44,6 +49,15 @@ export function DashboardHeader() {
     toast({
       title: "Période modifiée",
       description: `Les données sont maintenant filtrées pour : ${value}`,
+      duration: 3000,
+    });
+  };
+
+  const handleFilter = () => {
+    toast({
+      title: "Filtres",
+      description: "Ouverture des filtres avancés",
+      duration: 3000,
     });
   };
   
@@ -68,7 +82,12 @@ export function DashboardHeader() {
               <SelectItem value="year">Cette année</SelectItem>
             </SelectContent>
           </Select>
-          <Button variant="outline" size="icon" className="rounded-full hover:bg-primary/10">
+          <Button 
+            variant="outline" 
+            size="icon" 
+            className="rounded-full hover:bg-primary/10"
+            onClick={handleFilter}
+          >
             <Filter className="h-4 w-4" />
           </Button>
         </div>
