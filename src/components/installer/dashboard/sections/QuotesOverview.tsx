@@ -3,6 +3,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Mail, Phone, RefreshCw, FileText } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 const quotes = [
   {
@@ -36,6 +37,36 @@ const quotes = [
 ];
 
 export function QuotesOverview() {
+  const { toast } = useToast();
+
+  const handleEmailClick = (client: string) => {
+    toast({
+      title: "Email",
+      description: `Ouverture de l'email pour ${client}...`,
+    });
+  };
+
+  const handlePhoneClick = (client: string) => {
+    toast({
+      title: "Téléphone",
+      description: `Appel de ${client}...`,
+    });
+  };
+
+  const handleRefreshClick = (id: string) => {
+    toast({
+      title: "Actualisation",
+      description: `Actualisation du devis #${id}...`,
+    });
+  };
+
+  const handleDocumentClick = (id: string) => {
+    toast({
+      title: "Document",
+      description: `Ouverture du devis #${id}...`,
+    });
+  };
+
   return (
     <Card className="p-6 bg-background/50 backdrop-blur-sm border-primary/20">
       <h2 className="text-lg font-semibold mb-6 bg-gradient-to-r from-primary to-primary-light bg-clip-text text-transparent">
@@ -67,16 +98,32 @@ export function QuotesOverview() {
               <TableCell>{quote.date}</TableCell>
               <TableCell>
                 <div className="flex items-center gap-2">
-                  <Button variant="ghost" size="icon">
+                  <Button 
+                    variant="ghost" 
+                    size="icon"
+                    onClick={() => handleEmailClick(quote.client)}
+                  >
                     <Mail className="h-4 w-4" />
                   </Button>
-                  <Button variant="ghost" size="icon">
+                  <Button 
+                    variant="ghost" 
+                    size="icon"
+                    onClick={() => handlePhoneClick(quote.client)}
+                  >
                     <Phone className="h-4 w-4" />
                   </Button>
-                  <Button variant="ghost" size="icon">
+                  <Button 
+                    variant="ghost" 
+                    size="icon"
+                    onClick={() => handleRefreshClick(quote.id)}
+                  >
                     <RefreshCw className="h-4 w-4" />
                   </Button>
-                  <Button variant="ghost" size="icon">
+                  <Button 
+                    variant="ghost" 
+                    size="icon"
+                    onClick={() => handleDocumentClick(quote.id)}
+                  >
                     <FileText className="h-4 w-4" />
                   </Button>
                 </div>
