@@ -4,12 +4,14 @@ import { MarketplacePage } from "./components/installer/marketplace/MarketplaceP
 import { NewLeadsPage } from "./components/installer/marketplace/NewLeadsPage";
 import { Toaster } from "./components/ui/toaster";
 import { ThemeProvider } from "./components/theme-provider";
+import { InstallerDashboard } from "./components/installer/InstallerDashboard";
 
 export default function App() {
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
       <Router>
         <Routes>
+          <Route path="/espace-installateur" element={<InstallerDashboard />} />
           <Route path="/espace-installateur/leads" element={<PurchasedLeadsPage />} />
           <Route path="/espace-installateur/marketplace" element={<MarketplacePage />} />
           <Route path="/espace-installateur/marketplace/new" element={<NewLeadsPage />} />
