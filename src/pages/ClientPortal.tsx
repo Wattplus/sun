@@ -1,90 +1,87 @@
-import { useState } from "react"
-import { Home, FileText, MessageSquare, Settings, Shield, MapPin, Phone, Mail, Users, Sun, Battery, TrendingUp, Leaf } from "lucide-react"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { ClientNavbar } from "@/components/client/ClientNavbar"
-import { ProjectStatus } from "@/components/client/dashboard/ProjectStatus"
-import { InstallerRequests } from "@/components/client/dashboard/InstallerRequests"
-import { DocumentsList } from "@/components/client/documents/DocumentsList"
-import { MessagesList } from "@/components/client/messages/MessagesList"
-import { ClientInfoForm } from "@/components/client/dashboard/ClientInfoForm"
-import { ConsumptionChart } from "@/components/client/dashboard/ConsumptionChart"
-import { SavingsEstimate } from "@/components/client/dashboard/SavingsEstimate"
-import { NextSteps } from "@/components/client/dashboard/NextSteps"
-import { Card } from "@/components/ui/card"
-import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList } from "@/components/ui/breadcrumb"
-import { ClientFAQ } from "@/components/client/faq/ClientFAQ"
-import { InstallerDirectory } from "@/components/client/directory/InstallerDirectory"
-import { PurchasedContactsList } from "@/components/client/dashboard/PurchasedContactsList"
-import { Helmet } from "react-helmet"
-import { motion } from "framer-motion"
+import { useState } from "react";
+import { Home, FileText, MessageSquare, Settings, Users } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ClientNavbar } from "@/components/client/ClientNavbar";
+import { ProjectStatus } from "@/components/client/dashboard/ProjectStatus";
+import { DocumentsList } from "@/components/client/documents/DocumentsList";
+import { MessagesList } from "@/components/client/messages/MessagesList";
+import { ClientInfoForm } from "@/components/client/dashboard/ClientInfoForm";
+import { ConsumptionChart } from "@/components/client/dashboard/ConsumptionChart";
+import { SavingsEstimate } from "@/components/client/dashboard/SavingsEstimate";
+import { NextSteps } from "@/components/client/dashboard/NextSteps";
+import { ContactsList } from "@/components/client/dashboard/contacts/ContactsList";
+import { ClientFAQ } from "@/components/client/faq/ClientFAQ";
+import { InstallerDirectory } from "@/components/client/directory/InstallerDirectory";
+import { Helmet } from "react-helmet";
+import { motion } from "framer-motion";
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList } from "@/components/ui/breadcrumb";
+
+// Exemple de données de contact (à remplacer par les vraies données)
+const mockContacts = [
+  {
+    id: "1",
+    companyName: "Solar Expert",
+    contactName: "Marie Martin",
+    email: "contact@solarexpert.fr",
+    phone: "01 23 45 67 89",
+    purchaseType: "exclusif" as const,
+    purchaseDate: "2024-03-25"
+  },
+  {
+    id: "2",
+    companyName: "Éco Énergie",
+    contactName: "Pierre Dubois",
+    email: "info@ecoenergie.fr",
+    phone: "01 98 76 54 32",
+    purchaseType: "mutualisé" as const,
+    purchaseDate: "2024-03-24"
+  }
+];
 
 const ClientPortal = () => {
-  const [activeTab, setActiveTab] = useState("dashboard")
-  const [monthlyBill, setMonthlyBill] = useState<string>("")
+  const [activeTab, setActiveTab] = useState("dashboard");
+  const [monthlyBill, setMonthlyBill] = useState<string>("");
   const [userInfo] = useState({
     name: "Jean Dupont",
     email: "j********@example.com",
     phone: "06 ** ** ** 89",
     projectStatus: "En cours d'étude",
-    lastUpdate: "2024-03-20",
-    installerRequests: [
-      {
-        id: 1,
-        companyName: "Solar Pro",
-        date: "2024-03-22",
-        status: "pending"
-      }
-    ]
-  })
+    lastUpdate: "2024-03-20"
+  });
+
+  const handleMonthlyBillUpdate = (value: string) => {
+    setMonthlyBill(value);
+  };
 
   const getBreadcrumbText = () => {
     switch (activeTab) {
       case "dashboard":
-        return "Tableau de bord"
+        return "Tableau de bord";
       case "documents":
-        return "Documents"
+        return "Documents";
       case "messages":
-        return "Messages"
+        return "Messages";
       case "settings":
-        return "Paramètres"
+        return "Paramètres";
       case "directory":
-        return "Annuaire"
+        return "Annuaire";
       default:
-        return ""
+        return "";
     }
-  }
-
-  const handleMonthlyBillUpdate = (value: string) => {
-    setMonthlyBill(value)
-  }
-
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1
-      }
-    }
-  }
-
-  const itemVariants = {
-    hidden: { y: 20, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1
-    }
-  }
+  };
 
   return (
     <>
       <Helmet>
         <title>Espace Client - Suivi de Projet Photovoltaïque</title>
-        <meta name="description" content="Accédez à votre espace client pour suivre l'avancement de votre projet d'installation solaire, consulter vos documents et communiquer avec votre installateur." />
+        <meta
+          name="description"
+          content="Accédez à votre espace client pour suivre l'avancement de votre projet d'installation solaire, consulter vos documents et communiquer avec votre installateur."
+        />
         <meta name="robots" content="noindex, nofollow" />
       </Helmet>
 
-      <div className="min-h-screen bg-gradient-to-b from-background-dark to-background-light">
+      <div className="min-h-screen bg-gradient-to-b from-background/80 to-background">
         <ClientNavbar />
         
         <main className="container mx-auto px-4 py-8">
@@ -97,44 +94,24 @@ const ClientPortal = () => {
                 <BreadcrumbLink href="/client">Espace Client</BreadcrumbLink>
               </BreadcrumbItem>
               <BreadcrumbItem>
-                <span className="text-gray-400">{getBreadcrumbText()}</span>
+                <span className="text-muted-foreground">{getBreadcrumbText()}</span>
               </BreadcrumbItem>
             </BreadcrumbList>
           </Breadcrumb>
 
           <motion.div 
-            initial="hidden"
-            animate="visible"
-            variants={containerVariants}
-            className="mb-8 glass-panel p-6 rounded-lg border border-white/10"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="mb-8"
           >
-            <motion.h1 variants={itemVariants} className="text-3xl font-bold gradient-text mb-2">
-              Tableau de bord
-            </motion.h1>
-            <motion.div variants={itemVariants} className="flex items-center gap-4">
-              <div className="flex-1">
-                <p className="text-gray-300">Bienvenue, {userInfo.name}</p>
-                <p className="text-sm text-gray-400">Dernière connexion : {new Date().toLocaleDateString()}</p>
-              </div>
-              <div className="flex gap-2">
-                <Card className="p-3 bg-green-500/10 text-green-400">
-                  <Battery className="h-5 w-5" />
-                </Card>
-                <Card className="p-3 bg-yellow-500/10 text-yellow-400">
-                  <Sun className="h-5 w-5" />
-                </Card>
-                <Card className="p-3 bg-blue-500/10 text-blue-400">
-                  <TrendingUp className="h-5 w-5" />
-                </Card>
-                <Card className="p-3 bg-emerald-500/10 text-emerald-400">
-                  <Leaf className="h-5 w-5" />
-                </Card>
-              </div>
-            </motion.div>
+            <h1 className="text-3xl font-bold mb-2">Tableau de bord</h1>
+            <p className="text-muted-foreground">
+              Bienvenue, {userInfo.name}
+            </p>
           </motion.div>
 
           <Tabs defaultValue="dashboard" className="space-y-6">
-            <TabsList className="glass-panel p-1">
+            <TabsList>
               <TabsTrigger value="dashboard" onClick={() => setActiveTab("dashboard")} className="gap-2">
                 <Home className="w-4 h-4" />
                 Accueil
@@ -158,45 +135,26 @@ const ClientPortal = () => {
             </TabsList>
 
             <TabsContent value="dashboard">
-              <motion.div
-                initial="hidden"
-                animate="visible"
-                variants={containerVariants}
-                className="space-y-6"
-              >
-                <motion.div variants={itemVariants}>
-                  <ClientInfoForm onMonthlyBillUpdate={handleMonthlyBillUpdate} />
-                </motion.div>
+              <div className="space-y-6">
+                <ClientInfoForm onMonthlyBillUpdate={handleMonthlyBillUpdate} />
+                
+                <ContactsList contacts={mockContacts} />
 
-                <motion.div variants={itemVariants}>
-                  <PurchasedContactsList />
-                </motion.div>
-
-                <motion.div variants={itemVariants} className="grid gap-6 md:grid-cols-2">
+                <div className="grid gap-6 md:grid-cols-2">
                   <ProjectStatus 
                     status={userInfo.projectStatus}
                     lastUpdate={userInfo.lastUpdate}
                   />
                   <SavingsEstimate monthlyBill={monthlyBill} />
-                </motion.div>
+                </div>
 
-                <motion.div variants={itemVariants} className="grid gap-6 md:grid-cols-2">
+                <div className="grid gap-6 md:grid-cols-2">
                   <ConsumptionChart />
                   <NextSteps />
-                </motion.div>
+                </div>
 
-                <motion.div variants={itemVariants}>
-                  <InstallerRequests
-                    requests={userInfo.installerRequests}
-                    onAccept={(id) => console.log('Accept request:', id)}
-                    onReject={(id) => console.log('Reject request:', id)}
-                  />
-                </motion.div>
-
-                <motion.div variants={itemVariants}>
-                  <ClientFAQ />
-                </motion.div>
-              </motion.div>
+                <ClientFAQ />
+              </div>
             </TabsContent>
 
             <TabsContent value="directory">
@@ -212,37 +170,29 @@ const ClientPortal = () => {
             </TabsContent>
 
             <TabsContent value="settings">
-              <Card className="glass-panel">
-                <div className="p-6 space-y-6">
-                  <h3 className="text-xl font-semibold gradient-text">Paramètres du compte</h3>
-                  <div className="space-y-4">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-300">Nom</label>
-                      <input
-                        type="text"
-                        className="mt-1 block w-full rounded-md bg-background-dark/50 border-gray-600 text-gray-200"
-                        value={userInfo.name}
-                        readOnly
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-300">Email</label>
-                      <input
-                        type="email"
-                        className="mt-1 block w-full rounded-md bg-background-dark/50 border-gray-600 text-gray-200"
-                        value={userInfo.email}
-                        readOnly
-                      />
-                    </div>
+              <div className="space-y-6">
+                <h2 className="text-2xl font-semibold">Paramètres du compte</h2>
+                <div className="grid gap-4">
+                  <div>
+                    <label className="text-sm font-medium">Nom</label>
+                    <p className="mt-1">{userInfo.name}</p>
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium">Email</label>
+                    <p className="mt-1">{userInfo.email}</p>
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium">Téléphone</label>
+                    <p className="mt-1">{userInfo.phone}</p>
                   </div>
                 </div>
-              </Card>
+              </div>
             </TabsContent>
           </Tabs>
         </main>
       </div>
     </>
-  )
-}
+  );
+};
 
 export default ClientPortal;
