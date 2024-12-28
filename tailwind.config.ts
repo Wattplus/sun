@@ -20,9 +20,9 @@ export default {
     extend: {
       colors: {
         primary: {
-          DEFAULT: "#1EAEDB",
-          light: "#33C3F0",
-          dark: "#0FA0CE",
+          DEFAULT: "#0B1221",
+          light: "#1a5fb4",
+          dark: "#020617",
           foreground: "white",
         },
         secondary: {
@@ -32,9 +32,9 @@ export default {
           foreground: "white",
         },
         accent: {
-          DEFAULT: "#1a5fb4",
-          light: "#60A5FA",
-          dark: "#1E40AF",
+          DEFAULT: "#0B1221",
+          light: "#1a5fb4",
+          dark: "#020617",
           foreground: "white",
         },
         background: {
@@ -66,9 +66,9 @@ export default {
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
         'gradient-conic': 'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
-        'blue-gradient': 'linear-gradient(to bottom, #0B1221, #1a5fb4)',
-        'glass-gradient': 'linear-gradient(90deg, rgba(11,18,33,0.8) 0%, rgba(26,95,180,0.8) 100%)',
-        'glass-gradient-hover': 'linear-gradient(90deg, rgba(11,18,33,0.9) 0%, rgba(26,95,180,0.9) 100%)',
+        'blue-gradient': 'linear-gradient(to bottom, #020617, #0B1221)',
+        'glass-gradient': 'linear-gradient(90deg, rgba(2,6,23,0.8) 0%, rgba(11,18,33,0.8) 100%)',
+        'glass-gradient-hover': 'linear-gradient(90deg, rgba(2,6,23,0.9) 0%, rgba(11,18,33,0.9) 100%)',
       },
       borderRadius: {
         lg: "var(--radius)",
