@@ -11,12 +11,14 @@ import { SettingsPage } from "./components/installer/settings/SettingsPage";
 import NotificationsPage from "./components/admin/notifications/NotificationsPage";
 import { InstallerProfilePage } from "./pages/installer/profile/InstallerProfilePage";
 import { Index } from "./pages/Index";
+import ClientPortal from "./pages/ClientPortal";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Index />} />
+        <Route path="/client" element={<ClientPortal />} />
         <Route path="/espace-installateur" element={<InstallerLayout />}>
           <Route index element={<InstallerDashboard />} />
           <Route path="leads/nouveaux" element={<NewLeadsPage />} />
