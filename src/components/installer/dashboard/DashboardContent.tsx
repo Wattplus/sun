@@ -2,7 +2,6 @@ import { KPISection } from "./sections/KPISection";
 import { RecentActivity } from "./sections/RecentActivity";
 import { LeadsOverview } from "./sections/LeadsOverview";
 import { QuotesOverview } from "./sections/QuotesOverview";
-import { LeadsTable } from "./sections/LeadsTable";
 import { motion } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -17,9 +16,6 @@ export function DashboardContent() {
         transition={{ duration: 0.5 }}
         className="rounded-xl backdrop-blur-sm border border-[#1EAEDB]/10 p-6 hover:border-[#1EAEDB]/20 transition-all duration-300 hover:shadow-lg hover:shadow-[#1EAEDB]/5"
       >
-        <h1 className="text-3xl font-bold bg-gradient-to-r from-[#1EAEDB] via-[#33C3F0] to-[#0FA0CE] bg-clip-text text-transparent mb-6 animate-gradient bg-[length:200%_auto]">
-          Tableau de Bord WattPlus
-        </h1>
         <KPISection />
       </motion.div>
 
@@ -62,7 +58,6 @@ export function DashboardContent() {
             </h2>
             <LeadsOverview />
           </Card>
-          <LeadsTable />
         </TabsContent>
 
         <TabsContent value="quotes" className="space-y-4">
