@@ -80,7 +80,7 @@ export const StatsCards = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3, delay: index * 0.1 }}
-            className="col-span-4 sm:col-span-4 lg:col-span-4"
+            className="col-span-1"
           >
             <Card className="p-6 bg-background/50 backdrop-blur-sm border-primary/10 hover:border-primary/20 transition-all duration-300">
               <div className="flex items-center justify-between">
