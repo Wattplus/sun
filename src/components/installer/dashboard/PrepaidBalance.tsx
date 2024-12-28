@@ -45,6 +45,14 @@ export const PrepaidBalance = ({ balance = 0 }: PrepaidBalanceProps) => {
     }
   };
 
+  const handleAddCard = () => {
+    toast({
+      title: "Ajout de carte",
+      description: "Redirection vers la page d'ajout de carte...",
+    });
+    navigate("/espace-installateur/paiement/nouvelle-carte");
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -137,6 +145,7 @@ export const PrepaidBalance = ({ balance = 0 }: PrepaidBalanceProps) => {
                       description: "Votre carte a été supprimée avec succès",
                     });
                   }}
+                  onAddCard={handleAddCard}
                 />
               </div>
 
@@ -154,7 +163,7 @@ export const PrepaidBalance = ({ balance = 0 }: PrepaidBalanceProps) => {
                   <CustomAmountInput 
                     value=""
                     onChange={() => {}}
-                    onSubmit={handleCustomAmount}
+                    onSubmit={() => handleCustomAmount("")}
                     isLoading={false}
                   />
                 </div>
