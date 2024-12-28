@@ -10,7 +10,7 @@ export const ProfileStats = () => {
       transition={{ duration: 0.5 }}
       className="grid grid-cols-2 md:grid-cols-3 gap-4"
     >
-      <Card className="p-4 bg-white/5 backdrop-blur-sm border-primary/20">
+      <Card className="p-4 bg-background/50 backdrop-blur-sm border-primary/20">
         <div className="flex items-center gap-3">
           <div className="p-2 rounded-lg bg-primary/10">
             <Eye className="h-5 w-5 text-primary" />
@@ -22,7 +22,7 @@ export const ProfileStats = () => {
         </div>
       </Card>
 
-      <Card className="p-4 bg-white/5 backdrop-blur-sm border-primary/20">
+      <Card className="p-4 bg-background/50 backdrop-blur-sm border-primary/20">
         <div className="flex items-center gap-3">
           <div className="p-2 rounded-lg bg-primary/10">
             <MessageSquare className="h-5 w-5 text-primary" />
@@ -34,7 +34,7 @@ export const ProfileStats = () => {
         </div>
       </Card>
 
-      <Card className="p-4 bg-white/5 backdrop-blur-sm border-primary/20">
+      <Card className="p-4 bg-background/50 backdrop-blur-sm border-primary/20">
         <div className="flex items-center gap-3">
           <div className="p-2 rounded-lg bg-primary/10">
             <Star className="h-5 w-5 text-primary" />
@@ -46,7 +46,7 @@ export const ProfileStats = () => {
         </div>
       </Card>
 
-      <Card className="p-4 bg-white/5 backdrop-blur-sm border-primary/20">
+      <Card className="p-4 bg-background/50 backdrop-blur-sm border-primary/20">
         <div className="flex items-center gap-3">
           <div className="p-2 rounded-lg bg-primary/10">
             <Users className="h-5 w-5 text-primary" />
@@ -58,7 +58,7 @@ export const ProfileStats = () => {
         </div>
       </Card>
 
-      <Card className="p-4 bg-white/5 backdrop-blur-sm border-primary/20">
+      <Card className="p-4 bg-background/50 backdrop-blur-sm border-primary/20">
         <div className="flex items-center gap-3">
           <div className="p-2 rounded-lg bg-primary/10">
             <Award className="h-5 w-5 text-primary" />
@@ -70,7 +70,7 @@ export const ProfileStats = () => {
         </div>
       </Card>
 
-      <Card className="p-4 bg-white/5 backdrop-blur-sm border-primary/20">
+      <Card className="p-4 bg-background/50 backdrop-blur-sm border-primary/20">
         <div className="flex items-center gap-3">
           <div className="p-2 rounded-lg bg-primary/10">
             <BarChart3 className="h-5 w-5 text-primary" />

@@ -21,7 +21,7 @@ export const ProfileVisibilityOptions = ({ options, onToggle }: ProfileVisibilit
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.2 }}
     >
-      <Card className="p-6 bg-white/5 backdrop-blur-sm border-primary/20">
+      <Card className="p-6 bg-background/50 backdrop-blur-sm border-primary/20">
         <h3 className="text-lg font-semibold text-white mb-4">Options de visibilité</h3>
         <div className="space-y-6">
           <div className="flex items-center justify-between">

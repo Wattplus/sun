@@ -20,17 +20,17 @@ export const PremiumFeatures = () => {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.3 }}
     >
-      <Card className="p-6 bg-gradient-to-br from-[#2a2a2a] to-[#1a1a1a] border-yellow-500/20">
+      <Card className="p-6 bg-background/50 backdrop-blur-sm border-primary/20">
         <div className="space-y-6">
           <div className="flex items-center gap-3">
-            <Crown className="h-6 w-6 text-yellow-500" />
+            <Crown className="h-6 w-6 text-primary" />
             <h3 className="text-lg font-semibold text-white">Profil Premium Pro</h3>
           </div>
 
           <div className="grid gap-4">
             <div className="flex items-start gap-3">
-              <div className="p-2 rounded-lg bg-yellow-500/10">
-                <Rocket className="h-5 w-5 text-yellow-500" />
+              <div className="p-2 rounded-lg bg-primary/10">
+                <Rocket className="h-5 w-5 text-primary" />
               </div>
               <div>
                 <h4 className="font-medium text-white">Boost de visibilité x3</h4>
@@ -39,8 +39,8 @@ export const PremiumFeatures = () => {
             </div>
 
             <div className="flex items-start gap-3">
-              <div className="p-2 rounded-lg bg-yellow-500/10">
-                <Target className="h-5 w-5 text-yellow-500" />
+              <div className="p-2 rounded-lg bg-primary/10">
+                <Target className="h-5 w-5 text-primary" />
               </div>
               <div>
                 <h4 className="font-medium text-white">Leads ciblés premium</h4>
@@ -49,8 +49,8 @@ export const PremiumFeatures = () => {
             </div>
 
             <div className="flex items-start gap-3">
-              <div className="p-2 rounded-lg bg-yellow-500/10">
-                <Trophy className="h-5 w-5 text-yellow-500" />
+              <div className="p-2 rounded-lg bg-primary/10">
+                <Trophy className="h-5 w-5 text-primary" />
               </div>
               <div>
                 <h4 className="font-medium text-white">Badge "Pro Certifié"</h4>
@@ -59,8 +59,8 @@ export const PremiumFeatures = () => {
             </div>
 
             <div className="flex items-start gap-3">
-              <div className="p-2 rounded-lg bg-yellow-500/10">
-                <Star className="h-5 w-5 text-yellow-500" />
+              <div className="p-2 rounded-lg bg-primary/10">
+                <Star className="h-5 w-5 text-primary" />
               </div>
               <div>
                 <h4 className="font-medium text-white">Avis clients mis en avant</h4>
@@ -69,8 +69,8 @@ export const PremiumFeatures = () => {
             </div>
 
             <div className="flex items-start gap-3">
-              <div className="p-2 rounded-lg bg-yellow-500/10">
-                <Zap className="h-5 w-5 text-yellow-500" />
+              <div className="p-2 rounded-lg bg-primary/10">
+                <Zap className="h-5 w-5 text-primary" />
               </div>
               <div>
                 <h4 className="font-medium text-white">Support prioritaire 24/7</h4>
@@ -81,7 +81,7 @@ export const PremiumFeatures = () => {
 
           <Button
             onClick={handleUpgrade}
-            className="w-full bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-black font-semibold"
+            className="w-full bg-primary hover:bg-primary-dark text-white font-semibold"
           >
             <Crown className="w-5 h-5 mr-2" />
             Passer au Premium Pro
