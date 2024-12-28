@@ -2,12 +2,10 @@ import { useState } from "react";
 import { Home, FileText, MessageSquare, Settings, Users, Sun, Calendar } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ClientNavbar } from "@/components/client/ClientNavbar";
-import { ProjectStatus } from "@/components/client/dashboard/ProjectStatus";
 import { DocumentsList } from "@/components/client/documents/DocumentsList";
 import { MessagesList } from "@/components/client/messages/MessagesList";
 import { ClientInfoForm } from "@/components/client/dashboard/ClientInfoForm";
 import { ConsumptionChart } from "@/components/client/dashboard/ConsumptionChart";
-import { SavingsEstimate } from "@/components/client/dashboard/SavingsEstimate";
 import { NextSteps } from "@/components/client/dashboard/NextSteps";
 import { ContactsList } from "@/components/client/dashboard/contacts/ContactsList";
 import { ClientFAQ } from "@/components/client/faq/ClientFAQ";
@@ -147,14 +145,9 @@ const ClientPortal = () => {
                 <div className="grid gap-6 lg:grid-cols-2">
                   <div className="space-y-6">
                     <ClientInfoForm onMonthlyBillUpdate={handleMonthlyBillUpdate} />
-                    <ProjectStatus 
-                      status={userInfo.projectStatus}
-                      lastUpdate={userInfo.lastUpdate}
-                    />
                   </div>
                   <div className="space-y-6">
                     <ContactsList contacts={mockContacts} />
-                    <SavingsEstimate monthlyBill={monthlyBill} />
                   </div>
                 </div>
 
