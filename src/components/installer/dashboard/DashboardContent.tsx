@@ -5,7 +5,7 @@ import { QuotesOverview } from "./sections/QuotesOverview";
 import { motion } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
+import { Plus, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 
 export function DashboardContent() {
@@ -27,9 +27,9 @@ export function DashboardContent() {
       >
         <Card className="p-6 bg-background/50 backdrop-blur-sm border-primary/10 hover:border-primary/20 transition-all duration-300">
           <h2 className="text-xl font-semibold text-white mb-4">
-            Suivi des Devis
+            Activité Récente
           </h2>
-          <QuotesOverview />
+          <RecentActivity />
         </Card>
       </motion.div>
 
@@ -38,14 +38,15 @@ export function DashboardContent() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.2 }}
       >
-        <Link to="/espace-installateur/leads/nouveaux">
+        <Link to="/espace-installateur/leads/nouveaux" className="block">
           <div className="relative group">
-            <div className="absolute -inset-1 bg-gradient-to-r from-primary via-primary/50 to-primary rounded-xl blur opacity-60 group-hover:opacity-100 transition duration-200"></div>
+            <div className="absolute -inset-1 bg-gradient-to-r from-primary via-primary/50 to-primary rounded-xl blur opacity-60 group-hover:opacity-100 transition duration-300"></div>
             <Button 
-              className="relative w-full bg-background hover:bg-background/90 text-primary border-2 border-primary h-20 text-xl gap-3 rounded-xl font-semibold"
+              className="relative w-full bg-background hover:bg-background/90 text-primary border-2 border-primary h-24 text-2xl gap-4 rounded-xl font-semibold group-hover:scale-[1.02] transition-all duration-300"
             >
-              <Plus className="w-6 h-6" />
+              <Plus className="w-8 h-8" />
               Découvrir les nouveaux leads disponibles
+              <ArrowRight className="w-6 h-6 group-hover:translate-x-2 transition-transform duration-300" />
             </Button>
           </div>
         </Link>
@@ -58,9 +59,9 @@ export function DashboardContent() {
       >
         <Card className="p-6 bg-background/50 backdrop-blur-sm border-primary/10 hover:border-primary/20 transition-all duration-300">
           <h2 className="text-xl font-semibold text-white mb-4">
-            Activité Récente
+            Suivi des Devis
           </h2>
-          <RecentActivity />
+          <QuotesOverview />
         </Card>
       </motion.div>
 
