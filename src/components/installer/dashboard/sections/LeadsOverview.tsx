@@ -35,33 +35,37 @@ const leads = [
 export function LeadsOverview() {
   const { toast } = useToast();
 
-  const handlePhoneClick = (phone: string) => {
-    window.location.href = `tel:${phone}`;
+  const handlePhoneClick = (phone: string, name: string) => {
+    window.location.href = `tel:${phone.replace(/\s/g, '')}`;
     toast({
       title: "Appel en cours",
-      description: `Appel vers ${phone}`,
+      description: `Appel vers ${name} (${phone})`,
+      duration: 3000,
     });
   };
 
-  const handleEmailClick = (email: string) => {
+  const handleEmailClick = (email: string, name: string) => {
     window.location.href = `mailto:${email}`;
     toast({
       title: "Email",
-      description: `Ouverture de l'email vers ${email}`,
+      description: `Ouverture de l'email pour ${name}`,
+      duration: 3000,
     });
   };
 
   const handleCalendarClick = (name: string) => {
     toast({
-      title: "Calendrier",
+      title: "Rendez-vous",
       description: `Planification d'un rendez-vous avec ${name}`,
+      duration: 3000,
     });
   };
 
   const handleDetailsClick = (name: string) => {
     toast({
-      title: "Détails",
+      title: "Détails du lead",
       description: `Affichage des détails pour ${name}`,
+      duration: 3000,
     });
   };
 
@@ -97,7 +101,7 @@ export function LeadsOverview() {
                   <Button 
                     variant="ghost" 
                     size="icon"
-                    onClick={() => handlePhoneClick(lead.phone)}
+                    onClick={() => handlePhoneClick(lead.phone, lead.name)}
                     className="hover:bg-primary/10"
                   >
                     <Phone className="h-4 w-4" />
@@ -105,7 +109,7 @@ export function LeadsOverview() {
                   <Button 
                     variant="ghost" 
                     size="icon"
-                    onClick={() => handleEmailClick(lead.email)}
+                    onClick={() => handleEmailClick(lead.email, lead.name)}
                     className="hover:bg-primary/10"
                   >
                     <Mail className="h-4 w-4" />
