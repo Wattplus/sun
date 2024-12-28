@@ -1,4 +1,4 @@
-import { ReactNode } from "react"
+import { Outlet } from "react-router-dom"
 import { Link, useLocation } from "react-router-dom"
 import { cn } from "@/lib/utils"
 import { 
@@ -58,11 +58,7 @@ const navigation = [
   },
 ];
 
-interface InstallerLayoutProps {
-  children: ReactNode;
-}
-
-export function InstallerLayout({ children }: InstallerLayoutProps) {
+export function InstallerLayout() {
   const location = useLocation();
 
   return (
@@ -138,7 +134,7 @@ export function InstallerLayout({ children }: InstallerLayoutProps) {
 
       {/* Main content */}
       <main className="flex-1">
-        {children}
+        <Outlet />
       </main>
     </div>
   );
