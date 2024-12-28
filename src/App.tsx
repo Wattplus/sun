@@ -17,25 +17,18 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Index />} />
-        <Route
-          path="/espace-installateur/*"
-          element={
-            <InstallerLayout>
-              <Routes>
-                <Route path="/" element={<InstallerDashboard />} />
-                <Route path="leads/nouveaux" element={<NewLeadsPage />} />
-                <Route path="leads/achetes" element={<PurchasedLeadsPage />} />
-                <Route path="messages" element={<MessagesPage />} />
-                <Route path="rapports" element={<StatisticsPage />} />
-                <Route path="parametres" element={<SettingsPage />} />
-                <Route path="notifications" element={<NotificationsPage />} />
-                <Route path="mon-compte" element={<InstallerProfilePage />} />
-                <Route path="compte" element={<AccountPage />} />
-                <Route path="paiement/nouvelle-carte" element={<NewCardPage />} />
-              </Routes>
-            </InstallerLayout>
-          }
-        />
+        <Route path="/espace-installateur" element={<InstallerLayout />}>
+          <Route index element={<InstallerDashboard />} />
+          <Route path="leads/nouveaux" element={<NewLeadsPage />} />
+          <Route path="leads/achetes" element={<PurchasedLeadsPage />} />
+          <Route path="messages" element={<MessagesPage />} />
+          <Route path="rapports" element={<StatisticsPage />} />
+          <Route path="parametres" element={<SettingsPage />} />
+          <Route path="notifications" element={<NotificationsPage />} />
+          <Route path="mon-compte" element={<InstallerProfilePage />} />
+          <Route path="compte" element={<AccountPage />} />
+          <Route path="paiement/nouvelle-carte" element={<NewCardPage />} />
+        </Route>
       </Routes>
     </BrowserRouter>
   );
