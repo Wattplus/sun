@@ -15,49 +15,67 @@ export function DashboardHeader() {
   const currentDate = format(new Date(), "EEEE d MMMM yyyy", { locale: fr });
   
   const handleNotifications = () => {
+    console.log("Notifications clicked");
     toast({
       title: "Notifications",
       description: "Vous avez 3 nouvelles notifications",
-      duration: 3000,
+      duration: 5000,
+      variant: "default",
     });
   };
 
   const handleSettings = () => {
+    console.log("Settings clicked");
     toast({
       title: "Paramètres",
       description: "Accès aux paramètres du compte",
-      duration: 3000,
+      duration: 5000,
+      variant: "default",
     });
   };
 
-  const handleSearch = () => {
-    if (!isSearchOpen) {
-      setIsSearchOpen(true);
-    }
+  const handleSearch = (e: React.MouseEvent) => {
+    e.preventDefault();
+    console.log("Search clicked");
+    setIsSearchOpen(true);
   };
 
-  const handleExport = () => {
+  const handleSearchBlur = () => {
+    setTimeout(() => {
+      setIsSearchOpen(false);
+    }, 200);
+  };
+
+  const handleExport = (e: React.MouseEvent) => {
+    e.preventDefault();
+    console.log("Export clicked");
     toast({
       title: "Export des données",
       description: "L'export de vos données est en cours...",
-      duration: 3000,
+      duration: 5000,
+      variant: "default",
     });
   };
 
   const handleFilterChange = (value: string) => {
     setFilterPeriod(value);
+    console.log("Filter changed to:", value);
     toast({
       title: "Période modifiée",
       description: `Les données sont maintenant filtrées pour : ${value}`,
-      duration: 3000,
+      duration: 5000,
+      variant: "default",
     });
   };
 
-  const handleFilter = () => {
+  const handleFilter = (e: React.MouseEvent) => {
+    e.preventDefault();
+    console.log("Filter clicked");
     toast({
       title: "Filtres",
       description: "Ouverture des filtres avancés",
-      duration: 3000,
+      duration: 5000,
+      variant: "default",
     });
   };
   
@@ -123,7 +141,7 @@ export function DashboardHeader() {
               placeholder="Rechercher..."
               className="pl-10 w-[200px] bg-background border-primary/20"
               autoFocus
-              onBlur={() => setIsSearchOpen(false)}
+              onBlur={handleSearchBlur}
             />
           </div>
         ) : (
