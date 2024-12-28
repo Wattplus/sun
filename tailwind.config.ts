@@ -20,27 +20,27 @@ export default {
     extend: {
       colors: {
         primary: {
-          DEFAULT: "#0B1221",
-          light: "#1a5fb4",
-          dark: "#020617",
+          DEFAULT: "#1a2847",
+          light: "#2a3b62",
+          dark: "#0B1221",
           foreground: "white",
         },
         secondary: {
-          DEFAULT: "#0B1221",
-          light: "#1a5fb4",
-          dark: "#020617",
+          DEFAULT: "#1a2847",
+          light: "#2a3b62",
+          dark: "#0B1221",
           foreground: "white",
         },
         accent: {
-          DEFAULT: "#0B1221",
-          light: "#1a5fb4",
-          dark: "#020617",
+          DEFAULT: "#1a2847",
+          light: "#2a3b62",
+          dark: "#0B1221",
           foreground: "white",
         },
         background: {
-          DEFAULT: "#0B1221",
-          light: "#1a5fb4",
-          dark: "#020617",
+          DEFAULT: "#1a2847",
+          light: "#2a3b62",
+          dark: "#0B1221",
         },
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -66,9 +66,9 @@ export default {
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
         'gradient-conic': 'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
-        'blue-gradient': 'linear-gradient(to bottom, #020617, #0B1221)',
-        'glass-gradient': 'linear-gradient(90deg, rgba(2,6,23,0.8) 0%, rgba(11,18,33,0.8) 100%)',
-        'glass-gradient-hover': 'linear-gradient(90deg, rgba(2,6,23,0.9) 0%, rgba(11,18,33,0.9) 100%)',
+        'blue-gradient': 'linear-gradient(to bottom, #0B1221, #1a2847)',
+        'glass-gradient': 'linear-gradient(90deg, rgba(11,18,33,0.8) 0%, rgba(26,40,71,0.8) 100%)',
+        'glass-gradient-hover': 'linear-gradient(90deg, rgba(11,18,33,0.9) 0%, rgba(26,40,71,0.9) 100%)',
       },
       borderRadius: {
         lg: "var(--radius)",
