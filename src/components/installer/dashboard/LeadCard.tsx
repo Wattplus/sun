@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Building2, Home, Mail, MapPin, Phone } from "lucide-react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface LeadCardProps {
   lead: Lead;
@@ -15,6 +16,7 @@ interface LeadCardProps {
 
 export const LeadCard = ({ lead, status, onSelect, isSelected }: LeadCardProps) => {
   const isAvailable = status === 'available';
+  const isMobile = useIsMobile();
 
   return (
     <motion.div
@@ -36,7 +38,7 @@ export const LeadCard = ({ lead, status, onSelect, isSelected }: LeadCardProps) 
                 )}
               </div>
               <div>
-                <h3 className="font-medium text-lg">
+                <h3 className="font-medium text-base md:text-lg">
                   {lead.firstName} {isAvailable ? '' : lead.lastName}
                 </h3>
                 <Badge 
@@ -54,7 +56,7 @@ export const LeadCard = ({ lead, status, onSelect, isSelected }: LeadCardProps) 
             )}
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div className={`grid ${isMobile ? 'grid-cols-1' : 'grid-cols-2'} gap-3`}>
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <MapPin className="h-4 w-4" />
               <span>{lead.postalCode}</span>
@@ -78,6 +80,7 @@ export const LeadCard = ({ lead, status, onSelect, isSelected }: LeadCardProps) 
               onClick={onSelect}
               variant={isSelected ? "secondary" : "outline"}
               className="w-full mt-2"
+              size={isMobile ? "sm" : "default"}
             >
               {isSelected ? "Désélectionner" : "Sélectionner"}
             </Button>
