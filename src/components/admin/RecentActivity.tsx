@@ -4,13 +4,40 @@ interface Activity {
   action: string;
   time: string;
   status: 'success' | 'warning' | 'info';
+  detail?: string;
 }
 
 const activities: Activity[] = [
-  { action: "Nouveau devis généré", time: "Il y a 2h", status: "success" },
-  { action: "Lead qualifié contacté", time: "Il y a 4h", status: "warning" },
-  { action: "Installation planifiée", time: "Il y a 6h", status: "info" },
-  { action: "Nouveau contact", time: "Il y a 8h", status: "success" },
+  { 
+    action: "Nouveau lead disponible", 
+    detail: "Installation photovoltaïque - Paris",
+    time: "Il y a 30min", 
+    status: "success" 
+  },
+  { 
+    action: "Lead acheté avec succès", 
+    detail: "Projet résidentiel - Lyon",
+    time: "Il y a 2h", 
+    status: "success" 
+  },
+  { 
+    action: "Opportunité exclusive", 
+    detail: "Budget > 15,000€ - Marseille",
+    time: "Il y a 3h", 
+    status: "warning" 
+  },
+  { 
+    action: "Lead qualifié disponible", 
+    detail: "Installation pro - Bordeaux",
+    time: "Il y a 4h", 
+    status: "info" 
+  },
+  { 
+    action: "Nouveau secteur actif", 
+    detail: "5 leads disponibles - Toulouse",
+    time: "Il y a 5h", 
+    status: "info" 
+  }
 ];
 
 const RecentActivity = () => {
@@ -20,8 +47,9 @@ const RecentActivity = () => {
       animate={{ opacity: 1, y: 0 }}
       className="rounded-xl bg-[#0B1221]/50 backdrop-blur-md border border-primary/20 p-6"
     >
-      <h2 className="text-xl font-semibold mb-6 bg-gradient-to-r from-primary to-primary-light bg-clip-text text-transparent">
+      <h2 className="text-xl font-semibold mb-6 bg-gradient-to-r from-primary to-primary-light bg-clip-text text-transparent flex items-center justify-between">
         Activité Récente
+        <span className="text-sm font-normal text-primary/70">5 nouvelles opportunités</span>
       </h2>
       <div className="space-y-4">
         {activities.map((item, index) => (
@@ -30,16 +58,23 @@ const RecentActivity = () => {
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: index * 0.1 }}
-            className="flex items-center justify-between py-3 border-b border-primary/10 last:border-0 hover:bg-primary/5 rounded-lg transition-colors duration-200 p-2"
+            className="flex flex-col gap-2 py-3 border-b border-primary/10 last:border-0 hover:bg-primary/5 rounded-lg transition-colors duration-200 p-3"
           >
-            <div className="flex items-center space-x-3">
-              <div className={`w-2 h-2 rounded-full ${
-                item.status === 'success' ? 'bg-emerald-400' :
-                item.status === 'warning' ? 'bg-yellow-400' : 'bg-primary'
-              }`}></div>
-              <p className="text-sm text-white/70">{item.action}</p>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-3">
+                <div className={`w-2 h-2 rounded-full ${
+                  item.status === 'success' ? 'bg-emerald-400' :
+                  item.status === 'warning' ? 'bg-yellow-400' : 'bg-primary'
+                }`}></div>
+                <p className="text-sm font-medium text-white/90">{item.action}</p>
+              </div>
+              <span className="text-xs text-white/50">{item.time}</span>
             </div>
-            <span className="text-sm text-white/50">{item.time}</span>
+            {item.detail && (
+              <p className="text-xs text-white/70 pl-5">
+                {item.detail}
+              </p>
+            )}
           </motion.div>
         ))}
       </div>
