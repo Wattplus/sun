@@ -65,7 +65,6 @@ interface InstallerLayoutProps {
 
 export function InstallerLayout({ children }: InstallerLayoutProps) {
   const location = useLocation();
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (
     <div className="min-h-screen w-full flex flex-col">
