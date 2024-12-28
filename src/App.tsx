@@ -6,10 +6,10 @@ import { InstallerDashboard } from "./components/installer/InstallerDashboard";
 import { NewLeadsPage } from "./components/installer/marketplace/NewLeadsPage";
 import { PurchasedLeadsPage } from "./components/installer/leads/PurchasedLeadsPage";
 import { MessagesPage } from "./components/installer/messages/MessagesPage";
-import { StatisticsPage } from "./components/admin/statistics/StatisticsPage";
+import StatisticsPage from "./components/admin/statistics/StatisticsPage";
 import { SettingsPage } from "./components/installer/settings/SettingsPage";
-import { NotificationsPage } from "./components/admin/notifications/NotificationsPage";
-import { ProfilePage } from "./components/admin/profile/ProfilePage";
+import NotificationsPage from "./components/admin/notifications/NotificationsPage";
+import ProfilePage from "./components/admin/profile/ProfilePage";
 
 function App() {
   return (
