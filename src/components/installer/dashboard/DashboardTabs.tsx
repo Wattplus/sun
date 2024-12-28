@@ -11,57 +11,62 @@ import { LeadsOverview } from "./leads/LeadsOverview";
 import { AllPurchasedLeads } from "./leads/AllPurchasedLeads";
 import { AllAvailableLeads } from "./leads/AllAvailableLeads";
 
-export const DashboardTabs = () => {
-  const [showAllPurchasedLeads, setShowAllPurchasedLeads] = useState(false);
-  const [showAllAvailableLeads, setShowAllAvailableLeads] = useState(false);
-
-  if (showAllPurchasedLeads) {
-    return (
-      <AllPurchasedLeads
-        leads={mockPurchasedLeads}
-        onClose={() => setShowAllPurchasedLeads(false)}
-      />
-    );
-  }
-
-  if (showAllAvailableLeads) {
-    return (
-      <AllAvailableLeads
-        leads={mockAvailableLeads}
-        onClose={() => setShowAllAvailableLeads(false)}
-      />
-    );
-  }
+export function DashboardTabs() {
+  const [showAllAvailable, setShowAllAvailable] = useState(false);
+  const [showAllPurchased, setShowAllPurchased] = useState(false);
 
   return (
     <div className="space-y-8">
-      <div className="grid gap-6">
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <StatsCards />
       </div>
 
-      <PrepaidBalance balance={150} />
-      
-      <Button
-        size="lg"
-        onClick={() => setShowAllAvailableLeads(true)}
-        className="w-full py-8 text-lg font-semibold bg-gradient-to-r from-primary to-primary-light hover:from-primary-light hover:to-primary text-white shadow-lg transition-all duration-300 hover:scale-[1.02] group"
-      >
-        <span className="flex items-center justify-center gap-3">
-          Voir tous les leads disponibles
-          <ChevronRight className="h-6 w-6 transition-transform group-hover:translate-x-1" />
-        </span>
-      </Button>
-      
-      <LeadsOverview
-        availableLeads={mockAvailableLeads}
-        purchasedLeads={mockPurchasedLeads}
-        onShowAllAvailable={() => setShowAllAvailableLeads(true)}
-        onShowAllPurchased={() => setShowAllPurchasedLeads(true)}
-      />
+      <div className="grid gap-4 md:grid-cols-2">
+        <Card className="p-6">
+          <PrepaidBalance />
+        </Card>
+        <Card className="p-6">
+          <ProjectsList />
+        </Card>
+      </div>
 
-      <Card className="p-6">
-        <ProjectsList />
-      </Card>
+      <div className="space-y-8">
+        <div className="flex items-center justify-between">
+          <h2 className="text-2xl font-bold">Leads disponibles</h2>
+          <Button
+            variant="ghost"
+            onClick={() => setShowAllAvailable(!showAllAvailable)}
+            className="gap-2"
+          >
+            {showAllAvailable ? "Voir moins" : "Voir tout"}
+            <ChevronRight className={`h-4 w-4 transition-transform ${showAllAvailable ? "rotate-90" : ""}`} />
+          </Button>
+        </div>
+        {showAllAvailable ? (
+          <AllAvailableLeads leads={mockAvailableLeads} />
+        ) : (
+          <LeadsOverview leads={mockAvailableLeads.slice(0, 4)} />
+        )}
+      </div>
+
+      <div className="space-y-8">
+        <div className="flex items-center justify-between">
+          <h2 className="text-2xl font-bold">Leads achetés</h2>
+          <Button
+            variant="ghost"
+            onClick={() => setShowAllPurchased(!showAllPurchased)}
+            className="gap-2"
+          >
+            {showAllPurchased ? "Voir moins" : "Voir tout"}
+            <ChevronRight className={`h-4 w-4 transition-transform ${showAllPurchased ? "rotate-90" : ""}`} />
+          </Button>
+        </div>
+        {showAllPurchased ? (
+          <AllPurchasedLeads leads={mockPurchasedLeads} />
+        ) : (
+          <LeadsOverview leads={mockPurchasedLeads.slice(0, 4)} />
+        )}
+      </div>
     </div>
   );
-};
+}
