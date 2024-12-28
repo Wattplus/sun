@@ -12,7 +12,6 @@ import {
   User,
   Menu 
 } from "lucide-react"
-import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 
@@ -74,7 +73,9 @@ export function InstallerLayout({ children }: InstallerLayoutProps) {
           <nav className="flex items-center justify-between h-16">
             {/* Logo ou titre */}
             <div className="flex items-center">
-              <span className="text-xl font-bold">Espace Installateur</span>
+              <Link to="/espace-installateur" className="text-xl font-bold hover:text-primary transition-colors">
+                Espace Installateur
+              </Link>
             </div>
 
             {/* Menu mobile */}
