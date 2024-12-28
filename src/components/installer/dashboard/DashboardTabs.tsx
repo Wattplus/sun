@@ -64,41 +64,9 @@ export const DashboardTabs = () => {
         onShowAllPurchased={() => setShowAllPurchasedLeads(true)}
       />
 
-      <Tabs defaultValue="projects" className="w-full">
-        <TabsList className="grid w-full grid-cols-5">
-          <TabsTrigger value="projects">Projets</TabsTrigger>
-          <TabsTrigger value="messages">Messages</TabsTrigger>
-          <TabsTrigger value="profile">Profil</TabsTrigger>
-          <TabsTrigger value="subscription">Abonnement</TabsTrigger>
-          <TabsTrigger value="faq">FAQ</TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="projects">
-          <ProjectsList />
-        </TabsContent>
-
-        <TabsContent value="messages">
-          <Card className="p-6">
-            <MessagesList />
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="profile">
-          <InstallerProfile />
-        </TabsContent>
-
-        <TabsContent value="subscription">
-          <Card className="p-6">
-            <SubscriptionPlans />
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="faq">
-          <Card className="p-6">
-            <ClientFAQ />
-          </Card>
-        </TabsContent>
-      </Tabs>
+      <Card className="p-6">
+        <ProjectsList />
+      </Card>
     </div>
   );
 };
