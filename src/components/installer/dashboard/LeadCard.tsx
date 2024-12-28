@@ -19,29 +19,30 @@ export const LeadCard = ({ lead, status, onStatusChange }: LeadCardProps) => {
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3 }}
+        whileHover={{ scale: 1.02 }}
       >
-        <Card className="group hover:shadow-lg transition-all duration-300 border-2 border-primary/10 hover:border-primary/30 bg-background/50 backdrop-blur-sm">
+        <Card className="group hover:shadow-xl transition-all duration-300 border-2 border-primary/10 hover:border-primary/30 bg-glass-gradient hover:bg-glass-gradient-hover backdrop-blur-sm">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
             <div className="space-y-1.5">
               <div className="flex items-center gap-2">
-                <div className="p-2 bg-primary/10 rounded-lg">
+                <div className="p-2 bg-primary/10 rounded-lg group-hover:scale-110 transition-transform duration-300">
                   {lead.projectType === 'professional' ? (
-                    <Building2 className="h-4 w-4 text-primary" />
+                    <Building2 className="h-4 w-4 text-primary animate-pulse" />
                   ) : (
-                    <Home className="h-4 w-4 text-primary" />
+                    <Home className="h-4 w-4 text-primary animate-pulse" />
                   )}
                 </div>
                 <div>
-                  <h3 className="font-semibold text-lg text-foreground">
+                  <h3 className="font-semibold text-lg bg-gradient-to-r from-primary to-primary-light bg-clip-text text-transparent">
                     {lead.firstName} {lead.lastName}
                   </h3>
                   <Badge 
                     variant="outline" 
                     className={`
                       ${lead.projectType === 'professional' 
-                        ? 'bg-amber-500/10 text-amber-600 border-amber-200/20' 
-                        : 'bg-emerald-500/10 text-emerald-600 border-emerald-200/20'
-                      }
+                        ? 'bg-amber-500/10 text-amber-600 border-amber-200/20 group-hover:bg-amber-500/20' 
+                        : 'bg-emerald-500/10 text-emerald-600 border-emerald-200/20 group-hover:bg-emerald-500/20'
+                      } transition-colors duration-300
                     `}
                   >
                     {lead.projectType === 'professional' ? 'Professionnel' : 'Résidentiel'}
@@ -60,7 +61,7 @@ export const LeadCard = ({ lead, status, onStatusChange }: LeadCardProps) => {
                 value={status} 
                 onValueChange={onStatusChange}
               >
-                <SelectTrigger className="w-[140px] bg-background border-primary/20">
+                <SelectTrigger className="w-[140px] bg-background/50 border-primary/20 group-hover:border-primary/40 transition-colors duration-300">
                   <SelectValue placeholder="Statut" />
                 </SelectTrigger>
                 <SelectContent>
@@ -79,21 +80,21 @@ export const LeadCard = ({ lead, status, onStatusChange }: LeadCardProps) => {
             <div className="grid gap-4">
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-3">
-                  <div className="flex items-center gap-2 text-muted-foreground">
+                  <div className="flex items-center gap-2 text-muted-foreground group-hover:text-primary/80 transition-colors duration-300">
                     <Mail className="h-4 w-4" />
                     <span className="text-sm">{lead.email}</span>
                   </div>
-                  <div className="flex items-center gap-2 text-muted-foreground">
+                  <div className="flex items-center gap-2 text-muted-foreground group-hover:text-primary/80 transition-colors duration-300">
                     <Phone className="h-4 w-4" />
                     <span className="text-sm">{lead.phone}</span>
                   </div>
                 </div>
                 <div className="space-y-3">
-                  <div className="flex items-center gap-2 text-muted-foreground">
+                  <div className="flex items-center gap-2 text-muted-foreground group-hover:text-primary/80 transition-colors duration-300">
                     <MapPin className="h-4 w-4" />
                     <span className="text-sm">{lead.postalCode}</span>
                   </div>
-                  <div className="flex items-center gap-2 text-muted-foreground">
+                  <div className="flex items-center gap-2 text-muted-foreground group-hover:text-primary/80 transition-colors duration-300">
                     <CreditCard className="h-4 w-4" />
                     <span className="text-sm">{lead.monthlyBill ? `${lead.monthlyBill}€/mois` : 'Non renseigné'}</span>
                   </div>

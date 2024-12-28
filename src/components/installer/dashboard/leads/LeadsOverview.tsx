@@ -26,15 +26,15 @@ export const LeadsOverview = ({
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.1 }}
       >
-        <Card className="overflow-hidden border-2 border-primary/10 bg-background/50 backdrop-blur-sm hover:border-primary/30 transition-all duration-300 shadow-lg">
+        <Card className="overflow-hidden border-2 border-primary/10 bg-glass-gradient backdrop-blur-sm hover:bg-glass-gradient-hover transition-all duration-300 shadow-lg group">
           <div className="p-8">
             <div className="flex items-center justify-between mb-8">
               <div className="space-y-2">
                 <div className="flex items-center gap-3">
-                  <div className="p-2 bg-primary/10 rounded-lg">
-                    <Sparkles className="h-5 w-5 text-primary" />
+                  <div className="p-2 bg-primary/10 rounded-lg group-hover:scale-110 transition-transform duration-300">
+                    <Sparkles className="h-5 w-5 text-primary animate-pulse" />
                   </div>
-                  <h2 className="text-2xl font-bold text-foreground">
+                  <h2 className="text-2xl font-bold bg-gradient-to-r from-primary to-primary-light bg-clip-text text-transparent">
                     Leads Disponibles
                   </h2>
                 </div>
@@ -45,13 +45,13 @@ export const LeadsOverview = ({
               <Button 
                 variant="ghost"
                 onClick={onShowAllAvailable}
-                className="gap-2 hover:bg-primary/5 text-primary"
+                className="gap-2 hover:bg-primary/5 text-primary group-hover:translate-x-2 transition-transform duration-300"
               >
                 Voir tout
                 <ChevronRight className="h-4 w-4" />
               </Button>
             </div>
-            <div className="bg-card rounded-xl shadow-sm">
+            <div className="bg-background/50 rounded-xl shadow-sm">
               <LeadsList leads={availableLeads.slice(0, 2)} />
             </div>
           </div>
@@ -63,15 +63,15 @@ export const LeadsOverview = ({
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.2 }}
       >
-        <Card className="overflow-hidden border-2 border-primary/10 bg-background/50 backdrop-blur-sm hover:border-primary/30 transition-all duration-300 shadow-lg">
+        <Card className="overflow-hidden border-2 border-primary/10 bg-glass-gradient backdrop-blur-sm hover:bg-glass-gradient-hover transition-all duration-300 shadow-lg group">
           <div className="p-8">
             <div className="flex items-center justify-between mb-8">
               <div className="space-y-2">
                 <div className="flex items-center gap-3">
-                  <div className="p-2 bg-primary/10 rounded-lg">
-                    <Users className="h-5 w-5 text-primary" />
+                  <div className="p-2 bg-primary/10 rounded-lg group-hover:scale-110 transition-transform duration-300">
+                    <Users className="h-5 w-5 text-primary animate-pulse" />
                   </div>
-                  <h2 className="text-2xl font-bold text-foreground">
+                  <h2 className="text-2xl font-bold bg-gradient-to-r from-primary to-primary-light bg-clip-text text-transparent">
                     Leads Achetés
                   </h2>
                 </div>
@@ -82,13 +82,13 @@ export const LeadsOverview = ({
               <Button 
                 variant="ghost"
                 onClick={onShowAllPurchased}
-                className="gap-2 hover:bg-primary/5 text-primary"
+                className="gap-2 hover:bg-primary/5 text-primary group-hover:translate-x-2 transition-transform duration-300"
               >
                 Voir tout
                 <ChevronRight className="h-4 w-4" />
               </Button>
             </div>
-            <div className="bg-card rounded-xl shadow-sm">
+            <div className="bg-background/50 rounded-xl shadow-sm">
               <PurchasedLeads leads={purchasedLeads.slice(0, 2)} />
             </div>
           </div>
