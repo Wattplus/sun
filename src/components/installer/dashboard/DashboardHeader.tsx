@@ -4,9 +4,12 @@ import { format } from "date-fns";
 import { fr } from "date-fns/locale";
 import { motion } from "framer-motion";
 import { useToast } from "@/hooks/use-toast";
+import { Input } from "@/components/ui/input";
+import { useState } from "react";
 
 export function DashboardHeader() {
   const { toast } = useToast();
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
   const currentDate = format(new Date(), "EEEE d MMMM yyyy", { locale: fr });
   
   const handleNotifications = () => {
@@ -24,10 +27,7 @@ export function DashboardHeader() {
   };
 
   const handleSearch = () => {
-    toast({
-      title: "Recherche",
-      description: "Fonctionnalité en cours de développement",
-    });
+    setIsSearchOpen(!isSearchOpen);
   };
 
   const handleExport = () => {
@@ -72,14 +72,26 @@ export function DashboardHeader() {
         >
           <Settings className="h-4 w-4" />
         </Button>
-        <Button 
-          variant="ghost" 
-          className="gap-2 hover:bg-primary/10"
-          onClick={handleSearch}
-        >
-          <Search className="h-4 w-4" />
-          Rechercher
-        </Button>
+        {isSearchOpen ? (
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
+            <Input
+              placeholder="Rechercher..."
+              className="pl-10 w-[200px] bg-background border-primary/20"
+              autoFocus
+              onBlur={() => setIsSearchOpen(false)}
+            />
+          </div>
+        ) : (
+          <Button 
+            variant="ghost" 
+            className="gap-2 hover:bg-primary/10"
+            onClick={handleSearch}
+          >
+            <Search className="h-4 w-4" />
+            Rechercher
+          </Button>
+        )}
         <Button 
           variant="outline" 
           className="gap-2 border-primary/20 hover:bg-primary/10"
