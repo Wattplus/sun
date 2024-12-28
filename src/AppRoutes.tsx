@@ -11,6 +11,7 @@ import { SettingsPage } from "@/components/installer/settings/SettingsPage";
 import { ProfilePage } from "@/components/installer/profile/ProfilePage";
 import { AllAvailableLeads } from "@/components/installer/dashboard/leads/AllAvailableLeads";
 import { AllPurchasedLeads } from "@/components/installer/dashboard/leads/AllPurchasedLeads";
+import NotificationsPage from "@/components/admin/notifications/NotificationsPage";
 import { mockAvailableLeads } from "@/components/installer/dashboard/mockAvailableLeads";
 import { mockPurchasedLeads } from "@/components/installer/dashboard/mockPurchasedLeads";
 
@@ -39,7 +40,7 @@ export function AppRoutes() {
         <Route path="messages" element={<MessagesPage />} />
         <Route path="rapports" element={<ProfilePage />} />
         <Route path="parametres" element={<SettingsPage />} />
-        <Route path="notifications" element={<ProfilePage />} />
+        <Route path="notifications" element={<NotificationsPage />} />
         <Route path="mon-compte" element={<AccountPage />} />
       </Route>
     </Routes>
