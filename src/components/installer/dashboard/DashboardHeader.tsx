@@ -12,23 +12,23 @@ export const DashboardHeader = () => {
       transition={{ duration: 0.5 }}
       className="space-y-6"
     >
-      <div className="flex flex-col gap-3">
-        <h1 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-primary via-primary-light to-primary bg-clip-text text-transparent">
+      <div className="flex flex-col gap-2">
+        <h1 className="text-3xl sm:text-4xl font-bold text-foreground">
           Tableau de bord
         </h1>
-        <p className="text-base sm:text-lg text-muted-foreground max-w-2xl">
-          Bienvenue dans votre espace installateur premium - Gérez vos leads et développez votre activité
+        <p className="text-base sm:text-lg text-muted-foreground">
+          Bienvenue dans votre espace installateur premium
         </p>
       </div>
 
-      <Card className="p-6 sm:p-8 border-2 border-primary/20 bg-gradient-to-br from-primary/5 to-primary/10">
+      <Card className="p-6 sm:p-8 border border-primary/10 bg-background/50 backdrop-blur-sm hover:border-primary/20 transition-all duration-300">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
           <div className="flex items-start sm:items-center gap-4">
-            <div className="p-3 sm:p-4 bg-primary/10 rounded-xl">
+            <div className="p-3 sm:p-4 bg-primary/5 rounded-xl">
               <Sparkles className="h-6 w-6 sm:h-8 sm:w-8 text-primary" />
             </div>
             <div>
-              <h3 className="text-xl sm:text-2xl font-semibold bg-gradient-to-r from-white to-white/80 bg-clip-text text-transparent">
+              <h3 className="text-xl sm:text-2xl font-semibold text-foreground">
                 Passez au niveau supérieur
               </h3>
               <p className="text-sm sm:text-base text-muted-foreground mt-1">
@@ -38,7 +38,7 @@ export const DashboardHeader = () => {
           </div>
           <Link to="/espace-installateur/marketplace" className="w-full sm:w-auto">
             <Button 
-              className="w-full sm:w-auto gap-2 bg-primary hover:bg-primary-light text-white font-semibold shadow-lg transition-all duration-300 hover:scale-105" 
+              className="w-full sm:w-auto gap-2 bg-primary hover:bg-primary/90 text-primary-foreground shadow-sm transition-all duration-300" 
               size="lg"
             >
               Voir les offres
