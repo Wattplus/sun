@@ -15,6 +15,7 @@ import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList } from "@/co
 import { ClientFAQ } from "@/components/client/faq/ClientFAQ"
 import { InstallerDirectory } from "@/components/client/directory/InstallerDirectory"
 import { PurchasedContactsList } from "@/components/client/dashboard/PurchasedContactsList"
+import { Helmet } from "react-helmet"
 
 const ClientPortal = () => {
   const [activeTab, setActiveTab] = useState("dashboard")
@@ -57,124 +58,130 @@ const ClientPortal = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background-dark to-background-light">
-      <ClientNavbar />
-      
-      <main className="container mx-auto px-4 py-8">
-        <Breadcrumb className="mb-4">
-          <BreadcrumbList>
-            <BreadcrumbItem>
-              <BreadcrumbLink href="/">Accueil</BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbItem>
-              <BreadcrumbLink href="/client">Espace Client</BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbItem>
-              <span className="text-gray-400">{getBreadcrumbText()}</span>
-            </BreadcrumbItem>
-          </BreadcrumbList>
-        </Breadcrumb>
+    <>
+      <Helmet>
+        <title>Espace Client - Suivi de Projet Photovoltaïque</title>
+        <meta name="description" content="Accédez à votre espace client pour suivre l'avancement de votre projet d'installation solaire, consulter vos documents et communiquer avec votre installateur." />
+        <meta name="robots" content="noindex, nofollow" />
+        <meta property="og:title" content="Espace Client - Suivi de Projet Photovoltaïque" />
+        <meta property="og:description" content="Suivez l'avancement de votre projet d'installation solaire et gérez vos documents dans votre espace client personnalisé." />
+        <meta property="og:type" content="website" />
+      </Helmet>
 
-        <div className="mb-8 glass-panel p-6">
-          <h1 className="text-3xl font-bold gradient-text">Tableau de bord</h1>
-          <p className="text-gray-300 mt-2">Bienvenue, {userInfo.name}</p>
-        </div>
+      <div className="min-h-screen bg-gradient-to-b from-background-dark to-background-light">
+        <ClientNavbar />
+        
+        <main className="container mx-auto px-4 py-8">
+          <Breadcrumb className="mb-4">
+            <BreadcrumbList>
+              <BreadcrumbItem>
+                <BreadcrumbLink href="/">Accueil</BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbItem>
+                <BreadcrumbLink href="/client">Espace Client</BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbItem>
+                <span className="text-gray-400">{getBreadcrumbText()}</span>
+              </BreadcrumbItem>
+            </BreadcrumbList>
+          </Breadcrumb>
 
-        <Tabs defaultValue="dashboard" className="space-y-6">
-          <TabsList className="glass-panel p-1">
-            <TabsTrigger value="dashboard" onClick={() => setActiveTab("dashboard")} className="gap-2">
-              <Home className="w-4 h-4" />
-              Accueil
-            </TabsTrigger>
-            <TabsTrigger value="directory" onClick={() => setActiveTab("directory")} className="gap-2">
-              <Users className="w-4 h-4" />
-              Annuaire
-            </TabsTrigger>
-            <TabsTrigger value="documents" onClick={() => setActiveTab("documents")} className="gap-2">
-              <FileText className="w-4 h-4" />
-              Documents
-            </TabsTrigger>
-            <TabsTrigger value="messages" onClick={() => setActiveTab("messages")} className="gap-2">
-              <MessageSquare className="w-4 h-4" />
-              Messages
-            </TabsTrigger>
-            <TabsTrigger value="settings" onClick={() => setActiveTab("settings")} className="gap-2">
-              <Settings className="w-4 h-4" />
-              Paramètres
-            </TabsTrigger>
-          </TabsList>
+          <div className="mb-8 glass-panel p-6">
+            <h1 className="text-3xl font-bold gradient-text">Tableau de bord</h1>
+            <p className="text-gray-300 mt-2">Bienvenue, {userInfo.name}</p>
+          </div>
 
-          <TabsContent value="dashboard">
-            {/* Formulaire d'informations en premier */}
-            <ClientInfoForm onMonthlyBillUpdate={handleMonthlyBillUpdate} />
-            
-            {/* Liste des entreprises qui ont acheté le contact */}
-            <PurchasedContactsList />
-            
-            <div className="grid gap-6 md:grid-cols-2 mt-6">
-              <ProjectStatus 
-                status={userInfo.projectStatus}
-                lastUpdate={userInfo.lastUpdate}
+          <Tabs defaultValue="dashboard" className="space-y-6">
+            <TabsList className="glass-panel p-1">
+              <TabsTrigger value="dashboard" onClick={() => setActiveTab("dashboard")} className="gap-2">
+                <Home className="w-4 h-4" />
+                Accueil
+              </TabsTrigger>
+              <TabsTrigger value="directory" onClick={() => setActiveTab("directory")} className="gap-2">
+                <Users className="w-4 h-4" />
+                Annuaire
+              </TabsTrigger>
+              <TabsTrigger value="documents" onClick={() => setActiveTab("documents")} className="gap-2">
+                <FileText className="w-4 h-4" />
+                Documents
+              </TabsTrigger>
+              <TabsTrigger value="messages" onClick={() => setActiveTab("messages")} className="gap-2">
+                <MessageSquare className="w-4 h-4" />
+                Messages
+              </TabsTrigger>
+              <TabsTrigger value="settings" onClick={() => setActiveTab("settings")} className="gap-2">
+                <Settings className="w-4 h-4" />
+                Paramètres
+              </TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="dashboard">
+              <ClientInfoForm onMonthlyBillUpdate={handleMonthlyBillUpdate} />
+              <PurchasedContactsList />
+              <div className="grid gap-6 md:grid-cols-2 mt-6">
+                <ProjectStatus 
+                  status={userInfo.projectStatus}
+                  lastUpdate={userInfo.lastUpdate}
+                />
+                <SavingsEstimate monthlyBill={monthlyBill} />
+              </div>
+              <div className="grid gap-6 md:grid-cols-2">
+                <ConsumptionChart />
+                <NextSteps />
+              </div>
+
+              <InstallerRequests
+                requests={userInfo.installerRequests}
+                onAccept={(id) => console.log('Accept request:', id)}
+                onReject={(id) => console.log('Reject request:', id)}
               />
-              <SavingsEstimate monthlyBill={monthlyBill} />
-            </div>
-            
-            <div className="grid gap-6 md:grid-cols-2">
-              <ConsumptionChart />
-              <NextSteps />
-            </div>
 
-            <InstallerRequests
-              requests={userInfo.installerRequests}
-              onAccept={(id) => console.log('Accept request:', id)}
-              onReject={(id) => console.log('Reject request:', id)}
-            />
+              <ClientFAQ />
+            </TabsContent>
 
-            <ClientFAQ />
-          </TabsContent>
+            <TabsContent value="directory">
+              <InstallerDirectory />
+            </TabsContent>
 
-          <TabsContent value="directory">
-            <InstallerDirectory />
-          </TabsContent>
+            <TabsContent value="documents">
+              <DocumentsList />
+            </TabsContent>
 
-          <TabsContent value="documents">
-            <DocumentsList />
-          </TabsContent>
+            <TabsContent value="messages">
+              <MessagesList />
+            </TabsContent>
 
-          <TabsContent value="messages">
-            <MessagesList />
-          </TabsContent>
-
-          <TabsContent value="settings">
-            <Card className="glass-panel">
-              <div className="p-6 space-y-6">
-                <h3 className="text-xl font-semibold gradient-text">Paramètres du compte</h3>
-                <div className="space-y-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-300">Nom</label>
-                    <input
-                      type="text"
-                      className="mt-1 block w-full rounded-md bg-background-dark/50 border-gray-600 text-gray-200"
-                      value={userInfo.name}
-                      readOnly
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-300">Email</label>
-                    <input
-                      type="email"
-                      className="mt-1 block w-full rounded-md bg-background-dark/50 border-gray-600 text-gray-200"
-                      value={userInfo.email}
-                      readOnly
-                    />
+            <TabsContent value="settings">
+              <Card className="glass-panel">
+                <div className="p-6 space-y-6">
+                  <h3 className="text-xl font-semibold gradient-text">Paramètres du compte</h3>
+                  <div className="space-y-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-300">Nom</label>
+                      <input
+                        type="text"
+                        className="mt-1 block w-full rounded-md bg-background-dark/50 border-gray-600 text-gray-200"
+                        value={userInfo.name}
+                        readOnly
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-300">Email</label>
+                      <input
+                        type="email"
+                        className="mt-1 block w-full rounded-md bg-background-dark/50 border-gray-600 text-gray-200"
+                        value={userInfo.email}
+                        readOnly
+                      />
+                    </div>
                   </div>
                 </div>
-              </div>
-            </Card>
-          </TabsContent>
-        </Tabs>
-      </main>
-    </div>
+              </Card>
+            </TabsContent>
+          </Tabs>
+        </main>
+      </div>
+    </>
   )
 };
 
