@@ -1,24 +1,25 @@
 import { Lead } from "@/types/crm";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Building2, Home, Mail, MapPin, Phone, MessageSquare, Clock } from "lucide-react";
+import { Building2, Home, Mail, MapPin, Phone, MessageSquare, Clock, CheckCircle2 } from "lucide-react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useState } from "react";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/use-toast";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 interface LeadCardProps {
   lead: Lead;
   status: 'available' | 'purchased';
-  onStatusChange?: () => void;
+  onStatusChange?: (newStatus: string) => void;
   onSelect?: () => void;
   isSelected?: boolean;
   onNoteAdd?: (note: string) => void;
 }
 
-export const LeadCard = ({ lead, status, onSelect, isSelected, onNoteAdd }: LeadCardProps) => {
+export const LeadCard = ({ lead, status, onSelect, isSelected, onNoteAdd, onStatusChange }: LeadCardProps) => {
   const isAvailable = status === 'available';
   const isMobile = useIsMobile();
   const [showNoteInput, setShowNoteInput] = useState(false);
@@ -35,6 +36,14 @@ export const LeadCard = ({ lead, status, onSelect, isSelected, onNoteAdd }: Lead
         description: "La note a été ajoutée avec succès",
       });
     }
+  };
+
+  const handleStatusChange = (newStatus: string) => {
+    onStatusChange?.(newStatus);
+    toast({
+      title: "Statut mis à jour",
+      description: "Le statut du lead a été mis à jour avec succès",
+    });
   };
 
   const getStatusColor = (status: string) => {
@@ -80,11 +89,6 @@ export const LeadCard = ({ lead, status, onSelect, isSelected, onNoteAdd }: Lead
                   >
                     {lead.projectType === 'professional' ? 'Professionnel' : 'Résidentiel'}
                   </Badge>
-                  {!isAvailable && lead.installerStatus && (
-                    <Badge variant="outline" className={getStatusColor(lead.installerStatus)}>
-                      {lead.installerStatus.charAt(0).toUpperCase() + lead.installerStatus.slice(1)}
-                    </Badge>
-                  )}
                 </div>
               </div>
             </div>
@@ -94,6 +98,28 @@ export const LeadCard = ({ lead, status, onSelect, isSelected, onNoteAdd }: Lead
               </Badge>
             )}
           </div>
+
+          {!isAvailable && (
+            <div className="w-full">
+              <Select 
+                value={lead.installerStatus} 
+                onValueChange={handleStatusChange}
+              >
+                <SelectTrigger className={`w-full ${getStatusColor(lead.installerStatus || 'nouveau')}`}>
+                  <SelectValue placeholder="Changer le statut" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="nouveau">Nouveau</SelectItem>
+                  <SelectItem value="contacte">Contacté</SelectItem>
+                  <SelectItem value="devis_envoye">Devis envoyé</SelectItem>
+                  <SelectItem value="rdv_planifie">RDV planifié</SelectItem>
+                  <SelectItem value="negociation">En négociation</SelectItem>
+                  <SelectItem value="signe">Signé</SelectItem>
+                  <SelectItem value="perdu">Perdu</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          )}
 
           <div className={`grid ${isMobile ? 'grid-cols-1' : 'grid-cols-2'} gap-3`}>
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -130,6 +156,7 @@ export const LeadCard = ({ lead, status, onSelect, isSelected, onNoteAdd }: Lead
                   />
                   <div className="flex gap-2">
                     <Button size="sm" onClick={handleNoteSubmit}>
+                      <CheckCircle2 className="h-4 w-4 mr-2" />
                       Ajouter
                     </Button>
                     <Button 

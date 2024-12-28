@@ -19,6 +19,7 @@ export const PurchasedLeads = ({ leads = mockPurchasedLeads }: PurchasedLeadsPro
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [leadNotes, setLeadNotes] = useState<Record<string, string[]>>({});
+  const [localLeads, setLocalLeads] = useState(leads);
   const { toast } = useToast();
   const isMobile = useIsMobile();
 
@@ -29,11 +30,21 @@ export const PurchasedLeads = ({ leads = mockPurchasedLeads }: PurchasedLeadsPro
     }));
   };
 
-  if (leads.length === 0) {
+  const handleStatusChange = (leadId: string, newStatus: string) => {
+    setLocalLeads(prevLeads => 
+      prevLeads.map(lead => 
+        lead.id === leadId 
+          ? { ...lead, installerStatus: newStatus } 
+          : lead
+      )
+    );
+  };
+
+  if (localLeads.length === 0) {
     return <EmptyLeadState />;
   }
 
-  const filteredLeads = leads.filter(lead => {
+  const filteredLeads = localLeads.filter(lead => {
     const matchesSearch = 
       lead.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
       lead.lastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -80,7 +91,7 @@ export const PurchasedLeads = ({ leads = mockPurchasedLeads }: PurchasedLeadsPro
         </Badge>
       </div>
 
-      <ScrollArea className="h-[500px] pr-4">
+      <ScrollArea className="h-[calc(100vh-250px)] pr-4">
         <div className="space-y-4">
           {filteredLeads.map((lead) => (
             <LeadCard
@@ -88,6 +99,7 @@ export const PurchasedLeads = ({ leads = mockPurchasedLeads }: PurchasedLeadsPro
               lead={lead}
               status="purchased"
               onNoteAdd={(note) => handleAddNote(lead.id, note)}
+              onStatusChange={(newStatus) => handleStatusChange(lead.id, newStatus)}
             />
           ))}
         </div>
