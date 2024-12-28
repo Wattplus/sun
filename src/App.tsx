@@ -8,13 +8,14 @@ import { PurchasedLeadsPage } from "./components/installer/leads/PurchasedLeadsP
 import { NewLeadsPage } from "./components/installer/marketplace/NewLeadsPage";
 import { MessagesPage } from "./components/installer/messages/MessagesPage";
 import { SettingsPage } from "./components/installer/settings/SettingsPage";
+import { Index } from "./pages/Index";
 
 export function App() {
   return (
     <Router>
       <Routes>
-        {/* Route racine */}
-        <Route path="/" element={<InstallerDashboard />} />
+        {/* Route racine - Landing page */}
+        <Route path="/" element={<Index />} />
         
         {/* Routes de l'espace installateur */}
         <Route path="/espace-installateur" element={<InstallerProfile />}>
