@@ -3,6 +3,7 @@ import { Index } from "./pages/Index";
 import { InstallerLayout } from "./components/installer/navigation/InstallerLayout";
 import { AccountPage } from "./pages/installer/account/AccountPage";
 import { NewCardPage } from "./pages/installer/payment/NewCardPage";
+import { InstallerDashboard } from "./components/installer/InstallerDashboard";
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
           element={
             <InstallerLayout>
               <Routes>
+                <Route path="/" element={<InstallerDashboard />} />
                 <Route path="compte" element={<AccountPage />} />
                 <Route path="paiement/nouvelle-carte" element={<NewCardPage />} />
               </Routes>
