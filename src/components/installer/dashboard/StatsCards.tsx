@@ -3,79 +3,64 @@ import { motion } from "framer-motion";
 import { TrendingUp, Users, Star, Clock } from "lucide-react";
 
 export const StatsCards = () => {
+  const stats = [
+    {
+      title: "Leads disponibles",
+      value: "24",
+      icon: TrendingUp,
+      color: "text-primary",
+      bgColor: "bg-primary/10"
+    },
+    {
+      title: "Leads achetés",
+      value: "12",
+      icon: Users,
+      color: "text-green-500",
+      bgColor: "bg-green-500/10"
+    },
+    {
+      title: "Taux de conversion",
+      value: "68%",
+      icon: Star,
+      color: "text-yellow-500",
+      bgColor: "bg-yellow-500/10"
+    },
+    {
+      title: "Temps moyen",
+      value: "2.4j",
+      icon: Clock,
+      color: "text-blue-500",
+      bgColor: "bg-blue-500/10"
+    }
+  ];
+
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3, delay: 0.1 }}
-      >
-        <Card className="p-4 bg-white/5 backdrop-blur-sm border-primary/20">
-          <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-primary/10">
-              <TrendingUp className="h-5 w-5 text-primary" />
-            </div>
-            <div>
-              <p className="text-sm text-white/60">Leads disponibles</p>
-              <p className="text-xl sm:text-2xl font-bold text-white">24</p>
-            </div>
-          </div>
-        </Card>
-      </motion.div>
-
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3, delay: 0.2 }}
-      >
-        <Card className="p-4 bg-white/5 backdrop-blur-sm border-primary/20">
-          <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-primary/10">
-              <Users className="h-5 w-5 text-primary" />
-            </div>
-            <div>
-              <p className="text-sm text-white/60">Leads achetés</p>
-              <p className="text-xl sm:text-2xl font-bold text-white">12</p>
-            </div>
-          </div>
-        </Card>
-      </motion.div>
-
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3, delay: 0.3 }}
-      >
-        <Card className="p-4 bg-white/5 backdrop-blur-sm border-primary/20">
-          <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-primary/10">
-              <Star className="h-5 w-5 text-primary" />
-            </div>
-            <div>
-              <p className="text-sm text-white/60">Taux de conversion</p>
-              <p className="text-xl sm:text-2xl font-bold text-white">68%</p>
-            </div>
-          </div>
-        </Card>
-      </motion.div>
-
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3, delay: 0.4 }}
-      >
-        <Card className="p-4 bg-white/5 backdrop-blur-sm border-primary/20">
-          <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-primary/10">
-              <Clock className="h-5 w-5 text-primary" />
-            </div>
-            <div>
-              <p className="text-sm text-white/60">Temps moyen</p>
-              <p className="text-xl sm:text-2xl font-bold text-white">2.4j</p>
-            </div>
-          </div>
-        </Card>
-      </motion.div>
-    </div>
+    <>
+      {stats.map((stat, index) => {
+        const Icon = stat.icon;
+        return (
+          <motion.div
+            key={stat.title}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, delay: index * 0.1 }}
+          >
+            <Card className="p-6 bg-white/5 backdrop-blur-sm border-primary/20 hover:border-primary/40 transition-all duration-300">
+              <div className="flex items-center gap-4">
+                <div className={`p-3 rounded-xl ${stat.bgColor}`}>
+                  <Icon className={`h-6 w-6 ${stat.color}`} />
+                </div>
+                <div>
+                  <p className="text-sm text-white/60">{stat.title}</p>
+                  <p className="text-2xl font-bold bg-gradient-to-r from-white to-white/80 bg-clip-text text-transparent">
+                    {stat.value}
+                  </p>
+                </div>
+              </div>
+            </Card>
+          </motion.div>
+        );
+      })}
+    </>
   );
 };
