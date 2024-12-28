@@ -1,5 +1,4 @@
 import { KPISection } from "./sections/KPISection";
-import { RecentActivity } from "./sections/RecentActivity";
 import { PerformanceCharts } from "./sections/PerformanceCharts";
 import { QuotesOverview } from "./sections/QuotesOverview";
 import { motion } from "framer-motion";
@@ -46,19 +45,6 @@ export function DashboardContent() {
       >
         <Card className="p-6 bg-background/50 backdrop-blur-sm border-primary/10 hover:border-primary/20 transition-all duration-300">
           <h2 className="text-xl font-semibold text-white mb-4">
-            Activité Récente
-          </h2>
-          <RecentActivity />
-        </Card>
-      </motion.div>
-
-      <motion.div 
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.3 }}
-      >
-        <Card className="p-6 bg-background/50 backdrop-blur-sm border-primary/10 hover:border-primary/20 transition-all duration-300">
-          <h2 className="text-xl font-semibold text-white mb-4">
             Suivi des Devis
           </h2>
           <QuotesOverview />
@@ -68,7 +54,7 @@ export function DashboardContent() {
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.4 }}
+        transition={{ duration: 0.5, delay: 0.3 }}
       >
         <Card className="p-6 bg-background/50 backdrop-blur-sm border-primary/10 hover:border-primary/20 transition-all duration-300">
           <h2 className="text-xl font-semibold text-white mb-4">
