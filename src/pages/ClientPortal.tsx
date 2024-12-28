@@ -5,7 +5,6 @@ import { ClientNavbar } from "@/components/client/ClientNavbar";
 import { DocumentsList } from "@/components/client/documents/DocumentsList";
 import { MessagesList } from "@/components/client/messages/MessagesList";
 import { ClientInfoForm } from "@/components/client/dashboard/ClientInfoForm";
-import { ConsumptionChart } from "@/components/client/dashboard/ConsumptionChart";
 import { NextSteps } from "@/components/client/dashboard/NextSteps";
 import { ContactsList } from "@/components/client/dashboard/contacts/ContactsList";
 import { ClientFAQ } from "@/components/client/faq/ClientFAQ";
@@ -141,7 +140,6 @@ const ClientPortal = () => {
             <TabsContent value="dashboard">
               <div className="grid gap-6">
                 <DashboardStats />
-
                 <div className="grid gap-6 lg:grid-cols-2">
                   <div className="space-y-6">
                     <ClientInfoForm onMonthlyBillUpdate={handleMonthlyBillUpdate} />
@@ -150,12 +148,9 @@ const ClientPortal = () => {
                     <ContactsList contacts={mockContacts} />
                   </div>
                 </div>
-
-                <div className="grid gap-6 lg:grid-cols-2">
-                  <ConsumptionChart />
+                <div className="grid gap-6">
                   <NextSteps />
                 </div>
-
                 <ClientFAQ />
               </div>
             </TabsContent>
