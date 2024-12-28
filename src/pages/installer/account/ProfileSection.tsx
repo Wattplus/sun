@@ -54,101 +54,98 @@ export const ProfileSection = () => {
     <div className="space-y-6">
       <ProfileStats />
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <motion.div 
-          className="md:col-span-2"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-        >
-          <Card className="p-6 bg-white/5 backdrop-blur-sm border-primary/20">
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <FormField
-                  label="Prénom"
-                  id="firstName"
-                  value={formData.firstName}
-                  onChange={handleChange}
-                  placeholder="John"
-                  lightMode
-                />
-                <FormField
-                  label="Nom"
-                  id="lastName"
-                  value={formData.lastName}
-                  onChange={handleChange}
-                  placeholder="Doe"
-                  lightMode
-                />
-                <FormField
-                  label="Email"
-                  id="email"
-                  type="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  placeholder="john.doe@example.com"
-                  lightMode
-                />
-                <FormField
-                  label="Téléphone"
-                  id="phone"
-                  value={formData.phone}
-                  onChange={handleChange}
-                  placeholder="+33 6 12 34 56 78"
-                  lightMode
-                />
-                <FormField
-                  label="Entreprise"
-                  id="company"
-                  value={formData.company}
-                  onChange={handleChange}
-                  placeholder="Nom de votre entreprise"
-                  lightMode
-                />
-                <FormField
-                  label="SIRET"
-                  id="siret"
-                  value={formData.siret}
-                  onChange={handleChange}
-                  placeholder="123 456 789 00012"
-                  lightMode
-                />
-                <FormField
-                  label="Site web"
-                  id="website"
-                  value={formData.website}
-                  onChange={handleChange}
-                  placeholder="www.monentreprise.fr"
-                  lightMode
-                />
-              </div>
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        <Card className="p-6 bg-white/5 backdrop-blur-sm border-primary/20">
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <FormField
+                label="Prénom"
+                id="firstName"
+                value={formData.firstName}
+                onChange={handleChange}
+                placeholder="John"
+                lightMode
+              />
+              <FormField
+                label="Nom"
+                id="lastName"
+                value={formData.lastName}
+                onChange={handleChange}
+                placeholder="Doe"
+                lightMode
+              />
+              <FormField
+                label="Email"
+                id="email"
+                type="email"
+                value={formData.email}
+                onChange={handleChange}
+                placeholder="john.doe@example.com"
+                lightMode
+              />
+              <FormField
+                label="Téléphone"
+                id="phone"
+                value={formData.phone}
+                onChange={handleChange}
+                placeholder="+33 6 12 34 56 78"
+                lightMode
+              />
+              <FormField
+                label="Entreprise"
+                id="company"
+                value={formData.company}
+                onChange={handleChange}
+                placeholder="Nom de votre entreprise"
+                lightMode
+              />
+              <FormField
+                label="SIRET"
+                id="siret"
+                value={formData.siret}
+                onChange={handleChange}
+                placeholder="123 456 789 00012"
+                lightMode
+              />
+              <FormField
+                label="Site web"
+                id="website"
+                value={formData.website}
+                onChange={handleChange}
+                placeholder="www.monentreprise.fr"
+                lightMode
+              />
+            </div>
 
-              <div>
-                <label className="text-sm font-medium text-white mb-2 block">
-                  Description de votre entreprise
-                </label>
-                <textarea
-                  className="w-full h-32 rounded-md bg-white/10 border border-white/20 text-white placeholder:text-white/50 focus-visible:border-white p-3"
-                  placeholder="Décrivez votre entreprise, vos services et votre expertise..."
-                  value={formData.description}
-                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                />
-              </div>
+            <div>
+              <label className="text-sm font-medium text-white mb-2 block">
+                Description de votre entreprise
+              </label>
+              <textarea
+                className="w-full h-32 rounded-md bg-white/10 border border-white/20 text-white placeholder:text-white/50 focus-visible:border-white p-3"
+                placeholder="Décrivez votre entreprise, vos services et votre expertise..."
+                value={formData.description}
+                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+              />
+            </div>
 
-              <Button type="submit" className="w-full md:w-auto">
-                Enregistrer les modifications
-              </Button>
-            </form>
-          </Card>
-        </motion.div>
+            <Button type="submit" className="w-full md:w-auto">
+              Enregistrer les modifications
+            </Button>
+          </form>
+        </Card>
+      </motion.div>
 
-        <div className="space-y-6">
-          <PremiumFeatures />
-          <ProfileVisibilityOptions 
-            options={visibilityOptions}
-            onToggle={handleToggleChange}
-          />
-        </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <PremiumFeatures />
+        <ProfileVisibilityOptions 
+          options={visibilityOptions}
+          onToggle={handleToggleChange}
+        />
       </div>
     </div>
   )
