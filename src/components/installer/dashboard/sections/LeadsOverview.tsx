@@ -3,6 +3,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Phone, Mail, Calendar, ArrowUpRight } from "lucide-react";
+import { useToast } from "@/components/ui/use-toast";
 
 const leads = [
   {
@@ -10,46 +11,71 @@ const leads = [
     phone: "06 12 34 56 78",
     city: "Toulouse",
     status: "En cours",
-    date: "26/12/2024",
+    date: "Il y a 2h",
+    email: "sophie@example.com"
   },
   {
     name: "Pierre Martin",
     phone: "07 98 76 54 32",
     city: "Bordeaux",
-    status: "Devis accepté",
-    date: "25/12/2024",
+    status: "Qualifié",
+    date: "Il y a 4h",
+    email: "pierre@example.com"
   },
   {
     name: "Marie Dubois",
     phone: "06 54 32 10 98",
     city: "Lyon",
-    status: "Installation prévue",
-    date: "24/12/2024",
-  },
-  {
-    name: "Jean Dupont",
-    phone: "06 11 22 33 44",
-    city: "Marseille",
-    status: "En attente",
-    date: "22/12/2024",
+    status: "Installation",
+    date: "Il y a 6h",
+    email: "marie@example.com"
   }
 ];
 
 export function LeadsOverview() {
+  const { toast } = useToast();
+
+  const handlePhoneClick = (phone: string) => {
+    window.location.href = `tel:${phone}`;
+    toast({
+      title: "Appel en cours",
+      description: `Appel vers ${phone}`,
+    });
+  };
+
+  const handleEmailClick = (email: string) => {
+    window.location.href = `mailto:${email}`;
+    toast({
+      title: "Email",
+      description: `Ouverture de l'email vers ${email}`,
+    });
+  };
+
+  const handleCalendarClick = (name: string) => {
+    toast({
+      title: "Calendrier",
+      description: `Planification d'un rendez-vous avec ${name}`,
+    });
+  };
+
+  const handleDetailsClick = (name: string) => {
+    toast({
+      title: "Détails",
+      description: `Affichage des détails pour ${name}`,
+    });
+  };
+
   return (
     <Card className="p-6 bg-background/50 backdrop-blur-sm border-primary/20">
-      <h2 className="text-lg font-semibold mb-6 bg-gradient-to-r from-primary to-primary-light bg-clip-text text-transparent">
-        Gestion des Leads
-      </h2>
-      
       <Table>
         <TableHeader>
           <TableRow>
             <TableHead>Nom</TableHead>
+            <TableHead>Email</TableHead>
             <TableHead>Téléphone</TableHead>
             <TableHead>Ville</TableHead>
             <TableHead>Statut</TableHead>
-            <TableHead>Date d'Attribution</TableHead>
+            <TableHead>Dernière Action</TableHead>
             <TableHead>Actions</TableHead>
           </TableRow>
         </TableHeader>
@@ -57,6 +83,7 @@ export function LeadsOverview() {
           {leads.map((lead) => (
             <TableRow key={lead.name} className="group hover:bg-primary/5">
               <TableCell className="font-medium">{lead.name}</TableCell>
+              <TableCell>{lead.email}</TableCell>
               <TableCell>{lead.phone}</TableCell>
               <TableCell>{lead.city}</TableCell>
               <TableCell>
@@ -67,16 +94,36 @@ export function LeadsOverview() {
               <TableCell>{lead.date}</TableCell>
               <TableCell>
                 <div className="flex items-center gap-2">
-                  <Button variant="ghost" size="icon">
+                  <Button 
+                    variant="ghost" 
+                    size="icon"
+                    onClick={() => handlePhoneClick(lead.phone)}
+                    className="hover:bg-primary/10"
+                  >
                     <Phone className="h-4 w-4" />
                   </Button>
-                  <Button variant="ghost" size="icon">
+                  <Button 
+                    variant="ghost" 
+                    size="icon"
+                    onClick={() => handleEmailClick(lead.email)}
+                    className="hover:bg-primary/10"
+                  >
                     <Mail className="h-4 w-4" />
                   </Button>
-                  <Button variant="ghost" size="icon">
+                  <Button 
+                    variant="ghost" 
+                    size="icon"
+                    onClick={() => handleCalendarClick(lead.name)}
+                    className="hover:bg-primary/10"
+                  >
                     <Calendar className="h-4 w-4" />
                   </Button>
-                  <Button variant="ghost" size="icon">
+                  <Button 
+                    variant="ghost" 
+                    size="icon"
+                    onClick={() => handleDetailsClick(lead.name)}
+                    className="hover:bg-primary/10"
+                  >
                     <ArrowUpRight className="h-4 w-4" />
                   </Button>
                 </div>
