@@ -2,7 +2,6 @@ import { Card } from "@/components/ui/card";
 import { PrepaidBalance } from "./PrepaidBalance";
 import { StatsCards } from "./StatsCards";
 import { useState } from "react";
-import { ChevronRight } from "lucide-react";
 import { mockAvailableLeads } from "./mockAvailableLeads";
 import { mockPurchasedLeads } from "./mockPurchasedLeads";
 import { motion } from "framer-motion";
