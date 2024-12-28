@@ -97,7 +97,7 @@ export const ProfileSection = () => {
   return (
     <div className="space-y-6">
       {/* En-tête du profil avec avatar */}
-      <Card className="p-6 bg-white/5 backdrop-blur-sm border-primary/20">
+      <Card className="p-6 bg-secondary/80 backdrop-blur-sm border-primary/20">
         <div className="flex items-center gap-6">
           <div className="relative">
             <Avatar className="h-24 w-24">
@@ -107,7 +107,7 @@ export const ProfileSection = () => {
             <Button
               size="icon"
               variant="outline"
-              className="absolute bottom-0 right-0"
+              className="absolute bottom-0 right-0 bg-secondary hover:bg-secondary-dark"
               onClick={handleAvatarUpload}
             >
               <Camera className="h-4 w-4" />
@@ -134,7 +134,10 @@ export const ProfileSection = () => {
           handleCheckboxChange={handleCheckboxChange}
         />
 
-        <Button type="submit" className="w-full md:w-auto">
+        <Button 
+          type="submit" 
+          className="w-full md:w-auto bg-secondary hover:bg-secondary-dark text-white"
+        >
           Enregistrer les modifications
         </Button>
       </form>
