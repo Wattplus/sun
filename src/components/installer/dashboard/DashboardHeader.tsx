@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Bell, Download, Filter, Search, Settings } from "lucide-react";
+import { Bell, Download, Filter, Search, Settings, UserPlus } from "lucide-react";
 import { useState } from "react";
 
 export const DashboardHeader = () => {
@@ -13,6 +13,14 @@ export const DashboardHeader = () => {
   const [filterPeriod, setFilterPeriod] = useState("7j");
   const currentDate = format(new Date(), "EEEE d MMMM yyyy", { locale: fr });
   
+  const handleNewLead = () => {
+    toast({
+      title: "Nouveau lead",
+      description: "Redirection vers le formulaire de création de lead",
+      duration: 5000,
+    });
+  };
+
   const handleNotifications = () => {
     console.log("Notifications clicked");
     toast({
@@ -88,6 +96,13 @@ export const DashboardHeader = () => {
         </div>
 
         <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
+          <Button
+            onClick={handleNewLead}
+            className="bg-primary hover:bg-primary-dark text-white gap-2"
+          >
+            <UserPlus className="h-4 w-4" />
+            Nouveau lead
+          </Button>
           <Button
             variant="outline"
             size="icon"
