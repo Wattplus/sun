@@ -1,11 +1,12 @@
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Euro, Plus, History, CreditCard, Wallet, Shield, Award, TrendingUp, Users } from "lucide-react";
+import { Euro, Plus, History, CreditCard, Wallet, Shield, Award, TrendingUp } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { motion } from "framer-motion";
 import { CustomAmountInput } from "./prepaid/CustomAmountInput";
 import { QuickTopUpButtons } from "./prepaid/QuickTopUpButtons";
 import { SavedCards } from "./prepaid/SavedCards";
+import { useNavigate } from "react-router-dom";
 
 interface PrepaidBalanceProps {
   balance?: number;
@@ -13,12 +14,14 @@ interface PrepaidBalanceProps {
 
 export const PrepaidBalance = ({ balance = 0 }: PrepaidBalanceProps) => {
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   const handleRecharge = (amount: number) => {
     toast({
       title: "Rechargement",
       description: `Redirection vers la page de paiement pour ${amount}€...`,
     });
+    navigate("/espace-installateur/paiement/recharge", { state: { amount } });
   };
 
   const handleHistory = () => {
@@ -26,6 +29,20 @@ export const PrepaidBalance = ({ balance = 0 }: PrepaidBalanceProps) => {
       title: "Historique",
       description: "Affichage de l'historique des transactions...",
     });
+    navigate("/espace-installateur/compte/historique-transactions");
+  };
+
+  const handleCustomAmount = (amount: string) => {
+    const numAmount = parseFloat(amount);
+    if (!isNaN(numAmount) && numAmount > 0) {
+      handleRecharge(numAmount);
+    } else {
+      toast({
+        title: "Erreur",
+        description: "Veuillez entrer un montant valide",
+        variant: "destructive",
+      });
+    }
   };
 
   return (
@@ -114,8 +131,12 @@ export const PrepaidBalance = ({ balance = 0 }: PrepaidBalanceProps) => {
                 </p>
                 <SavedCards 
                   cards={[]}
-                  onDeleteCard={() => {}}
-                  onAddCard={() => {}}
+                  onDeleteCard={(id: string) => {
+                    toast({
+                      title: "Carte supprimée",
+                      description: "Votre carte a été supprimée avec succès",
+                    });
+                  }}
                 />
               </div>
 
@@ -133,7 +154,7 @@ export const PrepaidBalance = ({ balance = 0 }: PrepaidBalanceProps) => {
                   <CustomAmountInput 
                     value=""
                     onChange={() => {}}
-                    onSubmit={() => handleRecharge(0)}
+                    onSubmit={handleCustomAmount}
                     isLoading={false}
                   />
                 </div>
