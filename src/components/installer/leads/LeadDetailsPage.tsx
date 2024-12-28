@@ -69,19 +69,16 @@ export const LeadDetailsPage = () => {
 
   if (!lead) {
     return (
-      <InstallerLayout>
-        <div className="p-6">
-          <div className="text-center">Lead non trouvé</div>
-        </div>
-      </InstallerLayout>
+      <div className="p-6">
+        <div className="text-center">Lead non trouvé</div>
+      </div>
     );
   }
 
   return (
-    <InstallerLayout>
-      <div className="min-h-screen bg-gradient-to-b from-background/80 to-background p-6 space-y-8">
-        <InstallerBreadcrumb />
-        <div className="max-w-[1200px] mx-auto space-y-8">
+    <div className="min-h-screen bg-gradient-to-b from-background/80 to-background p-6 space-y-8">
+      <InstallerBreadcrumb />
+      <div className="max-w-[1200px] mx-auto space-y-8">
           <div className="flex justify-between items-center">
             <div>
               <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-primary-light bg-clip-text text-transparent mb-2">
@@ -179,6 +176,6 @@ export const LeadDetailsPage = () => {
           </Tabs>
         </div>
       </div>
-    </InstallerLayout>
+    </div>
   );
 };
