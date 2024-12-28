@@ -18,10 +18,67 @@ export const NewCardPage = () => {
     cvv: "",
     cardholderName: "",
   });
+  const [errors, setErrors] = useState({
+    cardNumber: "",
+    expiryDate: "",
+    cvv: "",
+    cardholderName: "",
+  });
+
+  const formatExpiryDate = (value: string) => {
+    // Supprimer tous les caractères non numériques
+    const numbers = value.replace(/\D/g, "");
+    
+    // Ne pas permettre plus de 4 chiffres
+    if (numbers.length > 4) return formData.expiryDate;
+    
+    // Ajouter le slash après les 2 premiers chiffres
+    if (numbers.length >= 2) {
+      return numbers.slice(0, 2) + "/" + numbers.slice(2);
+    }
+    
+    return numbers;
+  };
+
+  const validateExpiryDate = (value: string) => {
+    const numbers = value.replace(/\D/g, "");
+    if (numbers.length !== 4) return "Format invalide (MM/AA)";
+    
+    const month = parseInt(numbers.slice(0, 2));
+    const year = parseInt(numbers.slice(2));
+    const currentYear = new Date().getFullYear() % 100;
+    const currentMonth = new Date().getMonth() + 1;
+
+    if (month < 1 || month > 12) return "Mois invalide";
+    if (year < currentYear) return "Carte expirée";
+    if (year === currentYear && month < currentMonth) return "Carte expirée";
+    
+    return "";
+  };
+
+  const handleExpiryDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const formattedValue = formatExpiryDate(e.target.value);
+    setFormData({ ...formData, expiryDate: formattedValue });
+    
+    if (formattedValue.length === 5) {
+      const error = validateExpiryDate(formattedValue);
+      setErrors(prev => ({ ...prev, expiryDate: error }));
+    } else {
+      setErrors(prev => ({ ...prev, expiryDate: "" }));
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
+
+    // Valider la date d'expiration avant la soumission
+    const expiryError = validateExpiryDate(formData.expiryDate);
+    if (expiryError) {
+      setErrors(prev => ({ ...prev, expiryDate: expiryError }));
+      setIsSubmitting(false);
+      return;
+    }
 
     try {
       // Simulation d'un délai d'ajout de carte
@@ -85,6 +142,7 @@ export const NewCardPage = () => {
                   onChange={(e) =>
                     setFormData({ ...formData, cardNumber: e.target.value })
                   }
+                  error={errors.cardNumber}
                   lightMode
                 />
 
@@ -95,9 +153,8 @@ export const NewCardPage = () => {
                     type="text"
                     placeholder="MM/AA"
                     value={formData.expiryDate}
-                    onChange={(e) =>
-                      setFormData({ ...formData, expiryDate: e.target.value })
-                    }
+                    onChange={handleExpiryDateChange}
+                    error={errors.expiryDate}
                     lightMode
                   />
                   <FormField
@@ -109,6 +166,7 @@ export const NewCardPage = () => {
                     onChange={(e) =>
                       setFormData({ ...formData, cvv: e.target.value })
                     }
+                    error={errors.cvv}
                     lightMode
                   />
                 </div>
@@ -122,6 +180,7 @@ export const NewCardPage = () => {
                   onChange={(e) =>
                     setFormData({ ...formData, cardholderName: e.target.value })
                   }
+                  error={errors.cardholderName}
                   lightMode
                 />
 
