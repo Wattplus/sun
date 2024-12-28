@@ -3,6 +3,7 @@ import { SavedCards } from "../dashboard/prepaid/SavedCards";
 import { PrepaidBalance } from "../dashboard/PrepaidBalance";
 import { Card } from "@/components/ui/card";
 import { useState } from "react";
+import { ProfileSection } from "./ProfileSection";
 
 export const AccountPage = () => {
   const [cards, setCards] = useState([
@@ -36,10 +37,7 @@ export const AccountPage = () => {
         </TabsList>
 
         <TabsContent value="profile">
-          <Card className="p-6">
-            <h2 className="text-xl font-semibold mb-4">Informations du profil</h2>
-            {/* Contenu du profil */}
-          </Card>
+          <ProfileSection />
         </TabsContent>
 
         <TabsContent value="payment">
