@@ -80,21 +80,23 @@ export const StatsCards = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3, delay: index * 0.1 }}
-            className="col-span-2 sm:col-span-2 lg:col-span-1"
+            className="col-span-4 sm:col-span-4 lg:col-span-4"
           >
-            <Card className="p-4 bg-background/50 backdrop-blur-sm border-primary/10 hover:border-primary/20 transition-all duration-300">
-              <div className="flex flex-col gap-2">
-                <div className={`p-2 rounded-lg ${stat.bgColor} w-fit`}>
-                  <Icon className={`h-4 w-4 ${stat.color}`} />
-                </div>
-                <div>
-                  <p className="text-xs text-muted-foreground">{stat.title}</p>
-                  <p className="text-xl font-bold text-white">
-                    {stat.value}
-                  </p>
-                  <p className={`text-xs ${stat.change.includes('+') ? 'text-primary' : 'text-destructive'}`}>
-                    {stat.change}
-                  </p>
+            <Card className="p-6 bg-background/50 backdrop-blur-sm border-primary/10 hover:border-primary/20 transition-all duration-300">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <div className={`p-3 rounded-xl ${stat.bgColor}`}>
+                    <Icon className={`h-6 w-6 ${stat.color}`} />
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground">{stat.title}</p>
+                    <p className="text-2xl font-bold text-white mt-1">
+                      {stat.value}
+                    </p>
+                    <p className={`text-sm mt-1 ${stat.change.includes('+') ? 'text-emerald-500' : 'text-red-500'}`}>
+                      {stat.change}
+                    </p>
+                  </div>
                 </div>
               </div>
             </Card>
