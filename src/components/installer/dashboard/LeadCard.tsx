@@ -1,109 +1,68 @@
 import { Lead } from "@/types/crm";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Link } from "react-router-dom";
+import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Phone, Mail, MapPin, Home, CreditCard, Building2 } from "lucide-react";
+import { Building2, Home, Mail, MapPin, Phone } from "lucide-react";
 import { motion } from "framer-motion";
 
 interface LeadCardProps {
   lead: Lead;
-  status: string;
-  onStatusChange: (status: string) => void;
+  status: 'available' | 'purchased';
+  onStatusChange: () => void;
 }
 
-export const LeadCard = ({ lead, status, onStatusChange }: LeadCardProps) => {
+export const LeadCard = ({ lead, status }: LeadCardProps) => {
+  const isAvailable = status === 'available';
+
   return (
-    <Link to={`/espace-installateur/leads/${lead.id}`}>
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3 }}
-        whileHover={{ scale: 1.02 }}
-      >
-        <Card className="group hover:shadow-xl transition-all duration-300 border-2 border-primary/10 hover:border-primary/30 bg-glass-gradient hover:bg-glass-gradient-hover backdrop-blur-sm">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
-            <div className="space-y-1.5">
-              <div className="flex items-center gap-2">
-                <div className="p-2 bg-primary/10 rounded-lg group-hover:scale-110 transition-transform duration-300">
-                  {lead.projectType === 'professional' ? (
-                    <Building2 className="h-4 w-4 text-primary animate-pulse" />
-                  ) : (
-                    <Home className="h-4 w-4 text-primary animate-pulse" />
-                  )}
-                </div>
-                <div>
-                  <h3 className="font-semibold text-lg bg-gradient-to-r from-primary to-primary-light bg-clip-text text-transparent">
-                    {lead.firstName} {lead.lastName}
-                  </h3>
-                  <Badge 
-                    variant="outline" 
-                    className={`
-                      ${lead.projectType === 'professional' 
-                        ? 'bg-amber-500/10 text-amber-600 border-amber-200/20 group-hover:bg-amber-500/20' 
-                        : 'bg-emerald-500/10 text-emerald-600 border-emerald-200/20 group-hover:bg-emerald-500/20'
-                      } transition-colors duration-300
-                    `}
-                  >
-                    {lead.projectType === 'professional' ? 'Professionnel' : 'Résidentiel'}
-                  </Badge>
-                </div>
-              </div>
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }}
+      whileHover={{ scale: 1.02 }}
+    >
+      <Card className="p-4 hover:shadow-lg transition-all duration-300 border border-primary/10 hover:border-primary/30 bg-background/50">
+        <div className="flex items-start justify-between">
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-primary/10 rounded-lg">
+              {lead.projectType === 'professional' ? (
+                <Building2 className="h-4 w-4 text-primary" />
+              ) : (
+                <Home className="h-4 w-4 text-primary" />
+              )}
             </div>
-            <div 
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-              }}
-              className="relative z-10"
-            >
-              <Select 
-                value={status} 
-                onValueChange={onStatusChange}
+            <div>
+              <h3 className="font-medium text-lg">
+                {lead.firstName} {isAvailable ? '' : lead.lastName}
+              </h3>
+              <Badge 
+                variant="outline" 
+                className={lead.projectType === 'professional' ? 'bg-amber-500/10 text-amber-600' : 'bg-emerald-500/10 text-emerald-600'}
               >
-                <SelectTrigger className="w-[140px] bg-background/50 border-primary/20 group-hover:border-primary/40 transition-colors duration-300">
-                  <SelectValue placeholder="Statut" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="nouveau">Nouveau</SelectItem>
-                  <SelectItem value="contacte">Contacté</SelectItem>
-                  <SelectItem value="devis_envoye">Devis envoyé</SelectItem>
-                  <SelectItem value="rdv_planifie">RDV planifié</SelectItem>
-                  <SelectItem value="negociation">En négociation</SelectItem>
-                  <SelectItem value="signe">Signé</SelectItem>
-                  <SelectItem value="perdu">Perdu</SelectItem>
-                </SelectContent>
-              </Select>
+                {lead.projectType === 'professional' ? 'Professionnel' : 'Résidentiel'}
+              </Badge>
             </div>
-          </CardHeader>
-          <CardContent>
-            <div className="grid gap-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-3">
-                  <div className="flex items-center gap-2 text-muted-foreground group-hover:text-primary/80 transition-colors duration-300">
-                    <Mail className="h-4 w-4" />
-                    <span className="text-sm">{lead.email}</span>
-                  </div>
-                  <div className="flex items-center gap-2 text-muted-foreground group-hover:text-primary/80 transition-colors duration-300">
-                    <Phone className="h-4 w-4" />
-                    <span className="text-sm">{lead.phone}</span>
-                  </div>
-                </div>
-                <div className="space-y-3">
-                  <div className="flex items-center gap-2 text-muted-foreground group-hover:text-primary/80 transition-colors duration-300">
-                    <MapPin className="h-4 w-4" />
-                    <span className="text-sm">{lead.postalCode}</span>
-                  </div>
-                  <div className="flex items-center gap-2 text-muted-foreground group-hover:text-primary/80 transition-colors duration-300">
-                    <CreditCard className="h-4 w-4" />
-                    <span className="text-sm">{lead.monthlyBill ? `${lead.monthlyBill}€/mois` : 'Non renseigné'}</span>
-                  </div>
-                </div>
+          </div>
+        </div>
+
+        <div className="mt-4 grid grid-cols-2 gap-3">
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <MapPin className="h-4 w-4" />
+            <span>{lead.postalCode}</span>
+          </div>
+          {!isAvailable && (
+            <>
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <Phone className="h-4 w-4" />
+                <span>{lead.phone}</span>
               </div>
-            </div>
-          </CardContent>
-        </Card>
-      </motion.div>
-    </Link>
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <Mail className="h-4 w-4" />
+                <span>{lead.email}</span>
+              </div>
+            </>
+          )}
+        </div>
+      </Card>
+    </motion.div>
   );
 };
