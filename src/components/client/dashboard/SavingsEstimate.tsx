@@ -1,93 +1,67 @@
 import { Card } from "@/components/ui/card";
-import { SunIcon } from "lucide-react";
-import { useEffect, useState } from "react";
+import { Euro, TrendingUp, Sun, Battery } from "lucide-react";
 
 interface SavingsEstimateProps {
   monthlyBill?: string;
 }
 
 export const SavingsEstimate = ({ monthlyBill }: SavingsEstimateProps) => {
-  const [savings, setSavings] = useState({
-    monthly: 0,
-    annual: 0,
-    total: 0
-  });
-
-  useEffect(() => {
-    if (monthlyBill && !isNaN(parseFloat(monthlyBill))) {
-      const monthlyAmount = parseFloat(monthlyBill);
-      const monthlyEstimate = monthlyAmount * 0.7; // 70% d'économies estimées
-      const annualEstimate = monthlyEstimate * 12;
-      const totalEstimate = annualEstimate * 20; // sur 20 ans
-
-      setSavings({
-        monthly: monthlyEstimate,
-        annual: annualEstimate,
-        total: totalEstimate
-      });
-    } else {
-      setSavings({
-        monthly: 0,
-        annual: 0,
-        total: 0
-      });
-    }
-  }, [monthlyBill]);
-
-  const formatCurrency = (amount: number) => {
-    return amount.toLocaleString('fr-FR', {
-      style: 'currency',
-      currency: 'EUR',
-      maximumFractionDigits: 0
-    });
-  };
-
-  if (!monthlyBill) {
-    return (
-      <Card className="glass-panel p-6">
-        <div className="flex items-center gap-4">
-          <div className="p-3 rounded-full bg-primary/20">
-            <SunIcon className="w-8 h-8 text-primary" />
-          </div>
-          <div>
-            <h3 className="text-xl font-semibold gradient-text">
-              Économies estimées
-            </h3>
-            <p className="text-sm text-gray-400">
-              Remplissez vos informations pour voir vos économies estimées
-            </p>
-          </div>
-        </div>
-      </Card>
-    );
-  }
+  const monthlyBillNum = parseFloat(monthlyBill || "0");
+  const annualBill = monthlyBillNum * 12;
+  const estimatedSavings = annualBill * 0.65; // 65% d'économies estimées
+  const co2Reduction = (monthlyBillNum * 12 * 0.1); // 100g CO2 par kWh
+  const energyIndependence = Math.min(85, monthlyBillNum > 0 ? 65 + (monthlyBillNum / 10) : 65);
 
   return (
-    <Card className="glass-panel p-6">
-      <div className="flex items-center gap-4">
-        <div className="p-3 rounded-full bg-primary/20">
-          <SunIcon className="w-8 h-8 text-primary" />
-        </div>
+    <Card className="p-6 bg-background/95 backdrop-blur-sm">
+      <div className="space-y-6">
         <div>
-          <h3 className="text-xl font-semibold gradient-text">
-            Économies estimées
+          <h3 className="text-xl font-semibold text-primary">
+            Estimation des Bénéfices
           </h3>
-          <p className="text-sm text-gray-400">sur 20 ans</p>
+          <p className="text-sm text-muted-foreground">
+            Projection sur une année complète
+          </p>
         </div>
-      </div>
-      
-      <div className="mt-6 space-y-4">
-        <div className="flex justify-between items-center">
-          <span className="text-gray-300">Économies mensuelles</span>
-          <span className="text-2xl font-bold text-primary">{formatCurrency(savings.monthly)}</span>
-        </div>
-        <div className="flex justify-between items-center">
-          <span className="text-gray-300">Économies annuelles</span>
-          <span className="text-2xl font-bold text-primary">{formatCurrency(savings.annual)}</span>
-        </div>
-        <div className="flex justify-between items-center">
-          <span className="text-gray-300">Économies totales</span>
-          <span className="text-2xl font-bold text-primary">{formatCurrency(savings.total)}</span>
+
+        <div className="grid gap-4">
+          <div className="flex items-center gap-4 p-4 bg-green-500/10 rounded-lg">
+            <Euro className="h-8 w-8 text-green-400" />
+            <div>
+              <p className="text-sm text-green-400">Économies Estimées / An</p>
+              <p className="text-2xl font-semibold">
+                {estimatedSavings.toLocaleString('fr-FR', { 
+                  style: 'currency', 
+                  currency: 'EUR',
+                  maximumFractionDigits: 0
+                })}
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-4 p-4 bg-blue-500/10 rounded-lg">
+            <TrendingUp className="h-8 w-8 text-blue-400" />
+            <div>
+              <p className="text-sm text-blue-400">Retour sur Investissement</p>
+              <p className="text-2xl font-semibold">6-8 ans</p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-4 p-4 bg-yellow-500/10 rounded-lg">
+            <Sun className="h-8 w-8 text-yellow-400" />
+            <div>
+              <p className="text-sm text-yellow-400">Réduction CO2 / An</p>
+              <p className="text-2xl font-semibold">{co2Reduction.toFixed(1)} tonnes</p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-4 p-4 bg-purple-500/10 rounded-lg">
+            <Battery className="h-8 w-8 text-purple-400" />
+            <div>
+              <p className="text-sm text-purple-400">Autonomie Énergétique</p>
+              <p className="text-2xl font-semibold">{energyIndependence.toFixed(0)}%</p>
+            </div>
+          </div>
         </div>
       </div>
     </Card>
