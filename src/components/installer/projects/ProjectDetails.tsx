@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Calendar, MapPin, Euro, FileText, ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { mockProjects, Project } from "../dashboard/ProjectsList";
+import { mockProjects } from "@/types/project";
 
 export const ProjectDetails = () => {
   const { projectId } = useParams();
