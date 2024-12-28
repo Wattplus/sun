@@ -13,8 +13,10 @@ export function App() {
   return (
     <Router>
       <Routes>
+        {/* Redirection de la racine vers le tableau de bord */}
         <Route path="/" element={<Navigate to="/espace-installateur" replace />} />
         
+        {/* Routes de l'espace installateur */}
         <Route path="/espace-installateur" element={<InstallerProfile />}>
           <Route index element={<InstallerDashboard />} />
           

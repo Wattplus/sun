@@ -9,8 +9,12 @@ import {
   FileText, 
   Settings, 
   Bell, 
-  User 
+  User,
+  Menu 
 } from "lucide-react"
+import { useState } from "react"
+import { Button } from "@/components/ui/button"
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 
 const navigation = [
   { 
@@ -50,7 +54,7 @@ const navigation = [
   },
   { 
     name: "Mon profil", 
-    href: "/espace-installateur/profil", 
+    href: "/espace-installateur/mon-compte", 
     icon: User 
   },
 ];
@@ -61,15 +65,54 @@ interface InstallerLayoutProps {
 
 export function InstallerLayout({ children }: InstallerLayoutProps) {
   const location = useLocation();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (
     <div className="min-h-screen w-full flex flex-col">
       {/* Top Navigation */}
-      <header className="sticky top-0 z-50 w-full border-b border-border bg-background">
+      <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container mx-auto">
           <nav className="flex items-center justify-between h-16">
-            {/* Desktop Navigation */}
-            <div className="hidden md:flex items-center space-x-4">
+            {/* Logo ou titre */}
+            <div className="flex items-center">
+              <span className="text-xl font-bold">Espace Installateur</span>
+            </div>
+
+            {/* Menu mobile */}
+            <div className="md:hidden">
+              <Sheet>
+                <SheetTrigger asChild>
+                  <Button variant="ghost" size="icon">
+                    <Menu className="h-6 w-6" />
+                  </Button>
+                </SheetTrigger>
+                <SheetContent side="right" className="w-[80vw] sm:w-[385px]">
+                  <div className="flex flex-col gap-4 py-4">
+                    {navigation.map((item) => {
+                      const isActive = location.pathname === item.href;
+                      return (
+                        <Link
+                          key={item.name}
+                          to={item.href}
+                          className={cn(
+                            "flex items-center gap-3 px-4 py-2 text-sm font-medium rounded-md transition-colors",
+                            isActive 
+                              ? "bg-primary text-primary-foreground" 
+                              : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                          )}
+                        >
+                          <item.icon className="h-5 w-5" />
+                          {item.name}
+                        </Link>
+                      );
+                    })}
+                  </div>
+                </SheetContent>
+              </Sheet>
+            </div>
+
+            {/* Menu desktop */}
+            <div className="hidden md:flex items-center space-x-1">
               {navigation.map((item) => {
                 const isActive = location.pathname === item.href;
                 return (
@@ -89,37 +132,13 @@ export function InstallerLayout({ children }: InstallerLayoutProps) {
                 );
               })}
             </div>
-
-            {/* Mobile Navigation */}
-            <div className="md:hidden flex items-center justify-around w-full">
-              {navigation.slice(0, 4).map((item) => {
-                const isActive = location.pathname === item.href;
-                return (
-                  <Link
-                    key={item.name}
-                    to={item.href}
-                    className={cn(
-                      "flex flex-col items-center gap-1 p-2 text-xs rounded-md transition-colors",
-                      isActive 
-                        ? "text-primary" 
-                        : "text-muted-foreground hover:text-foreground"
-                    )}
-                  >
-                    <item.icon className="h-5 w-5" />
-                    <span>{item.name}</span>
-                  </Link>
-                );
-              })}
-            </div>
           </nav>
         </div>
       </header>
 
       {/* Main content */}
       <main className="flex-1">
-        <div className="container mx-auto p-4">
-          {children}
-        </div>
+        {children}
       </main>
     </div>
   );
