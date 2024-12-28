@@ -10,10 +10,10 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
-export const PurchasedLeads = () => {
+export const PurchasedLeads = ({ leads }: { leads: Lead[] }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
-  const [localLeads, setLocalLeads] = useState<Lead[]>(mockPurchasedLeads);
+  const [localLeads, setLocalLeads] = useState<Lead[]>(leads);
   const { toast } = useToast();
   const isMobile = useMediaQuery("(max-width: 768px)");
 
@@ -62,6 +62,10 @@ export const PurchasedLeads = () => {
     contacted: filteredLeads.filter(lead => lead.installerStatus === 'contacte').length,
     converted: filteredLeads.filter(lead => lead.installerStatus === 'signe').length,
     lost: filteredLeads.filter(lead => lead.installerStatus === 'perdu').length,
+    totalInvestment: filteredLeads.reduce((acc, lead) => acc + (lead.price || 0), 0),
+    averagePrice: filteredLeads.length > 0 
+      ? Math.round(filteredLeads.reduce((acc, lead) => acc + (lead.price || 0), 0) / filteredLeads.length) 
+      : 0
   };
 
   return (
@@ -142,4 +146,3 @@ export const PurchasedLeads = () => {
       )}
     </div>
   );
-};

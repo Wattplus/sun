@@ -1,5 +1,4 @@
-import { Card } from "@/components/ui/card";
-import { Users, Phone, FileCheck2, Ban } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Lead } from "@/types/crm";
 
 interface StatsCardsProps {
@@ -8,48 +7,62 @@ interface StatsCardsProps {
     contacted: number;
     converted: number;
     lost: number;
+    totalInvestment: number;
+    averagePrice: number;
   };
 }
 
-export const StatsCards = ({ stats }: StatsCardsProps) => {
+export function StatsCards({ stats }: StatsCardsProps) {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-      <Card className="p-4 flex items-center space-x-4">
-        <div className="p-2 bg-blue-500/10 rounded-lg">
-          <Users className="h-5 w-5 sm:h-6 sm:w-6 text-blue-600" />
-        </div>
-        <div>
-          <p className="text-sm text-muted-foreground">Total Leads</p>
-          <p className="text-xl sm:text-2xl font-bold">{stats.total}</p>
-        </div>
+    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
+      <Card>
+        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+          <CardTitle className="text-sm font-medium">Total Leads</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="text-2xl font-bold">{stats.total}</div>
+        </CardContent>
       </Card>
-      <Card className="p-4 flex items-center space-x-4">
-        <div className="p-2 bg-yellow-500/10 rounded-lg">
-          <Phone className="h-5 w-5 sm:h-6 sm:w-6 text-yellow-600" />
-        </div>
-        <div>
-          <p className="text-sm text-muted-foreground">Contactés</p>
-          <p className="text-xl sm:text-2xl font-bold">{stats.contacted}</p>
-        </div>
+      <Card>
+        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+          <CardTitle className="text-sm font-medium">Contactés</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="text-2xl font-bold">{stats.contacted}</div>
+        </CardContent>
       </Card>
-      <Card className="p-4 flex items-center space-x-4">
-        <div className="p-2 bg-emerald-500/10 rounded-lg">
-          <FileCheck2 className="h-5 w-5 sm:h-6 sm:w-6 text-emerald-600" />
-        </div>
-        <div>
-          <p className="text-sm text-muted-foreground">Convertis</p>
-          <p className="text-xl sm:text-2xl font-bold">{stats.converted}</p>
-        </div>
+      <Card>
+        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+          <CardTitle className="text-sm font-medium">Convertis</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="text-2xl font-bold text-green-600">{stats.converted}</div>
+        </CardContent>
       </Card>
-      <Card className="p-4 flex items-center space-x-4">
-        <div className="p-2 bg-red-500/10 rounded-lg">
-          <Ban className="h-5 w-5 sm:h-6 sm:w-6 text-red-600" />
-        </div>
-        <div>
-          <p className="text-sm text-muted-foreground">Perdus</p>
-          <p className="text-xl sm:text-2xl font-bold">{stats.lost}</p>
-        </div>
+      <Card>
+        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+          <CardTitle className="text-sm font-medium">Perdus</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="text-2xl font-bold text-red-600">{stats.lost}</div>
+        </CardContent>
+      </Card>
+      <Card>
+        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+          <CardTitle className="text-sm font-medium">Investissement Total</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="text-2xl font-bold">{stats.totalInvestment}€</div>
+        </CardContent>
+      </Card>
+      <Card>
+        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+          <CardTitle className="text-sm font-medium">Prix Moyen</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="text-2xl font-bold">{stats.averagePrice}€</div>
+        </CardContent>
       </Card>
     </div>
   );
-};
+}
