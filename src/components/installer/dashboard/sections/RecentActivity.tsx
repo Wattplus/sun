@@ -1,32 +1,40 @@
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Calendar, RefreshCw } from "lucide-react";
+import { ArrowRight, Calendar, FileText, Mail } from "lucide-react";
 
 const activities = [
   {
-    event: "Nouveau devis généré",
-    detail: "Client : Sophie Laurent, 3kWc",
+    event: "Nouveau lead attribué",
+    detail: "Client : Sophie Laurent, Toulouse",
     time: "Il y a 2h",
-    action: { label: "Voir le lead", icon: ArrowRight }
+    action: { label: "Voir détail", icon: ArrowRight }
   },
   {
-    event: "Lead qualifié contacté",
+    event: "Devis accepté",
     detail: "Client : Pierre Martin, Bordeaux",
     time: "Il y a 4h",
-    action: { label: "Relancer", icon: RefreshCw }
+    action: { label: "Préparer contrat", icon: FileText }
   },
   {
     event: "Installation planifiée",
     detail: "Client : Marie Dubois, Lyon",
     time: "Il y a 6h",
     action: { label: "Voir agenda", icon: Calendar }
+  },
+  {
+    event: "Suivi demandé par client",
+    detail: "Client : Jean Dupont, Marseille",
+    time: "Il y a 8h",
+    action: { label: "Contacter", icon: Mail }
   }
 ];
 
 export function RecentActivity() {
   return (
-    <Card className="p-6">
-      <h2 className="text-lg font-semibold mb-6">Activité Récente</h2>
+    <Card className="p-6 bg-background/50 backdrop-blur-sm border-primary/20">
+      <h2 className="text-lg font-semibold mb-6 bg-gradient-to-r from-primary to-primary-light bg-clip-text text-transparent">
+        Activité Récente
+      </h2>
       
       <div className="space-y-4">
         {activities.map((activity, index) => {
