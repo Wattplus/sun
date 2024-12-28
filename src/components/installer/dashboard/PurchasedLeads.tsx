@@ -146,3 +146,4 @@ export const PurchasedLeads = ({ leads }: { leads: Lead[] }) => {
       )}
     </div>
   );
+};
