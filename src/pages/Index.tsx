@@ -46,8 +46,20 @@ export const Index = () => {
             <PrimeRates />
             <Testimonials />
             <Certifications />
-            <LeadForm />
             <FAQ />
+            <div className="py-16 bg-gradient-to-b from-background/95 to-background">
+              <div className="container mx-auto px-4">
+                <div className="text-center mb-12">
+                  <h2 className="text-3xl font-bold text-white mb-4">
+                    Prêt à réduire vos factures d'électricité ?
+                  </h2>
+                  <p className="text-lg text-white/80">
+                    Remplissez le formulaire ci-dessous pour recevoir votre étude personnalisée gratuite
+                  </p>
+                </div>
+                <LeadForm />
+              </div>
+            </div>
           </article>
         </main>
 
