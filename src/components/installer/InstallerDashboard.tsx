@@ -8,9 +8,10 @@ export function InstallerDashboard() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
-      className="min-h-screen bg-gradient-to-br from-background via-background/95 to-background/90"
+      className="min-h-screen bg-gradient-to-br from-background via-background/95 to-background/90 relative overflow-hidden"
     >
-      <div className="container mx-auto p-4 sm:p-6 lg:p-8 space-y-8">
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary/5 via-transparent to-transparent"></div>
+      <div className="container mx-auto p-4 sm:p-6 lg:p-8 space-y-8 relative">
         <DashboardHeader />
         <DashboardContent />
       </div>
