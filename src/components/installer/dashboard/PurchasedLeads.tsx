@@ -10,13 +10,9 @@ interface PurchasedLeadsProps {
 }
 
 export const PurchasedLeads = ({ leads = mockPurchasedLeads }: PurchasedLeadsProps) => {
-  const [leadStatuses, setLeadStatuses] = useState<Record<string, string>>(
+  const [leadStatuses] = useState<Record<string, string>>(
     Object.fromEntries(leads.map(lead => [lead.id, "nouveau"]))
   );
-
-  const updateLeadStatus = (leadId: string, status: string) => {
-    setLeadStatuses(prev => ({ ...prev, [leadId]: status }));
-  };
 
   if (leads.length === 0) {
     return <EmptyLeadState />;
@@ -29,8 +25,8 @@ export const PurchasedLeads = ({ leads = mockPurchasedLeads }: PurchasedLeadsPro
           <LeadCard
             key={lead.id}
             lead={lead}
-            status={leadStatuses[lead.id]}
-            onStatusChange={(status) => updateLeadStatus(lead.id, status)}
+            status="purchased"
+            onStatusChange={() => {}}
           />
         ))}
       </div>
