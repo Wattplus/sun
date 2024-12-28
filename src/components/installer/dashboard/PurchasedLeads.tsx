@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useToast } from "@/components/ui/use-toast";
 
 interface PurchasedLeadsProps {
   leads?: Lead[];
@@ -17,10 +18,16 @@ interface PurchasedLeadsProps {
 export const PurchasedLeads = ({ leads = mockPurchasedLeads }: PurchasedLeadsProps) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
-  const [leadStatuses] = useState<Record<string, string>>(
-    Object.fromEntries(leads.map(lead => [lead.id, "nouveau"]))
-  );
+  const [leadNotes, setLeadNotes] = useState<Record<string, string[]>>({});
+  const { toast } = useToast();
   const isMobile = useIsMobile();
+
+  const handleAddNote = (leadId: string, note: string) => {
+    setLeadNotes(prev => ({
+      ...prev,
+      [leadId]: [...(prev[leadId] || []), note]
+    }));
+  };
 
   if (leads.length === 0) {
     return <EmptyLeadState />;
@@ -33,7 +40,7 @@ export const PurchasedLeads = ({ leads = mockPurchasedLeads }: PurchasedLeadsPro
       lead.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
       lead.postalCode.includes(searchTerm);
 
-    const matchesStatus = statusFilter === "all" || lead.status === statusFilter;
+    const matchesStatus = statusFilter === "all" || lead.installerStatus === statusFilter;
 
     return matchesSearch && matchesStatus;
   });
@@ -56,9 +63,13 @@ export const PurchasedLeads = ({ leads = mockPurchasedLeads }: PurchasedLeadsPro
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">Tous les statuts</SelectItem>
-            <SelectItem value="new">Nouveau</SelectItem>
-            <SelectItem value="contacted">Contacté</SelectItem>
-            <SelectItem value="qualified">Qualifié</SelectItem>
+            <SelectItem value="nouveau">Nouveau</SelectItem>
+            <SelectItem value="contacte">Contacté</SelectItem>
+            <SelectItem value="devis_envoye">Devis envoyé</SelectItem>
+            <SelectItem value="rdv_planifie">RDV planifié</SelectItem>
+            <SelectItem value="negociation">En négociation</SelectItem>
+            <SelectItem value="signe">Signé</SelectItem>
+            <SelectItem value="perdu">Perdu</SelectItem>
           </SelectContent>
         </Select>
       </div>
@@ -76,7 +87,7 @@ export const PurchasedLeads = ({ leads = mockPurchasedLeads }: PurchasedLeadsPro
               key={lead.id}
               lead={lead}
               status="purchased"
-              onStatusChange={() => {}}
+              onNoteAdd={(note) => handleAddNote(lead.id, note)}
             />
           ))}
         </div>
