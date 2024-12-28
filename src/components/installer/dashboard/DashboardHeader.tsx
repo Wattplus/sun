@@ -1,17 +1,16 @@
-import { Button } from "@/components/ui/button";
-import { Search, Download, Bell, Settings, Filter } from "lucide-react";
-import { format } from "date-fns";
 import { fr } from "date-fns/locale";
-import { motion } from "framer-motion";
-import { useToast } from "@/hooks/use-toast";
+import { format } from "date-fns";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useState } from "react";
+import { useToast } from "@/components/ui/use-toast";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Bell, Download, Filter, Search, Settings } from "lucide-react";
+import { useState } from "react";
 
-export function DashboardHeader() {
+export const DashboardHeader = () => {
   const { toast } = useToast();
   const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const [filterPeriod, setFilterPeriod] = useState("today");
+  const [filterPeriod, setFilterPeriod] = useState("7j");
   const currentDate = format(new Date(), "EEEE d MMMM yyyy", { locale: fr });
   
   const handleNotifications = () => {
@@ -80,89 +79,94 @@ export function DashboardHeader() {
   };
   
   return (
-    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-6 border-b border-primary/10">
-      <motion.div
-        initial={{ opacity: 0, x: -20 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.5 }}
-        className="flex flex-col gap-2"
-      >
-        <p className="text-muted-foreground">{currentDate}</p>
-        <div className="flex items-center gap-4">
+    <div className="space-y-4">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div>
+          <h1 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-primary to-primary-light bg-clip-text text-transparent">
+            Tableau de bord
+          </h1>
+          <p className="text-sm sm:text-base text-muted-foreground capitalize">
+            {currentDate}
+          </p>
+        </div>
+
+        <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
+          <Button
+            variant="outline"
+            size="icon"
+            className="border-primary/20"
+            onClick={handleNotifications}
+          >
+            <Bell className="h-4 w-4" />
+          </Button>
+          <Button
+            variant="outline"
+            size="icon"
+            className="border-primary/20"
+            onClick={handleSettings}
+          >
+            <Settings className="h-4 w-4" />
+          </Button>
+        </div>
+      </div>
+
+      <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
+        <div className="w-full sm:w-auto flex flex-wrap gap-2">
           <Select value={filterPeriod} onValueChange={handleFilterChange}>
-            <SelectTrigger className="w-[180px] bg-background/60 border-primary/20">
+            <SelectTrigger className="w-full sm:w-[180px] bg-background border-primary/20">
               <SelectValue placeholder="Sélectionner la période" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="today">Aujourd'hui</SelectItem>
-              <SelectItem value="week">Cette semaine</SelectItem>
-              <SelectItem value="month">Ce mois</SelectItem>
-              <SelectItem value="year">Cette année</SelectItem>
+              <SelectItem value="7j">7 derniers jours</SelectItem>
+              <SelectItem value="30j">30 derniers jours</SelectItem>
+              <SelectItem value="90j">3 derniers mois</SelectItem>
+              <SelectItem value="365j">12 derniers mois</SelectItem>
             </SelectContent>
           </Select>
-          <Button 
-            variant="outline" 
-            size="icon" 
-            className="rounded-full hover:bg-primary/10"
+        </div>
+
+        <div className="flex flex-wrap gap-2 w-full sm:w-auto">
+          {isSearchOpen ? (
+            <div className="relative flex-1 sm:flex-initial">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
+              <Input
+                type="text"
+                placeholder="Rechercher..."
+                className="pl-10 w-full sm:w-[200px] bg-background border-primary/20"
+                autoFocus
+                onBlur={handleSearchBlur}
+              />
+            </div>
+          ) : (
+            <Button
+              variant="outline"
+              size="icon"
+              className="border-primary/20"
+              onClick={handleSearch}
+            >
+              <Search className="h-4 w-4" />
+            </Button>
+          )}
+          
+          <Button
+            variant="outline"
+            size="icon"
+            className="border-primary/20"
+            onClick={handleExport}
+          >
+            <Download className="h-4 w-4" />
+          </Button>
+          
+          <Button
+            variant="outline"
+            size="icon"
+            className="border-primary/20"
             onClick={handleFilter}
           >
             <Filter className="h-4 w-4" />
           </Button>
         </div>
-      </motion.div>
-      
-      <motion.div 
-        initial={{ opacity: 0, x: 20 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.5 }}
-        className="flex items-center gap-2"
-      >
-        <Button 
-          variant="ghost" 
-          size="icon" 
-          className="rounded-full hover:bg-primary/10 relative"
-          onClick={handleNotifications}
-        >
-          <Bell className="h-4 w-4" />
-          <span className="absolute -top-1 -right-1 h-3 w-3 bg-red-500 rounded-full"></span>
-        </Button>
-        <Button 
-          variant="ghost" 
-          size="icon" 
-          className="rounded-full hover:bg-primary/10"
-          onClick={handleSettings}
-        >
-          <Settings className="h-4 w-4" />
-        </Button>
-        {isSearchOpen ? (
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
-            <Input
-              placeholder="Rechercher..."
-              className="pl-10 w-[200px] bg-background border-primary/20"
-              autoFocus
-              onBlur={handleSearchBlur}
-            />
-          </div>
-        ) : (
-          <Button 
-            variant="ghost" 
-            className="gap-2 hover:bg-primary/10"
-            onClick={handleSearch}
-          >
-            <Search className="h-4 w-4" />
-            Rechercher
-          </Button>
-        )}
-        <Button 
-          variant="outline" 
-          className="gap-2 border-primary/20 hover:bg-primary/10"
-          onClick={handleExport}
-        >
-          <Download className="h-4 w-4" />
-          Exporter
-        </Button>
-      </motion.div>
+      </div>
     </div>
   );
-}
+};
