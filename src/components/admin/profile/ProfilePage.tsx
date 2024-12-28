@@ -5,10 +5,40 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
+import { useState } from "react";
 
 const ProfilePage = () => {
-  const handleSave = () => {
-    toast.success("Profil mis à jour avec succès");
+  const [formData, setFormData] = useState({
+    firstName: "John",
+    lastName: "Doe",
+    email: "john@example.com",
+    phone: "+33 6 12 34 56 78",
+    company: "Solar Company",
+    location: "Paris, France",
+    bio: ""
+  });
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { id, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [id]: value
+    }));
+  };
+
+  const handleSave = async () => {
+    try {
+      // Simulate API call with a timeout
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      // Log the data that would be sent to the API
+      console.log("Saving profile data:", formData);
+      
+      toast.success("Profil mis à jour avec succès");
+    } catch (error) {
+      console.error("Error saving profile:", error);
+      toast.error("Erreur lors de la sauvegarde du profil");
+    }
   };
 
   return (
@@ -45,38 +75,68 @@ const ProfilePage = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
               <Label htmlFor="firstName">Prénom</Label>
-              <Input id="firstName" defaultValue="John" />
+              <Input 
+                id="firstName" 
+                value={formData.firstName}
+                onChange={handleInputChange}
+              />
             </div>
             <div className="space-y-2">
               <Label htmlFor="lastName">Nom</Label>
-              <Input id="lastName" defaultValue="Doe" />
+              <Input 
+                id="lastName" 
+                value={formData.lastName}
+                onChange={handleInputChange}
+              />
             </div>
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <div className="relative">
                 <Mail className="absolute left-3 top-3 h-4 w-4 text-white/40" />
-                <Input id="email" type="email" defaultValue="john@example.com" className="pl-10" />
+                <Input 
+                  id="email" 
+                  type="email" 
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  className="pl-10" 
+                />
               </div>
             </div>
             <div className="space-y-2">
               <Label htmlFor="phone">Téléphone</Label>
               <div className="relative">
                 <Phone className="absolute left-3 top-3 h-4 w-4 text-white/40" />
-                <Input id="phone" type="tel" defaultValue="+33 6 12 34 56 78" className="pl-10" />
+                <Input 
+                  id="phone" 
+                  type="tel" 
+                  value={formData.phone}
+                  onChange={handleInputChange}
+                  className="pl-10" 
+                />
               </div>
             </div>
             <div className="space-y-2">
               <Label htmlFor="company">Entreprise</Label>
               <div className="relative">
                 <Building className="absolute left-3 top-3 h-4 w-4 text-white/40" />
-                <Input id="company" defaultValue="Solar Company" className="pl-10" />
+                <Input 
+                  id="company" 
+                  value={formData.company}
+                  onChange={handleInputChange}
+                  className="pl-10" 
+                />
               </div>
             </div>
             <div className="space-y-2">
               <Label htmlFor="location">Localisation</Label>
               <div className="relative">
                 <MapPin className="absolute left-3 top-3 h-4 w-4 text-white/40" />
-                <Input id="location" defaultValue="Paris, France" className="pl-10" />
+                <Input 
+                  id="location" 
+                  value={formData.location}
+                  onChange={handleInputChange}
+                  className="pl-10" 
+                />
               </div>
             </div>
             <div className="space-y-2 md:col-span-2">
@@ -85,6 +145,8 @@ const ProfilePage = () => {
                 id="bio"
                 placeholder="Parlez-nous de vous..."
                 className="min-h-[100px]"
+                value={formData.bio}
+                onChange={handleInputChange}
               />
             </div>
           </div>
