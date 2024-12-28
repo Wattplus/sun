@@ -10,13 +10,13 @@
     --card-foreground: 210 40% 98%;
     --popover: 222 47% 11%;
     --popover-foreground: 210 40% 98%;
-    --primary: 195 82% 49%;
+    --primary: 222 47% 11%;
     --primary-foreground: 210 40% 98%;
-    --secondary: 195 82% 49%;
+    --secondary: 222 47% 11%;
     --secondary-foreground: 210 40% 98%;
     --muted: 215 27% 17%;
     --muted-foreground: 215 20% 65%;
-    --accent: 195 82% 49%;
+    --accent: 222 47% 11%;
     --accent-foreground: 210 40% 98%;
     --destructive: 0 62% 30%;
     --destructive-foreground: 210 40% 98%;
@@ -33,7 +33,7 @@
   }
   body {
     @apply bg-background text-foreground;
-    background: linear-gradient(to bottom, #0B1221 0%, #1EAEDB 100%);
+    background: linear-gradient(to bottom, #020617 0%, #1A2847 100%);
     min-height: 100vh;
   }
 }
