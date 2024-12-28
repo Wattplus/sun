@@ -16,7 +16,7 @@ import { Helmet } from "react-helmet";
 import { motion } from "framer-motion";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList } from "@/components/ui/breadcrumb";
 import { DashboardStats } from "@/components/client/dashboard/DashboardStats";
-import { Card } from "@/components/ui/card";
+import { SettingsSection } from "@/components/client/settings/SettingsSection";
 
 const mockContacts = [
   {
@@ -144,7 +144,6 @@ const ClientPortal = () => {
               <div className="grid gap-6">
                 <DashboardStats />
 
-                {/* Section Formulaire et Contacts */}
                 <div className="grid gap-6 lg:grid-cols-2">
                   <div className="space-y-6">
                     <ClientInfoForm onMonthlyBillUpdate={handleMonthlyBillUpdate} />
@@ -159,7 +158,6 @@ const ClientPortal = () => {
                   </div>
                 </div>
 
-                {/* Section Graphiques et Étapes */}
                 <div className="grid gap-6 lg:grid-cols-2">
                   <ConsumptionChart />
                   <NextSteps />
@@ -182,23 +180,7 @@ const ClientPortal = () => {
             </TabsContent>
 
             <TabsContent value="settings">
-              <Card className="p-6">
-                <h2 className="text-2xl font-semibold mb-6">Paramètres du compte</h2>
-                <div className="grid gap-6">
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium">Nom</label>
-                    <p className="p-2 bg-muted rounded-md">{userInfo.name}</p>
-                  </div>
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium">Email</label>
-                    <p className="p-2 bg-muted rounded-md">{userInfo.email}</p>
-                  </div>
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium">Téléphone</label>
-                    <p className="p-2 bg-muted rounded-md">{userInfo.phone}</p>
-                  </div>
-                </div>
-              </Card>
+              <SettingsSection userInfo={userInfo} />
             </TabsContent>
           </Tabs>
         </main>
