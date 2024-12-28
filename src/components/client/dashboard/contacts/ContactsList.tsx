@@ -1,9 +1,10 @@
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Phone, Mail, Building, Shield } from "lucide-react";
+import { Phone, Mail, Building, Shield, ExternalLink } from "lucide-react";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
 
 interface Contact {
   id: string;
@@ -20,6 +21,8 @@ interface ContactsListProps {
 }
 
 export const ContactsList = ({ contacts }: ContactsListProps) => {
+  const navigate = useNavigate();
+  
   const handleCall = (phone: string) => {
     window.location.href = `tel:${phone}`;
     toast.success("Appel en cours...");
@@ -28,6 +31,10 @@ export const ContactsList = ({ contacts }: ContactsListProps) => {
   const handleEmail = (email: string) => {
     window.location.href = `mailto:${email}`;
     toast.success("Ouverture de votre messagerie...");
+  };
+
+  const handleViewProfile = (id: string) => {
+    navigate(`/directory/${id}`);
   };
 
   return (
@@ -72,7 +79,7 @@ export const ContactsList = ({ contacts }: ContactsListProps) => {
                   </Badge>
                 </div>
 
-                <div className="flex gap-2">
+                <div className="flex flex-wrap gap-2">
                   <Button
                     variant="outline"
                     className="flex-1 gap-2"
@@ -88,6 +95,14 @@ export const ContactsList = ({ contacts }: ContactsListProps) => {
                   >
                     <Mail className="w-4 h-4" />
                     Email
+                  </Button>
+                  <Button
+                    variant="default"
+                    className="flex-1 gap-2"
+                    onClick={() => handleViewProfile(contact.id)}
+                  >
+                    <ExternalLink className="w-4 h-4" />
+                    Voir le profil
                   </Button>
                 </div>
               </motion.div>

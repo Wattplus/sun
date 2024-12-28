@@ -1,20 +1,37 @@
 import { Card } from "@/components/ui/card";
-import { CheckCircle2, Circle } from "lucide-react";
+import { CheckCircle2, Circle, ExternalLink } from "lucide-react";
 import { motion } from "framer-motion";
+import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
+
+interface Step {
+  title: string;
+  description: string;
+  status: "completed" | "current" | "pending";
+  date: string;
+  installerId?: string;
+  installerName?: string;
+}
 
 export const NextSteps = () => {
-  const steps = [
+  const navigate = useNavigate();
+  
+  const steps: Step[] = [
     {
       title: "Étude Personnalisée",
       description: "Analyse détaillée de votre consommation et de votre toiture",
       status: "completed",
-      date: "15/03/2024"
+      date: "15/03/2024",
+      installerId: "inst-123",
+      installerName: "Solar Expert"
     },
     {
       title: "Visite Technique",
       description: "Inspection sur site par notre expert technique",
       status: "current",
-      date: "22/03/2024"
+      date: "22/03/2024",
+      installerId: "inst-123",
+      installerName: "Solar Expert"
     },
     {
       title: "Proposition Commerciale",
@@ -46,6 +63,10 @@ export const NextSteps = () => {
       x: 0,
       opacity: 1
     }
+  };
+
+  const handleViewInstaller = (installerId: string) => {
+    navigate(`/directory/${installerId}`);
   };
 
   return (
@@ -86,6 +107,16 @@ export const NextSteps = () => {
                       <p className="text-sm text-muted-foreground">
                         {step.description}
                       </p>
+                      {step.installerName && (
+                        <Button
+                          variant="link"
+                          className="p-0 h-auto text-sm text-primary mt-1"
+                          onClick={() => step.installerId && handleViewInstaller(step.installerId)}
+                        >
+                          <ExternalLink className="w-4 h-4 mr-1" />
+                          Voir le profil de {step.installerName}
+                        </Button>
+                      )}
                     </div>
                     <span className="text-sm text-muted-foreground">
                       {step.date}
