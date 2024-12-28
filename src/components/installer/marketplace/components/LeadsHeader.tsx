@@ -1,6 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Filter, Download, Wallet } from "lucide-react";
-import { InstallerBreadcrumb } from "../../navigation/InstallerBreadcrumb";
+import { Filter, FileDown, Wallet } from "lucide-react";
 
 interface LeadsHeaderProps {
   onToggleFilters: () => void;
@@ -10,31 +9,41 @@ interface LeadsHeaderProps {
 
 export const LeadsHeader = ({ onToggleFilters, onExport, onPrepaidAccount }: LeadsHeaderProps) => {
   return (
-    <div className="flex items-center justify-between">
-      <InstallerBreadcrumb />
-      <div className="flex items-center gap-3">
-        <Button 
-          variant="outline" 
-          className="gap-2 bg-primary/10 hover:bg-primary/20 border-primary/20"
+    <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+      <div>
+        <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-primary-light bg-clip-text text-transparent">
+          Nouveaux Leads
+        </h1>
+        <p className="text-muted-foreground">
+          Découvrez et achetez de nouveaux leads qualifiés
+        </p>
+      </div>
+
+      <div className="flex flex-wrap gap-2">
+        <Button
+          variant="outline"
+          size="sm"
+          className="border-primary/20"
           onClick={onToggleFilters}
         >
-          <Filter className="w-4 h-4" />
-          Filtrer
-        </Button>
-        <Button 
-          variant="outline" 
-          className="gap-2 bg-primary/10 hover:bg-primary/20 border-primary/20" 
-          onClick={onExport}
-        >
-          <Download className="w-4 h-4" />
-          Exporter
+          <Filter className="w-4 h-4 mr-2" />
+          Filtres
         </Button>
         <Button
           variant="outline"
-          className="gap-2 bg-primary/10 hover:bg-primary/20 border-primary/20"
+          size="sm"
+          className="border-primary/20"
+          onClick={onExport}
+        >
+          <FileDown className="w-4 h-4 mr-2" />
+          Exporter
+        </Button>
+        <Button
+          variant="default"
+          size="sm"
           onClick={onPrepaidAccount}
         >
-          <Wallet className="w-4 h-4" />
+          <Wallet className="w-4 h-4 mr-2" />
           Recharger
         </Button>
       </div>

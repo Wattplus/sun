@@ -69,58 +69,56 @@ export const NewLeadsPage = () => {
     });
 
   return (
-    <InstallerLayout>
-      <div className="min-h-screen bg-gradient-to-b from-background/95 to-background">
-        <div className="max-w-[1400px] mx-auto p-6 space-y-8">
-          <LeadsHeader 
-            onToggleFilters={() => setShowFilters(!showFilters)}
-            onExport={handleExport}
-            onPrepaidAccount={handlePrepaidAccount}
-          />
+    <div className="min-h-screen bg-gradient-to-b from-background/95 to-background">
+      <div className="max-w-[1400px] mx-auto p-6 space-y-8">
+        <LeadsHeader 
+          onToggleFilters={() => setShowFilters(!showFilters)}
+          onExport={handleExport}
+          onPrepaidAccount={handlePrepaidAccount}
+        />
 
-          {showFilters && (
-            <Card className="p-4 border border-primary/20 bg-background/50 backdrop-blur-sm">
-              <LeadsFilters
-                availableDepartments={availableDepartments}
-                selectedDepartments={selectedDepartments}
-                projectTypeFilter={projectTypeFilter}
-                priceFilter={priceFilter}
-                onDepartmentSelect={(dept) => setSelectedDepartments(prev => [...prev, dept])}
-                onDepartmentRemove={(dept) => setSelectedDepartments(prev => prev.filter(d => d !== dept))}
-                onProjectTypeChange={setProjectTypeFilter}
-                onPriceFilterChange={setPriceFilter}
-              />
-            </Card>
-          )}
-
-          <LeadsSelection 
-            selectedLeads={selectedLeads}
-            onClearSelection={() => setSelectedLeads([])}
-            onPurchase={handlePurchase}
-            hasEnoughBalance={hasEnoughBalance}
-          />
-          
-          <LeadsSummaryCards 
-            availableLeads={mockAvailableLeads}
-            selectedLeads={selectedLeads}
-            balance={balance}
-            onPrepaidAccount={handlePrepaidAccount}
-          />
-
-          <Card className="overflow-hidden border border-primary/20 bg-background/50 backdrop-blur-sm">
-            <div className="p-6">
-              <div className="overflow-x-auto">
-                <LeadsTable 
-                  leads={filteredLeads}
-                  selectedLeads={selectedLeads}
-                  onSelectAll={handleSelectAll}
-                  onSelectLead={handleLeadSelect}
-                />
-              </div>
-            </div>
+        {showFilters && (
+          <Card className="p-4 border border-primary/20 bg-background/50 backdrop-blur-sm">
+            <LeadsFilters
+              availableDepartments={availableDepartments}
+              selectedDepartments={selectedDepartments}
+              projectTypeFilter={projectTypeFilter}
+              priceFilter={priceFilter}
+              onDepartmentSelect={(dept) => setSelectedDepartments(prev => [...prev, dept])}
+              onDepartmentRemove={(dept) => setSelectedDepartments(prev => prev.filter(d => d !== dept))}
+              onProjectTypeChange={setProjectTypeFilter}
+              onPriceFilterChange={setPriceFilter}
+            />
           </Card>
-        </div>
+        )}
+
+        <LeadsSelection 
+          selectedLeads={selectedLeads}
+          onClearSelection={() => setSelectedLeads([])}
+          onPurchase={handlePurchase}
+          hasEnoughBalance={hasEnoughBalance}
+        />
+        
+        <LeadsSummaryCards 
+          availableLeads={mockAvailableLeads}
+          selectedLeads={selectedLeads}
+          balance={balance}
+          onPrepaidAccount={handlePrepaidAccount}
+        />
+
+        <Card className="overflow-hidden border border-primary/20 bg-background/50 backdrop-blur-sm">
+          <div className="p-6">
+            <div className="overflow-x-auto">
+              <LeadsTable 
+                leads={filteredLeads}
+                selectedLeads={selectedLeads}
+                onSelectAll={handleSelectAll}
+                onSelectLead={handleLeadSelect}
+              />
+            </div>
+          </div>
+        </Card>
       </div>
-    </InstallerLayout>
+    </div>
   );
 };
