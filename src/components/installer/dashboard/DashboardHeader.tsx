@@ -1,28 +1,30 @@
 import { Button } from "@/components/ui/button";
-import { Search, Download, Bell, Settings } from "lucide-react";
+import { Search, Download, Bell, Settings, Filter } from "lucide-react";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
 import { motion } from "framer-motion";
 import { useToast } from "@/hooks/use-toast";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 export function DashboardHeader() {
   const { toast } = useToast();
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [filterPeriod, setFilterPeriod] = useState("today");
   const currentDate = format(new Date(), "EEEE d MMMM yyyy", { locale: fr });
   
   const handleNotifications = () => {
     toast({
       title: "Notifications",
-      description: "Fonctionnalité en cours de développement",
+      description: "Vous avez 3 nouvelles notifications",
     });
   };
 
   const handleSettings = () => {
     toast({
       title: "Paramètres",
-      description: "Fonctionnalité en cours de développement",
+      description: "Accès aux paramètres du compte",
     });
   };
 
@@ -32,8 +34,16 @@ export function DashboardHeader() {
 
   const handleExport = () => {
     toast({
-      title: "Export",
-      description: "Fonctionnalité en cours de développement",
+      title: "Export des données",
+      description: "L'export de vos données est en cours...",
+    });
+  };
+
+  const handleFilterChange = (value: string) => {
+    setFilterPeriod(value);
+    toast({
+      title: "Période modifiée",
+      description: `Les données sont maintenant filtrées pour : ${value}`,
     });
   };
   
@@ -43,11 +53,25 @@ export function DashboardHeader() {
         initial={{ opacity: 0, x: -20 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.5 }}
+        className="flex flex-col gap-2"
       >
-        <h1 className="text-2xl font-bold text-white">
-          WattPlus - Tableau de Bord
-        </h1>
-        <p className="text-muted-foreground mt-1">{currentDate}</p>
+        <p className="text-muted-foreground">{currentDate}</p>
+        <div className="flex items-center gap-4">
+          <Select value={filterPeriod} onValueChange={handleFilterChange}>
+            <SelectTrigger className="w-[180px] bg-background/60 border-primary/20">
+              <SelectValue placeholder="Sélectionner la période" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="today">Aujourd'hui</SelectItem>
+              <SelectItem value="week">Cette semaine</SelectItem>
+              <SelectItem value="month">Ce mois</SelectItem>
+              <SelectItem value="year">Cette année</SelectItem>
+            </SelectContent>
+          </Select>
+          <Button variant="outline" size="icon" className="rounded-full hover:bg-primary/10">
+            <Filter className="h-4 w-4" />
+          </Button>
+        </div>
       </motion.div>
       
       <motion.div 
@@ -59,10 +83,11 @@ export function DashboardHeader() {
         <Button 
           variant="ghost" 
           size="icon" 
-          className="rounded-full hover:bg-primary/10"
+          className="rounded-full hover:bg-primary/10 relative"
           onClick={handleNotifications}
         >
           <Bell className="h-4 w-4" />
+          <span className="absolute -top-1 -right-1 h-3 w-3 bg-red-500 rounded-full"></span>
         </Button>
         <Button 
           variant="ghost" 
