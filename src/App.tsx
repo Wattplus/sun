@@ -10,11 +10,13 @@ import StatisticsPage from "./components/admin/statistics/StatisticsPage";
 import { SettingsPage } from "./components/installer/settings/SettingsPage";
 import NotificationsPage from "./components/admin/notifications/NotificationsPage";
 import { InstallerProfilePage } from "./pages/installer/profile/InstallerProfilePage";
+import { Index } from "./pages/Index";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
+        <Route path="/" element={<Index />} />
         <Route
           path="/espace-installateur/*"
           element={
