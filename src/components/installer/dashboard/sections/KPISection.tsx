@@ -1,18 +1,18 @@
 import { Card } from "@/components/ui/card";
-import { Users, FileText, CheckCircle, TrendingUp, Euro } from "lucide-react";
+import { Wallet, FileText, CheckCircle, TrendingUp, Euro } from "lucide-react";
 import { motion } from "framer-motion";
 import { Area, AreaChart, ResponsiveContainer } from "recharts";
 
 const kpiData = [
   {
-    title: "Leads Reçus",
-    value: "45",
-    change: "+12% cette semaine",
-    icon: Users,
+    title: "Investissement Total",
+    value: "2,500€",
+    change: "+15% ce mois",
+    icon: Wallet,
     data: Array.from({ length: 30 }, (_, i) => ({ value: Math.random() * 100 }))
   },
   {
-    title: "Devis Envoyés",
+    title: "Leads Achetés",
     value: "30",
     change: "+10% cette semaine",
     icon: FileText,
