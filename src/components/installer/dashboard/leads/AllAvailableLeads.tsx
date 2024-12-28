@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Lead } from "@/types/crm";
-import { InstallerLayout } from "../../navigation/InstallerLayout";
 import { Card } from "@/components/ui/card";
 import { mockAvailableLeads } from "../mockAvailableLeads";
 import { toast } from "sonner";
@@ -8,12 +7,15 @@ import { LeadsTable } from "../LeadsTable";
 import { LeadsFilters } from "../LeadsFilters";
 import { Button } from "@/components/ui/button";
 import { ShoppingCart, X } from "lucide-react";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { LeadCard } from "../LeadCard";
 
 export const AllAvailableLeads = () => {
   const [selectedLeads, setSelectedLeads] = useState<Lead[]>([]);
   const [projectTypeFilter, setProjectTypeFilter] = useState("all");
   const [selectedDepartments, setSelectedDepartments] = useState<string[]>([]);
   const [priceFilter, setPriceFilter] = useState<"default" | "asc" | "desc">("default");
+  const isMobile = useIsMobile();
   
   const availableDepartments = Array.from(new Set(mockAvailableLeads.map(lead => lead.postalCode.substring(0, 2))));
 
@@ -51,10 +53,10 @@ export const AllAvailableLeads = () => {
     });
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 p-4">
       {selectedLeads.length > 0 && (
         <Card className="p-4 bg-primary/5 border-primary/20">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div>
               <h3 className="text-lg font-medium">
                 {selectedLeads.length} lead{selectedLeads.length > 1 ? 's' : ''} sélectionné{selectedLeads.length > 1 ? 's' : ''}
@@ -63,12 +65,12 @@ export const AllAvailableLeads = () => {
                 Total: {selectedLeads.reduce((sum, lead) => sum + lead.price, 0)}€
               </p>
             </div>
-            <div className="flex gap-3">
+            <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
               <Button 
                 variant="outline" 
                 size="sm"
                 onClick={() => setSelectedLeads([])}
-                className="gap-2"
+                className="gap-2 w-full sm:w-auto"
               >
                 <X className="h-4 w-4" />
                 Tout désélectionner
@@ -76,7 +78,7 @@ export const AllAvailableLeads = () => {
               <Button 
                 size="sm"
                 onClick={handlePurchase}
-                className="gap-2"
+                className="gap-2 w-full sm:w-auto"
               >
                 <ShoppingCart className="h-4 w-4" />
                 Acheter la sélection
@@ -103,14 +105,28 @@ export const AllAvailableLeads = () => {
             onPriceFilterChange={setPriceFilter}
           />
 
-          <div className="rounded-md border">
-            <LeadsTable 
-              leads={filteredLeads}
-              selectedLeads={selectedLeads}
-              onSelectAll={handleSelectAll}
-              onSelectLead={handleLeadSelect}
-            />
-          </div>
+          {isMobile ? (
+            <div className="grid grid-cols-1 gap-4">
+              {filteredLeads.map((lead) => (
+                <LeadCard
+                  key={lead.id}
+                  lead={lead}
+                  status="available"
+                  onSelect={() => handleLeadSelect(lead)}
+                  isSelected={selectedLeads.some(l => l.id === lead.id)}
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="rounded-md border">
+              <LeadsTable 
+                leads={filteredLeads}
+                selectedLeads={selectedLeads}
+                onSelectAll={handleSelectAll}
+                onSelectLead={handleLeadSelect}
+              />
+            </div>
+          )}
         </div>
       </Card>
     </div>

@@ -1,6 +1,7 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { X } from "lucide-react";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface LeadsFiltersProps {
   availableDepartments: string[];
@@ -23,42 +24,46 @@ export const LeadsFilters = ({
   onProjectTypeChange,
   onPriceFilterChange
 }: LeadsFiltersProps) => {
+  const isMobile = useIsMobile();
+
   return (
-    <div className="flex flex-wrap gap-4 items-center mb-4">
-      <Select value={projectTypeFilter} onValueChange={onProjectTypeChange}>
-        <SelectTrigger className="w-[180px] bg-background/60 border-primary/20">
-          <SelectValue placeholder="Type de projet" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="all">Tous les types</SelectItem>
-          <SelectItem value="residential">Résidentiel</SelectItem>
-          <SelectItem value="professional">Professionnel</SelectItem>
-        </SelectContent>
-      </Select>
+    <div className="flex flex-col gap-4">
+      <div className={`flex flex-wrap gap-4 ${isMobile ? 'flex-col' : ''}`}>
+        <Select value={projectTypeFilter} onValueChange={onProjectTypeChange}>
+          <SelectTrigger className={`bg-background/60 border-primary/20 ${isMobile ? 'w-full' : 'w-[180px]'}`}>
+            <SelectValue placeholder="Type de projet" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">Tous les types</SelectItem>
+            <SelectItem value="residential">Résidentiel</SelectItem>
+            <SelectItem value="professional">Professionnel</SelectItem>
+          </SelectContent>
+        </Select>
 
-      <Select onValueChange={onDepartmentSelect}>
-        <SelectTrigger className="w-[180px] bg-background/60 border-primary/20">
-          <SelectValue placeholder="Département" />
-        </SelectTrigger>
-        <SelectContent>
-          {availableDepartments.map((dept) => (
-            <SelectItem key={dept} value={dept}>
-              Département {dept}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
+        <Select onValueChange={onDepartmentSelect}>
+          <SelectTrigger className={`bg-background/60 border-primary/20 ${isMobile ? 'w-full' : 'w-[180px]'}`}>
+            <SelectValue placeholder="Département" />
+          </SelectTrigger>
+          <SelectContent>
+            {availableDepartments.map((dept) => (
+              <SelectItem key={dept} value={dept}>
+                Département {dept}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
 
-      <Select value={priceFilter} onValueChange={onPriceFilterChange}>
-        <SelectTrigger className="w-[180px] bg-background/60 border-primary/20">
-          <SelectValue placeholder="Prix" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="default">Par défaut</SelectItem>
-          <SelectItem value="asc">Prix croissant</SelectItem>
-          <SelectItem value="desc">Prix décroissant</SelectItem>
-        </SelectContent>
-      </Select>
+        <Select value={priceFilter} onValueChange={onPriceFilterChange}>
+          <SelectTrigger className={`bg-background/60 border-primary/20 ${isMobile ? 'w-full' : 'w-[180px]'}`}>
+            <SelectValue placeholder="Prix" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="default">Par défaut</SelectItem>
+            <SelectItem value="asc">Prix croissant</SelectItem>
+            <SelectItem value="desc">Prix décroissant</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
 
       <div className="flex flex-wrap gap-2">
         {selectedDepartments.map((dept) => (
