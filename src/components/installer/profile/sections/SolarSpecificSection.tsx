@@ -35,7 +35,7 @@ export const SolarSpecificSection = ({ formData, handleChange, handleCheckboxCha
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.2 }}
     >
-      <Card className="p-6 bg-white/5 backdrop-blur-sm border-primary/20">
+      <Card className="p-6 bg-background/50 backdrop-blur-sm border-primary/20">
         <div className="flex items-center gap-3 mb-4">
           <div className="p-2 rounded-lg bg-primary/10">
             <Sun className="h-5 w-5 text-primary" />
