@@ -43,9 +43,17 @@ export function DashboardTabs() {
           </Button>
         </div>
         {showAllAvailable ? (
-          <AllAvailableLeads leads={mockAvailableLeads} />
+          <AllAvailableLeads 
+            leads={mockAvailableLeads} 
+            onClose={() => setShowAllAvailable(false)}
+          />
         ) : (
-          <LeadsOverview leads={mockAvailableLeads.slice(0, 4)} />
+          <LeadsOverview 
+            availableLeads={mockAvailableLeads.slice(0, 4)}
+            purchasedLeads={mockPurchasedLeads.slice(0, 4)}
+            onShowAllAvailable={() => setShowAllAvailable(true)}
+            onShowAllPurchased={() => setShowAllPurchased(true)}
+          />
         )}
       </div>
 
@@ -62,9 +70,17 @@ export function DashboardTabs() {
           </Button>
         </div>
         {showAllPurchased ? (
-          <AllPurchasedLeads leads={mockPurchasedLeads} />
+          <AllPurchasedLeads 
+            leads={mockPurchasedLeads} 
+            onClose={() => setShowAllPurchased(false)}
+          />
         ) : (
-          <LeadsOverview leads={mockPurchasedLeads.slice(0, 4)} />
+          <LeadsOverview 
+            availableLeads={mockAvailableLeads.slice(0, 4)}
+            purchasedLeads={mockPurchasedLeads.slice(0, 4)}
+            onShowAllAvailable={() => setShowAllAvailable(true)}
+            onShowAllPurchased={() => setShowAllPurchased(true)}
+          />
         )}
       </div>
     </div>
