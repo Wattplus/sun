@@ -15,9 +15,6 @@ export function DashboardContent() {
         transition={{ duration: 0.5 }}
         className="rounded-xl backdrop-blur-sm border border-primary/10 p-6 hover:border-primary/20 transition-all duration-300"
       >
-        <h1 className="text-3xl font-bold text-white mb-6">
-          Tableau de Bord WattPlus
-        </h1>
         <KPISection />
       </motion.div>
 
