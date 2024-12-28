@@ -15,7 +15,7 @@ export const SubmitButton = ({ isSubmitting }: SubmitButtonProps) => {
         disabled={isSubmitting}
       >
         <Send className="w-6 h-6" />
-        {isSubmitting ? "Ajout en cours..." : "Ajouter la carte"}
+        {isSubmitting ? "Envoi en cours..." : "Faire une étude gratuite"}
       </Button>
     </div>
   );
