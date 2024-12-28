@@ -25,6 +25,19 @@ export function DashboardContent() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.1 }}
       >
+        <Card className="p-6 bg-background/50 backdrop-blur-sm border-primary/10 hover:border-primary/20 transition-all duration-300">
+          <h2 className="text-xl font-semibold text-white mb-4">
+            Suivi des Devis
+          </h2>
+          <QuotesOverview />
+        </Card>
+      </motion.div>
+
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.2 }}
+      >
         <Link to="/espace-installateur/leads/nouveaux">
           <div className="relative group">
             <div className="absolute -inset-1 bg-gradient-to-r from-primary via-primary/50 to-primary rounded-xl blur opacity-60 group-hover:opacity-100 transition duration-200"></div>
@@ -41,7 +54,7 @@ export function DashboardContent() {
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.2 }}
+        transition={{ duration: 0.5, delay: 0.3 }}
       >
         <Card className="p-6 bg-background/50 backdrop-blur-sm border-primary/10 hover:border-primary/20 transition-all duration-300">
           <h2 className="text-xl font-semibold text-white mb-4">
@@ -51,33 +64,18 @@ export function DashboardContent() {
         </Card>
       </motion.div>
 
-      <div className="grid grid-cols-1 gap-8">
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.4 }}
-        >
-          <Card className="p-6 bg-background/50 backdrop-blur-sm border-primary/10 hover:border-primary/20 transition-all duration-300">
-            <h2 className="text-xl font-semibold text-white mb-4">
-              Performance
-            </h2>
-            <PerformanceCharts />
-          </Card>
-        </motion.div>
-
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.5 }}
-        >
-          <Card className="p-6 bg-background/50 backdrop-blur-sm border-primary/10 hover:border-primary/20 transition-all duration-300">
-            <h2 className="text-xl font-semibold text-white mb-4">
-              Suivi des Devis
-            </h2>
-            <QuotesOverview />
-          </Card>
-        </motion.div>
-      </div>
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.4 }}
+      >
+        <Card className="p-6 bg-background/50 backdrop-blur-sm border-primary/10 hover:border-primary/20 transition-all duration-300">
+          <h2 className="text-xl font-semibold text-white mb-4">
+            Performance
+          </h2>
+          <PerformanceCharts />
+        </Card>
+      </motion.div>
     </div>
   );
 }
