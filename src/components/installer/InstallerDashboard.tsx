@@ -1,5 +1,5 @@
 import { DashboardHeader } from "./dashboard/DashboardHeader";
-import { DashboardContent } from "./dashboard/DashboardContent";
+import { DashboardLanding } from "./dashboard/DashboardLanding";
 import { motion } from "framer-motion";
 
 export function InstallerDashboard() {
@@ -14,7 +14,7 @@ export function InstallerDashboard() {
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom_left,_var(--tw-gradient-stops))] from-accent/5 via-transparent to-transparent"></div>
       <div className="container mx-auto p-4 sm:p-6 lg:p-8 space-y-8 relative">
         <DashboardHeader />
-        <DashboardContent />
+        <DashboardLanding />
       </div>
     </motion.div>
   );
