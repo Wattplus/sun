@@ -33,9 +33,36 @@ const faqItems = [
 ];
 
 export function DashboardTabs() {
-  const [showAllAvailable, setShowAllAvailable] = useState(false);
-  const [showAllPurchased, setShowAllPurchased] = useState(false);
+  const [activeSection, setActiveSection] = useState<'overview' | 'available' | 'purchased'>('overview');
   const [showFaq, setShowFaq] = useState(false);
+
+  const renderContent = () => {
+    switch (activeSection) {
+      case 'available':
+        return (
+          <AllAvailableLeads 
+            leads={mockAvailableLeads} 
+            onClose={() => setActiveSection('overview')}
+          />
+        );
+      case 'purchased':
+        return (
+          <AllPurchasedLeads 
+            leads={mockPurchasedLeads} 
+            onClose={() => setActiveSection('overview')}
+          />
+        );
+      default:
+        return (
+          <LeadsOverview 
+            availableLeads={mockAvailableLeads.slice(0, 4)}
+            purchasedLeads={mockPurchasedLeads.slice(0, 4)}
+            onShowAllAvailable={() => setActiveSection('available')}
+            onShowAllPurchased={() => setActiveSection('purchased')}
+          />
+        );
+    }
+  };
 
   return (
     <div className="space-y-8 sm:space-y-12">
@@ -62,68 +89,9 @@ export function DashboardTabs() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.4 }}
-        className="space-y-8"
+        className="space-y-6"
       >
-        <div className="flex items-center justify-between">
-          <h2 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-primary to-primary-light bg-clip-text text-transparent">
-            Leads disponibles
-          </h2>
-          <Button
-            variant="ghost"
-            onClick={() => setShowAllAvailable(!showAllAvailable)}
-            className="gap-2 hover:bg-primary/10"
-          >
-            {showAllAvailable ? "Voir moins" : "Voir tout"}
-            <ChevronRight className={`h-4 w-4 transition-transform ${showAllAvailable ? "rotate-90" : ""}`} />
-          </Button>
-        </div>
-        {showAllAvailable ? (
-          <AllAvailableLeads 
-            leads={mockAvailableLeads} 
-            onClose={() => setShowAllAvailable(false)}
-          />
-        ) : (
-          <LeadsOverview 
-            availableLeads={mockAvailableLeads.slice(0, 4)}
-            purchasedLeads={mockPurchasedLeads.slice(0, 4)}
-            onShowAllAvailable={() => setShowAllAvailable(true)}
-            onShowAllPurchased={() => setShowAllPurchased(true)}
-          />
-        )}
-      </motion.div>
-
-      <motion.div 
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.5 }}
-        className="space-y-8"
-      >
-        <div className="flex items-center justify-between">
-          <h2 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-primary to-primary-light bg-clip-text text-transparent">
-            Leads achetés
-          </h2>
-          <Button
-            variant="ghost"
-            onClick={() => setShowAllPurchased(!showAllPurchased)}
-            className="gap-2 hover:bg-primary/10"
-          >
-            {showAllPurchased ? "Voir moins" : "Voir tout"}
-            <ChevronRight className={`h-4 w-4 transition-transform ${showAllPurchased ? "rotate-90" : ""}`} />
-          </Button>
-        </div>
-        {showAllPurchased ? (
-          <AllPurchasedLeads 
-            leads={mockPurchasedLeads} 
-            onClose={() => setShowAllPurchased(false)}
-          />
-        ) : (
-          <LeadsOverview 
-            availableLeads={mockAvailableLeads.slice(0, 4)}
-            purchasedLeads={mockPurchasedLeads.slice(0, 4)}
-            onShowAllAvailable={() => setShowAllAvailable(true)}
-            onShowAllPurchased={() => setShowAllPurchased(true)}
-          />
-        )}
+        {renderContent()}
       </motion.div>
 
       <motion.div 
@@ -133,7 +101,7 @@ export function DashboardTabs() {
         className="space-y-4"
       >
         <div className="flex items-center justify-between">
-          <h2 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-primary to-primary-light bg-clip-text text-transparent flex items-center gap-2">
+          <h2 className="text-2xl font-bold bg-gradient-to-r from-primary to-primary-light bg-clip-text text-transparent flex items-center gap-2">
             <HelpCircle className="h-6 w-6" />
             Aide et FAQ
           </h2>
@@ -159,7 +127,7 @@ export function DashboardTabs() {
                   <AccordionTrigger className="text-lg hover:text-primary">
                     {item.question}
                   </AccordionTrigger>
-                  <AccordionContent className="text-gray-400">
+                  <AccordionContent className="text-muted-foreground">
                     {item.answer}
                   </AccordionContent>
                 </AccordionItem>
