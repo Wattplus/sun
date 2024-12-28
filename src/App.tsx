@@ -1,11 +1,11 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { PurchasedLeadsPage } from "@/components/installer/leads/PurchasedLeadsPage";
-import { MarketplacePage } from "@/components/installer/marketplace/MarketplacePage";
-import { NewLeadsPage } from "@/components/installer/marketplace/NewLeadsPage";
-import { Toaster } from "@/components/ui/toaster";
-import { ThemeProvider } from "@/components/theme-provider";
+import { PurchasedLeadsPage } from "./components/installer/leads/PurchasedLeadsPage";
+import { MarketplacePage } from "./components/installer/marketplace/MarketplacePage";
+import { NewLeadsPage } from "./components/installer/marketplace/NewLeadsPage";
+import { Toaster } from "./components/ui/toaster";
+import { ThemeProvider } from "./components/theme-provider";
 
-const App = () => {
+export default function App() {
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
       <Router>
@@ -19,5 +19,3 @@ const App = () => {
     </ThemeProvider>
   );
 }
-
-export default App;
