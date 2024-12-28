@@ -10,63 +10,63 @@ export const StatsCards = () => {
       change: "+12% cette semaine",
       icon: TrendingUp,
       color: "text-primary",
-      bgColor: "bg-primary/10"
+      bgColor: "bg-primary/5"
     },
     {
       title: "Leads achetés",
       value: "12",
       change: "+8% ce mois",
       icon: Users,
-      color: "text-green-500",
-      bgColor: "bg-green-500/10"
+      color: "text-primary",
+      bgColor: "bg-primary/5"
     },
     {
       title: "Taux de conversion",
       value: "68%",
       change: "+5% ce trimestre",
       icon: Star,
-      color: "text-yellow-500",
-      bgColor: "bg-yellow-500/10"
+      color: "text-primary",
+      bgColor: "bg-primary/5"
     },
     {
       title: "Temps moyen",
       value: "2.4j",
       change: "-0.5j ce mois",
       icon: Clock,
-      color: "text-blue-500",
-      bgColor: "bg-blue-500/10"
+      color: "text-primary",
+      bgColor: "bg-primary/5"
     },
     {
       title: "Chiffre d'affaires",
       value: "45K€",
       change: "+15% ce mois",
       icon: Euro,
-      color: "text-emerald-500",
-      bgColor: "bg-emerald-500/10"
+      color: "text-primary",
+      bgColor: "bg-primary/5"
     },
     {
       title: "Devis envoyés",
       value: "18",
       change: "+4 cette semaine",
       icon: FileText,
-      color: "text-purple-500",
-      bgColor: "bg-purple-500/10"
+      color: "text-primary",
+      bgColor: "bg-primary/5"
     },
     {
       title: "Projets signés",
       value: "8",
       change: "+2 ce mois",
       icon: CheckCircle,
-      color: "text-teal-500",
-      bgColor: "bg-teal-500/10"
+      color: "text-primary",
+      bgColor: "bg-primary/5"
     },
     {
       title: "En attente",
       value: "6",
       change: "-2 cette semaine",
       icon: AlertCircle,
-      color: "text-orange-500",
-      bgColor: "bg-orange-500/10"
+      color: "text-primary",
+      bgColor: "bg-primary/5"
     }
   ];
 
@@ -82,17 +82,17 @@ export const StatsCards = () => {
             transition={{ duration: 0.3, delay: index * 0.1 }}
             className="col-span-2 sm:col-span-2 lg:col-span-1"
           >
-            <Card className="p-4 bg-white/5 backdrop-blur-sm border-primary/20 hover:border-primary/40 transition-all duration-300">
+            <Card className="p-4 bg-background/50 backdrop-blur-sm border-primary/10 hover:border-primary/20 transition-all duration-300">
               <div className="flex flex-col gap-2">
                 <div className={`p-2 rounded-lg ${stat.bgColor} w-fit`}>
                   <Icon className={`h-4 w-4 ${stat.color}`} />
                 </div>
                 <div>
                   <p className="text-xs text-muted-foreground">{stat.title}</p>
-                  <p className="text-xl font-bold bg-gradient-to-r from-white to-white/80 bg-clip-text text-transparent">
+                  <p className="text-xl font-bold text-white">
                     {stat.value}
                   </p>
-                  <p className={`text-xs ${stat.change.includes('+') ? 'text-green-500' : 'text-red-500'}`}>
+                  <p className={`text-xs ${stat.change.includes('+') ? 'text-primary' : 'text-destructive'}`}>
                     {stat.change}
                   </p>
                 </div>

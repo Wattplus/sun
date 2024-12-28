@@ -20,21 +20,21 @@ export const LeadsOverview = ({
   onShowAllPurchased,
 }: LeadsOverviewProps) => {
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-8">
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.1 }}
       >
-        <Card className="overflow-hidden border-2 border-primary/10 bg-glass-gradient backdrop-blur-sm hover:bg-glass-gradient-hover transition-all duration-300">
-          <div className="p-4 sm:p-6">
+        <Card className="overflow-hidden border border-primary/10 bg-background/50 backdrop-blur-sm">
+          <div className="p-6">
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-3">
-                <div className="p-2.5 bg-primary/10 rounded-xl">
+                <div className="p-2.5 bg-primary/5 rounded-xl">
                   <Sparkles className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
                 </div>
                 <div>
-                  <h2 className="text-lg sm:text-xl font-semibold">Leads Disponibles</h2>
+                  <h2 className="text-lg sm:text-xl font-semibold text-white">Leads Disponibles</h2>
                   <p className="text-sm text-muted-foreground">
                     {availableLeads.length} leads en attente
                   </p>
@@ -43,7 +43,7 @@ export const LeadsOverview = ({
               <Button 
                 variant="ghost"
                 onClick={onShowAllAvailable}
-                className="gap-2 hover:bg-primary/5 group hidden sm:flex"
+                className="gap-2 text-primary hover:text-primary/80 hover:bg-primary/5 group hidden sm:flex"
               >
                 Voir tout
                 <ChevronRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
@@ -64,7 +64,7 @@ export const LeadsOverview = ({
             <Button 
               variant="ghost"
               onClick={onShowAllAvailable}
-              className="w-full mt-4 gap-2 hover:bg-primary/5 group sm:hidden"
+              className="w-full mt-4 gap-2 text-primary hover:text-primary/80 hover:bg-primary/5 group sm:hidden"
             >
               Voir tout
               <ChevronRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
@@ -78,15 +78,15 @@ export const LeadsOverview = ({
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.2 }}
       >
-        <Card className="overflow-hidden border-2 border-primary/10 bg-glass-gradient backdrop-blur-sm hover:bg-glass-gradient-hover transition-all duration-300">
-          <div className="p-4 sm:p-6">
+        <Card className="overflow-hidden border border-primary/10 bg-background/50 backdrop-blur-sm">
+          <div className="p-6">
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-3">
-                <div className="p-2.5 bg-primary/10 rounded-xl">
+                <div className="p-2.5 bg-primary/5 rounded-xl">
                   <Users className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
                 </div>
                 <div>
-                  <h2 className="text-lg sm:text-xl font-semibold">Leads Achetés</h2>
+                  <h2 className="text-lg sm:text-xl font-semibold text-white">Leads Achetés</h2>
                   <p className="text-sm text-muted-foreground">
                     {purchasedLeads.length} leads acquis
                   </p>
@@ -95,7 +95,7 @@ export const LeadsOverview = ({
               <Button 
                 variant="ghost"
                 onClick={onShowAllPurchased}
-                className="gap-2 hover:bg-primary/5 group hidden sm:flex"
+                className="gap-2 text-primary hover:text-primary/80 hover:bg-primary/5 group hidden sm:flex"
               >
                 Voir tout
                 <ChevronRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
@@ -116,7 +116,7 @@ export const LeadsOverview = ({
             <Button 
               variant="ghost"
               onClick={onShowAllPurchased}
-              className="w-full mt-4 gap-2 hover:bg-primary/5 group sm:hidden"
+              className="w-full mt-4 gap-2 text-primary hover:text-primary/80 hover:bg-primary/5 group sm:hidden"
             >
               Voir tout
               <ChevronRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
