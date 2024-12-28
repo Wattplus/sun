@@ -22,6 +22,7 @@ export interface Installer {
     rge: boolean;
     qualibat: boolean;
   };
+  yearFounded: string;
   siret?: string;
   siren?: string;
 }

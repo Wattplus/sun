@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Index } from "@/pages/Index";
-import { Admin } from "@/pages/Admin";
-import { ClientPortal } from "@/pages/ClientPortal";
+import Admin from "@/pages/Admin";
+import ClientPortal from "@/pages/ClientPortal";
 import { InstallerProfile } from "@/components/client/directory/InstallerProfile";
 import { InstallerDirectory } from "@/components/client/directory/InstallerDirectory";
 import { Toaster } from "@/components/ui/sonner";
