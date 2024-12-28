@@ -2,6 +2,8 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { CreditCard, Plus, Trash2 } from "lucide-react";
 import { motion } from "framer-motion";
+import { useToast } from "@/hooks/use-toast";
+import { useNavigate } from "react-router-dom";
 
 interface SavedCard {
   id: string;
@@ -17,7 +19,18 @@ interface SavedCardsProps {
   onAddCard: () => void;
 }
 
-export const SavedCards = ({ cards, onDeleteCard, onAddCard }: SavedCardsProps) => {
+export const SavedCards = ({ cards, onDeleteCard }: SavedCardsProps) => {
+  const { toast } = useToast();
+  const navigate = useNavigate();
+
+  const handleAddCard = () => {
+    toast({
+      title: "Ajout de carte",
+      description: "Redirection vers la page de paiement...",
+    });
+    navigate("/espace-installateur/paiement/nouvelle-carte");
+  };
+
   return (
     <div className="space-y-4">
       <div className="flex justify-between items-center">
@@ -25,7 +38,7 @@ export const SavedCards = ({ cards, onDeleteCard, onAddCard }: SavedCardsProps) 
         <Button 
           variant="outline" 
           size="sm"
-          onClick={onAddCard}
+          onClick={handleAddCard}
           className="flex items-center gap-2"
         >
           <Plus className="h-4 w-4" />
