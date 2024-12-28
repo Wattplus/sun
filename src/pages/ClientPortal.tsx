@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Home, FileText, MessageSquare, Settings, Users, Sun, ChartBar, Calendar, ArrowUp } from "lucide-react";
+import { Home, FileText, MessageSquare, Settings, Users, Sun, Calendar } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ClientNavbar } from "@/components/client/ClientNavbar";
 import { ProjectStatus } from "@/components/client/dashboard/ProjectStatus";
@@ -15,9 +15,8 @@ import { InstallerDirectory } from "@/components/client/directory/InstallerDirec
 import { Helmet } from "react-helmet";
 import { motion } from "framer-motion";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList } from "@/components/ui/breadcrumb";
-import { Card } from "@/components/ui/card";
+import { DashboardStats } from "@/components/client/dashboard/DashboardStats";
 
-// Exemple de données de contact (à remplacer par les vraies données)
 const mockContacts = [
   {
     id: "1",
@@ -142,45 +141,7 @@ const ClientPortal = () => {
 
             <TabsContent value="dashboard">
               <div className="grid gap-6">
-                {/* Section Résumé */}
-                <div className="grid gap-6 md:grid-cols-3">
-                  <Card className="p-6 bg-green-500/10">
-                    <div className="flex items-center gap-4">
-                      <div className="p-3 bg-green-500/20 rounded-lg">
-                        <ArrowUp className="h-6 w-6 text-green-500" />
-                      </div>
-                      <div>
-                        <p className="text-sm text-muted-foreground">Production Aujourd'hui</p>
-                        <p className="text-2xl font-bold">12.5 kWh</p>
-                        <p className="text-sm text-green-500">+15% vs hier</p>
-                      </div>
-                    </div>
-                  </Card>
-                  <Card className="p-6 bg-blue-500/10">
-                    <div className="flex items-center gap-4">
-                      <div className="p-3 bg-blue-500/20 rounded-lg">
-                        <ChartBar className="h-6 w-6 text-blue-500" />
-                      </div>
-                      <div>
-                        <p className="text-sm text-muted-foreground">Économies Réalisées</p>
-                        <p className="text-2xl font-bold">256 €</p>
-                        <p className="text-sm text-blue-500">Ce mois-ci</p>
-                      </div>
-                    </div>
-                  </Card>
-                  <Card className="p-6 bg-yellow-500/10">
-                    <div className="flex items-center gap-4">
-                      <div className="p-3 bg-yellow-500/20 rounded-lg">
-                        <Sun className="h-6 w-6 text-yellow-500" />
-                      </div>
-                      <div>
-                        <p className="text-sm text-muted-foreground">Puissance Installée</p>
-                        <p className="text-2xl font-bold">6 kWc</p>
-                        <p className="text-sm text-yellow-500">16 panneaux</p>
-                      </div>
-                    </div>
-                  </Card>
-                </div>
+                <DashboardStats />
 
                 {/* Section Formulaire et Contacts */}
                 <div className="grid gap-6 lg:grid-cols-2">
