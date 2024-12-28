@@ -147,7 +147,8 @@ const InstallerManagement = () => {
         qualiPV: false,
         rge: false,
         qualibat: false
-      }
+      },
+      yearFounded: new Date().getFullYear().toString()
     };
     setSelectedInstaller(newInstaller);
     setEditDialogOpen(true);
