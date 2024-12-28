@@ -9,7 +9,7 @@ import { MessagesPage } from "./components/installer/messages/MessagesPage";
 import StatisticsPage from "./components/admin/statistics/StatisticsPage";
 import { SettingsPage } from "./components/installer/settings/SettingsPage";
 import NotificationsPage from "./components/admin/notifications/NotificationsPage";
-import ProfilePage from "./components/admin/profile/ProfilePage";
+import { InstallerProfilePage } from "./pages/installer/profile/InstallerProfilePage";
 
 function App() {
   return (
@@ -27,7 +27,7 @@ function App() {
                 <Route path="rapports" element={<StatisticsPage />} />
                 <Route path="parametres" element={<SettingsPage />} />
                 <Route path="notifications" element={<NotificationsPage />} />
-                <Route path="mon-compte" element={<ProfilePage />} />
+                <Route path="mon-compte" element={<InstallerProfilePage />} />
                 <Route path="compte" element={<AccountPage />} />
                 <Route path="paiement/nouvelle-carte" element={<NewCardPage />} />
               </Routes>
