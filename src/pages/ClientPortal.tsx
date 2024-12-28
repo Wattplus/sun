@@ -14,6 +14,7 @@ import { motion } from "framer-motion";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList } from "@/components/ui/breadcrumb";
 import { DashboardStats } from "@/components/client/dashboard/DashboardStats";
 import { SettingsSection } from "@/components/client/settings/SettingsSection";
+import { Button } from "@/components/ui/button";
 
 const mockContacts = [
   {
@@ -103,9 +104,20 @@ const ClientPortal = () => {
             transition={{ duration: 0.5 }}
             className="mb-8"
           >
-            <div className="flex items-center gap-3 mb-2">
-              <Sun className="h-8 w-8 text-yellow-500" />
-              <h1 className="text-3xl font-bold">Tableau de bord</h1>
+            <div className="flex items-center justify-between gap-3 mb-2">
+              <div className="flex items-center gap-3">
+                <Sun className="h-8 w-8 text-yellow-500" />
+                <h1 className="text-3xl font-bold">Tableau de bord</h1>
+              </div>
+              <Button
+                variant="default"
+                size="lg"
+                onClick={() => setActiveTab("directory")}
+                className="bg-primary hover:bg-primary-dark text-white font-semibold shadow-lg transform transition-all duration-300 hover:scale-105 flex items-center gap-2"
+              >
+                <Users className="w-5 h-5" />
+                Consulter l'Annuaire des Installateurs
+              </Button>
             </div>
             <p className="text-muted-foreground flex items-center gap-2">
               <Calendar className="h-4 w-4" />
