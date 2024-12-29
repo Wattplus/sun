@@ -3,7 +3,7 @@ export interface Message {
   content: string;
   sender_id: string;
   sender_type: 'installer' | 'client' | 'system';
-  thread_id: string; // Changed from conversation_id to thread_id
+  thread_id: string;
   created_at: string;
   read: boolean;
 }
