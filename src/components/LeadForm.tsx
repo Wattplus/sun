@@ -6,6 +6,8 @@ import { ClientTypeForm } from "./lead-form/ClientTypeForm";
 import { PersonalInfoForm } from "./lead-form/PersonalInfoForm";
 import { initEmailJS, sendEmail } from "@/config/emailConfig";
 import { FormField } from "./form/FormField";
+import { FormHeader } from "./form/FormHeader";
+import { SubmitButton } from "./form/SubmitButton";
 
 // Initialisation d'EmailJS
 initEmailJS();
@@ -22,6 +24,7 @@ interface FormData {
 
 export const LeadForm = () => {
   const { toast } = useToast();
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState<FormData>({
     clientType: "particulier",
     firstName: "",
@@ -41,6 +44,7 @@ export const LeadForm = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsSubmitting(true);
 
     try {
       await sendEmail("template_lead", {
@@ -74,18 +78,22 @@ export const LeadForm = () => {
         description: "Une erreur est survenue lors de l'envoi du formulaire.",
         variant: "destructive",
       });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   return (
-    <Card className="p-6" id="lead-form">
-      <form onSubmit={handleSubmit} className="space-y-6">
+    <Card className="p-8 bg-gradient-to-br from-background/95 to-background/80 border-primary/10 shadow-2xl" id="lead-form">
+      <FormHeader />
+      
+      <form onSubmit={handleSubmit} className="space-y-8">
         <ClientTypeForm
           value={formData.clientType}
           onChange={(value) => handleFieldChange("clientType", value)}
         />
         
-        <div className="space-y-4">
+        <div className="space-y-6">
           <FormField
             label="Facture mensuelle (€)"
             id="monthlyBill"
@@ -93,6 +101,8 @@ export const LeadForm = () => {
             value={formData.monthlyBill}
             onChange={(e) => handleFieldChange("monthlyBill", e.target.value)}
             placeholder="Ex: 150"
+            required
+            lightMode
           />
           
           <FormField
@@ -101,6 +111,8 @@ export const LeadForm = () => {
             value={formData.postalCode}
             onChange={(e) => handleFieldChange("postalCode", e.target.value)}
             placeholder="Ex: 75001"
+            required
+            lightMode
           />
         </div>
 
@@ -112,9 +124,7 @@ export const LeadForm = () => {
           onFieldChange={handleFieldChange}
         />
 
-        <Button type="submit" className="w-full">
-          Envoyer
-        </Button>
+        <SubmitButton isSubmitting={isSubmitting} />
       </form>
     </Card>
   );
