@@ -1,5 +1,5 @@
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { MessageSquare, User, Star, Clock } from "lucide-react";
+import { MessageSquare, User, Star, Clock, Sun, MapPin, Home, Euro } from "lucide-react";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { MessageInput } from "./components/MessageInput";
@@ -88,12 +88,22 @@ export function MessagesList({ onMessageClick }: MessagesListProps) {
                 </div>
               </div>
               <p className="text-sm text-muted-foreground line-clamp-2">{message.content}</p>
-              <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                <Badge variant="outline" className="text-xs">
-                  {message.details?.["Conditionnement"]}
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                <Badge variant="outline" className="flex items-center gap-1 text-xs">
+                  <Home className="h-3 w-3" />
+                  {message.details?.["Type de projet"]}
                 </Badge>
-                <Badge variant="outline" className="text-xs">
-                  {message.details?.["Poids total en kg"]} kg
+                <Badge variant="outline" className="flex items-center gap-1 text-xs">
+                  <Sun className="h-3 w-3" />
+                  {message.details?.["Surface disponible"]}
+                </Badge>
+                <Badge variant="outline" className="flex items-center gap-1 text-xs">
+                  <Euro className="h-3 w-3" />
+                  {message.details?.["Facture mensuelle"]}
+                </Badge>
+                <Badge variant="outline" className="flex items-center gap-1 text-xs">
+                  <MapPin className="h-3 w-3" />
+                  {message.details?.["Ville"]}
                 </Badge>
               </div>
             </motion.div>
