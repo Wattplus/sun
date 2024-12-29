@@ -9,8 +9,11 @@ import { useLeadsData } from "./leads/useLeadsData";
 import { useLeadActions } from "./leads/useLeadActions";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/lib/supabase-client";
+import { useAuthRedirect } from "@/hooks/use-auth-redirect";
 
 export const LeadManagement = () => {
+  useAuthRedirect(); // Add this line to handle auth state
+
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
