@@ -111,7 +111,7 @@ export const MarketplacePage = () => {
                 <div className="space-y-2">
                   {selectedLeads.map(lead => (
                     <div key={lead.id} className="flex justify-between text-sm text-white/80">
-                      <span>{lead.firstName} {lead.lastName}</span>
+                      <span>{lead.firstname} {lead.lastname}</span>
                       <span className="font-medium text-[#1EAEDB]">{lead.price}€</span>
                     </div>
                   ))}

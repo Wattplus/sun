@@ -33,20 +33,10 @@ export const LeadContactInfo = ({ lead, isEditing, editedLead, setEditedLead }: 
               />
             </div>
             <div className="space-y-2">
-              <label className="text-sm text-muted-foreground">Adresse</label>
+              <label className="text-sm text-muted-foreground">Code postal</label>
               <Input 
-                value={editedLead?.address}
-                onChange={(e) => setEditedLead({...editedLead!, address: e.target.value})}
-              />
-              <Input 
-                value={editedLead?.postalCode}
-                onChange={(e) => setEditedLead({...editedLead!, postalCode: e.target.value})}
-                className="mt-2"
-              />
-              <Input 
-                value={editedLead?.city}
-                onChange={(e) => setEditedLead({...editedLead!, city: e.target.value})}
-                className="mt-2"
+                value={editedLead?.postalcode}
+                onChange={(e) => setEditedLead({...editedLead!, postalcode: e.target.value})}
               />
             </div>
           </>
@@ -61,12 +51,8 @@ export const LeadContactInfo = ({ lead, isEditing, editedLead, setEditedLead }: 
               <p className="font-medium">{lead.phone}</p>
             </div>
             <div>
-              <p className="text-sm text-muted-foreground">Adresse</p>
-              <p className="font-medium">
-                {lead.address}
-                <br />
-                {lead.postalCode} {lead.city}
-              </p>
+              <p className="text-sm text-muted-foreground">Code postal</p>
+              <p className="font-medium">{lead.postalcode}</p>
             </div>
           </>
         )}

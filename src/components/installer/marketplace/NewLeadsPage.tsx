@@ -19,7 +19,7 @@ export const NewLeadsPage = () => {
   
   const balance = 150;
   const hasEnoughBalance = balance >= selectedLeads.length * 26;
-  const availableDepartments = Array.from(new Set(mockAvailableLeads.map(lead => lead.postalCode.substring(0, 2))));
+  const availableDepartments = Array.from(new Set(mockAvailableLeads.map(lead => lead.postalcode.substring(0, 2))));
 
   const handleLeadSelect = (lead: Lead) => {
     setSelectedLeads(prev => 
@@ -61,7 +61,7 @@ export const NewLeadsPage = () => {
 
   const filteredLeads = mockAvailableLeads
     .filter(lead => projectTypeFilter === "all" || lead.projectType === projectTypeFilter)
-    .filter(lead => selectedDepartments.length === 0 || selectedDepartments.includes(lead.postalCode.substring(0, 2)))
+    .filter(lead => selectedDepartments.length === 0 || selectedDepartments.includes(lead.postalcode.substring(0, 2)))
     .sort((a, b) => {
       if (priceFilter === "asc") return a.price - b.price;
       if (priceFilter === "desc") return b.price - a.price;

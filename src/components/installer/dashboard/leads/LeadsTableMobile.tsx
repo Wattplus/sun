@@ -25,7 +25,7 @@ export const LeadsTableMobile = ({ leads, getStatusColor, onStatusChange }: Lead
                   {lead.projectType === 'professional' ? 'Professionnel' : 'Résidentiel'}
                 </Badge>
                 <h3 className="mt-2 font-medium">
-                  {lead.firstName} {lead.lastName}
+                  {lead.firstname} {lead.lastname}
                 </h3>
               </div>
               <Select 
@@ -58,7 +58,7 @@ export const LeadsTableMobile = ({ leads, getStatusColor, onStatusChange }: Lead
               </div>
               <div>
                 <p className="text-muted-foreground">Code postal</p>
-                <p className="font-medium">{lead.postalCode}</p>
+                <p className="font-medium">{lead.postalcode}</p>
               </div>
               <div>
                 <p className="text-muted-foreground">Type de toit</p>
@@ -66,7 +66,7 @@ export const LeadsTableMobile = ({ leads, getStatusColor, onStatusChange }: Lead
               </div>
               <div className="col-span-2">
                 <p className="text-muted-foreground">Facture mensuelle</p>
-                <p className="font-medium">{lead.monthlyBill || "Non renseigné"}</p>
+                <p className="font-medium">{lead.monthlybill || "Non renseigné"}</p>
               </div>
             </div>
           </Card>

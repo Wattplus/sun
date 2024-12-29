@@ -29,12 +29,12 @@ export const LeadInfoDisplay = ({ lead }: LeadInfoDisplayProps) => {
 
         <div className="flex flex-col gap-2">
           <span className="font-medium text-white/80">Prénom :</span>
-          <span className="text-white/80">{lead.firstName}</span>
+          <span className="text-white/80">{lead.firstname}</span>
         </div>
 
         <div className="flex flex-col gap-2">
           <span className="font-medium text-white/80">Nom :</span>
-          <span className="text-white/80">{lead.lastName}</span>
+          <span className="text-white/80">{lead.lastname}</span>
         </div>
 
         <div className="flex flex-col gap-2">
@@ -49,7 +49,7 @@ export const LeadInfoDisplay = ({ lead }: LeadInfoDisplayProps) => {
 
         <div className="flex flex-col gap-2">
           <span className="font-medium text-white/80">Code postal :</span>
-          <span className="text-white/80">{lead.postalCode}</span>
+          <span className="text-white/80">{lead.postalcode}</span>
         </div>
       </div>
     </div>

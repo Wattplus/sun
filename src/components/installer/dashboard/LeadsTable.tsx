@@ -33,31 +33,31 @@ export const LeadsTable = ({ leads, selectedLeads, onSelectAll, onSelectLead }: 
   return (
     <Table>
       <TableHeader>
-        <TableRow className="hover:bg-primary/5">
-          <TableHead className="w-[50px]">
+        <TableRow className="border-b border-primary/10 hover:bg-primary/5">
+          <TableHead className="text-primary w-[50px]">
             <Checkbox
-              checked={selectedLeads.length === leads.length && leads.length > 0}
+              checked={selectedLeads.length === leads.length}
               onCheckedChange={onSelectAll}
               className="border-primary/50"
             />
           </TableHead>
-          <TableHead>Type de projet</TableHead>
-          <TableHead>Prénom</TableHead>
-          <TableHead>Nom</TableHead>
-          <TableHead>Email</TableHead>
-          <TableHead>Téléphone</TableHead>
-          <TableHead>Code postal</TableHead>
-          <TableHead>Type de toit</TableHead>
-          <TableHead>Facture mensuelle</TableHead>
-          <TableHead>Installation électrique</TableHead>
-          <TableHead className="w-[100px]">Prix</TableHead>
+          <TableHead className="text-primary">Type de projet</TableHead>
+          <TableHead className="text-primary">Prénom</TableHead>
+          <TableHead className="text-primary">Nom</TableHead>
+          <TableHead className="text-primary">Email</TableHead>
+          <TableHead className="text-primary">Téléphone</TableHead>
+          <TableHead className="text-primary">Code postal</TableHead>
+          <TableHead className="text-primary">Type de toit</TableHead>
+          <TableHead className="text-primary">Facture mensuelle</TableHead>
+          <TableHead className="text-primary">Installation électrique</TableHead>
+          <TableHead className="text-primary w-[100px]">Action</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
         {leads.map((lead) => (
           <TableRow 
             key={lead.id}
-            className="hover:bg-primary/5 transition-colors"
+            className="border-b border-primary/10 hover:bg-primary/5 transition-colors"
           >
             <TableCell>
               <Checkbox
@@ -66,27 +66,30 @@ export const LeadsTable = ({ leads, selectedLeads, onSelectAll, onSelectLead }: 
                 className="border-primary/50"
               />
             </TableCell>
-            <TableCell>
+            <TableCell className="text-white font-medium">
               <Badge variant="outline" className={lead.projectType === 'professional' ? 'bg-amber-500/10 text-amber-600' : 'bg-emerald-500/10 text-emerald-600'}>
                 {lead.projectType === 'professional' ? 'Professionnel' : 'Résidentiel'}
               </Badge>
             </TableCell>
-            <TableCell>{lead.firstName}</TableCell>
-            <TableCell><MaskedInfo /></TableCell>
-            <TableCell><MaskedInfo /></TableCell>
-            <TableCell><MaskedInfo /></TableCell>
-            <TableCell>
+            <TableCell className="text-white">{lead.firstname}</TableCell>
+            <TableCell className="text-white"><MaskedInfo /></TableCell>
+            <TableCell className="text-white"><MaskedInfo /></TableCell>
+            <TableCell className="text-white"><MaskedInfo /></TableCell>
+            <TableCell className="text-white">
               <Badge variant="outline" className="bg-primary/10">
-                {lead.postalCode}
+                {lead.postalcode}
               </Badge>
             </TableCell>
-            <TableCell>{lead.roofType || "Non spécifié"}</TableCell>
-            <TableCell>{lead.monthlyBill ? `${lead.monthlyBill}€` : "Non spécifié"}</TableCell>
-            <TableCell>{lead.electricalType || "Non spécifié"}</TableCell>
+            <TableCell className="text-white">{lead.roofType || "Non spécifié"}</TableCell>
+            <TableCell className="text-white">{lead.monthlybill ? `${lead.monthlybill}€` : "Non spécifié"}</TableCell>
             <TableCell>
-              <Badge variant="outline" className="bg-primary/10">
-                {lead.price}€
-              </Badge>
+              <Button
+                onClick={() => onSelectLead(lead)}
+                variant={selectedLeads.some(l => l.id === lead.id) ? "secondary" : "outline"}
+                className="w-full bg-primary/10 hover:bg-primary/20 border-primary/20"
+              >
+                {selectedLeads.some(l => l.id === lead.id) ? "Désélectionner" : "Sélectionner"}
+              </Button>
             </TableCell>
           </TableRow>
         ))}
