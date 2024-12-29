@@ -58,11 +58,11 @@ export const LeadTable = ({
           {leads.map((lead) => (
             <TableRow key={lead.id} className="hover:bg-[#1EAEDB]/5">
               <TableCell className="font-medium">
-                {formatDate(lead.created_at)}
+                {formatDate(lead.createdAt)}
               </TableCell>
               <TableCell>
                 <div className="space-y-1">
-                  <div className="font-medium">{`${lead.firstname || ''} ${lead.lastname || ''}`}</div>
+                  <div className="font-medium">{`${lead.firstName || ''} ${lead.lastName || ''}`}</div>
                   {lead.email && (
                     <div className="text-sm text-muted-foreground">
                       <a href={`mailto:${lead.email}`} className="hover:underline">
@@ -82,25 +82,25 @@ export const LeadTable = ({
               <TableCell>
                 <div className="space-y-1">
                   {lead.city && <div className="text-sm">{lead.city}</div>}
-                  {lead.postalcode && (
+                  {lead.postalCode && (
                     <Badge variant="outline" className="bg-primary/10">
-                      {lead.postalcode}
+                      {lead.postalCode}
                     </Badge>
                   )}
-                  {!lead.city && !lead.postalcode && (
+                  {!lead.city && !lead.postalCode && (
                     <span className="text-sm text-muted-foreground">
                       Non renseigné
                     </span>
                   )}
                 </div>
               </TableCell>
-              <TableCell>{getProjectTypeText(lead.clienttype)}</TableCell>
+              <TableCell>{getProjectTypeText(lead.projectType)}</TableCell>
               <TableCell>
                 <Badge className={`${getStatusColor(lead.status as LeadStatus)} text-white`}>
                   {getStatusText(lead.status as LeadStatus)}
                 </Badge>
               </TableCell>
-              <TableCell>{lead.assignedto || "-"}</TableCell>
+              <TableCell>{lead.assignedTo || "-"}</TableCell>
               <TableCell>
                 <div className="flex gap-2">
                   <Button
