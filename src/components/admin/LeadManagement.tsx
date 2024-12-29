@@ -1,15 +1,14 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Lead, LeadStatus } from "@/types/crm";
-import { useToast } from "@/hooks/use-toast";
 import { LeadTable } from "./leads/LeadTable";
 import { LeadHeader } from "./leads/LeadHeader";
 import { LeadStats } from "./leads/LeadStats";
 import { AdminBreadcrumb } from "./AdminBreadcrumb";
 import { LeadDialogs } from "./leads/LeadDialogs";
-import { supabase } from "@/lib/supabase-client";
+import { useLeadsData } from "./leads/useLeadsData";
+import { useLeadActions } from "./leads/useLeadActions";
 
 export const LeadManagement = () => {
-  const [leads, setLeads] = useState<Lead[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
@@ -18,41 +17,9 @@ export const LeadManagement = () => {
   const [selectedInstallerId, setSelectedInstallerId] = useState<string>("");
   const [leadToAssign, setLeadToAssign] = useState<Lead | null>(null);
   const [leadToDelete, setLeadToDelete] = useState<Lead | null>(null);
-  const { toast } = useToast();
 
-  useEffect(() => {
-    fetchLeads();
-  }, []);
-
-  const fetchLeads = async () => {
-    try {
-      console.log("Fetching leads...");
-      const { data, error } = await supabase
-        .from("leads")
-        .select("*")
-        .order("created_at", { ascending: false });
-
-      if (error) {
-        console.error("Error fetching leads:", error);
-        toast({
-          title: "Erreur",
-          description: "Impossible de charger les leads",
-          variant: "destructive",
-        });
-        return;
-      }
-
-      console.log("Leads fetched successfully:", data);
-      setLeads(data || []);
-    } catch (error) {
-      console.error("Unexpected error fetching leads:", error);
-      toast({
-        title: "Erreur",
-        description: "Une erreur est survenue lors du chargement des leads",
-        variant: "destructive",
-      });
-    }
-  };
+  const { leads, setLeads } = useLeadsData();
+  const { handleDeleteLead, handleUpdateLead } = useLeadActions(leads, setLeads);
 
   const handleDeleteClick = (lead: Lead) => {
     setLeadToDelete(lead);
@@ -61,38 +28,9 @@ export const LeadManagement = () => {
 
   const handleConfirmDelete = async () => {
     if (!leadToDelete) return;
-    
-    try {
-      const { error } = await supabase
-        .from("leads")
-        .delete()
-        .eq("id", leadToDelete.id);
-
-      if (error) {
-        console.error("Error deleting lead:", error);
-        toast({
-          title: "Erreur",
-          description: "Impossible de supprimer le lead",
-          variant: "destructive",
-        });
-        return;
-      }
-
-      setLeads(leads.filter(lead => lead.id !== leadToDelete.id));
-      toast({
-        title: "Lead supprimé",
-        description: "Le lead a été supprimé définitivement.",
-      });
-      setDeleteDialogOpen(false);
-      setLeadToDelete(null);
-    } catch (error) {
-      console.error("Unexpected error deleting lead:", error);
-      toast({
-        title: "Erreur",
-        description: "Une erreur est survenue lors de la suppression du lead",
-        variant: "destructive",
-      });
-    }
+    await handleDeleteLead(leadToDelete.id);
+    setDeleteDialogOpen(false);
+    setLeadToDelete(null);
   };
 
   const handleEditClick = (lead: Lead) => {
@@ -111,36 +49,8 @@ export const LeadManagement = () => {
   };
 
   const handleSaveLead = async (updatedLead: Lead) => {
-    try {
-      const { error } = await supabase
-        .from("leads")
-        .update(updatedLead)
-        .eq("id", updatedLead.id);
-
-      if (error) {
-        console.error("Error updating lead:", error);
-        toast({
-          title: "Erreur",
-          description: "Impossible de mettre à jour le lead",
-          variant: "destructive",
-        });
-        return;
-      }
-
-      setLeads(leads.map(lead => lead.id === updatedLead.id ? updatedLead : lead));
-      toast({
-        title: "Lead mis à jour",
-        description: "Les modifications ont été enregistrées avec succès.",
-      });
-      handleEditClose();
-    } catch (error) {
-      console.error("Unexpected error updating lead:", error);
-      toast({
-        title: "Erreur",
-        description: "Une erreur est survenue lors de la mise à jour du lead",
-        variant: "destructive",
-      });
-    }
+    await handleUpdateLead(updatedLead);
+    handleEditClose();
   };
 
   const getStatusColor = (status: LeadStatus) => {
