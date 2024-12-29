@@ -4,19 +4,30 @@ import type { Message, Conversation } from '@/types/messages';
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
+// Validation plus stricte des variables d'environnement
 if (!supabaseUrl || !supabaseKey) {
   throw new Error(
     'Missing Supabase configuration. Please set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in your environment variables.'
   );
 }
 
-if (supabaseUrl.includes('[YOUR-ACTUAL-PROJECT-ID]')) {
+if (supabaseKey === '[YOUR-ACTUAL-ANON-KEY]') {
   throw new Error(
-    'Please replace [YOUR-ACTUAL-PROJECT-ID] with your actual Supabase project ID in VITE_SUPABASE_URL'
+    'Please replace [YOUR-ACTUAL-ANON-KEY] with your actual Supabase anon key in VITE_SUPABASE_ANON_KEY'
   );
 }
 
-export const supabase = createClient(supabaseUrl, supabaseKey);
+export const supabase = createClient(supabaseUrl, supabaseKey, {
+  auth: {
+    persistSession: true,
+    autoRefreshToken: true,
+  },
+});
+
+// Log the configuration (sans la clé complète pour la sécurité)
+console.log('Supabase URL:', supabaseUrl);
+console.log('Supabase Key configured:', supabaseKey ? 'Yes' : 'No');
+console.log('Supabase Key starts with:', supabaseKey.substring(0, 4) + '...');
 
 export const messagesService = {
   async getMessages(conversationId: string) {
@@ -25,13 +36,19 @@ export const messagesService = {
     }
 
     try {
+      console.log('Fetching messages for conversation:', conversationId);
       const { data, error } = await supabase
         .from('messages')
         .select('*')
         .eq('conversation_id', conversationId)
         .order('created_at', { ascending: true });
       
-      if (error) throw error;
+      if (error) {
+        console.error('Supabase error:', error);
+        throw error;
+      }
+
+      console.log('Messages fetched successfully:', data?.length || 0);
       return data as Message[];
     } catch (error) {
       console.error('Error fetching messages:', error);
@@ -45,13 +62,19 @@ export const messagesService = {
     }
 
     try {
+      console.log('Sending message:', { ...message, content: message.content.substring(0, 20) + '...' });
       const { data, error } = await supabase
         .from('messages')
         .insert([message])
         .select()
         .single();
       
-      if (error) throw error;
+      if (error) {
+        console.error('Supabase error:', error);
+        throw error;
+      }
+
+      console.log('Message sent successfully');
       return data as Message;
     } catch (error) {
       console.error('Error sending message:', error);
