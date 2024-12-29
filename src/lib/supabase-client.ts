@@ -67,14 +67,13 @@ export const createClientAccount = async (email: string, password: string, userD
   try {
     console.log('Creating client account with data:', userData);
     
-    // Vérifie d'abord si l'utilisateur existe
-    const { data: existingUser } = await supabase
-      .from('profiles')
-      .select('id')
-      .eq('email', email)
-      .single();
+    // Vérifie si l'utilisateur existe déjà dans auth
+    const { data: { user: existingAuthUser }, error: signInError } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
 
-    if (existingUser) {
+    if (existingAuthUser) {
       return { 
         error: { 
           message: "Un compte existe déjà avec cet email. Veuillez vous connecter ou utiliser une autre adresse email." 
@@ -82,7 +81,7 @@ export const createClientAccount = async (email: string, password: string, userD
       };
     }
 
-    // Create auth account
+    // Si l'utilisateur n'existe pas dans auth, on le crée
     const { data: authData, error: signUpError } = await supabase.auth.signUp({
       email,
       password,
@@ -97,6 +96,7 @@ export const createClientAccount = async (email: string, password: string, userD
     });
 
     if (signUpError) {
+      console.error('Error creating auth account:', signUpError);
       if (signUpError.message.includes('User already registered')) {
         return { 
           error: { 
@@ -104,12 +104,21 @@ export const createClientAccount = async (email: string, password: string, userD
           }
         };
       }
-      console.error('Error creating auth account:', signUpError);
       return { error: signUpError };
     }
 
-    if (authData.user) {
-      // Create profile
+    if (!authData.user) {
+      return { error: new Error('Failed to create auth user') };
+    }
+
+    // Créer le profil uniquement si l'utilisateur n'existe pas déjà
+    const { data: existingProfile } = await supabase
+      .from('profiles')
+      .select('id')
+      .eq('email', email)
+      .maybeSingle(); // Utilisation de maybeSingle au lieu de single
+
+    if (!existingProfile) {
       const { error: profileError } = await supabase
         .from('profiles')
         .insert([
@@ -131,7 +140,7 @@ export const createClientAccount = async (email: string, password: string, userD
       }
     }
 
-    // Send welcome email
+    // Envoyer l'email de bienvenue
     await sendEmail(
       email,
       userData.firstName,
@@ -145,8 +154,8 @@ export const createClientAccount = async (email: string, password: string, userD
 
     return { data: authData, error: null };
   } catch (error) {
-    console.error('Error creating client account:', error);
-    return { data: null, error };
+    console.error('Error in createClientAccount:', error);
+    return { error };
   }
 };
 
