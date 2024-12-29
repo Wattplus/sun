@@ -1,9 +1,45 @@
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { Mail, Phone, MapPin, Clock } from "lucide-react";
+import { useEffect } from "react";
+import emailjs from '@emailjs/browser';
+import { useToast } from "@/components/ui/use-toast";
 
 export function ThankYou() {
   const navigate = useNavigate();
+  const { toast } = useToast();
+
+  useEffect(() => {
+    // Initialize EmailJS with your public key
+    emailjs.init("3T3wauk7lJcCeW1M-");
+
+    // Send email using the specified template and service
+    emailjs.send(
+      "service_611ohbh",
+      "template_q11t4u8",
+      {
+        to_name: "Client", // You can customize these template variables
+        from_name: "WattPlus",
+        message: "Merci pour votre demande d'étude solaire",
+      }
+    ).then(
+      (result) => {
+        console.log("Email sent successfully:", result.text);
+        toast({
+          title: "Email de confirmation envoyé",
+          description: "Vous recevrez bientôt plus d'informations sur votre projet.",
+        });
+      },
+      (error) => {
+        console.error("Failed to send email:", error);
+        toast({
+          title: "Erreur",
+          description: "L'email de confirmation n'a pas pu être envoyé.",
+          variant: "destructive",
+        });
+      }
+    );
+  }, [toast]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-background-light to-primary/20 p-4">
