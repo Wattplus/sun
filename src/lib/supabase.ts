@@ -11,21 +11,7 @@ if (!supabaseUrl || !supabaseKey) {
   );
 }
 
-export const supabase = createClient(supabaseUrl, supabaseKey, {
-  auth: {
-    persistSession: true,
-    autoRefreshToken: true,
-  },
-  db: {
-    schema: 'public'
-  },
-  global: {
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${supabaseKey}`
-    }
-  }
-});
+export const supabase = createClient(supabaseUrl, supabaseKey);
 
 // Log the configuration (sans la clé complète pour la sécurité)
 console.log('Supabase URL:', supabaseUrl);
