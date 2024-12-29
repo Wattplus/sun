@@ -7,6 +7,7 @@ import { Profile } from "@/pages/Profile";
 import { Settings } from "@/pages/Settings";
 import { NotFound } from "@/pages/NotFound";
 import { Index } from "@/pages/Index";
+import AdminDashboard from "@/components/admin/AdminDashboard";
 
 export const AppRoutes = () => {
   return (
@@ -21,6 +22,7 @@ export const AppRoutes = () => {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/settings" element={<Settings />} />
+        <Route path="/admin" element={<AdminDashboard />} />
       </Route>
 
       {/* Catch all route */}
