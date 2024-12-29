@@ -30,7 +30,7 @@ interface LeadDialogsProps {
   setAssignDialogOpen: (open: boolean) => void;
   setDeleteDialogOpen: (open: boolean) => void;
   setSelectedInstallerId: (id: string) => void;
-  handleAssignSubmit: () => void;
+  handleAssignSubmit: (leadId: string, installerId: string) => Promise<void>;
   handleConfirmDelete: () => void;
 }
 
@@ -88,7 +88,7 @@ export const LeadDialogs = ({
               Annuler
             </Button>
             <Button
-              onClick={handleAssignSubmit}
+              onClick={() => leadToAssign && selectedInstallerId ? handleAssignSubmit(leadToAssign.id, selectedInstallerId) : undefined}
               disabled={!selectedInstallerId}
               className="bg-[#1EAEDB] hover:bg-[#0FA0CE]"
             >
