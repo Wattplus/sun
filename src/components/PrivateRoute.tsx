@@ -1,6 +1,6 @@
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 import { useAuthRedirect } from "@/hooks/use-auth-redirect";
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase-client";
 import { useToast } from "@/hooks/use-toast";
 
@@ -12,45 +12,40 @@ export const PrivateRoute = () => {
   const isAdminRoute = location.pathname.startsWith('/admin');
   const { toast } = useToast();
 
-  const checkAdminStatus = useCallback(async () => {
-    try {
+  useEffect(() => {
+    const checkAdminStatus = async () => {
       if (!isAuthenticated) {
         setCheckingAdmin(false);
         return;
       }
 
-      const { data: { user } } = await supabase.auth.getUser();
-      
-      if (!user) {
-        throw new Error("Utilisateur non trouvé");
-      }
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        
+        if (!user) {
+          setCheckingAdmin(false);
+          return;
+        }
 
-      const { data: profile, error } = await supabase
-        .from('profiles')
-        .select('role')
-        .eq('id', user.id)
-        .single();
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('role')
+          .eq('id', user.id)
+          .single();
 
-      if (error) {
-        console.error('Erreur lors de la récupération du profil:', error);
-        setIsAdmin(false);
-      } else {
         const hasAdminRole = profile?.role === 'admin' || profile?.role === 'super_admin';
         console.log("Rôle utilisateur:", profile?.role);
-        console.log("A les droits admin:", hasAdminRole);
         setIsAdmin(hasAdminRole);
+      } catch (error) {
+        console.error('Erreur de vérification admin:', error);
+        setIsAdmin(false);
+      } finally {
+        setCheckingAdmin(false);
       }
-    } catch (error) {
-      console.error('Erreur de vérification admin:', error);
-      setIsAdmin(false);
-    } finally {
-      setCheckingAdmin(false);
-    }
-  }, [isAuthenticated]);
+    };
 
-  useEffect(() => {
     checkAdminStatus();
-  }, [checkAdminStatus]);
+  }, [isAuthenticated]);
 
   if (isLoading || checkingAdmin) {
     return (
@@ -67,14 +62,12 @@ export const PrivateRoute = () => {
 
   if (isAdminRoute && !isAdmin) {
     console.log("Utilisateur non-admin tentant d'accéder à une route admin");
-    // Using setTimeout to avoid render-time toast calls
-    setTimeout(() => {
-      toast({
-        title: "Accès refusé",
-        description: "Vous n'avez pas les droits d'administration nécessaires",
-        variant: "destructive",
-      });
-    }, 0);
+    const message = {
+      title: "Accès refusé",
+      description: "Vous n'avez pas les droits d'administration nécessaires",
+      variant: "destructive",
+    };
+    setTimeout(() => toast(message), 0);
     return <Navigate to="/dashboard" />;
   }
 
