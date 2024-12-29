@@ -3,8 +3,9 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Lead, LeadStatus } from "@/types/lead";
-import { Edit, Trash2, UserPlus, Euro, Mail, Phone, MapPin, Shield } from "lucide-react";
+import { Edit, Trash2, UserPlus, Euro, Mail, Phone, MapPin, Shield, Building2, User2 } from "lucide-react";
 import { LeadPurchaseInfo } from "./LeadPurchaseInfo";
+import { Tooltip } from "@/components/ui/tooltip";
 
 interface LeadTableProps {
   leads: Lead[];
@@ -36,54 +37,80 @@ export const LeadTable = ({
     }
   };
 
+  const getQualityScoreBadge = (score?: number) => {
+    if (score === undefined || score === null) return null;
+    const getScoreColor = (score: number) => {
+      if (score >= 80) return "bg-green-500/10 text-green-600";
+      if (score >= 50) return "bg-yellow-500/10 text-yellow-600";
+      return "bg-red-500/10 text-red-600";
+    };
+    return (
+      <Badge className={getScoreColor(score)}>
+        {score}/100
+      </Badge>
+    );
+  };
+
   return (
     <ScrollArea className="h-[calc(100vh-300px)] rounded-md">
       <Table>
         <TableHeader className="bg-background/50 sticky top-0">
           <TableRow className="hover:bg-transparent border-b border-primary/10">
-            <TableHead className="text-primary">Type de client</TableHead>
-            <TableHead className="text-primary">Contact</TableHead>
-            <TableHead className="text-primary">Coordonnées</TableHead>
-            <TableHead className="text-primary">Localisation</TableHead>
-            <TableHead className="text-primary">Facture mensuelle</TableHead>
-            <TableHead className="text-primary">Score</TableHead>
-            <TableHead className="text-primary">Vérification</TableHead>
-            <TableHead className="text-primary">Statut</TableHead>
-            <TableHead className="text-primary">Actions</TableHead>
+            <TableHead className="text-primary font-semibold">Type de client</TableHead>
+            <TableHead className="text-primary font-semibold">Contact</TableHead>
+            <TableHead className="text-primary font-semibold">Coordonnées</TableHead>
+            <TableHead className="text-primary font-semibold">Localisation</TableHead>
+            <TableHead className="text-primary font-semibold">Facture mensuelle</TableHead>
+            <TableHead className="text-primary font-semibold">Score</TableHead>
+            <TableHead className="text-primary font-semibold">Vérification</TableHead>
+            <TableHead className="text-primary font-semibold">Statut</TableHead>
+            <TableHead className="text-primary font-semibold">Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {leads.map((lead) => (
-            <TableRow key={lead.id} className="hover:bg-primary/5 border-b border-primary/10">
+            <TableRow key={lead.id} className="group hover:bg-primary/5 border-b border-primary/10">
               <TableCell>
-                <Badge 
-                  variant="outline" 
-                  className={lead.clienttype === 'particulier' ? 'bg-emerald-500/10 text-emerald-600' : 'bg-amber-500/10 text-amber-600'}
-                >
-                  {lead.clienttype === 'particulier' ? 'Particulier' : 'Professionnel'}
-                </Badge>
+                <div className="flex items-center gap-2">
+                  {lead.clienttype === 'particulier' ? (
+                    <User2 className="h-4 w-4 text-emerald-500" />
+                  ) : (
+                    <Building2 className="h-4 w-4 text-amber-500" />
+                  )}
+                  <Badge 
+                    variant="outline" 
+                    className={lead.clienttype === 'particulier' ? 'bg-emerald-500/10 text-emerald-600' : 'bg-amber-500/10 text-amber-600'}
+                  >
+                    {lead.clienttype === 'particulier' ? 'Particulier' : 'Professionnel'}
+                  </Badge>
+                </div>
               </TableCell>
               <TableCell>
                 <div className="font-medium">
                   {lead.firstname} {lead.lastname}
                 </div>
+                <LeadPurchaseInfo lead={lead} />
               </TableCell>
               <TableCell>
-                <div className="space-y-1">
-                  <a 
-                    href={`mailto:${lead.email}`} 
-                    className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors"
-                  >
-                    <Mail className="h-4 w-4" />
-                    <span>{lead.email}</span>
-                  </a>
-                  <a 
-                    href={`tel:${lead.phone}`} 
-                    className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors"
-                  >
-                    <Phone className="h-4 w-4" />
-                    <span>{lead.phone}</span>
-                  </a>
+                <div className="space-y-1.5">
+                  <Tooltip content="Envoyer un email">
+                    <a 
+                      href={`mailto:${lead.email}`} 
+                      className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors"
+                    >
+                      <Mail className="h-4 w-4" />
+                      <span className="truncate max-w-[200px]">{lead.email}</span>
+                    </a>
+                  </Tooltip>
+                  <Tooltip content="Appeler">
+                    <a 
+                      href={`tel:${lead.phone}`} 
+                      className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors"
+                    >
+                      <Phone className="h-4 w-4" />
+                      <span>{lead.phone}</span>
+                    </a>
+                  </Tooltip>
                 </div>
               </TableCell>
               <TableCell>
@@ -106,15 +133,7 @@ export const LeadTable = ({
                 </div>
               </TableCell>
               <TableCell>
-                {lead.quality_score !== null && lead.quality_score !== undefined && (
-                  <Badge className={`
-                    ${lead.quality_score >= 80 ? 'bg-green-500/10 text-green-600' : 
-                      lead.quality_score >= 50 ? 'bg-yellow-500/10 text-yellow-600' : 
-                      'bg-red-500/10 text-red-600'}
-                  `}>
-                    {lead.quality_score}/100
-                  </Badge>
-                )}
+                {getQualityScoreBadge(lead.quality_score)}
               </TableCell>
               <TableCell>
                 <div className="flex items-center gap-2">
@@ -128,34 +147,37 @@ export const LeadTable = ({
                 </Badge>
               </TableCell>
               <TableCell>
-                <div className="flex gap-2">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => onEditClick(lead)}
-                    className="border-primary/20 hover:border-primary/40 hover:bg-primary/10"
-                  >
-                    <Edit className="h-4 w-4 mr-2 text-primary" />
-                    Éditer
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => onAssignClick(lead)}
-                    disabled={lead.status === "assigned" || lead.status === "converted"}
-                    className="border-primary/20 hover:border-primary/40 hover:bg-primary/10"
-                  >
-                    <UserPlus className="h-4 w-4 mr-2 text-primary" />
-                    Assigner
-                  </Button>
-                  <Button
-                    variant="destructive"
-                    size="sm"
-                    onClick={() => onDeleteClick(lead)}
-                  >
-                    <Trash2 className="h-4 w-4 mr-2" />
-                    Supprimer
-                  </Button>
+                <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <Tooltip content="Éditer">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => onEditClick(lead)}
+                      className="border-primary/20 hover:border-primary/40 hover:bg-primary/10"
+                    >
+                      <Edit className="h-4 w-4 text-primary" />
+                    </Button>
+                  </Tooltip>
+                  <Tooltip content="Assigner">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => onAssignClick(lead)}
+                      disabled={lead.status === "assigned" || lead.status === "converted"}
+                      className="border-primary/20 hover:border-primary/40 hover:bg-primary/10"
+                    >
+                      <UserPlus className="h-4 w-4 text-primary" />
+                    </Button>
+                  </Tooltip>
+                  <Tooltip content="Supprimer">
+                    <Button
+                      variant="destructive"
+                      size="sm"
+                      onClick={() => onDeleteClick(lead)}
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </Tooltip>
                 </div>
               </TableCell>
             </TableRow>
