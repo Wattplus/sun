@@ -10,7 +10,6 @@ import { ProfilePage } from "@/components/installer/profile/ProfilePage";
 import { AllAvailableLeads } from "@/components/installer/dashboard/leads/AllAvailableLeads";
 import { AllPurchasedLeads } from "@/components/installer/dashboard/leads/AllPurchasedLeads";
 import NotificationsPage from "@/components/admin/notifications/NotificationsPage";
-import { mockAvailableLeads } from "@/components/installer/dashboard/mockAvailableLeads";
 import AdminDashboard from "@/components/admin/AdminDashboard";
 import Admin from "@/pages/Admin";
 import StatisticsPage from "@/components/admin/statistics/StatisticsPage";
@@ -49,7 +48,7 @@ export function AppRoutes() {
         <Route path="messages/:id" element={<ConversationPage />} />
         <Route 
           path="leads/nouveaux" 
-          element={<AllAvailableLeads leads={mockAvailableLeads} onClose={handleClose} />} 
+          element={<AllAvailableLeads onClose={handleClose} />} 
         />
         <Route 
           path="leads/achetes" 

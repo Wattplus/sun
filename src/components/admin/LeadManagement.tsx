@@ -7,6 +7,8 @@ import { AdminBreadcrumb } from "./AdminBreadcrumb";
 import { LeadDialogs } from "./leads/LeadDialogs";
 import { useLeadsData } from "./leads/useLeadsData";
 import { useLeadActions } from "./leads/useLeadActions";
+import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/lib/supabase-client";
 
 export const LeadManagement = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -20,6 +22,7 @@ export const LeadManagement = () => {
 
   const { leads, setLeads } = useLeadsData();
   const { handleDeleteLead, handleUpdateLead } = useLeadActions(leads, setLeads);
+  const { toast } = useToast();
 
   const handleDeleteClick = (lead: Lead) => {
     setLeadToDelete(lead);
@@ -51,6 +54,50 @@ export const LeadManagement = () => {
   const handleSaveLead = async (updatedLead: Lead) => {
     await handleUpdateLead(updatedLead);
     handleEditClose();
+  };
+
+  const handleAssignSubmit = async (leadId: string, installerId: string) => {
+    try {
+      const { error } = await supabase
+        .from('leads')
+        .update({ 
+          assignedto: installerId,
+          status: 'assigned' as LeadStatus
+        })
+        .eq('id', leadId);
+
+      if (error) {
+        console.error('Error assigning lead:', error);
+        toast({
+          title: "Erreur",
+          description: "Impossible d'assigner le lead",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      setLeads(leads.map(lead => 
+        lead.id === leadId 
+          ? { ...lead, assignedto: installerId, status: 'assigned' } 
+          : lead
+      ));
+
+      toast({
+        title: "Lead assigné",
+        description: "Le lead a été assigné avec succès",
+      });
+
+      setAssignDialogOpen(false);
+      setSelectedInstallerId("");
+      setLeadToAssign(null);
+    } catch (error) {
+      console.error('Unexpected error assigning lead:', error);
+      toast({
+        title: "Erreur",
+        description: "Une erreur est survenue lors de l'assignation du lead",
+        variant: "destructive",
+      });
+    }
   };
 
   const getStatusColor = (status: LeadStatus) => {
@@ -114,7 +161,7 @@ export const LeadManagement = () => {
           setAssignDialogOpen={setAssignDialogOpen}
           setDeleteDialogOpen={setDeleteDialogOpen}
           setSelectedInstallerId={setSelectedInstallerId}
-          handleAssignSubmit={() => leadToAssign && selectedInstallerId ? handleAssignSubmit(leadToAssign.id, selectedInstallerId) : undefined}
+          handleAssignSubmit={handleAssignSubmit}
           handleConfirmDelete={handleConfirmDelete}
         />
       </div>
