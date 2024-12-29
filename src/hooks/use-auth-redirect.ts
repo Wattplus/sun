@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/lib/supabase-client';
+import { toast } from 'sonner';
 
 export const useAuthRedirect = () => {
   const navigate = useNavigate();
@@ -15,6 +16,7 @@ export const useAuthRedirect = () => {
       } catch (error) {
         console.error('Auth check error:', error);
         setIsAuthenticated(false);
+        toast.error("Erreur lors de la vérification de l'authentification");
       } finally {
         setIsLoading(false);
       }
