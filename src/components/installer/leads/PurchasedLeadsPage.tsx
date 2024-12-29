@@ -5,7 +5,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { LeadTable } from "./sections/LeadTable";
 import { LeadStats } from "./sections/LeadStats";
 import { LeadFilters } from "./sections/LeadFilters";
-import { InstallerBreadcrumb } from "../InstallerBreadcrumb";
+import { InstallerBreadcrumb } from "../../installer/navigation/InstallerBreadcrumb";
 
 export const PurchasedLeadsPage = () => {
   const [leads, setLeads] = useState<Lead[]>([]);
@@ -47,6 +47,20 @@ export const PurchasedLeadsPage = () => {
     }
   };
 
+  const getStatusColor = (status: string) => {
+    const colors = {
+      new: "bg-blue-500",
+      contacted: "bg-yellow-500",
+      qualified: "bg-green-500",
+      assigned: "bg-purple-500",
+      converted: "bg-emerald-500",
+      lost: "bg-red-500"
+    };
+    return colors[status as keyof typeof colors] || "bg-gray-500";
+  };
+
+  const getStatusText = (status: string) => status;
+
   return (
     <div className="space-y-6">
       <InstallerBreadcrumb />
@@ -54,7 +68,14 @@ export const PurchasedLeadsPage = () => {
 
       <div className="glass-panel p-6">
         <LeadFilters />
-        <LeadTable leads={leads} loading={loading} />
+        <LeadTable 
+          leads={leads}
+          onEditClick={() => {}}
+          onAssignClick={() => {}}
+          onDeleteClick={() => {}}
+          getStatusColor={getStatusColor}
+          getStatusText={getStatusText}
+        />
       </div>
     </div>
   );

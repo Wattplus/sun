@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Lead } from "@/types/crm";
 import { supabase } from "@/lib/supabase-client";
-import { LeadTable } from "./leads/LeadTable";
+import { LeadTable } from "@/components/installer/leads/sections/LeadTable";
 import { useToast } from "@/components/ui/use-toast";
 
 const getStatusColor = (status: string) => {
@@ -30,7 +30,7 @@ export const PurchasedLeads = () => {
           variant: "destructive",
         });
       } else {
-        setLeads(data);
+        setLeads(data || []);
       }
     };
 
@@ -41,7 +41,11 @@ export const PurchasedLeads = () => {
     <div>
       <LeadTable
         leads={leads}
+        onEditClick={() => {}}
+        onAssignClick={() => {}}
+        onDeleteClick={() => {}}
         getStatusColor={getStatusColor}
+        getStatusText={(status) => status}
       />
     </div>
   );

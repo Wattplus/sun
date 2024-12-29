@@ -28,7 +28,7 @@ export const AllPurchasedLeads = ({ leads, onClose }: AllPurchasedLeadsProps) =>
         </Button>
       </div>
       <Card className="p-4 md:p-6">
-        <PurchasedLeads leads={leads} />
+        <PurchasedLeads />
       </Card>
     </div>
   );

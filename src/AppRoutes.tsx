@@ -30,7 +30,6 @@ export function AppRoutes() {
 
   return (
     <Routes>
-      {/* Route admin en premier pour un accès direct */}
       <Route path="/admin" element={<Admin />}>
         <Route index element={<AdminDashboard />} />
         <Route path="statistics" element={<StatisticsPage />} />
@@ -55,7 +54,7 @@ export function AppRoutes() {
         />
         <Route 
           path="leads/achetes" 
-          element={<AllPurchasedLeads leads={mockPurchasedLeads} onClose={handleClose} />} 
+          element={<AllPurchasedLeads onClose={handleClose} />} 
         />
         <Route path="rapports" element={<ProfilePage />} />
         <Route path="parametres" element={<SettingsPage />} />
