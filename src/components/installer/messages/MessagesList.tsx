@@ -1,10 +1,11 @@
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { MessageSquare, User } from "lucide-react";
+import { MessageSquare, User, Star, Clock } from "lucide-react";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { MessageInput } from "./components/MessageInput";
 import { Badge } from "@/components/ui/badge";
 import { Avatar } from "@/components/ui/avatar";
+import { motion } from "framer-motion";
 
 interface Message {
   id: string;
@@ -55,8 +56,11 @@ export function MessagesList({ onMessageClick }: MessagesListProps) {
     <div className="space-y-6">
       <ScrollArea className="h-[600px] pr-4">
         <div className="space-y-4">
-          {messages.map((message) => (
-            <div 
+          {messages.map((message, index) => (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.1 }}
               key={message.id} 
               className="group bg-muted/30 hover:bg-muted/50 rounded-lg p-4 space-y-4 cursor-pointer transition-all duration-200 border border-primary/10 hover:border-primary/20"
               onClick={() => onMessageClick?.(message.id)}
@@ -70,18 +74,29 @@ export function MessagesList({ onMessageClick }: MessagesListProps) {
                   </Avatar>
                   <div>
                     <h3 className="font-medium">{message.details?.["Prénom pour le devis"]} {message.details?.["Nom pour le devis"]}</h3>
-                    <p className="text-sm text-muted-foreground">{message.details?.["Email"]}</p>
+                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                      <Clock className="h-3 w-3" />
+                      {message.date}
+                    </div>
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
                   <Badge variant="secondary" className="bg-primary/10 text-primary hover:bg-primary/20">
                     Nouveau LEAD
                   </Badge>
-                  <span className="text-sm text-muted-foreground">{message.date}</span>
+                  <Star className="h-4 w-4 text-muted-foreground hover:text-yellow-400 transition-colors" />
                 </div>
               </div>
               <p className="text-sm text-muted-foreground line-clamp-2">{message.content}</p>
-            </div>
+              <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                <Badge variant="outline" className="text-xs">
+                  {message.details?.["Conditionnement"]}
+                </Badge>
+                <Badge variant="outline" className="text-xs">
+                  {message.details?.["Poids total en kg"]} kg
+                </Badge>
+              </div>
+            </motion.div>
           ))}
         </div>
       </ScrollArea>
