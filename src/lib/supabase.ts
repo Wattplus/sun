@@ -16,30 +16,17 @@ export const supabase = createClient(supabaseUrl, supabaseKey, {
 });
 
 export const messagesService = {
-  async getMessages(conversationId: string): Promise<Message[]> {
-    console.log('Fetching messages for conversation:', conversationId);
+  async getMessages(threadId: string): Promise<Message[]> {
+    console.log('Fetching messages for thread:', threadId);
     
-    if (!conversationId) {
-      throw new Error('Conversation ID is required');
-    }
-
-    // First, let's log the table structure to help debug
-    const { data: tableInfo, error: tableError } = await supabase
-      .from('messages')
-      .select('*')
-      .limit(1);
-    
-    console.log('Table structure:', tableInfo);
-
-    if (tableError) {
-      console.error('Error checking table structure:', tableError);
+    if (!threadId) {
+      throw new Error('Thread ID is required');
     }
 
     const { data, error } = await supabase
       .from('messages')
       .select('*')
-      // Using conversation_id for now, but we'll see the actual column name in the logs
-      .eq('conversation_id', conversationId)
+      .eq('thread_id', threadId)
       .order('created_at', { ascending: true });
 
     if (error) {
@@ -51,8 +38,8 @@ export const messagesService = {
   },
 
   async sendMessage(message: Omit<Message, 'id' | 'created_at'>): Promise<Message> {
-    if (!message.conversation_id) {
-      throw new Error('Conversation ID is required');
+    if (!message.thread_id) {
+      throw new Error('Thread ID is required');
     }
 
     const { data, error } = await supabase

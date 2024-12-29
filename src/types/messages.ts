@@ -3,12 +3,12 @@ export interface Message {
   content: string;
   sender_id: string;
   sender_type: 'installer' | 'client' | 'system';
-  conversation_id: string;
+  thread_id: string; // Changed from conversation_id to thread_id
   created_at: string;
   read: boolean;
 }
 
-export interface Conversation {
+export interface Thread {
   id: string;
   client_id: string;
   installer_id: string;

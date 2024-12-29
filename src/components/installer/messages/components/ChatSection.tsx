@@ -11,43 +11,43 @@ import type { Message } from "@/types/messages";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 export const ChatSection = () => {
-  const { id: conversationId } = useParams();
+  const { id: threadId } = useParams();
   const [newMessage, setNewMessage] = useState("");
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
   const { data: messages = [], isLoading, error } = useQuery({
-    queryKey: ['messages', conversationId],
+    queryKey: ['messages', threadId],
     queryFn: async () => {
-      if (!conversationId) {
-        throw new Error('Conversation ID is required');
+      if (!threadId) {
+        throw new Error('Thread ID is required');
       }
       try {
-        return await messagesService.getMessages(conversationId);
+        return await messagesService.getMessages(threadId);
       } catch (error) {
         console.error('Error fetching messages:', error);
         throw error;
       }
     },
-    enabled: !!conversationId,
+    enabled: !!threadId,
     retry: 1,
   });
 
   const sendMessageMutation = useMutation({
     mutationFn: async (content: string) => {
-      if (!conversationId) {
-        throw new Error('Conversation ID is required');
+      if (!threadId) {
+        throw new Error('Thread ID is required');
       }
       return await messagesService.sendMessage({
         content,
-        conversation_id: conversationId,
+        thread_id: threadId,
         sender_id: 'current-installer-id',
         sender_type: 'installer',
         read: false,
       });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['messages', conversationId] });
+      queryClient.invalidateQueries({ queryKey: ['messages', threadId] });
       toast({
         title: "Message envoyé",
         description: "Votre message a été envoyé avec succès",
@@ -77,7 +77,7 @@ export const ChatSection = () => {
         </p>
         <Button 
           variant="outline"
-          onClick={() => queryClient.invalidateQueries({ queryKey: ['messages', conversationId] })}
+          onClick={() => queryClient.invalidateQueries({ queryKey: ['messages', threadId] })}
         >
           Réessayer
         </Button>
