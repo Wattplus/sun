@@ -68,40 +68,57 @@ export const sendEmail = async (
 
 export const createClientAccount = async (email: string, password: string, userData: any) => {
   try {
-    console.log('Starting account creation process for:', email);
+    console.log('Starting account creation/update process for:', email);
     
-    // Créer directement le compte auth sans vérification
-    console.log('Creating new auth account');
-    const { data: authData, error: signUpError } = await supabase.auth.signUp({
+    // Try to sign in first
+    const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
       email,
-      password,
-      options: {
-        data: {
-          first_name: userData.firstName,
-          last_name: userData.lastName,
-          phone: userData.phone,
-          role: 'client'
-        }
-      }
+      password
     });
 
-    if (signUpError) {
-      console.error('Error creating auth account:', signUpError);
-      return { error: signUpError };
+    let userId;
+
+    // If sign in fails because user doesn't exist, create new account
+    if (signInError && signInError.message === 'Invalid login credentials') {
+      console.log('User does not exist, creating new account');
+      const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: {
+            first_name: userData.firstName,
+            last_name: userData.lastName,
+            phone: userData.phone,
+            role: 'client'
+          }
+        }
+      });
+
+      if (signUpError) {
+        console.error('Error creating auth account:', signUpError);
+        return { error: signUpError };
+      }
+
+      userId = signUpData.user?.id;
+    } else if (signInError) {
+      console.error('Unexpected error during sign in:', signInError);
+      return { error: signInError };
+    } else {
+      userId = signInData.user.id;
     }
 
-    if (!authData.user) {
-      console.error('No user data returned from auth signup');
-      return { error: new Error('Failed to create auth user') };
+    if (!userId) {
+      console.error('No user ID available after auth operation');
+      return { error: new Error('Failed to get user ID') };
     }
 
-    // Créer le profil
-    console.log('Creating new profile');
+    // Upsert the profile
+    console.log('Upserting profile for user:', userId);
     const { error: profileError } = await supabase
       .from('profiles')
-      .insert([
+      .upsert([
         {
-          id: authData.user.id,
+          id: userId,
           email: email,
           first_name: userData.firstName,
           last_name: userData.lastName,
@@ -110,14 +127,14 @@ export const createClientAccount = async (email: string, password: string, userD
           client_type: userData.clientType,
           monthly_bill: userData.monthlyBill
         }
-      ]);
+      ], { onConflict: 'id' });
 
     if (profileError) {
-      console.error('Error creating profile:', profileError);
+      console.error('Error upserting profile:', profileError);
       return { error: profileError };
     }
 
-    // Envoyer l'email de bienvenue
+    // Send welcome email
     console.log('Sending welcome email');
     await sendEmail(
       email,
@@ -130,7 +147,7 @@ export const createClientAccount = async (email: string, password: string, userD
       password
     );
 
-    return { data: authData, error: null };
+    return { data: { userId }, error: null };
   } catch (error) {
     console.error('Unexpected error in createClientAccount:', error);
     return { error };
