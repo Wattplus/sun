@@ -1,8 +1,39 @@
 import { Auth } from "@supabase/auth-ui-react";
 import { ThemeSupa } from "@supabase/auth-ui-shared";
 import { supabase } from "@/lib/supabase-client";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 export const Login = () => {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // Check if user is already logged in
+    const checkUser = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session) {
+        navigate('/');
+      }
+    };
+    
+    checkUser();
+
+    // Listen for auth state changes
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'SIGNED_IN') {
+        navigate('/');
+      }
+      if (event === 'SIGNED_OUT') {
+        navigate('/login');
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, [navigate]);
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-background-light flex items-center justify-center p-4">
       <div className="w-full max-w-md space-y-8">
@@ -33,6 +64,7 @@ export const Login = () => {
                 button: 'w-full bg-primary hover:bg-primary-dark text-white font-medium py-2 px-4 rounded-md transition-colors',
                 input: 'w-full bg-white/10 border-white/20 text-white rounded-md',
                 label: 'text-white/80',
+                message: 'text-red-400',
               },
             }}
             localization={{
@@ -70,6 +102,14 @@ export const Login = () => {
             }}
             theme="dark"
             providers={[]}
+            onError={(error) => {
+              console.error('Auth error:', error);
+              toast.error(
+                error.message === 'Invalid login credentials'
+                  ? 'Email ou mot de passe incorrect'
+                  : 'Une erreur est survenue lors de la connexion'
+              );
+            }}
           />
         </div>
       </div>
