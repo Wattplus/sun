@@ -29,9 +29,22 @@ export const Login = () => {
       if (event === 'SIGNED_OUT') {
         navigate('/login');
       }
+      if (event === 'USER_DELETED') {
+        toast.error('Une erreur est survenue lors de la connexion');
+      }
     });
 
-    return () => subscription.unsubscribe();
+    // Set up error listener
+    const errorSubscription = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'USER_DELETED' || event === 'SIGNED_OUT') {
+        toast.error('Email ou mot de passe incorrect');
+      }
+    });
+
+    return () => {
+      subscription.unsubscribe();
+      errorSubscription.unsubscribe();
+    };
   }, [navigate]);
 
   return (
@@ -102,14 +115,6 @@ export const Login = () => {
             }}
             theme="dark"
             providers={[]}
-            onError={(error) => {
-              console.error('Auth error:', error);
-              toast.error(
-                error.message === 'Invalid login credentials'
-                  ? 'Email ou mot de passe incorrect'
-                  : 'Une erreur est survenue lors de la connexion'
-              );
-            }}
           />
         </div>
       </div>
