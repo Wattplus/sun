@@ -1,6 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
 import emailjs from '@emailjs/browser';
-import { User } from '@supabase/supabase-js';
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
@@ -25,7 +24,7 @@ export const sendEmail = async (
   password: string
 ) => {
   try {
-    console.log('Attempting to send email to:', email);
+    console.log('Sending welcome email to:', email);
     
     const templateParams = {
       to_email: email,
@@ -46,8 +45,6 @@ export const sendEmail = async (
       })
     };
 
-    console.log('Email template params:', templateParams);
-
     const response = await emailjs.send(
       EMAILJS_SERVICE_ID,
       EMAILJS_TEMPLATE_ID,
@@ -55,11 +52,7 @@ export const sendEmail = async (
       EMAILJS_PUBLIC_KEY
     );
 
-    if (response.status !== 200) {
-      throw new Error('Failed to send email');
-    }
-    
-    console.log('Email sent successfully to:', email);
+    console.log('Email sent successfully:', response);
     return { error: null };
   } catch (error) {
     console.error('Error sending email:', error);
@@ -71,6 +64,40 @@ export const createClientAccount = async (email: string, password: string, userD
   try {
     console.log('Starting account creation process for:', email);
 
+    // Vérifier si l'utilisateur existe déjà
+    const { data: existingUser } = await supabase.auth.signInWithPassword({
+      email,
+      password
+    });
+
+    if (existingUser?.user) {
+      console.log('User already exists, updating profile');
+      
+      // Mettre à jour le profil existant
+      const { error: profileError } = await supabase
+        .from('profiles')
+        .upsert([
+          {
+            id: existingUser.user.id,
+            email: email,
+            first_name: userData.firstName,
+            last_name: userData.lastName,
+            phone: userData.phone,
+            postal_code: userData.postalCode,
+            client_type: userData.clientType,
+            monthly_bill: userData.monthlyBill
+          }
+        ]);
+
+      if (profileError) {
+        console.error('Error updating profile:', profileError);
+        return { error: profileError };
+      }
+
+      return { data: { userId: existingUser.user.id }, error: null };
+    }
+
+    // Si l'utilisateur n'existe pas, créer un nouveau compte
     const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
       email,
       password,
@@ -96,7 +123,7 @@ export const createClientAccount = async (email: string, password: string, userD
       return { error: new Error('Failed to get user ID') };
     }
 
-    console.log('Creating profile for user:', userId);
+    // Créer le profil pour le nouvel utilisateur
     const { error: profileError } = await supabase
       .from('profiles')
       .upsert([
@@ -113,11 +140,11 @@ export const createClientAccount = async (email: string, password: string, userD
       ]);
 
     if (profileError) {
-      console.error('Error upserting profile:', profileError);
+      console.error('Error creating profile:', profileError);
       return { error: profileError };
     }
 
-    console.log('Sending welcome email');
+    // Envoyer l'email de bienvenue
     await sendEmail(
       email,
       userData.firstName,
@@ -150,7 +177,7 @@ export const createLead = async (leadData: any) => {
           phone: leadData.phone,
           postal_code: leadData.postalCode,
           monthly_bill: leadData.monthlyBill,
-          client_type: leadData.clientType, // Changed from clientType to client_type
+          client_type: leadData.clientType,
           status: 'new'
         }
       ])
