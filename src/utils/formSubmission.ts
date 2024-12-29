@@ -1,4 +1,5 @@
 import { createLead } from "@/lib/supabase-client";
+import emailjs from '@emailjs/browser';
 
 export const handleFormSubmission = async (
   formData: {
@@ -27,6 +28,31 @@ export const handleFormSubmission = async (
         variant: "destructive",
       });
       return false;
+    }
+
+    // Send confirmation email
+    try {
+      const emailParams = {
+        to_email: formData.email,
+        to_name: `${formData.firstName} ${formData.lastName}`,
+        from_name: "WattPlus",
+        message: `Bonjour ${formData.firstName},\n\nNous avons bien reçu votre demande d'étude solaire. Notre équipe va l'étudier et reviendra vers vous très rapidement.\n\nCordialement,\nL'équipe WattPlus`,
+      };
+
+      await emailjs.send(
+        process.env.EMAILJS_SERVICE_ID || '',
+        process.env.EMAILJS_TEMPLATE_ID || '',
+        emailParams,
+        {
+          publicKey: process.env.EMAILJS_PUBLIC_KEY || '',
+          privateKey: process.env.EMAILJS_PRIVATE_KEY || '',
+        }
+      );
+      
+      console.log('Confirmation email sent successfully');
+    } catch (emailError) {
+      console.error('Error sending confirmation email:', emailError);
+      // Don't block the form submission if email fails
     }
 
     // Show success notification
