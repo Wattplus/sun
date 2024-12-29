@@ -4,7 +4,6 @@ import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Lead, LeadStatus } from "@/types/crm";
 import { Edit, Trash2, UserPlus, Euro, Mail, Phone, MapPin, Users } from "lucide-react";
-import { LeadPurchaseInfo } from "./LeadPurchaseInfo";
 
 interface LeadTableProps {
   leads: Lead[];
