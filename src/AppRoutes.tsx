@@ -19,6 +19,11 @@ import { LeadMarketplace } from "@/components/admin/marketplace/LeadMarketplace"
 import AdminSettingsPage from "@/components/admin/settings/SettingsPage";
 import AdminProfilePage from "@/components/admin/profile/ProfilePage";
 import { ThankYou } from "@/pages/ThankYou";
+import UserManagement from "@/components/admin/users/UserManagement";
+import PricingSettings from "@/components/admin/pricing/PricingSettings";
+import TransactionMonitoring from "@/components/admin/transactions/TransactionMonitoring";
+import ComplaintManagement from "@/components/admin/complaints/ComplaintManagement";
+import DataExport from "@/components/admin/export/DataExport";
 
 export function AppRoutes() {
   const navigate = useNavigate();
@@ -37,6 +42,11 @@ export function AppRoutes() {
         <Route path="notifications" element={<NotificationsPage />} />
         <Route path="settings" element={<AdminSettingsPage />} />
         <Route path="profile" element={<AdminProfilePage />} />
+        <Route path="users" element={<UserManagement />} />
+        <Route path="pricing" element={<PricingSettings />} />
+        <Route path="transactions" element={<TransactionMonitoring />} />
+        <Route path="complaints" element={<ComplaintManagement />} />
+        <Route path="export" element={<DataExport />} />
       </Route>
 
       <Route path="/" element={<Index />} />

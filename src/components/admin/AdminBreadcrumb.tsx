@@ -25,7 +25,12 @@ const breadcrumbTitles: Record<string, string> = {
   "reports": "Rapports",
   "finance": "Finance",
   "support": "Support",
-  "notifications": "Notifications"
+  "notifications": "Notifications",
+  "users": "Gestion des Utilisateurs",
+  "pricing": "Paramétrage des Prix",
+  "transactions": "Suivi des Transactions",
+  "complaints": "Gestion des Réclamations",
+  "export": "Export de Données"
 };
 
 export const AdminBreadcrumb = () => {

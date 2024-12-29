@@ -1,4 +1,4 @@
-import { LayoutDashboard, Users, FileText, ShoppingBag, UserCircle, Settings, Bell, ChartBar } from "lucide-react";
+import { LayoutDashboard, Users, FileText, ShoppingBag, UserCircle, Settings, Bell, ChartBar, Euro, LineChart, AlertCircle, Download } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
@@ -36,6 +36,31 @@ const navItems = [
         title: "Marketplace",
         icon: ShoppingBag,
         href: "/admin/marketplace"
+      },
+      {
+        title: "Utilisateurs",
+        icon: Users,
+        href: "/admin/users"
+      },
+      {
+        title: "Prix",
+        icon: Euro,
+        href: "/admin/pricing"
+      },
+      {
+        title: "Transactions",
+        icon: LineChart,
+        href: "/admin/transactions"
+      },
+      {
+        title: "Réclamations",
+        icon: AlertCircle,
+        href: "/admin/complaints"
+      },
+      {
+        title: "Export",
+        icon: Download,
+        href: "/admin/export"
       }
     ]
   },
