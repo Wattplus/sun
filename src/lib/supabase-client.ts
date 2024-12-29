@@ -49,20 +49,16 @@ export const createLead = async (formData: {
 
 export const checkExistingUser = async (email: string) => {
   try {
-    const { data, error } = await supabase
-      .from('profiles')
-      .select('id')
-      .eq('email', email)
-      .maybeSingle();
+    const { data: userData } = await supabase.auth.signInWithOtp({
+      email: email,
+      options: {
+        shouldCreateUser: false,
+      },
+    });
 
-    if (error) {
-      console.error('Error checking existing user:', error);
-      return null;
-    }
-
-    return data?.id;
+    return userData?.user?.id;
   } catch (error) {
-    console.error('Error in checkExistingUser:', error);
+    console.error('Error checking existing user:', error);
     return null;
   }
 };
@@ -80,11 +76,44 @@ export const createClientAccount = async (
   }
 ) => {
   try {
-    const { data: authData, error: signUpError } = await supabase.auth.signUp({
+    // Vérifier si l'utilisateur existe déjà
+    const { data: existingUser } = await supabase.auth.signInWithPassword({
       email,
       password,
-      options: {
-        data: {
+    });
+
+    let userId;
+
+    if (existingUser?.user) {
+      // Si l'utilisateur existe, utiliser son ID
+      userId = existingUser.user.id;
+    } else {
+      // Si l'utilisateur n'existe pas, créer un nouveau compte
+      const { data: newUser, error: signUpError } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: {
+            first_name: metadata.firstName,
+            last_name: metadata.lastName,
+            phone: metadata.phone,
+            postal_code: metadata.postalCode,
+            client_type: metadata.clientType.toLowerCase(),
+            monthly_bill: metadata.monthlyBill,
+          },
+        },
+      });
+
+      if (signUpError) throw signUpError;
+      userId = newUser?.user?.id;
+    }
+
+    if (userId) {
+      // Mettre à jour ou créer le profil
+      const { error: profileError } = await supabase.from('profiles').upsert([
+        {
+          id: userId,
+          email,
           first_name: metadata.firstName,
           last_name: metadata.lastName,
           phone: metadata.phone,
@@ -92,29 +121,16 @@ export const createClientAccount = async (
           client_type: metadata.clientType.toLowerCase(),
           monthly_bill: metadata.monthlyBill,
         },
-      },
-    });
+      ], {
+        onConflict: 'id'
+      });
 
-    if (signUpError) throw signUpError;
+      if (profileError) throw profileError;
+    }
 
-    const { error: profileError } = await supabase.from('profiles').insert([
-      {
-        id: authData.user?.id,
-        email,
-        first_name: metadata.firstName,
-        last_name: metadata.lastName,
-        phone: metadata.phone,
-        postal_code: metadata.postalCode,
-        client_type: metadata.clientType.toLowerCase(),
-        monthly_bill: metadata.monthlyBill,
-      },
-    ]);
-
-    if (profileError) throw profileError;
-
-    return { data: authData, error: null };
+    return { error: null };
   } catch (error) {
     console.error('Error in createClientAccount:', error);
-    return { data: null, error };
+    return { error };
   }
 };
