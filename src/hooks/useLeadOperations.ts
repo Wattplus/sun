@@ -9,11 +9,11 @@ export const useLeadOperations = () => {
 
   const fetchLeads = async () => {
     try {
-      console.log("useLeadOperations: Début de fetchLeads");
+      console.log("[useLeadOperations] Début de fetchLeads");
       const { data: { session } } = await supabase.auth.getSession();
       
       if (!session) {
-        console.error("useLeadOperations: Pas de session active");
+        console.error("[useLeadOperations] Pas de session active");
         toast({
           title: "Erreur d'authentification",
           description: "Vous devez être connecté pour voir les leads",
@@ -22,8 +22,9 @@ export const useLeadOperations = () => {
         return;
       }
 
-      console.log("useLeadOperations: Session active, utilisateur:", session.user.id);
-      console.log("useLeadOperations: Récupération des leads depuis Supabase...");
+      console.log("[useLeadOperations] Session active, utilisateur:", session.user.id);
+      console.log("[useLeadOperations] URL de l'application:", window.location.origin);
+      console.log("[useLeadOperations] Récupération des leads depuis Supabase...");
       
       const { data, error } = await supabase
         .from("leads")
@@ -31,7 +32,10 @@ export const useLeadOperations = () => {
         .order("created_at", { ascending: false });
 
       if (error) {
-        console.error("useLeadOperations: Erreur Supabase:", error);
+        console.error("[useLeadOperations] Erreur Supabase:", error);
+        console.error("[useLeadOperations] Code d'erreur:", error.code);
+        console.error("[useLeadOperations] Message d'erreur:", error.message);
+        console.error("[useLeadOperations] Détails:", error.details);
         toast({
           title: "Erreur",
           description: "Impossible de charger les leads: " + error.message,
@@ -40,27 +44,30 @@ export const useLeadOperations = () => {
         return;
       }
 
-      console.log("useLeadOperations: Données reçues de Supabase:", data);
+      console.log("[useLeadOperations] Données reçues de Supabase:", data);
       setLeads(data || []);
       
       if (!data || data.length === 0) {
-        console.log("useLeadOperations: Aucun lead trouvé");
+        console.log("[useLeadOperations] Aucun lead trouvé");
         toast({
           title: "Information",
           description: "Aucun lead disponible pour le moment",
         });
       } else {
-        console.log(`useLeadOperations: ${data.length} leads récupérés`);
+        console.log(`[useLeadOperations] ${data.length} leads récupérés`);
         toast({
           title: "Succès",
           description: `${data.length} leads chargés`,
         });
       }
     } catch (error) {
-      console.error("useLeadOperations: Erreur inattendue:", error);
+      console.error("[useLeadOperations] Erreur inattendue:", error);
+      if (error instanceof Error) {
+        console.error("[useLeadOperations] Stack trace:", error.stack);
+      }
       toast({
         title: "Erreur",
-        description: "Une erreur inattendue est survenue",
+        description: "Une erreur inattendue est survenue lors du chargement des leads",
         variant: "destructive",
       });
     }
@@ -68,14 +75,14 @@ export const useLeadOperations = () => {
 
   const deleteLead = async (leadId: string) => {
     try {
-      console.log("useLeadOperations: Suppression du lead:", leadId);
+      console.log("[useLeadOperations] Suppression du lead:", leadId);
       const { error } = await supabase
         .from("leads")
         .delete()
         .eq("id", leadId);
 
       if (error) {
-        console.error("useLeadOperations: Erreur lors de la suppression:", error);
+        console.error("[useLeadOperations] Erreur lors de la suppression:", error);
         toast({
           title: "Erreur",
           description: "Impossible de supprimer le lead: " + error.message,
@@ -91,7 +98,7 @@ export const useLeadOperations = () => {
       });
       return true;
     } catch (error) {
-      console.error("useLeadOperations: Erreur inattendue lors de la suppression:", error);
+      console.error("[useLeadOperations] Erreur inattendue lors de la suppression:", error);
       toast({
         title: "Erreur",
         description: "Une erreur est survenue lors de la suppression",
@@ -103,14 +110,14 @@ export const useLeadOperations = () => {
 
   const updateLead = async (updatedLead: Lead) => {
     try {
-      console.log("useLeadOperations: Mise à jour du lead:", updatedLead);
+      console.log("[useLeadOperations] Mise à jour du lead:", updatedLead);
       const { error } = await supabase
         .from("leads")
         .update(updatedLead)
         .eq("id", updatedLead.id);
 
       if (error) {
-        console.error("useLeadOperations: Erreur lors de la mise à jour:", error);
+        console.error("[useLeadOperations] Erreur lors de la mise à jour:", error);
         toast({
           title: "Erreur",
           description: "Impossible de mettre à jour le lead: " + error.message,
@@ -126,7 +133,7 @@ export const useLeadOperations = () => {
       });
       return true;
     } catch (error) {
-      console.error("useLeadOperations: Erreur inattendue lors de la mise à jour:", error);
+      console.error("[useLeadOperations] Erreur inattendue lors de la mise à jour:", error);
       toast({
         title: "Erreur",
         description: "Une erreur est survenue lors de la mise à jour",
@@ -138,7 +145,7 @@ export const useLeadOperations = () => {
 
   const assignLead = async (leadId: string, installerId: string) => {
     try {
-      console.log("useLeadOperations: Attribution du lead:", { leadId, installerId });
+      console.log("[useLeadOperations] Attribution du lead:", { leadId, installerId });
       const { error } = await supabase
         .from("leads")
         .update({ 
@@ -149,7 +156,7 @@ export const useLeadOperations = () => {
         .eq("id", leadId);
 
       if (error) {
-        console.error("useLeadOperations: Erreur lors de l'attribution:", error);
+        console.error("[useLeadOperations] Erreur lors de l'attribution:", error);
         toast({
           title: "Erreur",
           description: "Impossible d'assigner le lead: " + error.message,
@@ -158,14 +165,14 @@ export const useLeadOperations = () => {
         return false;
       }
 
-      await fetchLeads(); // Recharger tous les leads
+      await fetchLeads();
       toast({
         title: "Lead assigné",
         description: "Le lead a été assigné avec succès",
       });
       return true;
     } catch (error) {
-      console.error("useLeadOperations: Erreur inattendue lors de l'attribution:", error);
+      console.error("[useLeadOperations] Erreur inattendue lors de l'attribution:", error);
       toast({
         title: "Erreur",
         description: "Une erreur est survenue lors de l'assignation",
