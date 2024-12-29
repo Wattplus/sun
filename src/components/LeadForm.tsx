@@ -84,48 +84,54 @@ export const LeadForm = () => {
   };
 
   return (
-    <Card className="p-4 sm:p-8 bg-gradient-to-br from-background/95 to-background/80 border-primary/10 shadow-2xl backdrop-blur-sm rounded-xl mx-auto max-w-xl" id="lead-form">
-      <FormHeader />
-      
-      <form onSubmit={handleSubmit} className="space-y-6 sm:space-y-8 mt-6">
-        <ClientTypeForm
-          value={formData.clientType}
-          onChange={(value) => handleFieldChange("clientType", value)}
-        />
+    <div className="w-full max-w-2xl mx-auto px-4 sm:px-6 lg:px-8" id="lead-form">
+      <Card className="relative overflow-hidden p-6 sm:p-10 bg-gradient-to-br from-background/95 to-background/80 border border-primary/20 shadow-2xl backdrop-blur-lg rounded-2xl">
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-secondary/5 pointer-events-none" />
         
-        <div className="space-y-4 sm:space-y-6">
-          <FormField
-            label="Facture mensuelle (€)"
-            id="monthlyBill"
-            type="number"
-            value={formData.monthlyBill}
-            onChange={(e) => handleFieldChange("monthlyBill", e.target.value)}
-            placeholder="Ex: 150"
-            required
-            lightMode
-          />
+        <div className="relative z-10">
+          <FormHeader />
           
-          <FormField
-            label="Code postal"
-            id="postalCode"
-            value={formData.postalCode}
-            onChange={(e) => handleFieldChange("postalCode", e.target.value)}
-            placeholder="Ex: 75001"
-            required
-            lightMode
-          />
+          <form onSubmit={handleSubmit} className="mt-8 space-y-6 sm:space-y-8">
+            <ClientTypeForm
+              value={formData.clientType}
+              onChange={(value) => handleFieldChange("clientType", value)}
+            />
+            
+            <div className="space-y-4 sm:space-y-6">
+              <FormField
+                label="Facture mensuelle (€)"
+                id="monthlyBill"
+                type="number"
+                value={formData.monthlyBill}
+                onChange={(e) => handleFieldChange("monthlyBill", e.target.value)}
+                placeholder="Ex: 150"
+                required
+                lightMode
+              />
+              
+              <FormField
+                label="Code postal"
+                id="postalCode"
+                value={formData.postalCode}
+                onChange={(e) => handleFieldChange("postalCode", e.target.value)}
+                placeholder="Ex: 75001"
+                required
+                lightMode
+              />
+            </div>
+
+            <PersonalInfoForm
+              firstName={formData.firstName}
+              lastName={formData.lastName}
+              email={formData.email}
+              phone={formData.phone}
+              onFieldChange={handleFieldChange}
+            />
+
+            <SubmitButton isSubmitting={isSubmitting} />
+          </form>
         </div>
-
-        <PersonalInfoForm
-          firstName={formData.firstName}
-          lastName={formData.lastName}
-          email={formData.email}
-          phone={formData.phone}
-          onFieldChange={handleFieldChange}
-        />
-
-        <SubmitButton isSubmitting={isSubmitting} />
-      </form>
-    </Card>
+      </Card>
+    </div>
   );
 };
