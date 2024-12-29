@@ -25,7 +25,11 @@ export const messagesService = {
       throw error;
     }
 
-    return data || [];
+    if (!data) {
+      return [];
+    }
+
+    return data;
   },
 
   async sendMessage(message: Omit<Message, 'id' | 'created_at'>): Promise<Message> {

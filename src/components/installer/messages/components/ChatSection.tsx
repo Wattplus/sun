@@ -18,24 +18,34 @@ export const ChatSection = () => {
 
   const { data: messages = [], isLoading, error } = useQuery({
     queryKey: ['messages', conversationId],
-    queryFn: () => {
+    queryFn: async () => {
       if (!conversationId) throw new Error('Conversation ID is required');
-      return messagesService.getMessages(conversationId);
+      try {
+        return await messagesService.getMessages(conversationId);
+      } catch (error) {
+        console.error('Error fetching messages:', error);
+        throw error;
+      }
     },
     enabled: !!conversationId,
     retry: 1,
   });
 
   const sendMessageMutation = useMutation({
-    mutationFn: (content: string) => {
+    mutationFn: async (content: string) => {
       if (!conversationId) throw new Error('Conversation ID is required');
-      return messagesService.sendMessage({
-        content,
-        conversation_id: conversationId,
-        sender_id: 'current-installer-id',
-        sender_type: 'installer',
-        read: false,
-      });
+      try {
+        return await messagesService.sendMessage({
+          content,
+          conversation_id: conversationId,
+          sender_id: 'current-installer-id',
+          sender_type: 'installer',
+          read: false,
+        });
+      } catch (error) {
+        console.error('Error sending message:', error);
+        throw error;
+      }
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['messages', conversationId] });
