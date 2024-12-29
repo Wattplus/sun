@@ -8,12 +8,7 @@ if (!supabaseUrl || !supabaseKey) {
   throw new Error('Missing Supabase configuration');
 }
 
-export const supabase = createClient(supabaseUrl, supabaseKey, {
-  auth: {
-    persistSession: true,
-    autoRefreshToken: true,
-  },
-});
+export const supabase = createClient(supabaseUrl, supabaseKey);
 
 export const messagesService = {
   async getMessages(conversationId: string): Promise<Message[]> {
@@ -39,16 +34,12 @@ export const messagesService = {
   },
 
   async sendMessage(message: Omit<Message, 'id' | 'created_at'>): Promise<Message> {
+    console.log('Sending message:', message);
+    
     try {
       const { data, error } = await supabase
         .from('messages')
-        .insert([{
-          content: message.content,
-          sender_id: message.sender_id,
-          sender_type: message.sender_type,
-          conversation_id: message.conversation_id,
-          read: message.read
-        }])
+        .insert([message])
         .select()
         .single();
 
