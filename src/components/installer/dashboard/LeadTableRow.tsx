@@ -69,20 +69,20 @@ export const LeadTableRow = ({ lead, onLeadSelect, isSelected }: LeadTableRowPro
           {lead.projectType === 'professional' ? 'Professionnel' : 'Résidentiel'}
         </Badge>
       </TableCell>
-      <TableCell className="font-medium text-foreground">{lead.firstName}</TableCell>
-      <TableCell>{maskSensitiveInfo(lead.lastName)}</TableCell>
+      <TableCell className="font-medium text-foreground">{lead.firstname}</TableCell>
+      <TableCell>{maskSensitiveInfo(lead.lastname)}</TableCell>
       <TableCell>{maskSensitiveInfo(lead.email)}</TableCell>
       <TableCell>{maskSensitiveInfo(lead.phone)}</TableCell>
       <TableCell>
         <Badge variant="outline" className="bg-primary/5 border-primary/20">
-          {lead.postalCode}
+          {lead.postalcode}
         </Badge>
       </TableCell>
       
       <TableCell>{renderOptionalInfo(lead.roofType?.replace(/-/g, ' '), 'Type de toit')}</TableCell>
       <TableCell>
-        {lead.monthlyBill ? (
-          <span className="text-primary font-medium">{lead.monthlyBill}€/mois</span>
+        {lead.monthlybill ? (
+          <span className="text-primary font-medium">{lead.monthlybill}€/mois</span>
         ) : (
           renderOptionalInfo(undefined, 'Facture mensuelle')
         )}

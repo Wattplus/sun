@@ -80,7 +80,7 @@ export const LeadCard = ({ lead, status, onSelect, isSelected, onNoteAdd, onStat
               </div>
               <div>
                 <h3 className="font-medium text-base md:text-lg">
-                  {lead.firstName} {isAvailable ? '' : lead.lastName}
+                  {lead.firstname} {isAvailable ? '' : lead.lastname}
                 </h3>
                 <div className="flex flex-wrap gap-2 mt-1">
                   <Badge 
@@ -124,7 +124,7 @@ export const LeadCard = ({ lead, status, onSelect, isSelected, onNoteAdd, onStat
           <div className={`grid ${isMobile ? 'grid-cols-1' : 'grid-cols-2'} gap-3`}>
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <MapPin className="h-4 w-4" />
-              <span>{lead.postalCode}</span>
+              <span>{lead.postalcode}</span>
             </div>
             {!isAvailable && (
               <>
@@ -138,7 +138,7 @@ export const LeadCard = ({ lead, status, onSelect, isSelected, onNoteAdd, onStat
                 </div>
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
                   <Clock className="h-4 w-4" />
-                  <span>Acheté le {new Date(lead.purchasedBy?.[0]?.purchaseDate || "").toLocaleDateString()}</span>
+                  <span>Acheté le {new Date(lead.purchasedby?.[0]?.purchaseDate || "").toLocaleDateString()}</span>
                 </div>
               </>
             )}

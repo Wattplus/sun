@@ -18,18 +18,18 @@ export const LeadsList = ({ leads, onLeadSelect, selectedLeads = [] }: LeadsList
   const availableDepartments = useMemo(() => {
     const departments = new Set<string>();
     leads.forEach(lead => {
-      if (lead.postalCode && lead.postalCode.length >= 2) {
-        departments.add(lead.postalCode.substring(0, 2));
+      if (lead.postalcode && lead.postalcode.length >= 2) {
+        departments.add(lead.postalcode.substring(0, 2));
       }
     });
     return Array.from(departments).sort();
   }, [leads]);
 
-  let availableLeads = leads.filter(lead => !lead.purchasedBy?.length);
+  let availableLeads = leads.filter(lead => !lead.purchasedby?.length);
 
   if (selectedDepartments.length > 0) {
     availableLeads = availableLeads.filter(lead => 
-      selectedDepartments.includes(lead.postalCode.substring(0, 2))
+      selectedDepartments.includes(lead.postalcode.substring(0, 2))
     );
   }
 
