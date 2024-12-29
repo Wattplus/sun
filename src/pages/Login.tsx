@@ -36,8 +36,10 @@ export const Login = ({ isAdminLogin = false }: LoginProps) => {
           }
 
           console.log("Profile data:", profile);
+          console.log("User role:", profile?.role);
 
           const isAdmin = profile?.role === 'admin' || profile?.role === 'super_admin';
+          console.log("Is admin user:", isAdmin);
 
           if (isAdminLogin) {
             if (isAdmin) {
@@ -51,7 +53,7 @@ export const Login = ({ isAdminLogin = false }: LoginProps) => {
                 description: "Vous n'avez pas les droits d'administration nécessaires.",
                 variant: "destructive",
               });
-              navigate("/login");
+              navigate("/admin/login");
             }
           } else {
             if (isAdmin) {
