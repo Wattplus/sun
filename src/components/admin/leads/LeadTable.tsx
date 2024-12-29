@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Lead, LeadStatus } from "@/types/crm";
-import { Edit, Trash2, UserPlus } from "lucide-react";
+import { Edit, Trash2, UserPlus, DollarSign } from "lucide-react";
 
 interface LeadTableProps {
   leads: Lead[];
@@ -31,7 +31,8 @@ export const LeadTable = ({
             <TableHead>Facture mensuelle</TableHead>
             <TableHead>Code postal</TableHead>
             <TableHead>Contact</TableHead>
-            <TableHead>Type de projet</TableHead>
+            <TableHead>Statut</TableHead>
+            <TableHead>Revenu</TableHead>
             <TableHead>Actions</TableHead>
           </TableRow>
         </TableHeader>
@@ -42,7 +43,7 @@ export const LeadTable = ({
                 {lead.clienttype === 'particulier' ? 'Particulier' : 'Professionnel'}
               </TableCell>
               <TableCell>
-                {lead.monthlybill ? `${lead.monthlybill} €` : 'Non renseigné €'}
+                {lead.monthlybill ? `${lead.monthlybill} €` : 'Non renseigné'}
               </TableCell>
               <TableCell>
                 {lead.postalcode ? (
@@ -75,7 +76,15 @@ export const LeadTable = ({
                 </div>
               </TableCell>
               <TableCell>
-                {lead.projectType === 'residential' ? 'Résidentiel' : 'Professionnel'}
+                <Badge className={`${getStatusColor(lead.status)}`}>
+                  {getStatusText(lead.status)}
+                </Badge>
+              </TableCell>
+              <TableCell>
+                <div className="flex items-center gap-1">
+                  <DollarSign className="h-4 w-4 text-green-500" />
+                  <span className="font-medium">{lead.price || 0}€</span>
+                </div>
               </TableCell>
               <TableCell>
                 <div className="flex gap-2">
