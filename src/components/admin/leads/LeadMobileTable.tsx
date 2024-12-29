@@ -27,7 +27,7 @@ export const LeadMobileTable = ({
     <ScrollArea className="h-[calc(100vh-300px)]">
       <div className="space-y-3 pb-4">
         {leads.map((lead) => (
-          <Card key={lead.id} className="p-4 bg-background/50 backdrop-blur-md border-[#33C3F0]/20">
+          <Card key={lead.id} className="p-4 bg-background/50 backdrop-blur-md border-primary/10">
             <div className="space-y-4">
               {/* Header with name and status */}
               <div className="flex items-start justify-between">
@@ -84,14 +84,14 @@ export const LeadMobileTable = ({
               </div>
 
               {/* Actions */}
-              <div className="flex gap-2 pt-2 border-t border-[#33C3F0]/20">
+              <div className="flex gap-2 pt-2 border-t border-primary/10">
                 <Button
                   variant="outline"
                   size="sm"
                   onClick={() => onEditClick(lead)}
-                  className="flex-1 border-[#33C3F0]/20 hover:border-[#33C3F0]/40 hover:bg-[#33C3F0]/10"
+                  className="flex-1 border-primary/20 hover:border-primary/40 hover:bg-primary/10"
                 >
-                  <Edit className="h-4 w-4 mr-2 text-[#1EAEDB]" />
+                  <Edit className="h-4 w-4 mr-2 text-primary" />
                   Éditer
                 </Button>
                 <Button
@@ -99,10 +99,10 @@ export const LeadMobileTable = ({
                   size="sm"
                   onClick={() => onAssignClick(lead)}
                   disabled={lead.status === "assigned" || lead.status === "converted"}
-                  className="flex-1 border-[#33C3F0]/20 hover:border-[#33C3F0]/40 hover:bg-[#33C3F0]/10"
+                  className="flex-1 border-primary/20 hover:border-primary/40 hover:bg-primary/10"
                 >
-                  <UserPlus className="h-4 w-4 mr-2 text-[#1EAEDB]" />
-                  Vendre
+                  <UserPlus className="h-4 w-4 mr-2 text-primary" />
+                  Assigner
                 </Button>
                 <Button
                   variant="destructive"

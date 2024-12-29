@@ -11,19 +11,16 @@ export const LeadPurchaseInfo = ({ lead }: LeadPurchaseInfoProps) => {
   const totalRevenue = purchaseCount * 25; // Prix fixe de 25€ par lead
 
   return (
-    <div className="space-y-2">
-      <div className="flex items-center gap-2">
+    <div className="flex items-center gap-2">
+      <div className="flex items-center gap-1.5">
         <Users className="h-4 w-4 text-primary" />
-        <Badge variant="secondary" className="bg-primary/10">
+        <span className="text-sm text-muted-foreground">
           {purchaseCount} installateur{purchaseCount > 1 ? 's' : ''}
-        </Badge>
+        </span>
       </div>
-      <div className="flex items-center gap-2">
-        <Euro className="h-4 w-4 text-emerald-500" />
-        <Badge variant="outline" className="bg-emerald-500/10 text-emerald-600">
-          Revenu: {totalRevenue}€
-        </Badge>
-      </div>
+      <Badge variant="outline" className="bg-emerald-500/10 text-emerald-600">
+        {totalRevenue}€
+      </Badge>
     </div>
   );
 };

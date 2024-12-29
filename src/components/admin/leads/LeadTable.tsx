@@ -24,23 +24,23 @@ export const LeadTable = ({
   getStatusText,
 }: LeadTableProps) => {
   return (
-    <ScrollArea className="h-[calc(100vh-300px)] rounded-md border border-[#33C3F0]/20">
+    <ScrollArea className="h-[calc(100vh-300px)] rounded-md">
       <Table>
-        <TableHeader>
-          <TableRow className="bg-[#1EAEDB]/5">
-            <TableHead>Type de client</TableHead>
-            <TableHead>Contact</TableHead>
-            <TableHead>Coordonnées</TableHead>
-            <TableHead>Localisation</TableHead>
-            <TableHead>Facture mensuelle</TableHead>
-            <TableHead>Ventes</TableHead>
-            <TableHead>Statut</TableHead>
-            <TableHead>Actions</TableHead>
+        <TableHeader className="bg-background/50 sticky top-0">
+          <TableRow className="hover:bg-transparent border-b border-primary/10">
+            <TableHead className="text-primary">Type de client</TableHead>
+            <TableHead className="text-primary">Contact</TableHead>
+            <TableHead className="text-primary">Coordonnées</TableHead>
+            <TableHead className="text-primary">Localisation</TableHead>
+            <TableHead className="text-primary">Facture mensuelle</TableHead>
+            <TableHead className="text-primary">Revenus générés</TableHead>
+            <TableHead className="text-primary">Statut</TableHead>
+            <TableHead className="text-primary">Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {leads.map((lead) => (
-            <TableRow key={lead.id} className="hover:bg-[#1EAEDB]/5">
+            <TableRow key={lead.id} className="hover:bg-primary/5 border-b border-primary/10">
               <TableCell>
                 <Badge 
                   variant="outline" 
@@ -50,14 +50,12 @@ export const LeadTable = ({
                 </Badge>
               </TableCell>
               <TableCell>
-                <div className="space-y-1">
-                  <div className="font-medium">
-                    {`${lead.firstname} ${lead.lastname}`}
-                  </div>
+                <div className="font-medium">
+                  {lead.firstname} {lead.lastname}
                 </div>
               </TableCell>
               <TableCell>
-                <div className="space-y-2">
+                <div className="space-y-1">
                   <a 
                     href={`mailto:${lead.email}`} 
                     className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors"
@@ -80,16 +78,16 @@ export const LeadTable = ({
                   <Badge variant="outline" className="bg-primary/10">
                     {lead.postalcode}
                   </Badge>
+                  {lead.city && (
+                    <span className="text-sm text-muted-foreground">
+                      {lead.city}
+                    </span>
+                  )}
                 </div>
-                {lead.city && (
-                  <span className="text-sm text-muted-foreground mt-1 block">
-                    {lead.city}
-                  </span>
-                )}
               </TableCell>
               <TableCell>
                 <div className="flex items-center gap-2">
-                  <Euro className="h-4 w-4 text-green-500" />
+                  <Euro className="h-4 w-4 text-primary" />
                   <span className="font-medium">{lead.monthlybill}€/mois</span>
                 </div>
               </TableCell>
@@ -107,9 +105,9 @@ export const LeadTable = ({
                     variant="outline"
                     size="sm"
                     onClick={() => onEditClick(lead)}
-                    className="border-[#33C3F0]/20 hover:border-[#33C3F0]/40 hover:bg-[#33C3F0]/10"
+                    className="border-primary/20 hover:border-primary/40 hover:bg-primary/10"
                   >
-                    <Edit className="h-4 w-4 mr-2 text-[#1EAEDB]" />
+                    <Edit className="h-4 w-4 mr-2 text-primary" />
                     Éditer
                   </Button>
                   <Button
@@ -117,10 +115,10 @@ export const LeadTable = ({
                     size="sm"
                     onClick={() => onAssignClick(lead)}
                     disabled={lead.status === "assigned" || lead.status === "converted"}
-                    className="border-[#33C3F0]/20 hover:border-[#33C3F0]/40 hover:bg-[#33C3F0]/10"
+                    className="border-primary/20 hover:border-primary/40 hover:bg-primary/10"
                   >
-                    <UserPlus className="h-4 w-4 mr-2 text-[#1EAEDB]" />
-                    Vendre
+                    <UserPlus className="h-4 w-4 mr-2 text-primary" />
+                    Assigner
                   </Button>
                   <Button
                     variant="destructive"
