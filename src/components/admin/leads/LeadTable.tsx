@@ -40,29 +40,32 @@ export const LeadTable = ({
     }
   };
 
-  const getProjectTypeText = (type: string) => {
-    return type === 'residential' ? 'Résidentiel' : 'Professionnel / Industriel';
-  };
-
   return (
     <ScrollArea className="h-[600px] rounded-md border border-[#33C3F0]/20">
       <Table>
         <TableHeader>
           <TableRow className="bg-[#1EAEDB]/5">
-            <TableHead>Date</TableHead>
+            <TableHead>Type de client</TableHead>
+            <TableHead>Facture mensuelle</TableHead>
+            <TableHead>Code postal</TableHead>
             <TableHead>Contact</TableHead>
-            <TableHead>Localisation</TableHead>
             <TableHead>Type de projet</TableHead>
-            <TableHead>Statut</TableHead>
-            <TableHead>Assigné à</TableHead>
             <TableHead>Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {leads.map((lead) => (
             <TableRow key={lead.id} className="hover:bg-[#1EAEDB]/5">
-              <TableCell className="font-medium">
-                {formatDate(lead.createdAt)}
+              <TableCell>{lead.clientType === 'particulier' ? 'Particulier' : 'Professionnel'}</TableCell>
+              <TableCell>{lead.monthlyBill || 'Non renseigné'} €</TableCell>
+              <TableCell>
+                {lead.postalCode ? (
+                  <Badge variant="outline" className="bg-primary/10">
+                    {lead.postalCode}
+                  </Badge>
+                ) : (
+                  <span className="text-sm text-muted-foreground">Non renseigné</span>
+                )}
               </TableCell>
               <TableCell>
                 <div className="space-y-1">
@@ -83,28 +86,7 @@ export const LeadTable = ({
                   )}
                 </div>
               </TableCell>
-              <TableCell>
-                <div className="space-y-1">
-                  {lead.city && <div className="text-sm">{lead.city}</div>}
-                  {lead.postalCode && (
-                    <Badge variant="outline" className="bg-primary/10">
-                      {lead.postalCode}
-                    </Badge>
-                  )}
-                  {!lead.city && !lead.postalCode && (
-                    <span className="text-sm text-muted-foreground">
-                      Non renseigné
-                    </span>
-                  )}
-                </div>
-              </TableCell>
-              <TableCell>{getProjectTypeText(lead.projectType)}</TableCell>
-              <TableCell>
-                <Badge className={`${getStatusColor(lead.status as LeadStatus)} text-white`}>
-                  {getStatusText(lead.status as LeadStatus)}
-                </Badge>
-              </TableCell>
-              <TableCell>{lead.assignedTo || "-"}</TableCell>
+              <TableCell>{lead.projectType === 'residential' ? 'Résidentiel' : 'Professionnel'}</TableCell>
               <TableCell>
                 <div className="flex gap-2">
                   <Button
