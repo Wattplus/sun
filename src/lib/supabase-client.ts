@@ -66,15 +66,11 @@ export const sendEmail = async (
 export const createClientAccount = async (email: string, password: string, userData: any) => {
   try {
     // Vérifier si l'utilisateur existe déjà
-    const { data: { users }, error: listUsersError } = await supabase.auth.admin.listUsers({
-      filters: {
-        email: email
-      }
-    });
+    const { data: existingUser, error: getUserError } = await supabase.auth.admin.getUserById(email);
     
-    if (listUsersError) throw listUsersError;
+    if (getUserError) throw getUserError;
     
-    if (users && users.length > 0) {
+    if (existingUser) {
       return { 
         error: {
           message: "Un compte existe déjà avec cet email. Veuillez vous connecter ou utiliser un autre email."
