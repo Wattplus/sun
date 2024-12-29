@@ -12,14 +12,37 @@ export const supabase = createClient(supabaseUrl, supabaseKey);
 // Fonction pour envoyer un email via la fonction Edge
 export const sendEmail = async (email: string, firstName: string, password: string, subject?: string, html?: string) => {
   try {
+    console.log('Tentative d\'envoi d\'email à:', email);
+    
     const { error } = await supabase.functions.invoke('send-email', {
-      body: { email, firstName, password, subject, html }
+      body: { 
+        email, 
+        firstName, 
+        password, 
+        subject: subject || 'Bienvenue chez WattPlus - Vos identifiants de connexion',
+        html: html || `
+          <h1>Bienvenue ${firstName} !</h1>
+          <p>Votre compte a été créé avec succès.</p>
+          <p>Voici vos identifiants de connexion :</p>
+          <ul>
+            <li>Email : ${email}</li>
+            <li>Mot de passe : ${password}</li>
+          </ul>
+          <p>Nous vous recommandons de changer votre mot de passe lors de votre première connexion.</p>
+          <p>Vous pouvez maintenant vous connecter à votre espace client pour suivre l'avancement de votre projet.</p>
+        `
+      }
     });
 
-    if (error) throw error;
+    if (error) {
+      console.error('Erreur lors de l\'envoi de l\'email:', error);
+      throw error;
+    }
+    
+    console.log('Email envoyé avec succès à:', email);
     return { error: null };
   } catch (error) {
-    console.error('Error sending email:', error);
+    console.error('Erreur lors de l\'envoi de l\'email:', error);
     return { error };
   }
 };

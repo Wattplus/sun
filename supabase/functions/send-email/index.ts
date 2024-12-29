@@ -14,8 +14,10 @@ serve(async (req) => {
   }
 
   try {
+    console.log('Démarrage de la fonction send-email');
     const { email, firstName, password, subject, html } = await req.json()
 
+    console.log('Connexion au serveur SMTP...');
     await client.connectTLS({
       hostname: "mail.wattplus.org",
       port: 465,
@@ -23,6 +25,7 @@ serve(async (req) => {
       password: "Hanna77026@"
     });
 
+    console.log('Envoi de l\'email...');
     await client.send({
       from: "mikael@wattplus.org",
       to: email,
@@ -40,6 +43,7 @@ serve(async (req) => {
       `
     });
 
+    console.log('Email envoyé avec succès');
     await client.close();
 
     return new Response(
@@ -50,7 +54,7 @@ serve(async (req) => {
       }
     )
   } catch (error) {
-    console.error('Error sending email:', error);
+    console.error('Erreur lors de l\'envoi de l\'email:', error);
     return new Response(
       JSON.stringify({ error: error.message }),
       { 
