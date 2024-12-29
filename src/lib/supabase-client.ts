@@ -71,7 +71,6 @@ export const createClientAccount = async (email: string, password: string, userD
   try {
     console.log('Starting account creation process for:', email);
 
-    // Créer directement le compte sans vérifier l'existence
     const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
       email,
       password,
@@ -97,7 +96,6 @@ export const createClientAccount = async (email: string, password: string, userD
       return { error: new Error('Failed to get user ID') };
     }
 
-    // Upsert the profile
     console.log('Creating profile for user:', userId);
     const { error: profileError } = await supabase
       .from('profiles')
@@ -119,7 +117,6 @@ export const createClientAccount = async (email: string, password: string, userD
       return { error: profileError };
     }
 
-    // Send welcome email
     console.log('Sending welcome email');
     await sendEmail(
       email,
@@ -153,7 +150,7 @@ export const createLead = async (leadData: any) => {
           phone: leadData.phone,
           postal_code: leadData.postalCode,
           monthly_bill: leadData.monthlyBill,
-          clientType: leadData.clientType,
+          client_type: leadData.clientType, // Changed from clientType to client_type
           status: 'new'
         }
       ])
