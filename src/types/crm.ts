@@ -3,6 +3,7 @@ export type InstallerLeadStatus = "nouveau" | "contacte" | "devis_envoye" | "rdv
 export type InstallerStatus = "active" | "inactive" | "pending";
 export type PaymentType = "prepaid" | "per_lead";
 export type PurchaseType = "mutualise" | "exclusif";
+export type ClientType = "particulier" | "professionnel";
 
 export interface Installer {
   id: string;
@@ -54,6 +55,7 @@ export interface Lead {
   monthlyBill?: string;
   electricalType?: string;
   lastUpdated?: string;
+  clientType: ClientType;
 }
 
 // Mock data for testing
