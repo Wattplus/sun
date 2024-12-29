@@ -2,12 +2,14 @@ import { useState, useEffect } from "react";
 import { Lead, LeadStatus } from "@/types/crm";
 import { useToast } from "@/components/ui/use-toast";
 import { LeadTable } from "./leads/LeadTable";
+import { LeadMobileTable } from "./leads/LeadMobileTable";
 import { LeadHeader } from "./leads/LeadHeader";
 import { LeadStats } from "./leads/LeadStats";
 import { AdminBreadcrumb } from "./AdminBreadcrumb";
 import { LeadDialogs } from "./leads/LeadDialogs";
 import { mockInstallers } from "./InstallerManagement";
 import { supabase } from "@/lib/supabase-client";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 export const LeadManagement = () => {
   const [leads, setLeads] = useState<Lead[]>([]);
@@ -20,6 +22,7 @@ export const LeadManagement = () => {
   const [leadToAssign, setLeadToAssign] = useState<Lead | null>(null);
   const [leadToDelete, setLeadToDelete] = useState<Lead | null>(null);
   const { toast } = useToast();
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     fetchLeads();
@@ -207,11 +210,11 @@ export const LeadManagement = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 p-4 lg:p-6">
       <AdminBreadcrumb />
       <LeadStats leads={leads} />
 
-      <div className="glass-panel p-6">
+      <div className="glass-panel p-4 lg:p-6">
         <LeadHeader
           searchTerm={searchTerm}
           onSearchChange={setSearchTerm}
@@ -222,14 +225,25 @@ export const LeadManagement = () => {
           }}
         />
 
-        <LeadTable
-          leads={leads}
-          onEditClick={handleEditClick}
-          onAssignClick={handleAssignClick}
-          onDeleteClick={handleDeleteClick}
-          getStatusColor={getStatusColor}
-          getStatusText={getStatusText}
-        />
+        {isMobile ? (
+          <LeadMobileTable
+            leads={leads}
+            onEditClick={handleEditClick}
+            onAssignClick={handleAssignClick}
+            onDeleteClick={handleDeleteClick}
+            getStatusColor={getStatusColor}
+            getStatusText={getStatusText}
+          />
+        ) : (
+          <LeadTable
+            leads={leads}
+            onEditClick={handleEditClick}
+            onAssignClick={handleAssignClick}
+            onDeleteClick={handleDeleteClick}
+            getStatusColor={getStatusColor}
+            getStatusText={getStatusText}
+          />
+        )}
 
         <LeadDialogs
           selectedLead={selectedLead}

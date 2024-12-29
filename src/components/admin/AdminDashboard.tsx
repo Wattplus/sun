@@ -5,8 +5,14 @@ import RecentActivity from "./RecentActivity";
 import { AdminNavigation } from "./AdminNavigation";
 import { AdminBreadcrumb } from "./AdminBreadcrumb";
 import { motion } from "framer-motion";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { Button } from "@/components/ui/button";
+import { useState } from "react";
 
 const AdminDashboard = () => {
+  const isMobile = useIsMobile();
+  const [showMenu, setShowMenu] = useState(false);
+
   const container = {
     hidden: { opacity: 0 },
     show: {
@@ -24,12 +30,54 @@ const AdminDashboard = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#0B1221] to-[#1a5fb4]">
-      <div className="flex">
+      <div className="flex flex-col lg:flex-row">
+        {/* Mobile Menu Button */}
+        {isMobile && (
+          <Button
+            variant="ghost"
+            className="fixed top-4 right-4 z-50"
+            onClick={() => setShowMenu(!showMenu)}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              {showMenu ? (
+                <>
+                  <line x1="18" y1="6" x2="6" y2="18" />
+                  <line x1="6" y1="6" x2="18" y2="18" />
+                </>
+              ) : (
+                <>
+                  <line x1="3" y1="12" x2="21" y2="12" />
+                  <line x1="3" y1="6" x2="21" y2="6" />
+                  <line x1="3" y1="18" x2="21" y2="18" />
+                </>
+              )}
+            </svg>
+          </Button>
+        )}
+
+        {/* Sidebar */}
         <motion.div 
           initial={{ x: -100, opacity: 0 }}
-          animate={{ x: 0, opacity: 1 }}
+          animate={{ 
+            x: 0, 
+            opacity: 1,
+            translateX: isMobile && !showMenu ? '-100%' : '0%'
+          }}
           transition={{ duration: 0.5 }}
-          className="w-64 min-h-screen bg-[#0B1221]/50 backdrop-blur-md border-r border-primary/20 p-4 sticky top-0"
+          className={`
+            ${isMobile ? 'fixed inset-y-0 left-0 z-40' : 'sticky top-0'}
+            w-64 min-h-screen bg-[#0B1221]/50 backdrop-blur-md border-r border-primary/20 p-4
+          `}
         >
           <h1 className="text-xl font-bold mb-6 px-4 bg-gradient-to-r from-primary to-primary-light bg-clip-text text-transparent">
             Administration
@@ -37,7 +85,8 @@ const AdminDashboard = () => {
           <AdminNavigation />
         </motion.div>
         
-        <div className="flex-1 p-8">
+        {/* Main Content */}
+        <div className={`flex-1 p-4 lg:p-8 ${isMobile ? 'mt-16' : ''}`}>
           <motion.div
             initial={{ y: -20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
@@ -50,7 +99,7 @@ const AdminDashboard = () => {
             variants={container}
             initial="hidden"
             animate="show"
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8"
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 mb-6 lg:mb-8"
           >
             <motion.div variants={item}>
               <StatCard
@@ -121,6 +170,14 @@ const AdminDashboard = () => {
           </motion.div>
         </div>
       </div>
+
+      {/* Mobile Menu Overlay */}
+      {isMobile && showMenu && (
+        <div 
+          className="fixed inset-0 bg-black/50 z-30"
+          onClick={() => setShowMenu(false)}
+        />
+      )}
     </div>
   );
 };
