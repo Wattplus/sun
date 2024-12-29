@@ -64,40 +64,7 @@ export const createClientAccount = async (email: string, password: string, userD
   try {
     console.log('Starting account creation process for:', email);
 
-    // Vérifier si l'utilisateur existe déjà
-    const { data: existingUser } = await supabase.auth.signInWithPassword({
-      email,
-      password
-    });
-
-    if (existingUser?.user) {
-      console.log('User already exists, updating profile');
-      
-      // Mettre à jour le profil existant
-      const { error: profileError } = await supabase
-        .from('profiles')
-        .upsert([
-          {
-            id: existingUser.user.id,
-            email: email,
-            first_name: userData.firstName,
-            last_name: userData.lastName,
-            phone: userData.phone,
-            postal_code: userData.postalCode,
-            client_type: userData.clientType,
-            monthly_bill: userData.monthlyBill
-          }
-        ]);
-
-      if (profileError) {
-        console.error('Error updating profile:', profileError);
-        return { error: profileError };
-      }
-
-      return { data: { userId: existingUser.user.id }, error: null };
-    }
-
-    // Si l'utilisateur n'existe pas, créer un nouveau compte
+    // Créer le compte avec le mot de passe généré
     const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
       email,
       password,
