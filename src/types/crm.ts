@@ -5,57 +5,23 @@ export type PaymentType = "prepaid" | "per_lead";
 export type PurchaseType = "mutualise" | "exclusif";
 export type ClientType = "particulier" | "professionnel";
 
-export interface Installer {
-  id: string;
-  companyName: string;
-  contactName: string;
-  email: string;
-  phone: string;
-  address: string;
-  zones: string[];
-  status: InstallerStatus;
-  commission: number;
-  leadsAssigned: number;
-  conversionRate: number;
-  paymentType: PaymentType;
-  certifications: {
-    qualiPV: boolean;
-    rge: boolean;
-    qualibat: boolean;
-  };
-  yearFounded: string;
-  siret?: string;
-  siren?: string;
-}
-
 export interface Lead {
   id: string;
-  firstName: string;
-  lastName: string;
+  created_at: string;
+  clienttype: string;
+  firstname: string;
+  lastname: string;
   email: string;
   phone: string;
-  address: string;
-  postalCode: string;
-  city: string;
-  projectType: string;
-  budget: number;
+  monthlybill: string;
+  postalcode: string;
   status: LeadStatus;
-  installerStatus?: InstallerLeadStatus;
-  notes: string;
-  createdAt: string;
-  assignedTo?: string;
-  price: number;
-  exclusivityPrice?: number;
-  purchasedBy?: Array<{
-    installerId: string;
-    purchaseType: PurchaseType;
-    purchaseDate: string;
-  }>;
-  roofType?: string;
-  monthlyBill?: string;
-  electricalType?: string;
-  lastUpdated?: string;
-  clientType: ClientType;
+  notes?: string;
+  address?: string;
+  city?: string;
+  assignedto?: string;
+  purchasedby?: string[];
+  projectType?: string;
 }
 
 // Mock data for testing

@@ -22,24 +22,6 @@ export const LeadTable = ({
   getStatusColor,
   getStatusText,
 }: LeadTableProps) => {
-  const formatDate = (dateString: string) => {
-    if (!dateString) return "Date non disponible";
-    
-    try {
-      const date = new Date(dateString);
-      if (isNaN(date.getTime())) return "Date invalide";
-      
-      return date.toLocaleDateString('fr-FR', {
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric',
-      });
-    } catch (error) {
-      console.error("Error formatting date:", error);
-      return "Date invalide";
-    }
-  };
-
   return (
     <ScrollArea className="h-[600px] rounded-md border border-[#33C3F0]/20">
       <Table>
@@ -56,12 +38,16 @@ export const LeadTable = ({
         <TableBody>
           {leads.map((lead) => (
             <TableRow key={lead.id} className="hover:bg-[#1EAEDB]/5">
-              <TableCell>{lead.clientType === 'particulier' ? 'Particulier' : 'Professionnel'}</TableCell>
-              <TableCell>{lead.monthlyBill || 'Non renseigné'} €</TableCell>
               <TableCell>
-                {lead.postalCode ? (
+                {lead.clienttype === 'particulier' ? 'Particulier' : 'Professionnel'}
+              </TableCell>
+              <TableCell>
+                {lead.monthlybill ? `${lead.monthlybill} €` : 'Non renseigné €'}
+              </TableCell>
+              <TableCell>
+                {lead.postalcode ? (
                   <Badge variant="outline" className="bg-primary/10">
-                    {lead.postalCode}
+                    {lead.postalcode}
                   </Badge>
                 ) : (
                   <span className="text-sm text-muted-foreground">Non renseigné</span>
@@ -69,7 +55,9 @@ export const LeadTable = ({
               </TableCell>
               <TableCell>
                 <div className="space-y-1">
-                  <div className="font-medium">{`${lead.firstName || ''} ${lead.lastName || ''}`}</div>
+                  <div className="font-medium">
+                    {`${lead.firstname || ''} ${lead.lastname || ''}`}
+                  </div>
                   {lead.email && (
                     <div className="text-sm text-muted-foreground">
                       <a href={`mailto:${lead.email}`} className="hover:underline">
@@ -86,7 +74,9 @@ export const LeadTable = ({
                   )}
                 </div>
               </TableCell>
-              <TableCell>{lead.projectType === 'residential' ? 'Résidentiel' : 'Professionnel'}</TableCell>
+              <TableCell>
+                {lead.projectType === 'residential' ? 'Résidentiel' : 'Professionnel'}
+              </TableCell>
               <TableCell>
                 <div className="flex gap-2">
                   <Button
