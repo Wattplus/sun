@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Home, FileText, MessageSquare, Settings, Users, Sun, Calendar, ChevronRight } from "lucide-react";
+import { Home, FileText, MessageSquare, Settings, Users, Sun, Calendar, ChevronRight, Menu } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ClientNavbar } from "@/components/client/ClientNavbar";
 import { DocumentsList } from "@/components/client/documents/DocumentsList";
@@ -15,6 +15,8 @@ import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbS
 import { DashboardStats } from "@/components/client/dashboard/DashboardStats";
 import { SettingsSection } from "@/components/client/settings/SettingsSection";
 import { Button } from "@/components/ui/button";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { useMediaQuery } from "@/hooks/use-media-query";
 
 const mockContacts = [
   {
@@ -48,6 +50,8 @@ const ClientPortal = () => {
     lastUpdate: "2024-03-20"
   });
 
+  const isMobile = useMediaQuery("(max-width: 768px)");
+
   const handleMonthlyBillUpdate = (value: string) => {
     setMonthlyBill(value);
   };
@@ -77,6 +81,25 @@ const ClientPortal = () => {
     { icon: Settings, label: "Paramètres", tab: "settings" },
   ];
 
+  const NavigationContent = () => (
+    <div className="flex flex-col space-y-2">
+      {navigationLinks.map((link) => (
+        <Button
+          key={link.tab}
+          variant={activeTab === link.tab ? "default" : "ghost"}
+          size="sm"
+          onClick={() => {
+            setActiveTab(link.tab);
+          }}
+          className="w-full justify-start gap-2"
+        >
+          <link.icon className="w-4 h-4" />
+          {link.label}
+        </Button>
+      ))}
+    </div>
+  );
+
   return (
     <>
       <Helmet>
@@ -91,67 +114,74 @@ const ClientPortal = () => {
       <div className="min-h-screen bg-gradient-to-b from-background/80 to-background">
         <ClientNavbar />
         
-        <main className="container mx-auto px-4 py-8">
-          <div className="mb-8 space-y-6">
+        <main className="container mx-auto px-4 py-4 md:py-8">
+          <div className="mb-4 md:mb-8 space-y-4 md:space-y-6">
             <div className="flex flex-col space-y-4">
-              <Breadcrumb>
-                <BreadcrumbList className="bg-background/50 backdrop-blur-md px-4 py-2 rounded-lg border border-border">
-                  <BreadcrumbItem>
-                    <BreadcrumbLink onClick={() => setActiveTab("dashboard")} className="text-muted-foreground hover:text-foreground transition-colors">
-                      Espace Client
-                    </BreadcrumbLink>
-                  </BreadcrumbItem>
-                  <BreadcrumbSeparator>
-                    <ChevronRight className="h-4 w-4" />
-                  </BreadcrumbSeparator>
-                  <BreadcrumbItem>
-                    <span className="font-medium">{getBreadcrumbText()}</span>
-                  </BreadcrumbItem>
-                </BreadcrumbList>
-              </Breadcrumb>
+              {!isMobile && (
+                <Breadcrumb>
+                  <BreadcrumbList className="bg-background/50 backdrop-blur-md px-4 py-2 rounded-lg border border-border">
+                    <BreadcrumbItem>
+                      <BreadcrumbLink onClick={() => setActiveTab("dashboard")} className="text-muted-foreground hover:text-foreground transition-colors">
+                        Espace Client
+                      </BreadcrumbLink>
+                    </BreadcrumbItem>
+                    <BreadcrumbSeparator>
+                      <ChevronRight className="h-4 w-4" />
+                    </BreadcrumbSeparator>
+                    <BreadcrumbItem>
+                      <span className="font-medium">{getBreadcrumbText()}</span>
+                    </BreadcrumbItem>
+                  </BreadcrumbList>
+                </Breadcrumb>
+              )}
 
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <Sun className="h-8 w-8 text-yellow-500" />
+                  <Sun className="h-6 w-6 md:h-8 md:w-8 text-yellow-500" />
                   <div>
-                    <h1 className="text-3xl font-bold">{getBreadcrumbText()}</h1>
-                    <p className="text-muted-foreground flex items-center gap-2 mt-1">
+                    <h1 className="text-xl md:text-3xl font-bold">{getBreadcrumbText()}</h1>
+                    <p className="text-sm md:text-base text-muted-foreground flex items-center gap-2 mt-1">
                       <Calendar className="h-4 w-4" />
-                      Bienvenue, {userInfo.name} | Dernière connexion : {new Date().toLocaleDateString('fr-FR')}
+                      {isMobile ? userInfo.name : `Bienvenue, ${userInfo.name} | Dernière connexion : ${new Date().toLocaleDateString('fr-FR')}`}
                     </p>
                   </div>
                 </div>
-                <div className="flex items-center gap-4">
-                  {navigationLinks.map((link) => (
-                    <Button
-                      key={link.tab}
-                      variant={activeTab === link.tab ? "default" : "ghost"}
-                      size="sm"
-                      onClick={() => setActiveTab(link.tab)}
-                      className="flex items-center gap-2"
-                    >
-                      <link.icon className="w-4 h-4" />
-                      {link.label}
-                    </Button>
-                  ))}
-                </div>
+
+                {isMobile ? (
+                  <Sheet>
+                    <SheetTrigger asChild>
+                      <Button variant="outline" size="icon">
+                        <Menu className="h-5 w-5" />
+                      </Button>
+                    </SheetTrigger>
+                    <SheetContent side="right" className="w-[240px]">
+                      <div className="py-4">
+                        <NavigationContent />
+                      </div>
+                    </SheetContent>
+                  </Sheet>
+                ) : (
+                  <div className="flex items-center gap-4">
+                    <NavigationContent />
+                  </div>
+                )}
               </div>
             </div>
           </div>
 
-          <Tabs value={activeTab} className="space-y-6">
+          <Tabs value={activeTab} className="space-y-4 md:space-y-6">
             <TabsContent value="dashboard">
-              <div className="grid gap-6">
+              <div className="grid gap-4 md:gap-6">
                 <DashboardStats />
-                <div className="grid gap-6 lg:grid-cols-2">
-                  <div className="space-y-6">
+                <div className="grid gap-4 md:gap-6 lg:grid-cols-2">
+                  <div className="space-y-4 md:space-y-6">
                     <ClientInfoForm onMonthlyBillUpdate={handleMonthlyBillUpdate} />
                   </div>
-                  <div className="space-y-6">
+                  <div className="space-y-4 md:space-y-6">
                     <ContactsList contacts={mockContacts} />
                   </div>
                 </div>
-                <div className="grid gap-6">
+                <div className="grid gap-4 md:gap-6">
                   <NextSteps />
                 </div>
                 <ClientFAQ />
