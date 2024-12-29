@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
 import { Lead } from "@/types/crm";
 import { supabase } from "@/lib/supabase-client";
-import { useToast } from "@/components/ui/use-toast";
 import { LeadTable } from "./sections/LeadTable";
 import { LeadStats } from "./sections/LeadStats";
 import { LeadFilters } from "./sections/LeadFilters";
 import { InstallerBreadcrumb } from "../../installer/navigation/InstallerBreadcrumb";
+import { useToast } from "@/components/ui/use-toast";
 
 export const PurchasedLeadsPage = () => {
   const [leads, setLeads] = useState<Lead[]>([]);
@@ -65,7 +65,6 @@ export const PurchasedLeadsPage = () => {
     <div className="space-y-6">
       <InstallerBreadcrumb />
       <LeadStats leads={leads} />
-
       <div className="glass-panel p-6">
         <LeadFilters />
         <LeadTable 
@@ -80,5 +79,3 @@ export const PurchasedLeadsPage = () => {
     </div>
   );
 };
-
-export default PurchasedLeadsPage;

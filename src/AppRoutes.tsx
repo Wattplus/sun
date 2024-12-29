@@ -11,7 +11,6 @@ import { AllAvailableLeads } from "@/components/installer/dashboard/leads/AllAva
 import { AllPurchasedLeads } from "@/components/installer/dashboard/leads/AllPurchasedLeads";
 import NotificationsPage from "@/components/admin/notifications/NotificationsPage";
 import { mockAvailableLeads } from "@/components/installer/dashboard/mockAvailableLeads";
-import { mockPurchasedLeads } from "@/components/installer/dashboard/mockPurchasedLeads";
 import AdminDashboard from "@/components/admin/AdminDashboard";
 import Admin from "@/pages/Admin";
 import StatisticsPage from "@/components/admin/statistics/StatisticsPage";

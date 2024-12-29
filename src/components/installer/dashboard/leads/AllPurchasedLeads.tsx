@@ -2,15 +2,13 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { X } from "lucide-react";
 import { PurchasedLeads } from "../PurchasedLeads";
-import { Lead } from "@/types/crm";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 interface AllPurchasedLeadsProps {
-  leads: Lead[];
   onClose: () => void;
 }
 
-export const AllPurchasedLeads = ({ leads, onClose }: AllPurchasedLeadsProps) => {
+export const AllPurchasedLeads = ({ onClose }: AllPurchasedLeadsProps) => {
   const isMobile = useIsMobile();
 
   return (
