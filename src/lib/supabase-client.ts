@@ -64,6 +64,18 @@ export const createClientAccount = async (email: string, password: string, userD
   try {
     console.log('Starting account creation process for:', email);
 
+    // Vérifier si l'utilisateur existe déjà
+    const { data: existingUser } = await supabase
+      .from('profiles')
+      .select('id')
+      .eq('email', email)
+      .single();
+
+    if (existingUser) {
+      console.log('User already exists, skipping account creation');
+      return { data: { userId: existingUser.id }, error: null };
+    }
+
     // Créer le compte avec le mot de passe généré
     const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
       email,
@@ -111,7 +123,7 @@ export const createClientAccount = async (email: string, password: string, userD
       return { error: profileError };
     }
 
-    // Envoyer l'email de bienvenue
+    // Envoyer l'email de bienvenue uniquement pour les nouveaux comptes
     await sendEmail(
       email,
       userData.firstName,
