@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Lead, LeadStatus } from "@/types/crm";
 import { Edit, Trash2, UserPlus, Euro, Mail, Phone } from "lucide-react";
+import { LeadPurchaseInfo } from "./LeadPurchaseInfo";
 
 interface LeadTableProps {
   leads: Lead[];
@@ -81,6 +82,9 @@ export const LeadTable = ({
                 <div className="flex items-center gap-2">
                   <Euro className="h-4 w-4 text-green-500" />
                   <span className="font-medium">{lead.monthlybill}€</span>
+                </div>
+                <div className="mt-1">
+                  <LeadPurchaseInfo lead={lead} />
                 </div>
               </TableCell>
               <TableCell>

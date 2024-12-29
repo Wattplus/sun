@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Edit, Trash2, UserPlus, Phone, Mail, Euro, MapPin } from "lucide-react";
+import { LeadPurchaseInfo } from "./LeadPurchaseInfo";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface LeadMobileTableProps {
@@ -46,9 +47,12 @@ export const LeadMobileTable = ({
                     </Badge>
                   </div>
                 </div>
-                <div className="flex items-center gap-1.5 bg-primary/10 px-2 py-1 rounded-full">
-                  <Euro className="h-3.5 w-3.5 text-primary" />
-                  <span className="text-sm font-medium text-primary">{lead.monthlybill}€</span>
+                <div className="space-y-1">
+                  <div className="flex items-center gap-1.5 bg-primary/10 px-2 py-1 rounded-full">
+                    <Euro className="h-3.5 w-3.5 text-primary" />
+                    <span className="text-sm font-medium text-primary">{lead.monthlybill}€</span>
+                  </div>
+                  <LeadPurchaseInfo lead={lead} />
                 </div>
               </div>
 
