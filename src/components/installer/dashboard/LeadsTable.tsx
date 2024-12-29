@@ -3,12 +3,7 @@ import { Lead } from "@/types/crm";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Lock } from "lucide-react";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+import { Tooltip } from "@/components/ui/tooltip";
 
 interface LeadsTableProps {
   leads: Lead[];
@@ -18,19 +13,12 @@ interface LeadsTableProps {
 }
 
 const MaskedInfo = () => (
-  <TooltipProvider>
-    <Tooltip>
-      <TooltipTrigger asChild>
-        <div className="flex items-center gap-2 text-muted-foreground hover:text-primary/80 transition-colors cursor-help">
-          <Lock className="h-4 w-4" />
-          <span>Information masquée</span>
-        </div>
-      </TooltipTrigger>
-      <TooltipContent>
-        <p>Cette information sera visible après l'achat du lead</p>
-      </TooltipContent>
-    </Tooltip>
-  </TooltipProvider>
+  <Tooltip content="Cette information sera visible après l'achat du lead">
+    <div className="flex items-center gap-2 text-muted-foreground hover:text-primary/80 transition-colors cursor-help">
+      <Lock className="h-4 w-4" />
+      <span>Information masquée</span>
+    </div>
+  </Tooltip>
 );
 
 export const LeadsTable = ({ leads, selectedLeads, onSelectAll, onSelectLead }: LeadsTableProps) => {

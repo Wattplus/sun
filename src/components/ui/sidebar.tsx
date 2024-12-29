@@ -1,11 +1,6 @@
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+import { Tooltip } from "@/components/ui/tooltip";
 import { ReactNode } from "react";
 
 type SidebarState = "expanded" | "collapsed";
@@ -13,7 +8,7 @@ type SidebarState = "expanded" | "collapsed";
 interface SidebarMenuButtonProps {
   icon: ReactNode;
   label: string;
-  tooltip?: string | { children: ReactNode };
+  tooltip?: string;
   state: SidebarState;
   isMobile: boolean;
   onClick?: () => void;
@@ -42,29 +37,18 @@ const SidebarMenuButton = ({
         <span className="ml-2">{label}</span>
       )}
     </Button>
-  )
+  );
 
   if (!tooltip) {
-    return button
+    return button;
   }
 
-  const tooltipContent = typeof tooltip === "string" ? tooltip : tooltip.children
-
   return (
-    <TooltipProvider>
-      <Tooltip>
-        <TooltipTrigger asChild>{button}</TooltipTrigger>
-        <TooltipContent
-          side="right"
-          align="center"
-          hidden={state !== "collapsed" || isMobile}
-        >
-          {tooltipContent}
-        </TooltipContent>
-      </Tooltip>
-    </TooltipProvider>
-  )
-}
+    <Tooltip content={tooltip}>
+      {button}
+    </Tooltip>
+  );
+};
 
 interface SidebarProps {
   children: ReactNode;
@@ -83,7 +67,7 @@ export function Sidebar({ children, state, isMobile }: SidebarProps) {
     >
       {children}
     </div>
-  )
+  );
 }
 
 interface SidebarSectionProps {
@@ -92,7 +76,7 @@ interface SidebarSectionProps {
 }
 
 export function SidebarSection({ children, className }: SidebarSectionProps) {
-  return <div className={cn("flex flex-col gap-1", className)}>{children}</div>
+  return <div className={cn("flex flex-col gap-1", className)}>{children}</div>;
 }
 
-export { SidebarMenuButton }
+export { SidebarMenuButton };
