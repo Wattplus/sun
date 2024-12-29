@@ -2,8 +2,18 @@ import { MessagesList } from "./MessagesList";
 import { Card } from "@/components/ui/card";
 import { motion } from "framer-motion";
 import { MessageSquare } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 export const MessagesPage = () => {
+  const { toast } = useToast();
+
+  const handleMessageSent = () => {
+    toast({
+      title: "Message envoyé",
+      description: "Votre message a été envoyé avec succès",
+    });
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-background/80 to-background p-6">
       <motion.div 
@@ -24,7 +34,7 @@ export const MessagesPage = () => {
         </div>
 
         <Card className="p-6 shadow-lg bg-card/50 backdrop-blur-sm">
-          <MessagesList />
+          <MessagesList onMessageSent={handleMessageSent} />
         </Card>
       </motion.div>
     </div>
