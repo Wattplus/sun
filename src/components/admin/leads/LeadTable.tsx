@@ -3,8 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Lead, LeadStatus } from "@/types/crm";
-import { Edit, Trash2, UserPlus, EuroIcon } from "lucide-react";
-import { LeadPurchaseInfo } from "./LeadPurchaseInfo";
+import { Edit, Trash2, UserPlus, Euro, Mail, Phone } from "lucide-react";
 
 interface LeadTableProps {
   leads: Lead[];
@@ -24,17 +23,16 @@ export const LeadTable = ({
   getStatusText,
 }: LeadTableProps) => {
   return (
-    <ScrollArea className="h-[600px] rounded-md border border-[#33C3F0]/20">
+    <ScrollArea className="h-[calc(100vh-300px)] rounded-md border border-[#33C3F0]/20">
       <Table>
         <TableHeader>
           <TableRow className="bg-[#1EAEDB]/5">
             <TableHead>Type de client</TableHead>
-            <TableHead>Facture mensuelle</TableHead>
-            <TableHead>Code postal</TableHead>
             <TableHead>Contact</TableHead>
+            <TableHead>Coordonnées</TableHead>
+            <TableHead>Code postal</TableHead>
+            <TableHead>Facture mensuelle</TableHead>
             <TableHead>Statut</TableHead>
-            <TableHead>Revenu</TableHead>
-            <TableHead>Achats</TableHead>
             <TableHead>Actions</TableHead>
           </TableRow>
         </TableHeader>
@@ -42,54 +40,53 @@ export const LeadTable = ({
           {leads.map((lead) => (
             <TableRow key={lead.id} className="hover:bg-[#1EAEDB]/5">
               <TableCell>
-                {lead.clienttype === 'particulier' ? 'Particulier' : 'Professionnel'}
-              </TableCell>
-              <TableCell>
-                {lead.monthlybill ? `${lead.monthlybill} €` : 'Non renseigné'}
-              </TableCell>
-              <TableCell>
-                {lead.postalcode ? (
-                  <Badge variant="outline" className="bg-primary/10">
-                    {lead.postalcode}
-                  </Badge>
-                ) : (
-                  <span className="text-sm text-muted-foreground">Non renseigné</span>
-                )}
+                <Badge 
+                  variant="outline" 
+                  className={lead.clienttype === 'particulier' ? 'bg-emerald-500/10 text-emerald-600' : 'bg-amber-500/10 text-amber-600'}
+                >
+                  {lead.clienttype === 'particulier' ? 'Particulier' : 'Professionnel'}
+                </Badge>
               </TableCell>
               <TableCell>
                 <div className="space-y-1">
                   <div className="font-medium">
-                    {`${lead.firstname || ''} ${lead.lastname || ''}`}
+                    {`${lead.firstname} ${lead.lastname}`}
                   </div>
-                  {lead.email && (
-                    <div className="text-sm text-muted-foreground">
-                      <a href={`mailto:${lead.email}`} className="hover:underline">
-                        {lead.email}
-                      </a>
-                    </div>
-                  )}
-                  {lead.phone && (
-                    <div className="text-sm text-muted-foreground">
-                      <a href={`tel:${lead.phone}`} className="hover:underline">
-                        {lead.phone}
-                      </a>
-                    </div>
-                  )}
                 </div>
               </TableCell>
               <TableCell>
-                <Badge className={`${getStatusColor(lead.status)}`}>
-                  {getStatusText(lead.status)}
+                <div className="space-y-2">
+                  <a 
+                    href={`mailto:${lead.email}`} 
+                    className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors"
+                  >
+                    <Mail className="h-4 w-4" />
+                    <span>{lead.email}</span>
+                  </a>
+                  <a 
+                    href={`tel:${lead.phone}`} 
+                    className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors"
+                  >
+                    <Phone className="h-4 w-4" />
+                    <span>{lead.phone}</span>
+                  </a>
+                </div>
+              </TableCell>
+              <TableCell>
+                <Badge variant="outline" className="bg-primary/10">
+                  {lead.postalcode}
                 </Badge>
               </TableCell>
               <TableCell>
-                <div className="flex items-center gap-1">
-                  <EuroIcon className="h-4 w-4 text-green-500" />
-                  <span className="font-medium">{lead.price || 0} €</span>
+                <div className="flex items-center gap-2">
+                  <Euro className="h-4 w-4 text-green-500" />
+                  <span className="font-medium">{lead.monthlybill}€</span>
                 </div>
               </TableCell>
               <TableCell>
-                <LeadPurchaseInfo lead={lead} />
+                <Badge className={getStatusColor(lead.status)}>
+                  {getStatusText(lead.status)}
+                </Badge>
               </TableCell>
               <TableCell>
                 <div className="flex gap-2">
@@ -113,12 +110,11 @@ export const LeadTable = ({
                     Assigner
                   </Button>
                   <Button
-                    variant="outline"
+                    variant="destructive"
                     size="sm"
                     onClick={() => onDeleteClick(lead)}
-                    className="border-red-500/20 hover:border-red-500/40 hover:bg-red-500/10"
                   >
-                    <Trash2 className="h-4 w-4 mr-2 text-red-500" />
+                    <Trash2 className="h-4 w-4 mr-2" />
                     Supprimer
                   </Button>
                 </div>
