@@ -7,18 +7,7 @@ import { SubmitButton } from "./form/SubmitButton";
 import emailjs from '@emailjs/browser';
 
 // Configuration d'EmailJS
-emailjs.init({
-  publicKey: "nSGUhEBvdNcDlBp0F",
-  smtp: {
-    host: "mail.wattplus.org",
-    port: 465,
-    secure: true,
-    auth: {
-      user: "mikael@wattplus.org",
-      pass: "Hanna77026@"
-    }
-  }
-});
+emailjs.init("nSGUhEBvdNcDlBp0F");
 
 interface FormData {
   clientType: string;
