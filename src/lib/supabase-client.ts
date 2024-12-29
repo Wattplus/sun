@@ -67,7 +67,19 @@ export const createClientAccount = async (email: string, password: string, userD
   try {
     console.log('Starting account creation process for:', email);
     
-    // First, check if user exists in profiles table
+    // First check if the user exists in auth
+    const { data: { user: existingUser }, error: getUserError } = await supabase.auth.getUser();
+    
+    if (existingUser) {
+      console.log('User already exists in auth:', email);
+      return { 
+        error: { 
+          message: "Un compte existe déjà avec cet email. Veuillez vous connecter ou utiliser une autre adresse email." 
+        }
+      };
+    }
+
+    // Then check profiles table as a backup
     const { data: existingProfile } = await supabase
       .from('profiles')
       .select('id')
@@ -83,7 +95,7 @@ export const createClientAccount = async (email: string, password: string, userD
       };
     }
 
-    // If no profile exists, try to create the auth account
+    // If no user exists, create the auth account
     console.log('Creating new auth account');
     const { data: authData, error: signUpError } = await supabase.auth.signUp({
       email,
@@ -99,13 +111,6 @@ export const createClientAccount = async (email: string, password: string, userD
     });
 
     if (signUpError) {
-      if (signUpError.message.includes('User already registered')) {
-        return { 
-          error: { 
-            message: "Un compte existe déjà avec cet email. Veuillez vous connecter ou utiliser une autre adresse email." 
-          }
-        };
-      }
       console.error('Error creating auth account:', signUpError);
       return { error: signUpError };
     }
