@@ -29,6 +29,12 @@ export const handleFormSubmission = async (
       return false;
     }
 
+    // Show success notification
+    toast({
+      title: "Demande envoyée avec succès !",
+      description: "Un de nos partenaires experts vous recontactera très prochainement pour étudier votre projet.",
+    });
+
     // Redirect to thank you page after successful submission
     setTimeout(() => {
       navigate("/thank-you");
