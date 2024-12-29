@@ -70,16 +70,13 @@ export const createClientAccount = async (email: string, password: string, userD
   try {
     console.log('Starting account creation/update process for:', email);
     
-    // Try to sign in first
-    const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
-      email,
-      password
-    });
+    // First check if user exists
+    const { data: { users }, error: getUserError } = await supabase.auth.admin.listUsers();
+    const existingUser = users?.find(user => user.email === email);
 
     let userId;
 
-    // If sign in fails because user doesn't exist, create new account
-    if (signInError && signInError.message === 'Invalid login credentials') {
+    if (!existingUser) {
       console.log('User does not exist, creating new account');
       const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
         email,
@@ -100,11 +97,9 @@ export const createClientAccount = async (email: string, password: string, userD
       }
 
       userId = signUpData.user?.id;
-    } else if (signInError) {
-      console.error('Unexpected error during sign in:', signInError);
-      return { error: signInError };
     } else {
-      userId = signInData.user.id;
+      console.log('User exists, updating profile');
+      userId = existingUser.id;
     }
 
     if (!userId) {
