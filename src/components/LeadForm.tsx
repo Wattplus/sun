@@ -85,7 +85,7 @@ export const LeadForm = () => {
           onChange={(value) => handleFieldChange("clientType", value)}
         />
         
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="space-y-4">
           <FormField
             label="Facture mensuelle (€)"
             id="monthlyBill"
@@ -93,7 +93,6 @@ export const LeadForm = () => {
             value={formData.monthlyBill}
             onChange={(e) => handleFieldChange("monthlyBill", e.target.value)}
             placeholder="Ex: 150"
-            required
           />
           
           <FormField
@@ -102,7 +101,6 @@ export const LeadForm = () => {
             value={formData.postalCode}
             onChange={(e) => handleFieldChange("postalCode", e.target.value)}
             placeholder="Ex: 75001"
-            required
           />
         </div>
 
