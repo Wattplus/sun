@@ -3,6 +3,9 @@ import emailjs from '@emailjs/browser';
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+const EMAILJS_SERVICE_ID = 'service_wattplus';  // Assurez-vous que cet ID correspond à votre service EmailJS
+const EMAILJS_TEMPLATE_ID = 'template_q11t4u8'; // Assurez-vous que cet ID correspond à votre template EmailJS
+const EMAILJS_PUBLIC_KEY = 'nSGUhEBvdNcDlBp0F';  // Assurez-vous que cette clé correspond à votre clé publique EmailJS
 
 if (!supabaseUrl || !supabaseKey) {
   throw new Error('Missing Supabase environment variables');
@@ -10,7 +13,6 @@ if (!supabaseUrl || !supabaseKey) {
 
 export const supabase = createClient(supabaseUrl, supabaseKey);
 
-// Fonction pour envoyer un email via EmailJS
 export const sendEmail = async (
   email: string, 
   firstName: string, 
@@ -43,10 +45,10 @@ export const sendEmail = async (
     };
 
     const response = await emailjs.send(
-      'service_wattplus',
-      'template_q11t4u8',
+      EMAILJS_SERVICE_ID,
+      EMAILJS_TEMPLATE_ID,
       templateParams,
-      'nSGUhEBvdNcDlBp0F'
+      EMAILJS_PUBLIC_KEY
     );
 
     if (response.status !== 200) {
@@ -61,35 +63,16 @@ export const sendEmail = async (
   }
 };
 
-// Fonction pour créer ou connecter un compte client
 export const createClientAccount = async (email: string, password: string, userData: any) => {
   try {
-    // Vérifie d'abord si l'utilisateur existe
-    const { data: existingUser } = await supabase
-      .from('profiles')
-      .select('*')
-      .eq('email', email)
-      .single();
-
-    if (existingUser) {
-      // Si l'utilisateur existe, on essaie de le connecter
-      const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
-        email,
-        password
-      });
-
-      if (signInError) throw signInError;
-      return { data: signInData, error: null };
-    }
-
-    // Si l'utilisateur n'existe pas, on crée un nouveau compte
+    // Créer le compte auth
     const { data: authData, error: authError } = await supabase.auth.signUp({
       email,
       password,
       options: {
         data: {
-          firstName: userData.firstName,
-          lastName: userData.lastName,
+          first_name: userData.firstName,
+          last_name: userData.lastName,
           phone: userData.phone,
           role: 'client'
         }
@@ -98,7 +81,24 @@ export const createClientAccount = async (email: string, password: string, userD
 
     if (authError) throw authError;
 
-    // Envoyer un email de notification
+    // Créer le profil
+    if (authData.user) {
+      const { error: profileError } = await supabase
+        .from('profiles')
+        .insert([
+          {
+            id: authData.user.id,
+            email: email,
+            first_name: userData.firstName,
+            last_name: userData.lastName,
+            phone: userData.phone
+          }
+        ]);
+
+      if (profileError) throw profileError;
+    }
+
+    // Envoyer l'email
     await sendEmail(
       email,
       userData.firstName,
@@ -117,20 +117,19 @@ export const createClientAccount = async (email: string, password: string, userD
   }
 };
 
-// Fonction pour créer un nouveau lead
 export const createLead = async (leadData: any) => {
   try {
     const { data, error } = await supabase
       .from('leads')
       .insert([
         {
-          firstName: leadData.firstName,
-          lastName: leadData.lastName,
+          first_name: leadData.firstName,
+          last_name: leadData.lastName,
           email: leadData.email,
           phone: leadData.phone,
-          postalCode: leadData.postalCode,
-          monthlyBill: leadData.monthlyBill,
-          clientType: leadData.clientType,
+          postal_code: leadData.postalCode,
+          monthly_bill: leadData.monthlyBill,
+          client_type: leadData.clientType,
           status: 'new'
         }
       ])
