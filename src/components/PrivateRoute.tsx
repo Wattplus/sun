@@ -16,13 +16,14 @@ export const PrivateRoute = () => {
     let isMounted = true;
 
     const checkAdminStatus = async () => {
-      if (!isAuthenticated) {
-        setCheckingAdmin(false);
-        return;
-      }
-
       try {
-        console.log("Vérification du statut administrateur...");
+        if (!isAuthenticated) {
+          if (isMounted) {
+            setCheckingAdmin(false);
+          }
+          return;
+        }
+
         const { data: { user } } = await supabase.auth.getUser();
         
         if (!user) {
@@ -33,17 +34,12 @@ export const PrivateRoute = () => {
           .from('profiles')
           .select('role')
           .eq('id', user.id)
-          .maybeSingle();
-        
+          .single();
+
         if (error) {
           console.error('Erreur lors de la récupération du profil:', error);
           if (isMounted) {
             setIsAdmin(false);
-            toast({
-              title: "Erreur",
-              description: "Impossible de vérifier les droits d'accès",
-              variant: "destructive",
-            });
           }
         } else {
           const hasAdminRole = profile?.role === 'admin' || profile?.role === 'super_admin';
@@ -57,11 +53,6 @@ export const PrivateRoute = () => {
         console.error('Erreur de vérification admin:', error);
         if (isMounted) {
           setIsAdmin(false);
-          toast({
-            title: "Erreur",
-            description: "Une erreur est survenue lors de la vérification des droits",
-            variant: "destructive",
-          });
         }
       } finally {
         if (isMounted) {
@@ -75,7 +66,7 @@ export const PrivateRoute = () => {
     return () => {
       isMounted = false;
     };
-  }, [isAuthenticated, toast]);
+  }, [isAuthenticated]);
 
   if (isLoading || checkingAdmin) {
     return (
@@ -91,7 +82,7 @@ export const PrivateRoute = () => {
   }
 
   if (isAdminRoute && !isAdmin) {
-    console.log("Utilisateur non-admin tentant d'accéder à une route admin, redirection vers le tableau de bord");
+    console.log("Utilisateur non-admin tentant d'accéder à une route admin");
     toast({
       title: "Accès refusé",
       description: "Vous n'avez pas les droits d'administration nécessaires",
