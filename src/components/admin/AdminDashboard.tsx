@@ -1,149 +1,133 @@
-import { Activity, ArrowUpRight, FileText, LineChart, Target, TrendingUp, Users } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Card } from "@/components/ui/card";
 import StatCard from "./StatCard";
-import RecentActivity from "./RecentActivity";
-import { AdminNavigation } from "./AdminNavigation";
-import { AdminBreadcrumb } from "./AdminBreadcrumb";
-import { motion } from "framer-motion";
-import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/lib/supabase-client";
 import PerformanceChart from "./PerformanceChart";
+import { AdminBreadcrumb } from "./AdminBreadcrumb";
+import { RecentActivity } from "./RecentActivity";
+import { supabase } from "@/lib/supabase-client";
+import { useToast } from "@/hooks/use-toast";
+import { Euro, TrendingUp, Users, CheckCircle, XCircle } from "lucide-react";
 
-const AdminDashboard = () => {
-  const { data: leadsData } = useQuery({
-    queryKey: ['leads'],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from('leads')
-        .select('*')
-        .order('created_at', { ascending: false });
-      
-      if (error) throw error;
-      return data || [];
-    }
+export default function AdminDashboard() {
+  const [stats, setStats] = useState({
+    totalLeads: 0,
+    convertedLeads: 0,
+    lostLeads: 0,
+    totalRevenue: 0,
+    averageRevenue: 0,
   });
+  const { toast } = useToast();
+  const [isLoading, setIsLoading] = useState(true);
 
-  const { data: installersData } = useQuery({
-    queryKey: ['installers'],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from('installers')
-        .select('*')
-        .order('created_at', { ascending: false });
-      
-      if (error) throw error;
-      return data || [];
-    }
-  });
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        console.log("Fetching stats...");
+        const { data: leads, error } = await supabase
+          .from("leads")
+          .select("*");
 
-  // Calculate conversion rate
-  const convertedLeads = leadsData?.filter(lead => lead.status === 'converted')?.length || 0;
-  const totalLeads = leadsData?.length || 0;
-  const conversionRate = totalLeads > 0 ? ((convertedLeads / totalLeads) * 100).toFixed(1) : 0;
+        if (error) {
+          console.error("Error fetching leads:", error);
+          toast({
+            title: "Erreur",
+            description: "Impossible de charger les statistiques",
+            variant: "destructive" as const,
+          });
+          return;
+        }
 
-  // Calculate qualified leads
-  const qualifiedLeads = leadsData?.filter(lead => 
-    lead.status === 'qualified' || lead.status === 'converted'
-  )?.length || 0;
+        const totalLeads = leads?.length || 0;
+        const convertedLeads = leads?.filter(lead => lead.status === "converted").length || 0;
+        const lostLeads = leads?.filter(lead => lead.status === "lost").length || 0;
+        
+        // Calculate revenue (assuming each lead has a price field)
+        const totalRevenue = leads?.reduce((sum, lead) => sum + (lead.price || 0), 0) || 0;
+        const averageRevenue = totalLeads > 0 ? totalRevenue / totalLeads : 0;
 
-  const container = {
-    hidden: { opacity: 0 },
-    show: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1
+        setStats({
+          totalLeads,
+          convertedLeads,
+          lostLeads,
+          totalRevenue,
+          averageRevenue,
+        });
+
+        console.log("Stats fetched successfully:", { totalLeads, convertedLeads, lostLeads, totalRevenue, averageRevenue });
+      } catch (error) {
+        console.error("Unexpected error fetching stats:", error);
+        toast({
+          title: "Erreur",
+          description: "Une erreur est survenue lors du chargement des statistiques",
+          variant: "destructive" as const,
+        });
+      } finally {
+        setIsLoading(false);
       }
-    }
-  };
+    };
 
-  const item = {
-    hidden: { opacity: 0, y: 20 },
-    show: { opacity: 1, y: 0 }
-  };
+    fetchStats();
+  }, [toast]);
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
+
+  const trendIcon = TrendingUp;
+  const trendColor = stats.convertedLeads > stats.lostLeads ? "green" : "red";
 
   return (
-    <div className="min-h-screen bg-background">
-      <AdminNavigation />
+    <div className="space-y-6 p-6">
+      <AdminBreadcrumb />
       
-      <main className="p-8 pt-24">
-        <div className="max-w-7xl mx-auto space-y-8">
-          <AdminBreadcrumb />
-          
-          <motion.div
-            variants={container}
-            initial="hidden"
-            animate="show"
-            className="space-y-8"
-          >
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              <motion.div variants={item}>
-                <StatCard
-                  title="Leads Totaux"
-                  value={totalLeads.toString()}
-                  change={`+${leadsData?.filter(l => {
-                    const date = new Date(l.created_at);
-                    const now = new Date();
-                    return date.getMonth() === now.getMonth();
-                  })?.length || 0} ce mois`}
-                  icon={Users}
-                  trendIcon={TrendingUp}
-                  trendColor="green"
-                />
-              </motion.div>
-              
-              <motion.div variants={item}>
-                <StatCard
-                  title="Installateurs"
-                  value={installersData?.length.toString() || "0"}
-                  change={`+${installersData?.filter(i => {
-                    const date = new Date(i.created_at);
-                    const now = new Date();
-                    return date.getMonth() === now.getMonth();
-                  })?.length || 0} ce mois`}
-                  icon={FileText}
-                  trendIcon={ArrowUpRight}
-                  trendColor="green"
-                />
-              </motion.div>
-              
-              <motion.div variants={item}>
-                <StatCard
-                  title="Taux de Conversion"
-                  value={`${conversionRate}%`}
-                  change={`${convertedLeads} leads convertis`}
-                  icon={Target}
-                  trendIcon={LineChart}
-                  trendColor={Number(conversionRate) > 20 ? "green" : "yellow"}
-                />
-              </motion.div>
-              
-              <motion.div variants={item}>
-                <StatCard
-                  title="Leads Qualifiés"
-                  value={qualifiedLeads.toString()}
-                  change={`${((qualifiedLeads / totalLeads) * 100).toFixed(1)}% du total`}
-                  icon={Activity}
-                  trendIcon={TrendingUp}
-                  trendColor={qualifiedLeads > totalLeads / 4 ? "green" : "yellow"}
-                />
-              </motion.div>
-            </div>
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <StatCard
+          title="Total des Leads"
+          value={stats.totalLeads.toString()}
+          change={`${((stats.convertedLeads / stats.totalLeads) * 100).toFixed(1)}% de conversion`}
+          icon={Users}
+          trendIcon={trendIcon}
+          trendColor={trendColor}
+        />
+        
+        <StatCard
+          title="Leads Convertis"
+          value={stats.convertedLeads.toString()}
+          change={`${((stats.convertedLeads / stats.totalLeads) * 100).toFixed(1)}% du total`}
+          icon={CheckCircle}
+          trendIcon={trendIcon}
+          trendColor="green"
+        />
+        
+        <StatCard
+          title="Revenu Total"
+          value={`${stats.totalRevenue.toLocaleString()}€`}
+          change={`${stats.averageRevenue.toFixed(0)}€ par lead`}
+          icon={Euro}
+          trendIcon={trendIcon}
+          trendColor="green"
+        />
+        
+        <StatCard
+          title="Leads Perdus"
+          value={stats.lostLeads.toString()}
+          change={`${((stats.lostLeads / stats.totalLeads) * 100).toFixed(1)}% du total`}
+          icon={XCircle}
+          trendIcon={trendIcon}
+          trendColor="red"
+        />
+      </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              <motion.div variants={item} className="bg-card rounded-xl p-6 border">
-                <h2 className="text-2xl font-semibold mb-6">Performance des Leads</h2>
-                <PerformanceChart data={leadsData || []} />
-              </motion.div>
-
-              <motion.div variants={item} className="bg-card rounded-xl p-6 border">
-                <h2 className="text-2xl font-semibold mb-6">Activité Récente</h2>
-                <RecentActivity leads={leadsData || []} installers={installersData || []} />
-              </motion.div>
-            </div>
-          </motion.div>
-        </div>
-      </main>
+      <div className="grid gap-4 md:grid-cols-2">
+        <PerformanceChart data={[]} />
+        <Card className="p-6">
+          <RecentActivity />
+        </Card>
+      </div>
     </div>
   );
-};
-
-export default AdminDashboard;
+}
