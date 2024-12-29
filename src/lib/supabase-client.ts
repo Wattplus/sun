@@ -65,21 +65,8 @@ export const sendEmail = async (
 
 export const createClientAccount = async (email: string, password: string, userData: any) => {
   try {
-    // Vérifier si l'utilisateur existe déjà
-    const { data: existingUser, error: getUserError } = await supabase.auth.admin.getUserById(email);
-    
-    if (getUserError) throw getUserError;
-    
-    if (existingUser) {
-      return { 
-        error: {
-          message: "Un compte existe déjà avec cet email. Veuillez vous connecter ou utiliser un autre email."
-        }
-      };
-    }
-
-    // Créer le compte auth
-    const { data: authData, error: authError } = await supabase.auth.signUp({
+    // Créer directement le compte avec signUp
+    const { data: authData, error: signUpError } = await supabase.auth.signUp({
       email,
       password,
       options: {
@@ -92,9 +79,12 @@ export const createClientAccount = async (email: string, password: string, userD
       }
     });
 
-    if (authError) throw authError;
+    if (signUpError) {
+      console.error('Erreur lors de la création du compte:', signUpError);
+      return { error: signUpError };
+    }
 
-    // Créer le profil
+    // Si l'inscription réussit, créer le profil
     if (authData.user) {
       const { error: profileError } = await supabase
         .from('profiles')
@@ -111,10 +101,13 @@ export const createClientAccount = async (email: string, password: string, userD
           }
         ]);
 
-      if (profileError) throw profileError;
+      if (profileError) {
+        console.error('Erreur lors de la création du profil:', profileError);
+        return { error: profileError };
+      }
     }
 
-    // Envoyer l'email
+    // Envoyer l'email de bienvenue
     await sendEmail(
       email,
       userData.firstName,
