@@ -84,16 +84,16 @@ export const LeadForm = () => {
   };
 
   return (
-    <Card className="p-8 bg-gradient-to-br from-background/95 to-background/80 border-primary/10 shadow-2xl" id="lead-form">
+    <Card className="p-4 sm:p-8 bg-gradient-to-br from-background/95 to-background/80 border-primary/10 shadow-2xl backdrop-blur-sm rounded-xl mx-auto max-w-xl" id="lead-form">
       <FormHeader />
       
-      <form onSubmit={handleSubmit} className="space-y-8">
+      <form onSubmit={handleSubmit} className="space-y-6 sm:space-y-8 mt-6">
         <ClientTypeForm
           value={formData.clientType}
           onChange={(value) => handleFieldChange("clientType", value)}
         />
         
-        <div className="space-y-6">
+        <div className="space-y-4 sm:space-y-6">
           <FormField
             label="Facture mensuelle (€)"
             id="monthlyBill"
