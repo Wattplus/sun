@@ -26,12 +26,6 @@ export function ConversationPage() {
           description: "Le rappel a été programmé"
         });
         break;
-      case 'paiement':
-        toast({
-          title: "Paiement",
-          description: "Redirection vers la page de paiement"
-        });
-        break;
       case 'devis':
         toast({
           title: "Devis",

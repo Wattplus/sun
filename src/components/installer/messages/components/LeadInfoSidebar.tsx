@@ -85,15 +85,6 @@ export const LeadInfoSidebar = ({ onQuickAction }: LeadInfoSidebarProps) => {
       <div className="space-y-2">
         <Button 
           variant="outline" 
-          className="w-full justify-start" 
-          onClick={() => onQuickAction('paiement')}
-        >
-          <Euro className="h-4 w-4 mr-2" />
-          Percevoir le paiement
-        </Button>
-        
-        <Button 
-          variant="outline" 
           className="w-full justify-start"
           onClick={() => onQuickAction('devis')}
         >
