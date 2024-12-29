@@ -228,6 +228,7 @@ export type Database = {
           monthly_bill: string | null
           phone: string | null
           postal_code: string | null
+          role: string | null
         }
         Insert: {
           client_type?: string | null
@@ -239,6 +240,7 @@ export type Database = {
           monthly_bill?: string | null
           phone?: string | null
           postal_code?: string | null
+          role?: string | null
         }
         Update: {
           client_type?: string | null
@@ -250,6 +252,7 @@ export type Database = {
           monthly_bill?: string | null
           phone?: string | null
           postal_code?: string | null
+          role?: string | null
         }
         Relationships: []
       }
@@ -276,7 +279,13 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      create_super_admin: {
+        Args: {
+          email: string
+          password: string
+        }
+        Returns: undefined
+      }
     }
     Enums: {
       [_ in never]: never
