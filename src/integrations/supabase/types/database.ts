@@ -12,6 +12,15 @@ export type Database = {
         Row: TransactionsTable
         Insert: Omit<TransactionsTable, 'id' | 'created_at'>
         Update: Partial<Omit<TransactionsTable, 'id' | 'created_at'>>
+        Relationships: [
+          {
+            foreignKeyName: "transactions_installer_id_fkey"
+            columns: ["installer_id"]
+            isOneToOne: false
+            referencedRelation: "installers"
+            referencedColumns: ["id"]
+          }
+        ]
       }
       leads: {
         Row: LeadsTable
