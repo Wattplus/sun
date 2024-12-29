@@ -11,7 +11,6 @@ interface LoginProps {
 
 export const Login = ({ isAdminLogin = false }: LoginProps) => {
   const navigate = useNavigate();
-  const location = useLocation();
   const { toast } = useToast();
 
   useEffect(() => {
@@ -42,7 +41,10 @@ export const Login = ({ isAdminLogin = false }: LoginProps) => {
       }
     };
 
-    checkSession();
+    // Ne vérifier la session que si nous sommes sur la page de connexion admin
+    if (isAdminLogin) {
+      checkSession();
+    }
 
     const {
       data: { subscription },
