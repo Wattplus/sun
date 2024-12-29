@@ -16,7 +16,7 @@ export const handleFormSubmission = async (
   try {
     console.log('Starting form submission...');
 
-    // Créer le lead
+    // Create the lead
     const { error: leadError } = await createLead(formData);
 
     if (leadError) {
@@ -29,12 +29,7 @@ export const handleFormSubmission = async (
       return false;
     }
 
-    toast({
-      title: "Demande envoyée avec succès",
-      description: "Nous vous contacterons rapidement pour étudier votre projet.",
-    });
-
-    // Rediriger vers la page de confirmation
+    // Redirect to thank you page after successful submission
     setTimeout(() => {
       navigate("/thank-you");
     }, 2000);
