@@ -5,12 +5,11 @@ import { AdminBreadcrumb } from "./AdminBreadcrumb";
 import RecentActivity from "./RecentActivity";
 import { supabase } from "@/lib/supabase-client";
 import { useToast } from "@/hooks/use-toast";
-import { Euro, TrendingUp, Users, CheckCircle, XCircle } from "lucide-react";
-import { Card } from "@/components/ui/card";
-import { Lead } from "@/types/crm";
+import { Users, TrendingUp, CircleDollarSign, CheckCircle, XCircle } from "lucide-react";
+import { motion } from "framer-motion";
 
 const AdminDashboard = () => {
-  const [leads, setLeads] = useState<Lead[]>([]);
+  const [leads, setLeads] = useState([]);
   const [installers, setInstallers] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const { toast } = useToast();
@@ -52,59 +51,69 @@ const AdminDashboard = () => {
   const convertedLeads = leads.filter(lead => lead.status === 'converted').length;
   const lostLeads = leads.filter(lead => lead.status === 'lost').length;
   const conversionRate = totalLeads ? ((convertedLeads / totalLeads) * 100).toFixed(1) : '0';
-  
-  // Assuming each lead has a value of 100€ for this example
-  const leadValue = 100;
-  const totalRevenue = convertedLeads * leadValue;
-  const averageRevenue = totalLeads ? (totalRevenue / totalLeads).toFixed(2) : '0';
 
   return (
     <div className="space-y-6 p-6">
       <AdminBreadcrumb />
       
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="grid gap-4 md:grid-cols-2 lg:grid-cols-5"
+      >
         <StatCard
           title="Total Leads"
-          value={totalLeads.toString()}
+          value={totalLeads}
           icon={Users}
-          trend="+12%"
+          trend="+12% ce mois"
           trendUp={true}
         />
         <StatCard
           title="Leads Convertis"
-          value={convertedLeads.toString()}
+          value={convertedLeads}
           icon={CheckCircle}
-          trend="+5%"
+          trend="+5% ce mois"
           trendUp={true}
         />
         <StatCard
-          title="Chiffre d'Affaires"
-          value={`${totalRevenue}€`}
-          icon={Euro}
-          trend="+8%"
+          title="Taux de Conversion"
+          value={`${conversionRate}%`}
+          icon={TrendingUp}
+          trend="+8% ce mois"
           trendUp={true}
         />
         <StatCard
           title="Leads Perdus"
-          value={lostLeads.toString()}
+          value={lostLeads}
           icon={XCircle}
-          trend="-3%"
+          trend="-3% ce mois"
           trendUp={false}
         />
         <StatCard
           title="Revenu Moyen/Lead"
-          value={`${averageRevenue}€`}
-          icon={TrendingUp}
-          trend="+2%"
+          value="350€"
+          icon={CircleDollarSign}
+          trend="+2% ce mois"
           trendUp={true}
         />
-      </div>
+      </motion.div>
 
       <div className="grid gap-4 md:grid-cols-2">
-        <PerformanceChart data={[]} />
-        <Card className="p-6">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+        >
+          <PerformanceChart data={[]} />
+        </motion.div>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.3 }}
+        >
           <RecentActivity leads={leads} installers={installers} />
-        </Card>
+        </motion.div>
       </div>
     </div>
   );
