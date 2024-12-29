@@ -29,14 +29,11 @@ export const Login = () => {
       if (event === 'SIGNED_OUT') {
         navigate('/login');
       }
-      if (event === 'USER_DELETED') {
-        toast.error('Une erreur est survenue lors de la connexion');
-      }
     });
 
-    // Set up error listener
-    const errorSubscription = supabase.auth.onAuthStateChange((event, session) => {
-      if (event === 'USER_DELETED' || event === 'SIGNED_OUT') {
+    // Set up error listener for authentication errors
+    const { data: { subscription: errorSubscription } } = supabase.auth.onAuthStateChange((event) => {
+      if (event === 'SIGNED_OUT') {
         toast.error('Email ou mot de passe incorrect');
       }
     });

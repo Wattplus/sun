@@ -1,66 +1,23 @@
-import { Routes, Route, useNavigate } from "react-router-dom";
-import { Index } from "@/pages/Index";
+import { Routes, Route } from "react-router-dom";
 import { Login } from "@/pages/Login";
-import { InstallerDashboard } from "@/components/installer/InstallerDashboard";
-import { InstallerLayout } from "@/components/installer/navigation/InstallerLayout";
-import { AccountPage } from "@/components/installer/account/AccountPage";
-import { MessagesPage } from "@/components/installer/messages/MessagesPage";
-import { ConversationPage } from "@/components/installer/messages/ConversationPage";
-import { SettingsPage } from "@/components/installer/settings/SettingsPage";
-import { ProfilePage } from "@/components/installer/profile/ProfilePage";
-import { AllAvailableLeads } from "@/components/installer/dashboard/leads/AllAvailableLeads";
-import { AllPurchasedLeads } from "@/components/installer/dashboard/leads/AllPurchasedLeads";
-import NotificationsPage from "@/components/admin/notifications/NotificationsPage";
-import AdminDashboard from "@/components/admin/AdminDashboard";
-import Admin from "@/pages/Admin";
-import StatisticsPage from "@/components/admin/statistics/StatisticsPage";
-import LeadManagement from "@/components/admin/LeadManagement";
-import InstallerManagement from "@/components/admin/InstallerManagement";
-import { LeadMarketplace } from "@/components/admin/marketplace/LeadMarketplace";
-import AdminSettingsPage from "@/components/admin/settings/SettingsPage";
-import AdminProfilePage from "@/components/admin/profile/ProfilePage";
-import { ThankYou } from "@/pages/ThankYou";
+import { CreateSuperAdmin } from "@/pages/CreateSuperAdmin";
+import { PrivateRoute } from "@/components/PrivateRoute";
+import { Dashboard } from "@/pages/Dashboard";
+import { Profile } from "@/pages/Profile";
+import { Settings } from "@/pages/Settings";
+import { NotFound } from "@/pages/NotFound";
 
-export function AppRoutes() {
-  const navigate = useNavigate();
-  const handleClose = () => {
-    navigate("/espace-installateur");
-  };
-
+export const AppRoutes = () => {
   return (
     <Routes>
       <Route path="/login" element={<Login />} />
-      <Route path="/admin" element={<Admin />}>
-        <Route index element={<AdminDashboard />} />
-        <Route path="statistics" element={<StatisticsPage />} />
-        <Route path="leads" element={<LeadManagement />} />
-        <Route path="installers" element={<InstallerManagement />} />
-        <Route path="marketplace" element={<LeadMarketplace />} />
-        <Route path="notifications" element={<NotificationsPage />} />
-        <Route path="settings" element={<AdminSettingsPage />} />
-        <Route path="profile" element={<AdminProfilePage />} />
+      <Route path="/create-super-admin" element={<CreateSuperAdmin />} />
+      <Route element={<PrivateRoute />}>
+        <Route path="/" element={<Dashboard />} />
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/settings" element={<Settings />} />
       </Route>
-
-      <Route path="/" element={<Index />} />
-      <Route path="/thank-you" element={<ThankYou />} />
-      
-      <Route path="/espace-installateur" element={<InstallerLayout />}>
-        <Route index element={<InstallerDashboard />} />
-        <Route path="messages" element={<MessagesPage />} />
-        <Route path="messages/:id" element={<ConversationPage />} />
-        <Route 
-          path="leads/nouveaux" 
-          element={<AllAvailableLeads onClose={handleClose} />} 
-        />
-        <Route 
-          path="leads/achetes" 
-          element={<AllPurchasedLeads onClose={handleClose} />} 
-        />
-        <Route path="rapports" element={<ProfilePage />} />
-        <Route path="parametres" element={<SettingsPage />} />
-        <Route path="notifications" element={<NotificationsPage />} />
-        <Route path="mon-compte" element={<AccountPage />} />
-      </Route>
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
-}
+};
