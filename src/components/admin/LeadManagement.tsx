@@ -30,33 +30,43 @@ export const LeadManagement = () => {
 
   useEffect(() => {
     const checkAuthAndFetchLeads = async () => {
-      console.log("LeadManagement: Vérification de l'authentification...");
-      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+      try {
+        console.log("LeadManagement: Vérification de l'authentification...");
+        const { data: { session }, error: sessionError } = await supabase.auth.getSession();
 
-      if (sessionError) {
-        console.error("LeadManagement: Erreur de session:", sessionError);
+        if (sessionError) {
+          console.error("LeadManagement: Erreur de session:", sessionError);
+          toast({
+            title: "Erreur d'authentification",
+            description: "Impossible de vérifier votre session: " + sessionError.message,
+            variant: "destructive",
+          });
+          return;
+        }
+
+        if (!session) {
+          console.error("LeadManagement: Pas de session active");
+          toast({
+            title: "Non authentifié",
+            description: "Vous devez être connecté pour accéder à cette page",
+            variant: "destructive",
+          });
+          return;
+        }
+
+        console.log("LeadManagement: Session active, utilisateur:", session.user.id);
+        console.log("LeadManagement: Récupération des leads...");
+        await fetchLeads();
+      } catch (error) {
+        console.error("LeadManagement: Erreur inattendue:", error);
         toast({
-          title: "Erreur d'authentification",
-          description: "Impossible de vérifier votre session",
+          title: "Erreur",
+          description: "Une erreur inattendue est survenue",
           variant: "destructive",
         });
-        return;
+      } finally {
+        setIsLoading(false);
       }
-
-      if (!session) {
-        console.error("LeadManagement: Pas de session active");
-        toast({
-          title: "Non authentifié",
-          description: "Vous devez être connecté pour accéder à cette page",
-          variant: "destructive",
-        });
-        return;
-      }
-
-      console.log("LeadManagement: Session active, utilisateur:", session.user.id);
-      console.log("LeadManagement: Récupération des leads...");
-      await fetchLeads();
-      setIsLoading(false);
     };
 
     checkAuthAndFetchLeads();
@@ -147,8 +157,15 @@ export const LeadManagement = () => {
               <LeadHeader
                 searchTerm={searchTerm}
                 onSearchChange={setSearchTerm}
-                onExportClick={() => console.log("Exporting to CSV...")}
+                onExportClick={() => {
+                  console.log("Export to CSV requested");
+                  toast({
+                    title: "Export",
+                    description: "L'export des leads sera bientôt disponible",
+                  });
+                }}
                 onNewLeadClick={() => {
+                  console.log("New lead creation requested");
                   setSelectedLead(null);
                   setEditDialogOpen(true);
                 }}
