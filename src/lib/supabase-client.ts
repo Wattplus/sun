@@ -65,7 +65,8 @@ export const sendEmail = async (
 
 export const createClientAccount = async (email: string, password: string, userData: any) => {
   try {
-    // Créer directement le compte avec signUp
+    console.log('Création du compte client avec les données:', userData);
+    
     const { data: authData, error: signUpError } = await supabase.auth.signUp({
       email,
       password,
@@ -84,7 +85,6 @@ export const createClientAccount = async (email: string, password: string, userD
       return { error: signUpError };
     }
 
-    // Si l'inscription réussit, créer le profil
     if (authData.user) {
       const { error: profileError } = await supabase
         .from('profiles')
@@ -107,7 +107,6 @@ export const createClientAccount = async (email: string, password: string, userD
       }
     }
 
-    // Envoyer l'email de bienvenue
     await sendEmail(
       email,
       userData.firstName,
@@ -128,6 +127,8 @@ export const createClientAccount = async (email: string, password: string, userD
 
 export const createLead = async (leadData: any) => {
   try {
+    console.log('Création du lead avec les données:', leadData);
+    
     const { data, error } = await supabase
       .from('leads')
       .insert([
