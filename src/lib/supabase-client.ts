@@ -56,7 +56,7 @@ export const checkExistingUser = async (email: string) => {
       },
     });
 
-    return userData?.user?.id;
+    return userData?.user?.id || null;
   } catch (error) {
     console.error('Error checking existing user:', error);
     return null;
@@ -82,9 +82,9 @@ export const createClientAccount = async (
       password,
     });
 
-    let userId;
+    let userId: string | undefined;
 
-    if (existingUser?.user) {
+    if (existingUser?.user?.id) {
       // Si l'utilisateur existe, utiliser son ID
       userId = existingUser.user.id;
     } else {
