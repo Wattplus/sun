@@ -55,40 +55,6 @@ export const LeadManagement = () => {
     }
   };
 
-  const getStatusColor = (status: LeadStatus) => {
-    const colors = {
-      new: "bg-[#1EAEDB]",
-      contacted: "bg-[#33C3F0]",
-      qualified: "bg-[#0FA0CE]",
-      assigned: "bg-[#1EAEDB]",
-      converted: "bg-emerald-500",
-      lost: "bg-red-500"
-    };
-    return colors[status];
-  };
-
-  const getStatusText = (status: LeadStatus) => {
-    const texts = {
-      new: "Nouveau",
-      contacted: "Contacté",
-      qualified: "Qualifié",
-      assigned: "Assigné",
-      converted: "Converti",
-      lost: "Perdu"
-    };
-    return texts[status];
-  };
-
-  const handleEditClick = (lead: Lead) => {
-    setSelectedLead(lead);
-    setEditDialogOpen(true);
-  };
-
-  const handleAssignClick = (lead: Lead) => {
-    setLeadToAssign(lead);
-    setAssignDialogOpen(true);
-  };
-
   const handleDeleteClick = (lead: Lead) => {
     setLeadToDelete(lead);
     setDeleteDialogOpen(true);
@@ -130,6 +96,16 @@ export const LeadManagement = () => {
     }
   };
 
+  const handleEditClick = (lead: Lead) => {
+    setSelectedLead(lead);
+    setEditDialogOpen(true);
+  };
+
+  const handleAssignClick = (lead: Lead) => {
+    setLeadToAssign(lead);
+    setAssignDialogOpen(true);
+  };
+
   const handleEditClose = () => {
     setSelectedLead(null);
     setEditDialogOpen(false);
@@ -168,57 +144,28 @@ export const LeadManagement = () => {
     }
   };
 
-  const handleAssignSubmit = async () => {
-    if (!leadToAssign || !selectedInstallerId) return;
+  const getStatusColor = (status: LeadStatus) => {
+    const colors = {
+      new: "bg-[#1EAEDB]",
+      contacted: "bg-[#33C3F0]",
+      qualified: "bg-[#0FA0CE]",
+      assigned: "bg-[#1EAEDB]",
+      converted: "bg-emerald-500",
+      lost: "bg-red-500"
+    };
+    return colors[status];
+  };
 
-    const installer = mockInstallers.find(i => i.id === selectedInstallerId);
-    if (!installer) return;
-
-    try {
-      const { error } = await supabase
-        .from("leads")
-        .update({
-          status: "assigned" as LeadStatus,
-          assignedTo: installer.companyName
-        })
-        .eq("id", leadToAssign.id);
-
-      if (error) {
-        console.error("Error assigning lead:", error);
-        toast({
-          title: "Erreur",
-          description: "Impossible d'assigner le lead",
-          variant: "destructive",
-        });
-        return;
-      }
-
-      const updatedLead = {
-        ...leadToAssign,
-        status: "assigned" as LeadStatus,
-        assignedTo: installer.companyName
-      };
-
-      setLeads(leads.map(lead => 
-        lead.id === updatedLead.id ? updatedLead : lead
-      ));
-
-      toast({
-        title: "Lead assigné avec succès",
-        description: `Le lead a été assigné à ${installer.companyName}`,
-      });
-
-      setAssignDialogOpen(false);
-      setSelectedInstallerId("");
-      setLeadToAssign(null);
-    } catch (error) {
-      console.error("Unexpected error assigning lead:", error);
-      toast({
-        title: "Erreur",
-        description: "Une erreur est survenue lors de l'assignation du lead",
-        variant: "destructive",
-      });
-    }
+  const getStatusText = (status: LeadStatus) => {
+    const texts = {
+      new: "Nouveau",
+      contacted: "Contacté",
+      qualified: "Qualifié",
+      assigned: "Assigné",
+      converted: "Converti",
+      lost: "Perdu"
+    };
+    return texts[status];
   };
 
   return (
