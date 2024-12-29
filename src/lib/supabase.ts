@@ -4,20 +4,13 @@ import type { Message, Conversation } from '@/types/messages';
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
+if (!supabaseUrl || !supabaseKey) {
+  console.error('Supabase environment variables are not set');
+}
+
 export const supabase = createClient(supabaseUrl, supabaseKey);
 
 export const messagesService = {
-  async getConversation(conversationId: string) {
-    const { data, error } = await supabase
-      .from('conversations')
-      .select('*')
-      .eq('id', conversationId)
-      .single();
-    
-    if (error) throw error;
-    return data as Conversation;
-  },
-
   async getMessages(conversationId: string) {
     const { data, error } = await supabase
       .from('messages')
@@ -38,14 +31,5 @@ export const messagesService = {
     
     if (error) throw error;
     return data as Message;
-  },
-
-  async markAsRead(messageId: string) {
-    const { error } = await supabase
-      .from('messages')
-      .update({ read: true })
-      .eq('id', messageId);
-    
-    if (error) throw error;
   }
 };
