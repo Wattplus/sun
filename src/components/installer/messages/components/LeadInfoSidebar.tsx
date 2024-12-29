@@ -1,4 +1,4 @@
-import { Home, Sun, Euro, MapPin, Phone, Mail } from "lucide-react";
+import { Home, Sun, Euro, MapPin, Phone, Mail, Plus, Calendar } from "lucide-react";
 import { Avatar } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
