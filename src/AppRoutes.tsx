@@ -1,8 +1,5 @@
 import { Routes, Route, useNavigate } from "react-router-dom";
 import { Index } from "@/pages/Index";
-import ClientPortal from "@/pages/ClientPortal";
-import { InstallerProfile } from "@/components/client/directory/InstallerProfile";
-import { InstallerDirectory } from "@/components/client/directory/InstallerDirectory";
 import { InstallerDashboard } from "@/components/installer/InstallerDashboard";
 import { InstallerLayout } from "@/components/installer/navigation/InstallerLayout";
 import { AccountPage } from "@/components/installer/account/AccountPage";
@@ -45,9 +42,6 @@ export function AppRoutes() {
       </Route>
 
       <Route path="/" element={<Index />} />
-      <Route path="/client/*" element={<ClientPortal />} />
-      <Route path="/directory" element={<InstallerDirectory />} />
-      <Route path="/directory/:id" element={<InstallerProfile />} />
       
       <Route path="/espace-installateur" element={<InstallerLayout />}>
         <Route index element={<InstallerDashboard />} />
