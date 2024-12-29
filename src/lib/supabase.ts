@@ -8,12 +8,21 @@ if (!supabaseUrl || !supabaseKey) {
   throw new Error('Missing Supabase environment variables');
 }
 
-export const supabase = createClient(supabaseUrl, supabaseKey);
+export const supabase = createClient(supabaseUrl, supabaseKey, {
+  auth: {
+    persistSession: true,
+    autoRefreshToken: true,
+  },
+});
 
 export const messagesService = {
   async getMessages(conversationId: string): Promise<Message[]> {
     console.log('Fetching messages for conversation:', conversationId);
     
+    if (!conversationId) {
+      throw new Error('Conversation ID is required');
+    }
+
     const { data, error } = await supabase
       .from('messages')
       .select('*')
@@ -25,14 +34,14 @@ export const messagesService = {
       throw error;
     }
 
-    if (!data) {
-      return [];
-    }
-
-    return data;
+    return data || [];
   },
 
   async sendMessage(message: Omit<Message, 'id' | 'created_at'>): Promise<Message> {
+    if (!message.conversation_id) {
+      throw new Error('Conversation ID is required');
+    }
+
     const { data, error } = await supabase
       .from('messages')
       .insert([message])

@@ -19,7 +19,9 @@ export const ChatSection = () => {
   const { data: messages = [], isLoading, error } = useQuery({
     queryKey: ['messages', conversationId],
     queryFn: async () => {
-      if (!conversationId) throw new Error('Conversation ID is required');
+      if (!conversationId) {
+        throw new Error('Conversation ID is required');
+      }
       try {
         return await messagesService.getMessages(conversationId);
       } catch (error) {
@@ -33,19 +35,16 @@ export const ChatSection = () => {
 
   const sendMessageMutation = useMutation({
     mutationFn: async (content: string) => {
-      if (!conversationId) throw new Error('Conversation ID is required');
-      try {
-        return await messagesService.sendMessage({
-          content,
-          conversation_id: conversationId,
-          sender_id: 'current-installer-id',
-          sender_type: 'installer',
-          read: false,
-        });
-      } catch (error) {
-        console.error('Error sending message:', error);
-        throw error;
+      if (!conversationId) {
+        throw new Error('Conversation ID is required');
       }
+      return await messagesService.sendMessage({
+        content,
+        conversation_id: conversationId,
+        sender_id: 'current-installer-id',
+        sender_type: 'installer',
+        read: false,
+      });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['messages', conversationId] });
@@ -143,14 +142,20 @@ export const ChatSection = () => {
             onKeyDown={(e) => {
               if (e.key === "Enter" && !e.shiftKey) {
                 e.preventDefault();
-                handleSendMessage();
+                if (newMessage.trim()) {
+                  sendMessageMutation.mutate(newMessage);
+                }
               }
             }}
           />
           <Button 
-            onClick={handleSendMessage} 
+            onClick={() => {
+              if (newMessage.trim()) {
+                sendMessageMutation.mutate(newMessage);
+              }
+            }} 
             className="h-auto"
-            disabled={sendMessageMutation.isPending}
+            disabled={sendMessageMutation.isPending || !newMessage.trim()}
           >
             <Send className="h-4 w-4" />
           </Button>
