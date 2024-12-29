@@ -26,7 +26,7 @@ export const Login = ({ isAdminLogin = false }: LoginProps) => {
           // Fetch user profile with role
           const { data: profile, error: profileError } = await supabase
             .from('profiles')
-            .select('role')
+            .select('role, email')
             .eq('id', session.user.id)
             .maybeSingle();
 
@@ -35,26 +35,9 @@ export const Login = ({ isAdminLogin = false }: LoginProps) => {
             throw profileError;
           }
 
-          if (!profile) {
-            console.log("No profile found, creating default profile");
-            const { error: insertError } = await supabase
-              .from('profiles')
-              .insert([
-                { 
-                  id: session.user.id,
-                  email: session.user.email,
-                  role: 'user'
-                }
-              ]);
-
-            if (insertError) {
-              console.error('Profile creation error:', insertError);
-              throw insertError;
-            }
-          }
-
           console.log("Profile data:", profile);
           console.log("User role:", profile?.role);
+          console.log("User email:", profile?.email);
 
           const isAdmin = profile?.role === 'admin' || profile?.role === 'super_admin';
           console.log("Is admin user:", isAdmin);
@@ -62,6 +45,10 @@ export const Login = ({ isAdminLogin = false }: LoginProps) => {
           if (isAdminLogin) {
             if (isAdmin) {
               console.log("Admin login successful - redirecting to /admin");
+              toast({
+                title: "Connexion réussie",
+                description: "Bienvenue dans l'interface administrateur",
+              });
               navigate("/admin");
             } else {
               console.log("Non-admin user attempted admin login");
@@ -136,6 +123,11 @@ export const Login = ({ isAdminLogin = false }: LoginProps) => {
                   email_label: 'Adresse email',
                   password_label: 'Mot de passe',
                   button_label: 'Se connecter',
+                },
+                sign_up: {
+                  email_label: 'Adresse email',
+                  password_label: 'Mot de passe',
+                  button_label: 'S\'inscrire',
                 },
               },
             }}
