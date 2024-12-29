@@ -1,5 +1,4 @@
 import { createClient } from '@supabase/supabase-js';
-import { sendWelcomeEmail } from '../config/emailConfig';
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
@@ -9,6 +8,21 @@ if (!supabaseUrl || !supabaseKey) {
 }
 
 export const supabase = createClient(supabaseUrl, supabaseKey);
+
+// Fonction pour envoyer un email via la fonction Edge
+export const sendEmail = async (email: string, firstName: string, password: string, subject?: string, html?: string) => {
+  try {
+    const { error } = await supabase.functions.invoke('send-email', {
+      body: { email, firstName, password, subject, html }
+    });
+
+    if (error) throw error;
+    return { error: null };
+  } catch (error) {
+    console.error('Error sending email:', error);
+    return { error };
+  }
+};
 
 // Fonction pour créer un nouveau compte client
 export const createClientAccount = async (email: string, password: string, userData: any) => {
@@ -29,7 +43,7 @@ export const createClientAccount = async (email: string, password: string, userD
     if (authError) throw authError;
 
     // Envoyer un email de bienvenue avec le mot de passe
-    await sendWelcomeEmail(email, userData.firstName, password);
+    await sendEmail(email, userData.firstName, password);
 
     return { data: authData, error: null };
   } catch (error) {
