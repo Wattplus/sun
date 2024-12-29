@@ -10,6 +10,8 @@ import { useLeadOperations } from "@/hooks/useLeadOperations";
 import { getStatusColor, getStatusText } from "@/utils/leadStatus";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Card } from "@/components/ui/card";
+import { supabase } from "@/lib/supabase-client";
+import { useToast } from "@/components/ui/use-toast";
 
 export const LeadManagement = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -20,28 +22,59 @@ export const LeadManagement = () => {
   const [selectedInstallerId, setSelectedInstallerId] = useState<string>("");
   const [leadToAssign, setLeadToAssign] = useState<Lead | null>(null);
   const [leadToDelete, setLeadToDelete] = useState<Lead | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   
   const { leads, fetchLeads, deleteLead, updateLead, assignLead } = useLeadOperations();
   const isMobile = useIsMobile();
+  const { toast } = useToast();
 
   useEffect(() => {
-    console.log("LeadManagement: Fetching leads...");
-    fetchLeads();
+    const checkAuthAndFetchLeads = async () => {
+      console.log("LeadManagement: Vérification de l'authentification...");
+      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+
+      if (sessionError) {
+        console.error("LeadManagement: Erreur de session:", sessionError);
+        toast({
+          title: "Erreur d'authentification",
+          description: "Impossible de vérifier votre session",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      if (!session) {
+        console.error("LeadManagement: Pas de session active");
+        toast({
+          title: "Non authentifié",
+          description: "Vous devez être connecté pour accéder à cette page",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      console.log("LeadManagement: Session active, utilisateur:", session.user.id);
+      console.log("LeadManagement: Récupération des leads...");
+      await fetchLeads();
+      setIsLoading(false);
+    };
+
+    checkAuthAndFetchLeads();
   }, []);
 
   useEffect(() => {
-    console.log("LeadManagement: Leads updated:", leads);
+    console.log("LeadManagement: Mise à jour des leads:", leads);
   }, [leads]);
 
   const handleDeleteClick = (lead: Lead) => {
-    console.log("LeadManagement: Handling delete for lead:", lead);
+    console.log("LeadManagement: Demande de suppression pour le lead:", lead);
     setLeadToDelete(lead);
     setDeleteDialogOpen(true);
   };
 
   const handleConfirmDelete = async () => {
     if (!leadToDelete) return;
-    console.log("LeadManagement: Confirming delete for lead:", leadToDelete);
+    console.log("LeadManagement: Confirmation de suppression pour le lead:", leadToDelete);
     const success = await deleteLead(leadToDelete.id);
     if (success) {
       setDeleteDialogOpen(false);
@@ -50,13 +83,13 @@ export const LeadManagement = () => {
   };
 
   const handleEditClick = (lead: Lead) => {
-    console.log("LeadManagement: Handling edit for lead:", lead);
+    console.log("LeadManagement: Demande de modification pour le lead:", lead);
     setSelectedLead(lead);
     setEditDialogOpen(true);
   };
 
   const handleAssignClick = (lead: Lead) => {
-    console.log("LeadManagement: Handling assign for lead:", lead);
+    console.log("LeadManagement: Demande d'assignation pour le lead:", lead);
     setLeadToAssign(lead);
     setAssignDialogOpen(true);
   };
@@ -67,7 +100,7 @@ export const LeadManagement = () => {
   };
 
   const handleSaveLead = async (updatedLead: Lead) => {
-    console.log("LeadManagement: Saving lead:", updatedLead);
+    console.log("LeadManagement: Sauvegarde du lead:", updatedLead);
     const success = await updateLead(updatedLead);
     if (success) {
       handleEditClose();
@@ -75,12 +108,22 @@ export const LeadManagement = () => {
   };
 
   const handleAssignSubmit = async (leadId: string, installerId: string) => {
-    console.log("LeadManagement: Assigning lead:", { leadId, installerId });
+    console.log("LeadManagement: Attribution du lead:", { leadId, installerId });
     const success = await assignLead(leadId, installerId);
     if (success) {
       setAssignDialogOpen(false);
     }
   };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-background/95 to-background/50 py-8">
+        <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
+          <p className="text-center text-muted-foreground">Chargement des leads...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background/95 to-background/50 py-8">
