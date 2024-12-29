@@ -32,6 +32,7 @@ export const createLead = async (formData: {
         monthlybill: formData.monthlyBill,
         postalcode: formData.postalCode,
         status: 'new',
+        created_at: new Date().toISOString()
       },
     ]);
 
