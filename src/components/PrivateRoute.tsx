@@ -13,37 +13,49 @@ export const PrivateRoute = () => {
   const { toast } = useToast();
 
   useEffect(() => {
-    const checkAdminStatus = async () => {
-      if (isAuthenticated) {
-        console.log("Vérification du statut administrateur...");
-        try {
-          const { data: { user } } = await supabase.auth.getUser();
-          if (!user) {
-            throw new Error("Utilisateur non trouvé");
-          }
+    let isMounted = true;
 
-          const { data: profile, error } = await supabase
-            .from('profiles')
-            .select('role')
-            .eq('id', user.id)
-            .maybeSingle();
-          
-          if (error) {
-            console.error('Erreur lors de la récupération du profil:', error);
+    const checkAdminStatus = async () => {
+      if (!isAuthenticated) {
+        setCheckingAdmin(false);
+        return;
+      }
+
+      try {
+        console.log("Vérification du statut administrateur...");
+        const { data: { user } } = await supabase.auth.getUser();
+        
+        if (!user) {
+          throw new Error("Utilisateur non trouvé");
+        }
+
+        const { data: profile, error } = await supabase
+          .from('profiles')
+          .select('role')
+          .eq('id', user.id)
+          .maybeSingle();
+        
+        if (error) {
+          console.error('Erreur lors de la récupération du profil:', error);
+          if (isMounted) {
             setIsAdmin(false);
             toast({
               title: "Erreur",
               description: "Impossible de vérifier les droits d'accès",
               variant: "destructive",
             });
-          } else {
-            const hasAdminRole = profile?.role === 'admin' || profile?.role === 'super_admin';
-            console.log("Rôle utilisateur:", profile?.role);
-            console.log("A les droits admin:", hasAdminRole);
+          }
+        } else {
+          const hasAdminRole = profile?.role === 'admin' || profile?.role === 'super_admin';
+          console.log("Rôle utilisateur:", profile?.role);
+          console.log("A les droits admin:", hasAdminRole);
+          if (isMounted) {
             setIsAdmin(hasAdminRole);
           }
-        } catch (error) {
-          console.error('Erreur de vérification admin:', error);
+        }
+      } catch (error) {
+        console.error('Erreur de vérification admin:', error);
+        if (isMounted) {
           setIsAdmin(false);
           toast({
             title: "Erreur",
@@ -51,13 +63,18 @@ export const PrivateRoute = () => {
             variant: "destructive",
           });
         }
-        setCheckingAdmin(false);
-      } else {
-        setCheckingAdmin(false);
+      } finally {
+        if (isMounted) {
+          setCheckingAdmin(false);
+        }
       }
     };
 
     checkAdminStatus();
+
+    return () => {
+      isMounted = false;
+    };
   }, [isAuthenticated, toast]);
 
   if (isLoading || checkingAdmin) {
