@@ -15,7 +15,22 @@ export const handleFormSubmission = async (
   generatedPassword: string
 ) => {
   try {
-    // Créer le compte client avec le mot de passe généré
+    console.log('Starting form submission...');
+
+    // Créer le lead d'abord
+    const { error: leadError } = await createLead(formData);
+
+    if (leadError) {
+      console.error('Error creating lead:', leadError);
+      toast({
+        title: "Erreur",
+        description: "Une erreur est survenue lors de la création de votre demande.",
+        variant: "destructive",
+      });
+      return false;
+    }
+
+    // Créer le compte client
     const { error: accountError } = await createClientAccount(
       formData.email,
       generatedPassword,
@@ -30,33 +45,40 @@ export const handleFormSubmission = async (
     );
 
     if (accountError) {
+      console.error('Error creating account:', accountError);
       if (accountError.message.includes("User already registered")) {
-        // Si l'utilisateur existe déjà, on met à jour ses informations
         console.log("Utilisateur existant, mise à jour du profil...");
       } else {
         toast({
           title: "Erreur",
-          description: accountError.message || "Une erreur est survenue lors de la création de votre compte.",
+          description: "Une erreur est survenue lors de la création de votre compte.",
           variant: "destructive",
         });
         return false;
       }
     }
 
-    // Créer le lead
-    const { error: leadError } = await createLead(formData);
+    // Envoyer l'email de bienvenue
+    const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/send-welcome-email`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
+      },
+      body: JSON.stringify({
+        email: formData.email,
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        password: generatedPassword,
+      }),
+    });
 
-    if (leadError) {
-      toast({
-        title: "Erreur",
-        description: "Une erreur est survenue lors de la création de votre demande.",
-        variant: "destructive",
-      });
-      return false;
+    if (!response.ok) {
+      console.error('Error sending welcome email:', await response.text());
     }
 
     toast({
-      title: "Compte créé avec succès",
+      title: "Demande envoyée avec succès",
       description: "Un email contenant vos identifiants de connexion vous a été envoyé.",
     });
 
@@ -67,7 +89,7 @@ export const handleFormSubmission = async (
 
     return true;
   } catch (error) {
-    console.error("Erreur lors de la création du compte:", error);
+    console.error("Erreur lors de la soumission du formulaire:", error);
     toast({
       title: "Erreur",
       description: "Une erreur est survenue lors de la création de votre compte.",

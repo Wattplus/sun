@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import { ClientTypeForm } from "./lead-form/ClientTypeForm";
 import { PersonalInfoForm } from "./lead-form/PersonalInfoForm";
 import { Card } from "@/components/ui/card";
@@ -66,7 +66,15 @@ export const LeadForm = () => {
 
     if (!success) {
       setIsSubmitting(false);
+      return;
     }
+
+    toast({
+      title: "Demande envoyée !",
+      description: "Votre demande a bien été prise en compte. Vous allez recevoir un email de confirmation.",
+    });
+
+    setIsSubmitting(false);
   };
 
   return (

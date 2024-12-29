@@ -16,7 +16,7 @@ export const checkExistingUser = async (email: string) => {
       .from('profiles')
       .select('id')
       .eq('email', email)
-      .maybeSingle(); // Utilisation de maybeSingle au lieu de single
+      .maybeSingle();
 
     if (error) {
       console.error('Error checking existing user:', error);
@@ -124,14 +124,16 @@ export const createLead = async (formData: {
         monthly_bill: formData.monthlyBill,
         postal_code: formData.postalCode,
         status: 'new',
+        created_at: new Date().toISOString(),
       },
     ]);
 
     if (error) {
       console.error('Error creating lead:', error);
+      throw error;
     }
 
-    return { error };
+    return { error: null };
   } catch (error) {
     console.error('Error in createLead:', error);
     return { error };

@@ -12,28 +12,49 @@ serve(async (req) => {
   }
 
   try {
-    const { email, firstName, password } = await req.json()
+    const { email, firstName, lastName, password } = await req.json()
 
-    // Configuration de l'envoi d'email (à adapter selon votre service d'email)
+    // Configuration de l'envoi d'email
     const emailData = {
       to: email,
-      subject: 'Bienvenue sur notre plateforme solaire',
+      subject: 'Bienvenue sur WattPlus - Votre demande a été reçue',
       html: `
-        <h1>Bienvenue ${firstName} !</h1>
-        <p>Votre compte a été créé avec succès.</p>
-        <p>Voici vos identifiants de connexion :</p>
-        <ul>
-          <li>Email : ${email}</li>
-          <li>Mot de passe : ${password}</li>
-        </ul>
-        <p>Nous vous recommandons de changer votre mot de passe lors de votre première connexion.</p>
-        <p>Vous pouvez maintenant vous connecter à votre espace client pour suivre l'avancement de votre projet.</p>
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <style>
+                body { font-family: Arial, sans-serif; line-height: 1.6; }
+                .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+                .header { background-color: #1d4ed8; color: white; padding: 20px; text-align: center; }
+                .content { padding: 20px; }
+                .footer { text-align: center; padding: 20px; color: #666; }
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <div class="header">
+                    <h1>Bienvenue ${firstName} ${lastName} !</h1>
+                </div>
+                <div class="content">
+                    <p>Votre demande d'étude solaire a bien été prise en compte.</p>
+                    <p>Voici vos identifiants de connexion pour suivre votre projet :</p>
+                    <ul>
+                        <li>Email : ${email}</li>
+                        <li>Mot de passe temporaire : ${password}</li>
+                    </ul>
+                    <p>Nous vous recommandons de changer votre mot de passe lors de votre première connexion.</p>
+                    <p>Notre équipe va étudier votre demande et reviendra vers vous très rapidement.</p>
+                </div>
+                <div class="footer">
+                    <p>WattPlus - Expert en installations photovoltaïques</p>
+                </div>
+            </div>
+        </body>
+        </html>
       `
     }
 
-    // Ici, vous devrez implémenter l'envoi d'email avec votre service préféré
-    // Par exemple avec SendGrid, Mailgun, etc.
-    console.log('Email would be sent:', emailData)
+    console.log('Sending email:', emailData)
 
     return new Response(
       JSON.stringify({ success: true }),
@@ -43,6 +64,7 @@ serve(async (req) => {
       },
     )
   } catch (error) {
+    console.error('Error sending email:', error)
     return new Response(
       JSON.stringify({ error: error.message }),
       {
