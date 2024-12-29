@@ -1,63 +1,22 @@
 import { Lead } from "@/types/crm";
-import { differenceInDays } from "date-fns";
-import { SubscriptionTier } from "@/types/subscription";
 
-interface PriceCalculationResult {
-  mutualPrice: number;
-  exclusivePrice: number;
-}
+export const calculateLeadPrice = (lead: Lead): number => {
+  const basePrice = 25;
+  let multiplier = 1;
 
-const getSubscriptionDiscount = (tier: SubscriptionTier = 'free'): number => {
-  switch (tier) {
-    case 'premium':
-      return 0.20; // 20% de réduction
-    case 'pro':
-      return 0.10; // 10% de réduction
-    default:
-      return 0; // Pas de réduction
-  }
-};
-
-export const calculateLeadPrice = (
-  lead: Lead, 
-  subscriptionTier: SubscriptionTier = 'free'
-): PriceCalculationResult => {
-  const basePrice = lead.projectType === 'professional' 
-    ? { mutualPrice: 49, exclusivePrice: 59 }
-    : { mutualPrice: 26, exclusivePrice: 35 };
-
-  const createdAt = new Date(lead.createdAt);
-  const today = new Date();
-  const daysOld = differenceInDays(today, createdAt);
-
-  // Prix minimum fixe après 30 jours
-  if (daysOld >= 30) {
-    return {
-      mutualPrice: 12,
-      exclusivePrice: 12
-    };
+  // Add price modifiers based on lead properties
+  if (lead.projectType === 'professional') {
+    multiplier *= 1.5;
   }
 
-  // Réduction de 20% après 15 jours
-  let currentPrices = daysOld >= 15 
-    ? {
-        mutualPrice: Math.max(12, basePrice.mutualPrice * 0.8),
-        exclusivePrice: Math.max(12, basePrice.exclusivePrice * 0.8)
-      }
-    : basePrice;
-
-  // Application de la réduction liée à l'abonnement
-  const subscriptionDiscount = getSubscriptionDiscount(subscriptionTier);
-  if (subscriptionDiscount > 0) {
-    currentPrices = {
-      mutualPrice: Math.max(12, currentPrices.mutualPrice * (1 - subscriptionDiscount)),
-      exclusivePrice: Math.max(12, currentPrices.exclusivePrice * (1 - subscriptionDiscount))
-    };
+  // Add recency bonus (leads less than 24h old)
+  const leadDate = new Date(lead.created_at);
+  const now = new Date();
+  const hoursDiff = (now.getTime() - leadDate.getTime()) / (1000 * 60 * 60);
+  
+  if (hoursDiff <= 24) {
+    multiplier *= 1.2;
   }
 
-  return currentPrices;
-};
-
-export const formatPrice = (price: number): string => {
-  return `${price.toFixed(0)}€`;
+  return Math.round(basePrice * multiplier);
 };

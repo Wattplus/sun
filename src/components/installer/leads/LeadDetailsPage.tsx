@@ -81,10 +81,10 @@ export const LeadDetailsPage = () => {
         <div className="flex justify-between items-center">
           <div>
             <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-primary-light bg-clip-text text-transparent mb-2">
-              {lead.firstName} {lead.lastName}
+              {lead.firstname} {lead.lastname}
             </h1>
             <p className="text-muted-foreground">
-              Lead créé le {new Date(lead.createdAt).toLocaleDateString()}
+              Lead créé le {new Date(lead.created_at).toLocaleDateString()}
             </p>
           </div>
           <div className="flex gap-4">

@@ -43,8 +43,8 @@ export const LeadProjectInfo = ({ lead, isEditing, editedLead, setEditedLead }: 
             <div className="space-y-2">
               <label className="text-sm text-muted-foreground">Facture mensuelle</label>
               <Input 
-                value={editedLead?.monthlyBill || ""}
-                onChange={(e) => setEditedLead({...editedLead!, monthlyBill: e.target.value})}
+                value={editedLead?.monthlybill || ""}
+                onChange={(e) => setEditedLead({...editedLead!, monthlybill: e.target.value})}
               />
             </div>
             <div className="space-y-2">
@@ -71,7 +71,7 @@ export const LeadProjectInfo = ({ lead, isEditing, editedLead, setEditedLead }: 
             </div>
             <div>
               <p className="text-sm text-muted-foreground">Facture mensuelle</p>
-              <p className="font-medium">{lead.monthlyBill || "Non spécifié"}€</p>
+              <p className="font-medium">{lead.monthlybill || "Non spécifié"}€</p>
             </div>
             <div>
               <p className="text-sm text-muted-foreground">Type électrique</p>

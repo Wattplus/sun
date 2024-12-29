@@ -16,12 +16,12 @@ export const LeadStats = ({ leads }: LeadStatsProps) => {
   
   // Calcul des leads complètement remplis (tous les champs obligatoires)
   const completedLeads = leads.filter(lead => 
-    lead.firstName && 
-    lead.lastName && 
+    lead.firstname && 
+    lead.lastname && 
     lead.email && 
     lead.phone && 
     lead.address && 
-    lead.postalCode && 
+    lead.postalcode && 
     lead.city && 
     lead.projectType
   ).length;
