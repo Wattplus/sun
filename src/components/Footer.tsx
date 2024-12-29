@@ -82,7 +82,7 @@ export const Footer = () => {
                 </div>
               </Link>
               <Link 
-                to="/login" 
+                to="/admin/login" 
                 className="inline-block text-sm text-gray-400 hover:text-white transition-colors cursor-pointer"
               >
                 Administration
