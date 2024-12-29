@@ -8,7 +8,6 @@ if (!supabaseUrl || !supabaseKey) {
   throw new Error('Missing Supabase configuration');
 }
 
-// Create a single instance of the Supabase client
 export const supabase = createClient(supabaseUrl, supabaseKey);
 
 export const messagesService = {
@@ -16,29 +15,18 @@ export const messagesService = {
     console.log('Fetching messages for conversation:', conversationId);
     
     try {
-      // First check if the conversation exists in contacts table
-      const { data: contact, error: contactError } = await supabase
-        .from('contacts')
+      const { data: messages, error } = await supabase
+        .from('messages')
         .select('*')
-        .eq('id', conversationId)
-        .single();
+        .eq('conversation_id', conversationId)
+        .order('created_at', { ascending: true });
 
-      if (contactError) {
-        console.error('Error fetching contact:', contactError);
-        throw contactError;
+      if (error) {
+        console.error('Error fetching messages:', error);
+        throw error;
       }
 
-      // If contact exists, return mock messages for now
-      // TODO: Replace with actual messages table once created
-      return [{
-        id: '1',
-        content: "Bonjour, je suis intéressé par vos services.",
-        sender_id: contact.id,
-        sender_type: 'client',
-        conversation_id: conversationId,
-        created_at: new Date().toISOString(),
-        read: false
-      }];
+      return messages || [];
     } catch (error) {
       console.error('Error in getMessages:', error);
       throw error;
@@ -47,17 +35,24 @@ export const messagesService = {
 
   async sendMessage(message: Omit<Message, 'id' | 'created_at'>): Promise<Message> {
     try {
-      // For now, just return a mock response
-      // TODO: Replace with actual message insertion once messages table is created
-      return {
-        id: Date.now().toString(),
-        content: message.content,
-        sender_id: message.sender_id,
-        sender_type: message.sender_type,
-        conversation_id: message.conversation_id,
-        created_at: new Date().toISOString(),
-        read: false
-      };
+      const { data, error } = await supabase
+        .from('messages')
+        .insert([{
+          content: message.content,
+          sender_id: message.sender_id,
+          sender_type: message.sender_type,
+          conversation_id: message.conversation_id,
+          read: message.read
+        }])
+        .select()
+        .single();
+
+      if (error) {
+        console.error('Error sending message:', error);
+        throw error;
+      }
+
+      return data;
     } catch (error) {
       console.error('Error in sendMessage:', error);
       throw error;
