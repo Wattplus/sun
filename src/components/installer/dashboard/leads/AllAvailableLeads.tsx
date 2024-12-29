@@ -2,7 +2,7 @@ import { FC } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { LeadCard } from "@/components/installer/dashboard/leads/LeadCard";
+import { LeadCard } from "./LeadCard";
 import { useLeads } from "@/hooks/use-leads";
 import { Lead } from "@/types/crm";
 

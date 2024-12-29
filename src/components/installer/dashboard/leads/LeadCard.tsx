@@ -31,10 +31,6 @@ export const LeadCard: FC<LeadCardProps> = ({ lead }) => {
             <p className="text-sm font-medium text-muted-foreground">Code postal</p>
             <p className="text-sm">{lead.postalcode}</p>
           </div>
-          <div>
-            <p className="text-sm font-medium text-muted-foreground">Type de projet</p>
-            <p className="text-sm capitalize">{lead.projectType || "Non spécifié"}</p>
-          </div>
           <div className="pt-2">
             <Button className="w-full">Voir les détails</Button>
           </div>
