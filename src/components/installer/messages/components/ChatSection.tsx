@@ -23,6 +23,7 @@ export const ChatSection = () => {
       return messagesService.getMessages(conversationId);
     },
     enabled: !!conversationId,
+    retry: 1,
   });
 
   const sendMessageMutation = useMutation({
@@ -61,8 +62,16 @@ export const ChatSection = () => {
 
   if (error) {
     return (
-      <div className="flex items-center justify-center h-[600px] text-destructive">
-        Une erreur est survenue lors du chargement des messages
+      <div className="flex flex-col items-center justify-center h-[600px] p-4">
+        <p className="text-destructive text-center mb-4">
+          Une erreur est survenue lors du chargement des messages
+        </p>
+        <Button 
+          variant="outline"
+          onClick={() => queryClient.invalidateQueries({ queryKey: ['messages', conversationId] })}
+        >
+          Réessayer
+        </Button>
       </div>
     );
   }
@@ -70,7 +79,9 @@ export const ChatSection = () => {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-[600px]">
-        Chargement des messages...
+        <div className="animate-pulse text-muted-foreground">
+          Chargement des messages...
+        </div>
       </div>
     );
   }
