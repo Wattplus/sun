@@ -11,16 +11,28 @@ if (!supabaseUrl || !supabaseKey) {
 export const supabase = createClient(supabaseUrl, supabaseKey);
 
 // Fonction pour envoyer un email via EmailJS
-export const sendEmail = async (email: string, firstName: string, lastName: string, phone: string, postalCode: string) => {
+export const sendEmail = async (
+  email: string, 
+  firstName: string, 
+  lastName: string, 
+  phone: string, 
+  postalCode: string,
+  clientType: string,
+  monthlyBill: string,
+  password: string
+) => {
   try {
     console.log('Tentative d\'envoi d\'email à:', email);
     
     const templateParams = {
+      client_type: clientType,
       first_name: firstName,
       last_name: lastName,
       email: email,
       phone: phone,
       postal_code: postalCode,
+      monthly_bill: monthlyBill,
+      password: password,
       date: new Date().toLocaleDateString('fr-FR', {
         year: 'numeric',
         month: 'long',
@@ -31,10 +43,10 @@ export const sendEmail = async (email: string, firstName: string, lastName: stri
     };
 
     const response = await emailjs.send(
-      'service_wattplus', // Votre Service ID EmailJS
-      'template_lead', // Votre Template ID EmailJS
+      'service_wattplus',
+      'template_q11t4u8',
       templateParams,
-      'YOUR_PUBLIC_KEY' // Votre Public Key EmailJS
+      'nSGUhEBvdNcDlBp0F'
     );
 
     if (response.status !== 200) {
@@ -92,7 +104,10 @@ export const createClientAccount = async (email: string, password: string, userD
       userData.firstName,
       userData.lastName,
       userData.phone,
-      userData.postalCode
+      userData.postalCode,
+      userData.clientType,
+      userData.monthlyBill,
+      password
     );
 
     return { data: authData, error: null };
