@@ -1,20 +1,16 @@
 import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip } from 'recharts';
 import { motion } from 'framer-motion';
 
-interface PerformanceChartProps {
-  data: any[];
-}
+const data = [
+  { month: 'Jan', leads: 0, devis: 0, conversion: 0 },
+  { month: 'Fév', leads: 0, devis: 0, conversion: 0 },
+  { month: 'Mar', leads: 0, devis: 0, conversion: 0 },
+  { month: 'Avr', leads: 0, devis: 0, conversion: 0 },
+  { month: 'Mai', leads: 0, devis: 0, conversion: 0 },
+  { month: 'Juin', leads: 0, devis: 0, conversion: 0 },
+];
 
-const PerformanceChart = ({ data }: PerformanceChartProps) => {
-  const chartData = [
-    { month: 'Jan', leads: 0, devis: 0, conversion: 0 },
-    { month: 'Fév', leads: 0, devis: 0, conversion: 0 },
-    { month: 'Mar', leads: 0, devis: 0, conversion: 0 },
-    { month: 'Avr', leads: 0, devis: 0, conversion: 0 },
-    { month: 'Mai', leads: 0, devis: 0, conversion: 0 },
-    { month: 'Juin', leads: 0, devis: 0, conversion: 0 },
-  ];
-
+const PerformanceChart = () => {
   return (
     <motion.div 
       initial={{ opacity: 0, y: 20 }}
@@ -26,7 +22,7 @@ const PerformanceChart = ({ data }: PerformanceChartProps) => {
       </h2>
       <div className="h-[300px]">
         <ResponsiveContainer width="100%" height="100%">
-          <AreaChart data={chartData}>
+          <AreaChart data={data}>
             <defs>
               <linearGradient id="colorLeads" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="5%" stopColor="#1EAEDB" stopOpacity={0.3}/>

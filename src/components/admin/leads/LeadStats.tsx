@@ -1,71 +1,91 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Users, ClipboardCheck, CheckCircle, AlertCircle } from "lucide-react";
 import { Lead } from "@/types/crm";
-import { EuroIcon, Users, CheckCircle, XCircle } from "lucide-react";
 
 interface LeadStatsProps {
   leads: Lead[];
 }
 
 export const LeadStats = ({ leads }: LeadStatsProps) => {
-  const totalRevenue = leads.reduce((sum, lead) => {
-    const price = typeof lead.price === 'number' ? lead.price : 0;
-    return sum + price;
-  }, 0);
+  const totalLeads = leads.length;
   
-  const convertedLeads = leads.filter(lead => lead.status === "converted").length;
-  const lostLeads = leads.filter(lead => lead.status === "lost").length;
-  const conversionRate = leads.length > 0 ? (convertedLeads / leads.length * 100).toFixed(1) : "0";
+  // Calcul des leads complètement remplis (tous les champs obligatoires)
+  const completedLeads = leads.filter(lead => 
+    lead.firstname && 
+    lead.lastname && 
+    lead.email && 
+    lead.phone && 
+    lead.address && 
+    lead.postalcode && 
+    lead.city && 
+    lead.projectType
+  ).length;
+
+  // Pourcentage de complétion
+  const completionRate = totalLeads > 0 ? Math.round((completedLeads / totalLeads) * 100) : 0;
+
+  // Leads par statut
+  const leadsByStatus = leads.reduce((acc, lead) => {
+    acc[lead.status] = (acc[lead.status] || 0) + 1;
+    return acc;
+  }, {} as Record<string, number>);
 
   return (
-    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-      <Card className="bg-background/50 backdrop-blur-sm border-primary/20">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <Card className="bg-background/50 backdrop-blur-md border-primary/20">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Revenu Total</CardTitle>
-          <EuroIcon className="h-4 w-4 text-muted-foreground" />
+          <CardTitle className="text-sm font-medium">Total Leads</CardTitle>
+          <Users className="h-4 w-4 text-[#1EAEDB]" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">{totalRevenue.toLocaleString()} €</div>
+          <div className="text-2xl font-bold">{totalLeads}</div>
+        </CardContent>
+      </Card>
+
+      <Card className="bg-background/50 backdrop-blur-md border-primary/20">
+        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+          <CardTitle className="text-sm font-medium">Leads Complets</CardTitle>
+          <ClipboardCheck className="h-4 w-4 text-[#33C3F0]" />
+        </CardHeader>
+        <CardContent>
+          <div className="text-2xl font-bold">{completedLeads}</div>
           <p className="text-xs text-muted-foreground">
-            Revenu total généré
+            {completionRate}% de complétion
           </p>
         </CardContent>
       </Card>
 
-      <Card className="bg-background/50 backdrop-blur-sm border-primary/20">
+      <Card className="bg-background/50 backdrop-blur-md border-primary/20">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Leads Totaux</CardTitle>
-          <Users className="h-4 w-4 text-muted-foreground" />
+          <CardTitle className="text-sm font-medium">Leads Traités</CardTitle>
+          <CheckCircle className="h-4 w-4 text-emerald-500" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">{leads.length}</div>
+          <div className="text-2xl font-bold">
+            {(leadsByStatus.converted || 0) + (leadsByStatus.assigned || 0)}
+          </div>
           <p className="text-xs text-muted-foreground">
-            Nombre total de leads
+            Assignés ou convertis
           </p>
         </CardContent>
       </Card>
 
-      <Card className="bg-background/50 backdrop-blur-sm border-primary/20">
+      <Card className="bg-background/50 backdrop-blur-md border-primary/20">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Leads Convertis</CardTitle>
-          <CheckCircle className="h-4 w-4 text-muted-foreground" />
+          <CardTitle className="text-sm font-medium">À Traiter</CardTitle>
+          <AlertCircle className="h-4 w-4 text-[#0FA0CE]" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">{convertedLeads}</div>
+          <div className="text-2xl font-bold">
+            {(leadsByStatus.new || 0) + (leadsByStatus.contacted || 0)}
+          </div>
           <p className="text-xs text-muted-foreground">
-            Taux de conversion: {conversionRate}%
-          </p>
-        </CardContent>
-      </Card>
-
-      <Card className="bg-background/50 backdrop-blur-sm border-primary/20">
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Leads Perdus</CardTitle>
-          <XCircle className="h-4 w-4 text-muted-foreground" />
-        </CardHeader>
-        <CardContent>
-          <div className="text-2xl font-bold">{lostLeads}</div>
-          <p className="text-xs text-muted-foreground">
-            Leads non convertis
+            Nouveaux ou contactés
           </p>
         </CardContent>
       </Card>

@@ -2,13 +2,15 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { X } from "lucide-react";
 import { PurchasedLeads } from "../PurchasedLeads";
+import { Lead } from "@/types/crm";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 interface AllPurchasedLeadsProps {
+  leads: Lead[];
   onClose: () => void;
 }
 
-export const AllPurchasedLeads = ({ onClose }: AllPurchasedLeadsProps) => {
+export const AllPurchasedLeads = ({ leads, onClose }: AllPurchasedLeadsProps) => {
   const isMobile = useIsMobile();
 
   return (
@@ -26,7 +28,7 @@ export const AllPurchasedLeads = ({ onClose }: AllPurchasedLeadsProps) => {
         </Button>
       </div>
       <Card className="p-4 md:p-6">
-        <PurchasedLeads />
+        <PurchasedLeads leads={leads} />
       </Card>
     </div>
   );

@@ -1,4 +1,4 @@
-import { Lead } from "@/types/crm";
+import { Lead, LeadStatus } from "@/types/crm";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -30,7 +30,7 @@ interface LeadDialogsProps {
   setAssignDialogOpen: (open: boolean) => void;
   setDeleteDialogOpen: (open: boolean) => void;
   setSelectedInstallerId: (id: string) => void;
-  handleAssignSubmit: (leadId: string, installerId: string) => Promise<void>;
+  handleAssignSubmit: () => void;
   handleConfirmDelete: () => void;
 }
 
@@ -88,7 +88,7 @@ export const LeadDialogs = ({
               Annuler
             </Button>
             <Button
-              onClick={() => leadToAssign && selectedInstallerId ? handleAssignSubmit(leadToAssign.id, selectedInstallerId) : undefined}
+              onClick={handleAssignSubmit}
               disabled={!selectedInstallerId}
               className="bg-[#1EAEDB] hover:bg-[#0FA0CE]"
             >
@@ -101,10 +101,9 @@ export const LeadDialogs = ({
       <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
         <DialogContent className="bg-background/95 backdrop-blur-md border-[#33C3F0]/20">
           <DialogHeader>
-            <DialogTitle>Supprimer définitivement le lead</DialogTitle>
+            <DialogTitle>Supprimer le lead</DialogTitle>
             <DialogDescription>
-              Attention : Cette action est irréversible. Le lead sera définitivement supprimé de la base de données.
-              Êtes-vous sûr de vouloir continuer ?
+              Êtes-vous sûr de vouloir supprimer ce lead ? Cette action est irréversible.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
@@ -119,7 +118,7 @@ export const LeadDialogs = ({
               onClick={handleConfirmDelete}
               className="bg-red-500 hover:bg-red-600"
             >
-              Supprimer définitivement
+              Supprimer
             </Button>
           </DialogFooter>
         </DialogContent>

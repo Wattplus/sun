@@ -1,39 +1,20 @@
-import { Card } from "@/components/ui/card";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Lead } from "@/types/crm";
+import { motion } from "framer-motion";
 
-interface RecentActivityProps {
-  leads: Lead[];
-  installers: any[]; // Type this properly based on your installer type
-}
-
-const RecentActivity = ({ leads, installers }: RecentActivityProps) => {
+const RecentActivity = () => {
   return (
-    <div className="space-y-4">
-      <h3 className="text-lg font-semibold">Activité Récente</h3>
-      <ScrollArea className="h-[300px]">
-        <div className="space-y-4">
-          {leads.map((lead, index) => (
-            <div
-              key={lead.id || index}
-              className="flex items-center justify-between p-4 rounded-lg bg-card hover:bg-accent/50 transition-colors"
-            >
-              <div>
-                <p className="font-medium">
-                  {lead.firstname} {lead.lastname}
-                </p>
-                <p className="text-sm text-muted-foreground">
-                  {lead.email} - {lead.postalcode}
-                </p>
-              </div>
-              <span className="text-sm text-muted-foreground">
-                {new Date(lead.created_at).toLocaleDateString('fr-FR')}
-              </span>
-            </div>
-          ))}
-        </div>
-      </ScrollArea>
-    </div>
+    <motion.div 
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="rounded-xl bg-[#0B1221]/50 backdrop-blur-md border border-primary/20 p-6"
+    >
+      <h2 className="text-xl font-semibold mb-6 bg-gradient-to-r from-primary to-primary-light bg-clip-text text-transparent flex items-center justify-between">
+        Activité Récente
+        <span className="text-sm font-normal text-primary/70">Aucune activité</span>
+      </h2>
+      <div className="text-center text-white/70 py-8">
+        Aucune activité récente à afficher
+      </div>
+    </motion.div>
   );
 };
 

@@ -1,50 +1,67 @@
-import { Routes, Route } from "react-router-dom";
-import { Login } from "@/pages/Login";
-import { CreateSuperAdmin } from "@/pages/CreateSuperAdmin";
-import { PrivateRoute } from "@/components/PrivateRoute";
-import { Dashboard } from "@/pages/Dashboard";
-import { Profile } from "@/pages/Profile";
-import { Settings } from "@/pages/Settings";
-import { NotFound } from "@/pages/NotFound";
+import { Routes, Route, useNavigate } from "react-router-dom";
 import { Index } from "@/pages/Index";
+import { InstallerDashboard } from "@/components/installer/InstallerDashboard";
+import { InstallerLayout } from "@/components/installer/navigation/InstallerLayout";
+import { AccountPage } from "@/components/installer/account/AccountPage";
+import { MessagesPage } from "@/components/installer/messages/MessagesPage";
+import { ConversationPage } from "@/components/installer/messages/ConversationPage";
+import { SettingsPage } from "@/components/installer/settings/SettingsPage";
+import { ProfilePage } from "@/components/installer/profile/ProfilePage";
+import { AllAvailableLeads } from "@/components/installer/dashboard/leads/AllAvailableLeads";
+import { AllPurchasedLeads } from "@/components/installer/dashboard/leads/AllPurchasedLeads";
+import NotificationsPage from "@/components/admin/notifications/NotificationsPage";
+import { mockAvailableLeads } from "@/components/installer/dashboard/mockAvailableLeads";
+import { mockPurchasedLeads } from "@/components/installer/dashboard/mockPurchasedLeads";
 import AdminDashboard from "@/components/admin/AdminDashboard";
+import Admin from "@/pages/Admin";
 import StatisticsPage from "@/components/admin/statistics/StatisticsPage";
-import { LeadManagement } from "@/components/admin/LeadManagement";
+import LeadManagement from "@/components/admin/LeadManagement";
 import InstallerManagement from "@/components/admin/InstallerManagement";
 import { LeadMarketplace } from "@/components/admin/marketplace/LeadMarketplace";
-import NotificationsPage from "@/components/admin/notifications/NotificationsPage";
+import AdminSettingsPage from "@/components/admin/settings/SettingsPage";
 import AdminProfilePage from "@/components/admin/profile/ProfilePage";
-import SettingsPage from "@/components/admin/settings/SettingsPage";
+import { ThankYou } from "@/pages/ThankYou";
 
-export const AppRoutes = () => {
+export function AppRoutes() {
+  const navigate = useNavigate();
+  const handleClose = () => {
+    navigate("/espace-installateur");
+  };
+
   return (
     <Routes>
-      {/* Public routes */}
-      <Route path="/" element={<Index />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/admin/login" element={<Login isAdminLogin={true} />} />
-      <Route path="/create-super-admin" element={<CreateSuperAdmin />} />
-      
-      {/* Protected routes */}
-      <Route element={<PrivateRoute />}>
-        {/* Client routes */}
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/settings" element={<Settings />} />
-        
-        {/* Admin routes */}
-        <Route path="/admin" element={<AdminDashboard />} />
-        <Route path="/admin/statistics" element={<StatisticsPage />} />
-        <Route path="/admin/leads" element={<LeadManagement />} />
-        <Route path="/admin/installers" element={<InstallerManagement />} />
-        <Route path="/admin/marketplace" element={<LeadMarketplace />} />
-        <Route path="/admin/notifications" element={<NotificationsPage />} />
-        <Route path="/admin/profile" element={<AdminProfilePage />} />
-        <Route path="/admin/settings" element={<SettingsPage />} />
+      {/* Route admin en premier pour un accès direct */}
+      <Route path="/admin" element={<Admin />}>
+        <Route index element={<AdminDashboard />} />
+        <Route path="statistics" element={<StatisticsPage />} />
+        <Route path="leads" element={<LeadManagement />} />
+        <Route path="installers" element={<InstallerManagement />} />
+        <Route path="marketplace" element={<LeadMarketplace />} />
+        <Route path="notifications" element={<NotificationsPage />} />
+        <Route path="settings" element={<AdminSettingsPage />} />
+        <Route path="profile" element={<AdminProfilePage />} />
       </Route>
 
-      {/* Catch all route */}
-      <Route path="*" element={<NotFound />} />
+      <Route path="/" element={<Index />} />
+      <Route path="/thank-you" element={<ThankYou />} />
+      
+      <Route path="/espace-installateur" element={<InstallerLayout />}>
+        <Route index element={<InstallerDashboard />} />
+        <Route path="messages" element={<MessagesPage />} />
+        <Route path="messages/:id" element={<ConversationPage />} />
+        <Route 
+          path="leads/nouveaux" 
+          element={<AllAvailableLeads leads={mockAvailableLeads} onClose={handleClose} />} 
+        />
+        <Route 
+          path="leads/achetes" 
+          element={<AllPurchasedLeads leads={mockPurchasedLeads} onClose={handleClose} />} 
+        />
+        <Route path="rapports" element={<ProfilePage />} />
+        <Route path="parametres" element={<SettingsPage />} />
+        <Route path="notifications" element={<NotificationsPage />} />
+        <Route path="mon-compte" element={<AccountPage />} />
+      </Route>
     </Routes>
   );
-};
+}
