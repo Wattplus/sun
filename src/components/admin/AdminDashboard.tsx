@@ -1,12 +1,12 @@
 import { Activity, ArrowUpRight, FileText, LineChart, Target, TrendingUp, Users } from "lucide-react";
-import { StatCard } from "./StatCard";
-import { RecentActivity } from "./RecentActivity";
+import StatCard from "./StatCard";
+import RecentActivity from "./RecentActivity";
 import { AdminNavigation } from "./AdminNavigation";
 import { AdminBreadcrumb } from "./AdminBreadcrumb";
 import { motion } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase-client";
-import { PerformanceChart } from "./PerformanceChart";
+import PerformanceChart from "./PerformanceChart";
 
 const AdminDashboard = () => {
   const { data: leadsData } = useQuery({

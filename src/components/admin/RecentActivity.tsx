@@ -1,6 +1,11 @@
 import { motion } from "framer-motion";
 
-const RecentActivity = () => {
+interface RecentActivityProps {
+  leads: any[];
+  installers: any[];
+}
+
+const RecentActivity = ({ leads, installers }: RecentActivityProps) => {
   return (
     <motion.div 
       initial={{ opacity: 0, y: 20 }}
