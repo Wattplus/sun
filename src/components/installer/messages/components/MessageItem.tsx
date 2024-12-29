@@ -2,7 +2,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
-import { Clock, User, Star, CheckCircle2 } from "lucide-react";
+import { Clock, User, Star, CheckCircle2, Phone, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { motion } from "framer-motion";
@@ -13,6 +13,8 @@ interface MessageItemProps {
     sender: {
       name: string;
       type: 'admin' | 'client' | 'installer';
+      email?: string;
+      phone?: string;
     };
     content: string;
     date: string;
@@ -89,6 +91,22 @@ export const MessageItem = ({ message, selected, onSelect, onToggleStar }: Messa
             <p className="text-xs md:text-sm text-muted-foreground leading-relaxed line-clamp-2 md:line-clamp-none">
               {message.content}
             </p>
+            {(message.sender.email || message.sender.phone) && (
+              <div className="mt-2 flex flex-wrap gap-3 text-xs text-muted-foreground">
+                {message.sender.email && (
+                  <div className="flex items-center gap-1">
+                    <Mail className="h-3 w-3" />
+                    {message.sender.email}
+                  </div>
+                )}
+                {message.sender.phone && (
+                  <div className="flex items-center gap-1">
+                    <Phone className="h-3 w-3" />
+                    {message.sender.phone}
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         </div>
       </Card>
