@@ -5,8 +5,30 @@ import RecentActivity from "./RecentActivity";
 import { AdminNavigation } from "./AdminNavigation";
 import { AdminBreadcrumb } from "./AdminBreadcrumb";
 import { motion } from "framer-motion";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/lib/supabase-client";
 
 const AdminDashboard = () => {
+  const { data: leadsCount } = useQuery({
+    queryKey: ['leadsCount'],
+    queryFn: async () => {
+      const { count } = await supabase
+        .from('leads')
+        .select('*', { count: 'exact', head: true });
+      return count || 0;
+    }
+  });
+
+  const { data: installersCount } = useQuery({
+    queryKey: ['installersCount'],
+    queryFn: async () => {
+      const { count } = await supabase
+        .from('installers')
+        .select('*', { count: 'exact', head: true });
+      return count || 0;
+    }
+  });
+
   const container = {
     hidden: { opacity: 0 },
     show: {
@@ -54,29 +76,29 @@ const AdminDashboard = () => {
           >
             <motion.div variants={item}>
               <StatCard
-                title="Visiteurs"
-                value="0"
-                change="0% ce mois"
+                title="Leads Totaux"
+                value={leadsCount?.toString() || "0"}
+                change="+0% ce mois"
                 icon={Users}
                 trendIcon={TrendingUp}
-                trendColor="yellow"
+                trendColor="green"
               />
             </motion.div>
             <motion.div variants={item}>
               <StatCard
-                title="Devis générés"
-                value="0"
-                change="0% cette semaine"
+                title="Installateurs"
+                value={installersCount?.toString() || "0"}
+                change="+0% cette semaine"
                 icon={FileText}
                 trendIcon={ArrowUpRight}
-                trendColor="yellow"
+                trendColor="green"
               />
             </motion.div>
             <motion.div variants={item}>
               <StatCard
-                title="Taux de conversion"
+                title="Taux de Conversion"
                 value="0%"
-                change="0% ce mois"
+                change="+0% ce mois"
                 icon={Target}
                 trendIcon={LineChart}
                 trendColor="yellow"
@@ -84,9 +106,9 @@ const AdminDashboard = () => {
             </motion.div>
             <motion.div variants={item}>
               <StatCard
-                title="Leads qualifiés"
+                title="Leads Qualifiés"
                 value="0"
-                change="0% cette semaine"
+                change="+0% cette semaine"
                 icon={Activity}
                 trendIcon={TrendingUp}
                 trendColor="yellow"
