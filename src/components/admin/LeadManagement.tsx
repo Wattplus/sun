@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Lead, LeadStatus, mockLeads } from "@/types/crm";
+import { Lead, LeadStatus } from "@/types/crm";
 import { useToast } from "@/components/ui/use-toast";
 import { LeadTable } from "./leads/LeadTable";
 import { LeadHeader } from "./leads/LeadHeader";
@@ -7,6 +7,8 @@ import { LeadStats } from "./leads/LeadStats";
 import { AdminBreadcrumb } from "./AdminBreadcrumb";
 import { LeadDialogs } from "./leads/LeadDialogs";
 import { mockInstallers } from "./InstallerManagement";
+
+export const mockLeads: Lead[] = [];
 
 const LeadManagement = () => {
   const [leads, setLeads] = useState<Lead[]>(mockLeads);
@@ -124,7 +126,7 @@ const LeadManagement = () => {
         <LeadHeader
           searchTerm={searchTerm}
           onSearchChange={setSearchTerm}
-          onExportClick={exportToCSV}
+          onExportClick={() => console.log("Exporting to CSV...")}
           onNewLeadClick={() => {
             setSelectedLead(null);
             setEditDialogOpen(true);
