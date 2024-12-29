@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
+import emailjs from '@emailjs/browser';
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
@@ -9,34 +10,28 @@ if (!supabaseUrl || !supabaseKey) {
 
 export const supabase = createClient(supabaseUrl, supabaseKey);
 
-// Fonction pour envoyer un email via la fonction Edge
+// Fonction pour envoyer un email via EmailJS
 export const sendEmail = async (email: string, firstName: string, password: string, subject?: string, html?: string) => {
   try {
     console.log('Tentative d\'envoi d\'email à:', email);
     
-    const { error } = await supabase.functions.invoke('send-email', {
-      body: { 
-        email, 
-        firstName, 
-        password, 
-        subject: subject || 'Bienvenue chez WattPlus - Vos identifiants de connexion',
-        html: html || `
-          <h1>Bienvenue ${firstName} !</h1>
-          <p>Votre compte a été créé avec succès.</p>
-          <p>Voici vos identifiants de connexion :</p>
-          <ul>
-            <li>Email : ${email}</li>
-            <li>Mot de passe : ${password}</li>
-          </ul>
-          <p>Nous vous recommandons de changer votre mot de passe lors de votre première connexion.</p>
-          <p>Vous pouvez maintenant vous connecter à votre espace client pour suivre l'avancement de votre projet.</p>
-        `
-      }
-    });
+    const templateParams = {
+      to_email: email,
+      to_name: firstName,
+      user_email: email,
+      user_password: password,
+      subject: subject || 'Bienvenue chez WattPlus - Vos identifiants de connexion'
+    };
 
-    if (error) {
-      console.error('Erreur lors de l\'envoi de l\'email:', error);
-      throw error;
+    const response = await emailjs.send(
+      'service_wattplus', // Votre Service ID EmailJS
+      'template_welcome', // Votre Template ID EmailJS
+      templateParams,
+      'YOUR_PUBLIC_KEY' // Votre Public Key EmailJS
+    );
+
+    if (response.status !== 200) {
+      throw new Error('Erreur lors de l\'envoi de l\'email');
     }
     
     console.log('Email envoyé avec succès à:', email);
