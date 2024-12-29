@@ -22,6 +22,7 @@ export const AppRoutes = () => {
       {/* Public routes */}
       <Route path="/" element={<Index />} />
       <Route path="/login" element={<Login />} />
+      <Route path="/admin/login" element={<Login />} />
       <Route path="/create-super-admin" element={<CreateSuperAdmin />} />
       
       {/* Protected routes */}
