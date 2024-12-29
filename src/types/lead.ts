@@ -17,10 +17,6 @@ export interface Lead {
   city?: string;
   assignedto?: string;
   purchasedby?: string[];
-  projectType?: string;
-  price?: number;
-  
-  // Nouveaux champs
   quality_score?: number;
   roof_surface?: number;
   roof_type?: string;
@@ -33,4 +29,5 @@ export interface Lead {
   source?: string;
   assigned_installer?: string;
   exclusive_until?: string;
+  price?: number;
 }

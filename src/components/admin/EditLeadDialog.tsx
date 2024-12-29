@@ -45,7 +45,7 @@ export function EditLeadDialog({ lead, open, onOpenChange, onSave }: EditLeadDia
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[500px]">
+      <DialogContent className="sm:max-w-[500px] max-h-[90vh] overflow-y-auto">
         <form onSubmit={handleSubmit}>
           <DialogHeader>
             <DialogTitle>Modifier le lead</DialogTitle>
@@ -54,6 +54,22 @@ export function EditLeadDialog({ lead, open, onOpenChange, onSave }: EditLeadDia
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
+            <div>
+              <label htmlFor="clienttype" className="text-sm font-medium">Type de client</label>
+              <Select
+                value={formData.clienttype}
+                onValueChange={(value) => setFormData({ ...formData, clienttype: value })}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Sélectionnez le type de client" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="particulier">Particulier</SelectItem>
+                  <SelectItem value="professionnel">Professionnel</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label htmlFor="firstname" className="text-sm font-medium">Prénom</label>
@@ -118,6 +134,71 @@ export function EditLeadDialog({ lead, open, onOpenChange, onSave }: EditLeadDia
                   onChange={(e) => setFormData({ ...formData, city: e.target.value })}
                 />
               </div>
+            </div>
+
+            <div>
+              <label htmlFor="monthlybill" className="text-sm font-medium">Facture mensuelle (€)</label>
+              <Input
+                id="monthlybill"
+                value={formData.monthlybill || ""}
+                onChange={(e) => setFormData({ ...formData, monthlybill: e.target.value })}
+              />
+            </div>
+
+            <div>
+              <label htmlFor="property_type" className="text-sm font-medium">Type de propriété</label>
+              <Select
+                value={formData.property_type}
+                onValueChange={(value) => setFormData({ ...formData, property_type: value })}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Sélectionnez le type de propriété" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="maison">Maison individuelle</SelectItem>
+                  <SelectItem value="appartement">Appartement</SelectItem>
+                  <SelectItem value="local_commercial">Local commercial</SelectItem>
+                  <SelectItem value="terrain">Terrain</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div>
+              <label htmlFor="roof_type" className="text-sm font-medium">Type de toiture</label>
+              <Select
+                value={formData.roof_type}
+                onValueChange={(value) => setFormData({ ...formData, roof_type: value })}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Sélectionnez le type de toiture" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="tuiles">Tuiles</SelectItem>
+                  <SelectItem value="ardoises">Ardoises</SelectItem>
+                  <SelectItem value="tole">Tôle</SelectItem>
+                  <SelectItem value="terrasse">Terrasse</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div>
+              <label htmlFor="roof_surface" className="text-sm font-medium">Surface de toiture (m²)</label>
+              <Input
+                id="roof_surface"
+                type="number"
+                value={formData.roof_surface || ""}
+                onChange={(e) => setFormData({ ...formData, roof_surface: parseFloat(e.target.value) })}
+              />
+            </div>
+
+            <div>
+              <label htmlFor="annual_consumption" className="text-sm font-medium">Consommation annuelle (kWh)</label>
+              <Input
+                id="annual_consumption"
+                type="number"
+                value={formData.annual_consumption || ""}
+                onChange={(e) => setFormData({ ...formData, annual_consumption: parseInt(e.target.value) })}
+              />
             </div>
 
             <div>
