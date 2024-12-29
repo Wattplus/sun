@@ -1,6 +1,9 @@
 import { createLead } from "@/lib/supabase-client";
 import emailjs from '@emailjs/browser';
 
+// Initialize EmailJS with your public key
+emailjs.init("YOUR_PUBLIC_KEY"); // Replace this with your actual public key
+
 export const handleFormSubmission = async (
   formData: {
     clientType: string;
@@ -50,17 +53,16 @@ export const handleFormSubmission = async (
         password: tempPassword
       };
 
-      await emailjs.send(
-        'service_id', // Replace with your EmailJS service ID
-        'template_id', // Replace with your EmailJS template ID
+      const response = await emailjs.send(
+        import.meta.env.VITE_EMAILJS_SERVICE_ID,
+        import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
         emailParams,
-        'public_key' // Replace with your EmailJS public key
+        import.meta.env.VITE_EMAILJS_PUBLIC_KEY
       );
       
-      console.log('Confirmation email sent successfully');
+      console.log('Confirmation email sent successfully', response);
     } catch (emailError) {
       console.error('Error sending confirmation email:', emailError);
-      // Don't block the form submission if email fails
       toast({
         title: "Attention",
         description: "Votre demande a été enregistrée mais l'email de confirmation n'a pas pu être envoyé.",
