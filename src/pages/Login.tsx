@@ -14,21 +14,25 @@ export const Login = ({ isAdminLogin = false }: LoginProps) => {
   const { toast } = useToast();
 
   useEffect(() => {
-    const checkSession = async () => {
-      try {
-        const { data: { session } } = await supabase.auth.getSession();
-        if (session) {
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange(async (event, session) => {
+      if (event === "SIGNED_IN" && session) {
+        try {
           // Vérifier si l'utilisateur est un admin
-          const { data: profile } = await supabase
+          const { data: profile, error } = await supabase
             .from('profiles')
             .select('role')
             .eq('id', session.user.id)
             .single();
 
+          if (error) throw error;
+
           if (isAdminLogin) {
             if (profile?.role === 'admin' || profile?.role === 'super_admin') {
               navigate("/admin");
             } else {
+              // Si ce n'est pas un admin, déconnexion et redirection
               await supabase.auth.signOut();
               toast({
                 title: "Accès refusé",
@@ -38,44 +42,16 @@ export const Login = ({ isAdminLogin = false }: LoginProps) => {
               navigate("/");
             }
           } else {
+            // Pour une connexion normale, redirection vers le dashboard
             navigate("/dashboard");
           }
-        }
-      } catch (error) {
-        console.error('Auth check error:', error);
-        toast({
-          title: "Erreur",
-          description: "Une erreur est survenue lors de la vérification de l'authentification.",
-          variant: "destructive",
-        });
-      }
-    };
-
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (event, session) => {
-      if (event === "SIGNED_IN" && session) {
-        // Vérifier si l'utilisateur est un admin
-        const { data: profile } = await supabase
-          .from('profiles')
-          .select('role')
-          .eq('id', session.user.id)
-          .single();
-
-        if (isAdminLogin) {
-          if (profile?.role === 'admin' || profile?.role === 'super_admin') {
-            navigate("/admin");
-          } else {
-            await supabase.auth.signOut();
-            toast({
-              title: "Accès refusé",
-              description: "Vous n'avez pas les droits d'administration nécessaires.",
-              variant: "destructive",
-            });
-            navigate("/");
-          }
-        } else {
-          navigate("/dashboard");
+        } catch (error) {
+          console.error('Auth check error:', error);
+          toast({
+            title: "Erreur",
+            description: "Une erreur est survenue lors de la vérification de l'authentification.",
+            variant: "destructive",
+          });
         }
       }
     });
