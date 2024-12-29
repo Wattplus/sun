@@ -2,8 +2,8 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Lead, LeadStatus } from "@/types/crm";
-import { Edit, Trash2, UserPlus, Euro, Mail, Phone, MapPin } from "lucide-react";
+import { Lead, LeadStatus } from "@/types/lead";
+import { Edit, Trash2, UserPlus, Euro, Mail, Phone, MapPin, Shield } from "lucide-react";
 import { LeadPurchaseInfo } from "./LeadPurchaseInfo";
 
 interface LeadTableProps {
@@ -23,6 +23,19 @@ export const LeadTable = ({
   getStatusColor,
   getStatusText,
 }: LeadTableProps) => {
+  const getVerificationBadge = (status?: string) => {
+    switch (status) {
+      case 'verified':
+        return <Badge className="bg-green-500/10 text-green-600">Vérifié</Badge>;
+      case 'invalid':
+        return <Badge className="bg-red-500/10 text-red-600">Invalide</Badge>;
+      case 'duplicate':
+        return <Badge className="bg-yellow-500/10 text-yellow-600">Doublon</Badge>;
+      default:
+        return <Badge className="bg-blue-500/10 text-blue-600">En attente</Badge>;
+    }
+  };
+
   return (
     <ScrollArea className="h-[calc(100vh-300px)] rounded-md">
       <Table>
@@ -33,7 +46,8 @@ export const LeadTable = ({
             <TableHead className="text-primary">Coordonnées</TableHead>
             <TableHead className="text-primary">Localisation</TableHead>
             <TableHead className="text-primary">Facture mensuelle</TableHead>
-            <TableHead className="text-primary">Revenus générés</TableHead>
+            <TableHead className="text-primary">Score</TableHead>
+            <TableHead className="text-primary">Vérification</TableHead>
             <TableHead className="text-primary">Statut</TableHead>
             <TableHead className="text-primary">Actions</TableHead>
           </TableRow>
@@ -92,7 +106,21 @@ export const LeadTable = ({
                 </div>
               </TableCell>
               <TableCell>
-                <LeadPurchaseInfo lead={lead} />
+                {lead.quality_score !== null && lead.quality_score !== undefined && (
+                  <Badge className={`
+                    ${lead.quality_score >= 80 ? 'bg-green-500/10 text-green-600' : 
+                      lead.quality_score >= 50 ? 'bg-yellow-500/10 text-yellow-600' : 
+                      'bg-red-500/10 text-red-600'}
+                  `}>
+                    {lead.quality_score}/100
+                  </Badge>
+                )}
+              </TableCell>
+              <TableCell>
+                <div className="flex items-center gap-2">
+                  <Shield className="h-4 w-4 text-primary" />
+                  {getVerificationBadge(lead.verification_status)}
+                </div>
               </TableCell>
               <TableCell>
                 <Badge className={getStatusColor(lead.status)}>

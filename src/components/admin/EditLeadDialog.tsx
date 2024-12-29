@@ -27,7 +27,7 @@ interface EditLeadDialogProps {
 }
 
 export function EditLeadDialog({ lead, open, onOpenChange, onSave }: EditLeadDialogProps) {
-  const [formData, setFormData] = useState<Partial<Lead>>(lead || {})
+  const [formData, setFormData] = useState<Partial<Lead>>(lead || {});
 
   useEffect(() => {
     if (lead) {
@@ -56,9 +56,7 @@ export function EditLeadDialog({ lead, open, onOpenChange, onSave }: EditLeadDia
           <div className="grid gap-4 py-4">
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label htmlFor="firstname" className="text-sm font-medium">
-                  Prénom
-                </label>
+                <label htmlFor="firstname" className="text-sm font-medium">Prénom</label>
                 <Input
                   id="firstname"
                   value={formData.firstname || ""}
@@ -66,9 +64,7 @@ export function EditLeadDialog({ lead, open, onOpenChange, onSave }: EditLeadDia
                 />
               </div>
               <div>
-                <label htmlFor="lastname" className="text-sm font-medium">
-                  Nom
-                </label>
+                <label htmlFor="lastname" className="text-sm font-medium">Nom</label>
                 <Input
                   id="lastname"
                   value={formData.lastname || ""}
@@ -76,10 +72,9 @@ export function EditLeadDialog({ lead, open, onOpenChange, onSave }: EditLeadDia
                 />
               </div>
             </div>
+            
             <div>
-              <label htmlFor="email" className="text-sm font-medium">
-                Email
-              </label>
+              <label htmlFor="email" className="text-sm font-medium">Email</label>
               <Input
                 id="email"
                 type="email"
@@ -87,31 +82,28 @@ export function EditLeadDialog({ lead, open, onOpenChange, onSave }: EditLeadDia
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
               />
             </div>
+
             <div>
-              <label htmlFor="phone" className="text-sm font-medium">
-                Téléphone
-              </label>
+              <label htmlFor="phone" className="text-sm font-medium">Téléphone</label>
               <Input
                 id="phone"
                 value={formData.phone || ""}
                 onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
               />
             </div>
+
             <div>
-              <label htmlFor="address" className="text-sm font-medium">
-                Adresse
-              </label>
+              <label htmlFor="address" className="text-sm font-medium">Adresse</label>
               <Input
                 id="address"
                 value={formData.address || ""}
                 onChange={(e) => setFormData({ ...formData, address: e.target.value })}
               />
             </div>
+
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label htmlFor="postalcode" className="text-sm font-medium">
-                  Code postal
-                </label>
+                <label htmlFor="postalcode" className="text-sm font-medium">Code postal</label>
                 <Input
                   id="postalcode"
                   value={formData.postalcode || ""}
@@ -119,9 +111,7 @@ export function EditLeadDialog({ lead, open, onOpenChange, onSave }: EditLeadDia
                 />
               </div>
               <div>
-                <label htmlFor="city" className="text-sm font-medium">
-                  Ville
-                </label>
+                <label htmlFor="city" className="text-sm font-medium">Ville</label>
                 <Input
                   id="city"
                   value={formData.city || ""}
@@ -129,27 +119,39 @@ export function EditLeadDialog({ lead, open, onOpenChange, onSave }: EditLeadDia
                 />
               </div>
             </div>
+
             <div>
-              <label htmlFor="projectType" className="text-sm font-medium">
-                Type de projet photovoltaïque
-              </label>
+              <label htmlFor="quality_score" className="text-sm font-medium">Score qualité</label>
+              <Input
+                id="quality_score"
+                type="number"
+                min="0"
+                max="100"
+                value={formData.quality_score || ""}
+                onChange={(e) => setFormData({ ...formData, quality_score: parseInt(e.target.value) })}
+              />
+            </div>
+
+            <div>
+              <label htmlFor="verification_status" className="text-sm font-medium">Statut de vérification</label>
               <Select
-                value={formData.projectType}
-                onValueChange={(value) => setFormData({ ...formData, projectType: value })}
+                value={formData.verification_status}
+                onValueChange={(value) => setFormData({ ...formData, verification_status: value })}
               >
                 <SelectTrigger>
-                  <SelectValue placeholder="Sélectionnez le type de projet" />
+                  <SelectValue placeholder="Sélectionnez un statut" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="residential">Résidentiel</SelectItem>
-                  <SelectItem value="professional">Professionnel / Industriel</SelectItem>
+                  <SelectItem value="pending">En attente</SelectItem>
+                  <SelectItem value="verified">Vérifié</SelectItem>
+                  <SelectItem value="invalid">Invalide</SelectItem>
+                  <SelectItem value="duplicate">Doublon</SelectItem>
                 </SelectContent>
               </Select>
             </div>
+
             <div>
-              <label htmlFor="status" className="text-sm font-medium">
-                Statut
-              </label>
+              <label htmlFor="status" className="text-sm font-medium">Statut</label>
               <Select
                 value={formData.status}
                 onValueChange={(value: LeadStatus) => setFormData({ ...formData, status: value })}
@@ -167,10 +169,9 @@ export function EditLeadDialog({ lead, open, onOpenChange, onSave }: EditLeadDia
                 </SelectContent>
               </Select>
             </div>
+
             <div>
-              <label htmlFor="notes" className="text-sm font-medium">
-                Notes
-              </label>
+              <label htmlFor="notes" className="text-sm font-medium">Notes</label>
               <Textarea
                 id="notes"
                 value={formData.notes || ""}
@@ -184,5 +185,5 @@ export function EditLeadDialog({ lead, open, onOpenChange, onSave }: EditLeadDia
         </form>
       </DialogContent>
     </Dialog>
-  )
+  );
 }
