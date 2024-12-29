@@ -15,6 +15,8 @@ import { AllPurchasedLeads } from "@/components/installer/dashboard/leads/AllPur
 import NotificationsPage from "@/components/admin/notifications/NotificationsPage";
 import { mockAvailableLeads } from "@/components/installer/dashboard/mockAvailableLeads";
 import { mockPurchasedLeads } from "@/components/installer/dashboard/mockPurchasedLeads";
+import AdminDashboard from "@/components/admin/AdminDashboard";
+import Admin from "@/pages/Admin";
 
 export function AppRoutes() {
   const navigate = useNavigate();
@@ -28,6 +30,10 @@ export function AppRoutes() {
       <Route path="/client/*" element={<ClientPortal />} />
       <Route path="/directory" element={<InstallerDirectory />} />
       <Route path="/directory/:id" element={<InstallerProfile />} />
+      <Route path="/admin" element={<Admin />}>
+        <Route index element={<AdminDashboard />} />
+        <Route path="notifications" element={<NotificationsPage />} />
+      </Route>
       <Route path="/espace-installateur" element={<InstallerLayout />}>
         <Route index element={<InstallerDashboard />} />
         <Route path="messages" element={<MessagesPage />} />
