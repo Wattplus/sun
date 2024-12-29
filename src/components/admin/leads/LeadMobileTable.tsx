@@ -2,8 +2,7 @@ import { Lead, LeadStatus } from "@/types/crm";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Edit, Trash2, UserPlus, Phone, Mail, Euro, MapPin } from "lucide-react";
-import { LeadPurchaseInfo } from "./LeadPurchaseInfo";
+import { Edit, Trash2, UserPlus, Phone, Mail, Euro, MapPin, Users } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface LeadMobileTableProps {
@@ -23,6 +22,11 @@ export const LeadMobileTable = ({
   getStatusColor,
   getStatusText,
 }: LeadMobileTableProps) => {
+  const calculateRevenue = (lead: Lead) => {
+    const purchaseCount = lead.purchasedby?.length || 0;
+    return purchaseCount * 25; // 25€ par achat
+  };
+
   return (
     <ScrollArea className="h-[calc(100vh-300px)]">
       <div className="space-y-3 pb-4">
@@ -52,7 +56,17 @@ export const LeadMobileTable = ({
                     <Euro className="h-3.5 w-3.5 text-primary" />
                     <span className="text-sm font-medium text-primary">{lead.monthlybill}€/mois</span>
                   </div>
-                  <LeadPurchaseInfo lead={lead} />
+                  <div className="flex flex-col items-end gap-1">
+                    <div className="flex items-center gap-1.5">
+                      <Users className="h-3.5 w-3.5 text-primary" />
+                      <span className="text-sm">
+                        {lead.purchasedby?.length || 0} installateur{lead.purchasedby?.length !== 1 ? 's' : ''}
+                      </span>
+                    </div>
+                    <Badge variant="outline" className="bg-emerald-500/10 text-emerald-600">
+                      {calculateRevenue(lead)}€
+                    </Badge>
+                  </div>
                 </div>
               </div>
 
@@ -77,6 +91,9 @@ export const LeadMobileTable = ({
                   <Badge variant="outline" className="bg-primary/10">
                     {lead.postalcode}
                   </Badge>
+                  {lead.city && (
+                    <span className="text-sm">{lead.city}</span>
+                  )}
                 </div>
               </div>
 

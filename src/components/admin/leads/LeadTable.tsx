@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Lead, LeadStatus } from "@/types/crm";
-import { Edit, Trash2, UserPlus, Euro, Mail, Phone } from "lucide-react";
+import { Edit, Trash2, UserPlus, Euro, Mail, Phone, MapPin, Users } from "lucide-react";
 import { LeadPurchaseInfo } from "./LeadPurchaseInfo";
 
 interface LeadTableProps {
@@ -23,6 +23,11 @@ export const LeadTable = ({
   getStatusColor,
   getStatusText,
 }: LeadTableProps) => {
+  const calculateRevenue = (lead: Lead) => {
+    const purchaseCount = lead.purchasedby?.length || 0;
+    return purchaseCount * 25; // 25€ par achat
+  };
+
   return (
     <ScrollArea className="h-[calc(100vh-300px)] rounded-md border border-[#33C3F0]/20">
       <Table>
@@ -31,8 +36,9 @@ export const LeadTable = ({
             <TableHead>Type de client</TableHead>
             <TableHead>Contact</TableHead>
             <TableHead>Coordonnées</TableHead>
-            <TableHead>Code postal</TableHead>
+            <TableHead>Localisation</TableHead>
             <TableHead>Facture mensuelle</TableHead>
+            <TableHead>Revenus générés</TableHead>
             <TableHead>Statut</TableHead>
             <TableHead>Actions</TableHead>
           </TableRow>
@@ -74,17 +80,38 @@ export const LeadTable = ({
                 </div>
               </TableCell>
               <TableCell>
-                <Badge variant="outline" className="bg-primary/10">
-                  {lead.postalcode}
-                </Badge>
+                <div className="flex items-center gap-2">
+                  <MapPin className="h-4 w-4 text-primary" />
+                  <Badge variant="outline" className="bg-primary/10">
+                    {lead.postalcode}
+                  </Badge>
+                </div>
+                {lead.city && (
+                  <span className="text-sm text-muted-foreground mt-1 block">
+                    {lead.city}
+                  </span>
+                )}
               </TableCell>
               <TableCell>
                 <div className="flex items-center gap-2">
                   <Euro className="h-4 w-4 text-green-500" />
-                  <span className="font-medium">{lead.monthlybill}€</span>
+                  <span className="font-medium">{lead.monthlybill}€/mois</span>
                 </div>
-                <div className="mt-1">
-                  <LeadPurchaseInfo lead={lead} />
+              </TableCell>
+              <TableCell>
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2">
+                    <Users className="h-4 w-4 text-primary" />
+                    <span className="text-sm">
+                      {lead.purchasedby?.length || 0} installateur{lead.purchasedby?.length !== 1 ? 's' : ''}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Euro className="h-4 w-4 text-emerald-500" />
+                    <Badge variant="outline" className="bg-emerald-500/10 text-emerald-600">
+                      {calculateRevenue(lead)}€
+                    </Badge>
+                  </div>
                 </div>
               </TableCell>
               <TableCell>
