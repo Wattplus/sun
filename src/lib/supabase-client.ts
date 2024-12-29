@@ -68,12 +68,13 @@ export const createClientAccount = async (email: string, password: string, userD
     console.log('Checking if user exists:', email);
     
     // Vérifier si l'utilisateur existe déjà dans auth
-    const { data: existingUser } = await supabase.auth.signInWithPassword({
+    const { data: { user: existingUser }, error: signInError } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
 
-    if (existingUser?.user) {
+    // Si la connexion réussit, l'utilisateur existe déjà
+    if (existingUser) {
       console.log('User already exists, returning error');
       return { 
         error: { 
@@ -82,7 +83,13 @@ export const createClientAccount = async (email: string, password: string, userD
       };
     }
 
-    // Si l'utilisateur n'existe pas, on le crée
+    // Si l'erreur n'est pas "invalid_credentials", c'est une autre erreur qu'il faut gérer
+    if (signInError && !signInError.message.includes('Invalid login credentials')) {
+      console.error('Unexpected error during sign in check:', signInError);
+      return { error: signInError };
+    }
+
+    // À ce stade, nous savons que l'utilisateur n'existe pas, on peut créer le compte
     console.log('Creating new user account');
     const { data: authData, error: signUpError } = await supabase.auth.signUp({
       email,
@@ -98,6 +105,14 @@ export const createClientAccount = async (email: string, password: string, userD
     });
 
     if (signUpError) {
+      // Si l'erreur indique que l'utilisateur existe déjà
+      if (signUpError.message.includes('User already registered')) {
+        return { 
+          error: { 
+            message: "Un compte existe déjà avec cet email. Veuillez vous connecter ou utiliser une autre adresse email." 
+          }
+        };
+      }
       console.error('Error creating auth account:', signUpError);
       return { error: signUpError };
     }
