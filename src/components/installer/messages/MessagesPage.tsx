@@ -18,7 +18,7 @@ export const MessagesPage = () => {
           <div>
             <h1 className="text-3xl font-bold">Messages</h1>
             <p className="text-muted-foreground">
-              Gérez vos conversations et suivez vos échanges
+              Gérez vos conversations et suivez vos échanges avec vos clients et l'équipe support
             </p>
           </div>
         </div>
