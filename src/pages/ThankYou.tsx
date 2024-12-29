@@ -20,6 +20,9 @@ export function ThankYou() {
     // Initialize EmailJS with your public key
     emailjs.init("3T3wauk7lJcCeW1M-");
 
+    // Generate a temporary password
+    const tempPassword = Math.random().toString(36).slice(-8);
+
     // Send email using the specified template and service
     emailjs.send(
       "service_611ohbh",
@@ -33,6 +36,7 @@ export function ThankYou() {
         postal_code: leadData.postalCode,
         monthly_bill: leadData.monthlyBill,
         date: new Date().toLocaleDateString('fr-FR'),
+        password: tempPassword
       }
     ).then(
       (result) => {
