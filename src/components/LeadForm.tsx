@@ -18,7 +18,6 @@ interface FormData {
   phone: string;
   monthlyBill: string;
   postalCode: string;
-  password: string;
 }
 
 export const LeadForm = () => {
@@ -33,7 +32,6 @@ export const LeadForm = () => {
     phone: "",
     monthlyBill: "",
     postalCode: "",
-    password: ""
   });
 
   const handleFieldChange = (field: keyof FormData, value: string) => {
@@ -43,15 +41,28 @@ export const LeadForm = () => {
     }));
   };
 
+  const generateSecurePassword = () => {
+    const length = 12;
+    const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*";
+    let password = "";
+    for (let i = 0; i < length; i++) {
+      const randomIndex = Math.floor(Math.random() * charset.length);
+      password += charset[randomIndex];
+    }
+    return password;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
 
     try {
-      // Créer le compte client
+      const generatedPassword = generateSecurePassword();
+      
+      // Créer le compte client avec le mot de passe généré
       const { error: accountError } = await createClientAccount(
         formData.email,
-        formData.password,
+        generatedPassword,
         {
           firstName: formData.firstName,
           lastName: formData.lastName,
@@ -68,7 +79,7 @@ export const LeadForm = () => {
 
       toast({
         title: "Compte créé avec succès",
-        description: "Vous allez être redirigé vers votre espace client.",
+        description: "Un email contenant vos identifiants de connexion vous a été envoyé.",
       });
 
       // Rediriger vers l'espace client
@@ -120,17 +131,6 @@ export const LeadForm = () => {
                 value={formData.postalCode}
                 onChange={(e) => handleFieldChange("postalCode", e.target.value)}
                 placeholder="Ex: 75001"
-                required
-                lightMode
-              />
-
-              <FormField
-                label="Mot de passe"
-                id="password"
-                type="password"
-                value={formData.password}
-                onChange={(e) => handleFieldChange("password", e.target.value)}
-                placeholder="Choisissez un mot de passe"
                 required
                 lightMode
               />

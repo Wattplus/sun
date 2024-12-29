@@ -27,8 +27,8 @@ export const createClientAccount = async (email: string, password: string, userD
 
     if (authError) throw authError;
 
-    // Envoyer un email de bienvenue
-    await sendWelcomeEmail(email, userData.firstName);
+    // Envoyer un email de bienvenue avec le mot de passe
+    await sendWelcomeEmail(email, userData.firstName, password);
 
     return { data: authData, error: null };
   } catch (error) {
@@ -66,10 +66,10 @@ export const createLead = async (leadData: any) => {
 };
 
 // Fonction pour envoyer l'email de bienvenue
-const sendWelcomeEmail = async (email: string, firstName: string) => {
+const sendWelcomeEmail = async (email: string, firstName: string, password: string) => {
   try {
     const { error } = await supabase.functions.invoke('send-welcome-email', {
-      body: { email, firstName }
+      body: { email, firstName, password }
     });
 
     if (error) throw error;

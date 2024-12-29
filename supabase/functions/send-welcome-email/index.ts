@@ -12,7 +12,7 @@ serve(async (req) => {
   }
 
   try {
-    const { email, firstName } = await req.json()
+    const { email, firstName, password } = await req.json()
 
     // Configuration de l'envoi d'email (à adapter selon votre service d'email)
     const emailData = {
@@ -21,6 +21,12 @@ serve(async (req) => {
       html: `
         <h1>Bienvenue ${firstName} !</h1>
         <p>Votre compte a été créé avec succès.</p>
+        <p>Voici vos identifiants de connexion :</p>
+        <ul>
+          <li>Email : ${email}</li>
+          <li>Mot de passe : ${password}</li>
+        </ul>
+        <p>Nous vous recommandons de changer votre mot de passe lors de votre première connexion.</p>
         <p>Vous pouvez maintenant vous connecter à votre espace client pour suivre l'avancement de votre projet.</p>
       `
     }
