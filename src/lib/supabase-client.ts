@@ -3,7 +3,7 @@ import emailjs from '@emailjs/browser';
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
-const EMAILJS_SERVICE_ID = 'service_wattplus';
+const EMAILJS_SERVICE_ID = 'service_611ohbh';
 const EMAILJS_TEMPLATE_ID = 'template_q11t4u8';
 const EMAILJS_PUBLIC_KEY = 'nSGUhEBvdNcDlBp0F';
 
@@ -44,6 +44,8 @@ export const sendEmail = async (
         minute: '2-digit'
       })
     };
+
+    console.log('Email template params:', templateParams);
 
     const response = await emailjs.send(
       EMAILJS_SERVICE_ID,
