@@ -23,20 +23,20 @@ interface MessagesListProps {
 const mockMessages: Message[] = [
   {
     id: "1",
-    content: "transport d'un tracteur 25380 longevelle les russey à Val de drome st jean des essartiers 14350 calvados",
+    content: "Installation de panneaux photovoltaïques sur toiture résidentielle. Surface disponible 45m², orientation sud-ouest, consommation annuelle 8500 kWh.",
     date: "28 DÉC.",
     details: {
-      "Conditionnement": "Autres",
-      "Précisez la nature de la marchandise": "tracteur ih553",
-      "Quantité de colis/palette": "1",
-      "Poids total en kg": "3600",
-      "Dimensions du colis ou palette en cm": "3m75",
-      "Départ de envoi : Code Postal et ville de départ": "25380",
-      "Arrivée de envoi : Code Postal et ville de livraison": "14350",
-      "Numéro de téléphone": "0674909294",
-      "Email": "mlerrible@wanadoo.fr",
-      "Prénom pour le devis": "Accard",
-      "Nom pour le devis": "marie"
+      "Type de projet": "Résidentiel",
+      "Surface disponible": "45m²",
+      "Orientation": "Sud-Ouest",
+      "Consommation annuelle": "8500 kWh",
+      "Type de toiture": "Tuiles",
+      "Code Postal": "75012",
+      "Ville": "Paris",
+      "Numéro de téléphone": "0612345678",
+      "Email": "client@example.com",
+      "Prénom pour le devis": "Thomas",
+      "Nom pour le devis": "Martin"
     }
   }
 ];
