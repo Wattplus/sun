@@ -78,7 +78,7 @@ export const handleFormSubmission = async (
 
     // Redirect to thank you page after successful submission
     setTimeout(() => {
-      navigate("/thank-you");
+      navigate("/thank-you", { state: { leadData: formData } });
     }, 2000);
 
     return true;

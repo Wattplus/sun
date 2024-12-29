@@ -1,15 +1,22 @@
 import { Button } from "@/components/ui/button";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Mail, Phone, MapPin, Clock } from "lucide-react";
 import { useEffect } from "react";
 import emailjs from '@emailjs/browser';
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 
 export function ThankYou() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { toast } = useToast();
+  const leadData = location.state?.leadData;
 
   useEffect(() => {
+    if (!leadData) {
+      console.error("No lead data found");
+      return;
+    }
+
     // Initialize EmailJS with your public key
     emailjs.init("3T3wauk7lJcCeW1M-");
 
@@ -18,9 +25,14 @@ export function ThankYou() {
       "service_611ohbh",
       "template_q11t4u8",
       {
-        to_name: "Client", // You can customize these template variables
-        from_name: "WattPlus",
-        message: "Merci pour votre demande d'étude solaire",
+        client_type: leadData.clientType,
+        first_name: leadData.firstName,
+        last_name: leadData.lastName,
+        email: leadData.email,
+        phone: leadData.phone,
+        postal_code: leadData.postalCode,
+        monthly_bill: leadData.monthlyBill,
+        date: new Date().toLocaleDateString('fr-FR'),
       }
     ).then(
       (result) => {
@@ -39,7 +51,7 @@ export function ThankYou() {
         });
       }
     );
-  }, [toast]);
+  }, [toast, leadData]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-background-light to-primary/20 p-4">
