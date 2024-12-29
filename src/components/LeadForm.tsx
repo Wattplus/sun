@@ -1,14 +1,14 @@
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
 import { useToast } from "@/components/ui/use-toast";
 import { ClientTypeForm } from "./lead-form/ClientTypeForm";
 import { PersonalInfoForm } from "./lead-form/PersonalInfoForm";
-import { FormField } from "./form/FormField";
+import { Card } from "@/components/ui/card";
 import { FormHeader } from "./form/FormHeader";
+import { FormField } from "./form/FormField";
 import { SubmitButton } from "./form/SubmitButton";
-import { createClientAccount, createLead } from "@/lib/supabase-client";
 import { useNavigate } from "react-router-dom";
+import { validateForm } from "@/utils/formValidation";
+import { handleFormSubmission } from "@/utils/formSubmission";
 
 interface FormData {
   clientType: string;
@@ -52,123 +52,19 @@ export const LeadForm = () => {
     return password;
   };
 
-  const validateForm = () => {
-    if (!formData.firstName.trim()) {
-      toast({
-        title: "Erreur",
-        description: "Le prénom est requis",
-        variant: "destructive",
-      });
-      return false;
-    }
-    if (!formData.lastName.trim()) {
-      toast({
-        title: "Erreur",
-        description: "Le nom est requis",
-        variant: "destructive",
-      });
-      return false;
-    }
-    if (!formData.email.trim()) {
-      toast({
-        title: "Erreur",
-        description: "L'email est requis",
-        variant: "destructive",
-      });
-      return false;
-    }
-    if (!formData.phone.trim()) {
-      toast({
-        title: "Erreur",
-        description: "Le téléphone est requis",
-        variant: "destructive",
-      });
-      return false;
-    }
-    if (!formData.monthlyBill.trim()) {
-      toast({
-        title: "Erreur",
-        description: "La facture mensuelle est requise",
-        variant: "destructive",
-      });
-      return false;
-    }
-    if (!formData.postalCode.trim()) {
-      toast({
-        title: "Erreur",
-        description: "Le code postal est requis",
-        variant: "destructive",
-      });
-      return false;
-    }
-    return true;
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!validateForm()) {
+    if (!validateForm(formData, toast)) {
       return;
     }
 
     setIsSubmitting(true);
 
-    try {
-      const generatedPassword = generateSecurePassword();
-      
-      // Créer le compte client avec le mot de passe généré
-      const { error: accountError } = await createClientAccount(
-        formData.email,
-        generatedPassword,
-        {
-          firstName: formData.firstName,
-          lastName: formData.lastName,
-          phone: formData.phone,
-          postalCode: formData.postalCode,
-          clientType: formData.clientType,
-          monthlyBill: formData.monthlyBill
-        }
-      );
+    const generatedPassword = generateSecurePassword();
+    const success = await handleFormSubmission(formData, toast, navigate, generatedPassword);
 
-      if (accountError) {
-        toast({
-          title: "Erreur",
-          description: accountError.message || "Une erreur est survenue lors de la création de votre compte.",
-          variant: "destructive",
-        });
-        return;
-      }
-
-      // Créer le lead
-      const { error: leadError } = await createLead(formData);
-
-      if (leadError) {
-        toast({
-          title: "Erreur",
-          description: "Une erreur est survenue lors de la création de votre demande.",
-          variant: "destructive",
-        });
-        return;
-      }
-
-      toast({
-        title: "Compte créé avec succès",
-        description: "Un email contenant vos identifiants de connexion vous a été envoyé.",
-      });
-
-      // Rediriger vers l'espace client
-      setTimeout(() => {
-        navigate("/client-portal");
-      }, 2000);
-
-    } catch (error) {
-      console.error("Erreur lors de la création du compte:", error);
-      toast({
-        title: "Erreur",
-        description: "Une erreur est survenue lors de la création de votre compte.",
-        variant: "destructive",
-      });
-    } finally {
+    if (!success) {
       setIsSubmitting(false);
     }
   };
