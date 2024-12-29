@@ -3,8 +3,8 @@ import { TableCell, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
-import { Lock, Info } from "lucide-react";
-import { Tooltip } from "@/components/ui/tooltip";
+import { ShoppingCart, Lock, Info } from "lucide-react";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 interface LeadTableRowProps {
   lead: Lead;
@@ -14,12 +14,19 @@ interface LeadTableRowProps {
 
 export const LeadTableRow = ({ lead, onLeadSelect, isSelected }: LeadTableRowProps) => {
   const maskSensitiveInfo = (text: string) => (
-    <Tooltip content="Cette information sera visible après l'achat du lead">
-      <div className="flex items-center gap-2 text-muted-foreground hover:text-primary/80 transition-colors cursor-help">
-        <Lock className="h-4 w-4" />
-        <span>Information masquée</span>
-      </div>
-    </Tooltip>
+    <TooltipProvider>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <div className="flex items-center gap-2 text-muted-foreground hover:text-primary/80 transition-colors cursor-help">
+            <Lock className="h-4 w-4" />
+            <span>Information masquée</span>
+          </div>
+        </TooltipTrigger>
+        <TooltipContent>
+          <p>Cette information sera visible après l'achat du lead</p>
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
   );
 
   const renderOptionalInfo = (value: string | undefined, label: string) => {
@@ -96,6 +103,7 @@ export const LeadTableRow = ({ lead, onLeadSelect, isSelected }: LeadTableRowPro
           className="w-full bg-primary hover:bg-primary/90 opacity-0 group-hover:opacity-100 transition-all duration-300"
           onClick={() => onLeadSelect?.(lead)}
         >
+          <ShoppingCart className="h-4 w-4 mr-2" />
           Acheter
         </Button>
       </TableCell>

@@ -7,12 +7,17 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
-import { Lead } from "@/types/lead"
+import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
+import { Lead, LeadStatus } from "@/types/crm"
 import { useState, useEffect } from "react"
-import { ClientInfoSection } from "./leads/form-sections/ClientInfoSection"
-import { AddressSection } from "./leads/form-sections/AddressSection"
-import { ProjectDetailsSection } from "./leads/form-sections/ProjectDetailsSection"
-import { StatusSection } from "./leads/form-sections/StatusSection"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 
 interface EditLeadDialogProps {
   lead: Lead | null
@@ -22,7 +27,7 @@ interface EditLeadDialogProps {
 }
 
 export function EditLeadDialog({ lead, open, onOpenChange, onSave }: EditLeadDialogProps) {
-  const [formData, setFormData] = useState<Partial<Lead>>(lead || {});
+  const [formData, setFormData] = useState<Partial<Lead>>(lead || {})
 
   useEffect(() => {
     if (lead) {
@@ -40,7 +45,7 @@ export function EditLeadDialog({ lead, open, onOpenChange, onSave }: EditLeadDia
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[500px] max-h-[90vh] overflow-y-auto">
+      <DialogContent className="sm:max-w-[500px]">
         <form onSubmit={handleSubmit}>
           <DialogHeader>
             <DialogTitle>Modifier le lead</DialogTitle>
@@ -48,14 +53,131 @@ export function EditLeadDialog({ lead, open, onOpenChange, onSave }: EditLeadDia
               Modifiez les informations du lead ici. Cliquez sur sauvegarder une fois terminé.
             </DialogDescription>
           </DialogHeader>
-          
-          <div className="grid gap-6 py-4">
-            <ClientInfoSection formData={formData} setFormData={setFormData} />
-            <AddressSection formData={formData} setFormData={setFormData} />
-            <ProjectDetailsSection formData={formData} setFormData={setFormData} />
-            <StatusSection formData={formData} setFormData={setFormData} />
+          <div className="grid gap-4 py-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label htmlFor="firstname" className="text-sm font-medium">
+                  Prénom
+                </label>
+                <Input
+                  id="firstname"
+                  value={formData.firstname || ""}
+                  onChange={(e) => setFormData({ ...formData, firstname: e.target.value })}
+                />
+              </div>
+              <div>
+                <label htmlFor="lastname" className="text-sm font-medium">
+                  Nom
+                </label>
+                <Input
+                  id="lastname"
+                  value={formData.lastname || ""}
+                  onChange={(e) => setFormData({ ...formData, lastname: e.target.value })}
+                />
+              </div>
+            </div>
+            <div>
+              <label htmlFor="email" className="text-sm font-medium">
+                Email
+              </label>
+              <Input
+                id="email"
+                type="email"
+                value={formData.email || ""}
+                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+              />
+            </div>
+            <div>
+              <label htmlFor="phone" className="text-sm font-medium">
+                Téléphone
+              </label>
+              <Input
+                id="phone"
+                value={formData.phone || ""}
+                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+              />
+            </div>
+            <div>
+              <label htmlFor="address" className="text-sm font-medium">
+                Adresse
+              </label>
+              <Input
+                id="address"
+                value={formData.address || ""}
+                onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+              />
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label htmlFor="postalcode" className="text-sm font-medium">
+                  Code postal
+                </label>
+                <Input
+                  id="postalcode"
+                  value={formData.postalcode || ""}
+                  onChange={(e) => setFormData({ ...formData, postalcode: e.target.value })}
+                />
+              </div>
+              <div>
+                <label htmlFor="city" className="text-sm font-medium">
+                  Ville
+                </label>
+                <Input
+                  id="city"
+                  value={formData.city || ""}
+                  onChange={(e) => setFormData({ ...formData, city: e.target.value })}
+                />
+              </div>
+            </div>
+            <div>
+              <label htmlFor="projectType" className="text-sm font-medium">
+                Type de projet photovoltaïque
+              </label>
+              <Select
+                value={formData.projectType}
+                onValueChange={(value) => setFormData({ ...formData, projectType: value })}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Sélectionnez le type de projet" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="residential">Résidentiel</SelectItem>
+                  <SelectItem value="professional">Professionnel / Industriel</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <label htmlFor="status" className="text-sm font-medium">
+                Statut
+              </label>
+              <Select
+                value={formData.status}
+                onValueChange={(value: LeadStatus) => setFormData({ ...formData, status: value })}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Sélectionnez un statut" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="new">Nouveau</SelectItem>
+                  <SelectItem value="contacted">Contacté</SelectItem>
+                  <SelectItem value="qualified">Qualifié</SelectItem>
+                  <SelectItem value="assigned">Assigné</SelectItem>
+                  <SelectItem value="converted">Converti</SelectItem>
+                  <SelectItem value="lost">Perdu</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <label htmlFor="notes" className="text-sm font-medium">
+                Notes
+              </label>
+              <Textarea
+                id="notes"
+                value={formData.notes || ""}
+                onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
+              />
+            </div>
           </div>
-
           <DialogFooter>
             <Button type="submit">Sauvegarder</Button>
           </DialogFooter>

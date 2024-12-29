@@ -151,103 +151,56 @@ export type Database = {
       leads: {
         Row: {
           address: string | null
-          annual_consumption: number | null
-          assigned_installer: string | null
           assignedto: string | null
           city: string | null
           clienttype: string
-          contact_attempts: number | null
           created_at: string
-          electrical_installation: string | null
           email: string
-          exclusive_until: string | null
           firstname: string
           id: string
-          last_contact_date: string | null
           lastname: string
           monthlybill: string
           notes: string | null
           phone: string
           postalcode: string
-          price: number | null
-          property_type: string | null
           purchasedby: string[] | null
-          quality_score: number | null
-          roof_surface: number | null
-          roof_type: string | null
-          source: string | null
           status: string
-          verification_status: string | null
         }
         Insert: {
           address?: string | null
-          annual_consumption?: number | null
-          assigned_installer?: string | null
           assignedto?: string | null
           city?: string | null
           clienttype: string
-          contact_attempts?: number | null
           created_at?: string
-          electrical_installation?: string | null
           email: string
-          exclusive_until?: string | null
           firstname: string
           id?: string
-          last_contact_date?: string | null
           lastname: string
           monthlybill: string
           notes?: string | null
           phone: string
           postalcode: string
-          price?: number | null
-          property_type?: string | null
           purchasedby?: string[] | null
-          quality_score?: number | null
-          roof_surface?: number | null
-          roof_type?: string | null
-          source?: string | null
           status?: string
-          verification_status?: string | null
         }
         Update: {
           address?: string | null
-          annual_consumption?: number | null
-          assigned_installer?: string | null
           assignedto?: string | null
           city?: string | null
           clienttype?: string
-          contact_attempts?: number | null
           created_at?: string
-          electrical_installation?: string | null
           email?: string
-          exclusive_until?: string | null
           firstname?: string
           id?: string
-          last_contact_date?: string | null
           lastname?: string
           monthlybill?: string
           notes?: string | null
           phone?: string
           postalcode?: string
-          price?: number | null
-          property_type?: string | null
           purchasedby?: string[] | null
-          quality_score?: number | null
-          roof_surface?: number | null
-          roof_type?: string | null
-          source?: string | null
           status?: string
-          verification_status?: string | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "leads_assigned_installer_fkey"
-            columns: ["assigned_installer"]
-            isOneToOne: false
-            referencedRelation: "installers"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       messages: {
         Row: {
