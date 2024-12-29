@@ -1,4 +1,4 @@
-import { Lead, LeadStatus } from "@/types/crm";
+import { Lead } from "@/types/crm";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -101,9 +101,10 @@ export const LeadDialogs = ({
       <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
         <DialogContent className="bg-background/95 backdrop-blur-md border-[#33C3F0]/20">
           <DialogHeader>
-            <DialogTitle>Supprimer le lead</DialogTitle>
+            <DialogTitle>Supprimer définitivement le lead</DialogTitle>
             <DialogDescription>
-              Êtes-vous sûr de vouloir supprimer ce lead ? Cette action est irréversible.
+              Attention : Cette action est irréversible. Le lead sera définitivement supprimé de la base de données.
+              Êtes-vous sûr de vouloir continuer ?
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
@@ -118,7 +119,7 @@ export const LeadDialogs = ({
               onClick={handleConfirmDelete}
               className="bg-red-500 hover:bg-red-600"
             >
-              Supprimer
+              Supprimer définitivement
             </Button>
           </DialogFooter>
         </DialogContent>

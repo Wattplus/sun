@@ -1,12 +1,11 @@
 import { useState, useEffect } from "react";
 import { Lead, LeadStatus } from "@/types/crm";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import { LeadTable } from "./leads/LeadTable";
 import { LeadHeader } from "./leads/LeadHeader";
 import { LeadStats } from "./leads/LeadStats";
 import { AdminBreadcrumb } from "./AdminBreadcrumb";
 import { LeadDialogs } from "./leads/LeadDialogs";
-import { mockInstallers } from "./InstallerManagement";
 import { supabase } from "@/lib/supabase-client";
 
 export const LeadManagement = () => {
@@ -82,7 +81,7 @@ export const LeadManagement = () => {
       setLeads(leads.filter(lead => lead.id !== leadToDelete.id));
       toast({
         title: "Lead supprimé",
-        description: "Le lead a été supprimé avec succès.",
+        description: "Le lead a été supprimé définitivement.",
       });
       setDeleteDialogOpen(false);
       setLeadToDelete(null);
@@ -139,44 +138,6 @@ export const LeadManagement = () => {
       toast({
         title: "Erreur",
         description: "Une erreur est survenue lors de la mise à jour du lead",
-        variant: "destructive",
-      });
-    }
-  };
-
-  const handleAssignSubmit = async (leadId: string, installerId: string) => {
-    try {
-      const { error } = await supabase
-        .from("leads")
-        .update({ assignedto: installerId })
-        .eq("id", leadId);
-
-      if (error) {
-        console.error("Error assigning lead:", error);
-        toast({
-          title: "Erreur",
-          description: "Impossible d'assigner le lead",
-          variant: "destructive",
-        });
-        return;
-      }
-
-      setLeads(leads.map(lead => 
-        lead.id === leadId 
-          ? { ...lead, assignedto: installerId }
-          : lead
-      ));
-
-      toast({
-        title: "Lead assigné",
-        description: "Le lead a été assigné avec succès.",
-      });
-      setAssignDialogOpen(false);
-    } catch (error) {
-      console.error("Unexpected error assigning lead:", error);
-      toast({
-        title: "Erreur",
-        description: "Une erreur est survenue lors de l'assignation du lead",
         variant: "destructive",
       });
     }
