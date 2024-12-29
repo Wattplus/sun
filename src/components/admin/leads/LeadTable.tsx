@@ -5,6 +5,12 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Lead, LeadStatus } from "@/types/crm";
 import { Edit, Trash2, UserPlus, Euro, Mail, Phone, MapPin } from "lucide-react";
 import { LeadPurchaseInfo } from "./LeadPurchaseInfo";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 interface LeadTableProps {
   leads: Lead[];
@@ -56,20 +62,39 @@ export const LeadTable = ({
               </TableCell>
               <TableCell>
                 <div className="space-y-1">
-                  <a 
-                    href={`mailto:${lead.email}`} 
-                    className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors"
-                  >
-                    <Mail className="h-4 w-4" />
-                    <span>{lead.email}</span>
-                  </a>
-                  <a 
-                    href={`tel:${lead.phone}`} 
-                    className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors"
-                  >
-                    <Phone className="h-4 w-4" />
-                    <span>{lead.phone}</span>
-                  </a>
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <a 
+                          href={`mailto:${lead.email}`} 
+                          className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors"
+                        >
+                          <Mail className="h-4 w-4" />
+                          <span>{lead.email}</span>
+                        </a>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Envoyer un email</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <a 
+                          href={`tel:${lead.phone}`} 
+                          className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors"
+                        >
+                          <Phone className="h-4 w-4" />
+                          <span>{lead.phone}</span>
+                        </a>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Appeler</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
                 </div>
               </TableCell>
               <TableCell>
@@ -101,33 +126,62 @@ export const LeadTable = ({
               </TableCell>
               <TableCell>
                 <div className="flex gap-2">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => onEditClick(lead)}
-                    className="border-primary/20 hover:border-primary/40 hover:bg-primary/10"
-                  >
-                    <Edit className="h-4 w-4 mr-2 text-primary" />
-                    Éditer
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => onAssignClick(lead)}
-                    disabled={lead.status === "assigned" || lead.status === "converted"}
-                    className="border-primary/20 hover:border-primary/40 hover:bg-primary/10"
-                  >
-                    <UserPlus className="h-4 w-4 mr-2 text-primary" />
-                    Assigner
-                  </Button>
-                  <Button
-                    variant="destructive"
-                    size="sm"
-                    onClick={() => onDeleteClick(lead)}
-                  >
-                    <Trash2 className="h-4 w-4 mr-2" />
-                    Supprimer
-                  </Button>
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => onEditClick(lead)}
+                          className="border-primary/20 hover:border-primary/40 hover:bg-primary/10"
+                        >
+                          <Edit className="h-4 w-4 text-primary" />
+                          <span>Éditer</span>
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Modifier le lead</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => onAssignClick(lead)}
+                          disabled={lead.status === "assigned" || lead.status === "converted"}
+                          className="border-primary/20 hover:border-primary/40 hover:bg-primary/10"
+                        >
+                          <UserPlus className="h-4 w-4 text-primary" />
+                          <span>Assigner</span>
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Assigner à un installateur</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button
+                          variant="destructive"
+                          size="sm"
+                          onClick={() => onDeleteClick(lead)}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                          <span>Supprimer</span>
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Supprimer le lead</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
                 </div>
               </TableCell>
             </TableRow>
