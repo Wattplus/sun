@@ -5,6 +5,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { ClientTypeForm } from "./lead-form/ClientTypeForm";
 import { PersonalInfoForm } from "./lead-form/PersonalInfoForm";
 import { initEmailJS, sendEmail } from "@/config/emailConfig";
+import { FormField } from "./form/FormField";
 
 // Initialisation d'EmailJS
 initEmailJS();
@@ -15,6 +16,8 @@ interface FormData {
   lastName: string;
   email: string;
   phone: string;
+  monthlyBill: string;
+  postalCode: string;
 }
 
 export const LeadForm = () => {
@@ -25,6 +28,8 @@ export const LeadForm = () => {
     lastName: "",
     email: "",
     phone: "",
+    monthlyBill: "",
+    postalCode: "",
   });
 
   const handleFieldChange = (field: keyof FormData, value: string) => {
@@ -44,6 +49,8 @@ export const LeadForm = () => {
         last_name: formData.lastName,
         email: formData.email,
         phone: formData.phone,
+        monthly_bill: formData.monthlyBill,
+        postal_code: formData.postalCode,
       });
 
       toast({
@@ -57,6 +64,8 @@ export const LeadForm = () => {
         lastName: "",
         email: "",
         phone: "",
+        monthlyBill: "",
+        postalCode: "",
       });
     } catch (error) {
       console.error("Erreur lors de l'envoi du formulaire:", error);
@@ -76,6 +85,27 @@ export const LeadForm = () => {
           onChange={(value) => handleFieldChange("clientType", value)}
         />
         
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <FormField
+            label="Facture mensuelle (€)"
+            id="monthlyBill"
+            type="number"
+            value={formData.monthlyBill}
+            onChange={(e) => handleFieldChange("monthlyBill", e.target.value)}
+            placeholder="Ex: 150"
+            required
+          />
+          
+          <FormField
+            label="Code postal"
+            id="postalCode"
+            value={formData.postalCode}
+            onChange={(e) => handleFieldChange("postalCode", e.target.value)}
+            placeholder="Ex: 75001"
+            required
+          />
+        </div>
+
         <PersonalInfoForm
           firstName={formData.firstName}
           lastName={formData.lastName}
