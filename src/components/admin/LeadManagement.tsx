@@ -1,18 +1,17 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Lead, LeadStatus } from "@/types/crm";
 import { LeadTable } from "./leads/LeadTable";
 import { LeadHeader } from "./leads/LeadHeader";
 import { LeadStats } from "./leads/LeadStats";
 import { AdminBreadcrumb } from "./AdminBreadcrumb";
 import { LeadDialogs } from "./leads/LeadDialogs";
-import { useLeadsData } from "./leads/useLeadsData";
 import { useLeadActions } from "./leads/useLeadActions";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/lib/supabase-client";
 import { useAuthRedirect } from "@/hooks/use-auth-redirect";
 
 export const LeadManagement = () => {
-  useAuthRedirect(); // Add this line to handle auth state
+  useAuthRedirect();
 
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
@@ -22,10 +21,47 @@ export const LeadManagement = () => {
   const [selectedInstallerId, setSelectedInstallerId] = useState<string>("");
   const [leadToAssign, setLeadToAssign] = useState<Lead | null>(null);
   const [leadToDelete, setLeadToDelete] = useState<Lead | null>(null);
+  const [leads, setLeads] = useState<Lead[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const { leads, setLeads } = useLeadsData();
   const { handleDeleteLead, handleUpdateLead } = useLeadActions(leads, setLeads);
   const { toast } = useToast();
+
+  useEffect(() => {
+    const fetchLeads = async () => {
+      try {
+        console.log("Fetching leads...");
+        const { data, error } = await supabase
+          .from("leads")
+          .select("*")
+          .order("created_at", { ascending: false });
+
+        if (error) {
+          console.error("Error fetching leads:", error);
+          toast({
+            title: "Erreur",
+            description: "Impossible de charger les leads",
+            variant: "destructive",
+          });
+          return;
+        }
+
+        console.log("Leads fetched successfully:", data);
+        setLeads(data || []);
+      } catch (error) {
+        console.error("Unexpected error fetching leads:", error);
+        toast({
+          title: "Erreur",
+          description: "Une erreur est survenue lors du chargement des leads",
+          variant: "destructive",
+        });
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchLeads();
+  }, [toast]);
 
   const handleDeleteClick = (lead: Lead) => {
     setLeadToDelete(lead);
@@ -127,6 +163,14 @@ export const LeadManagement = () => {
     return texts[status];
   };
 
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
       <AdminBreadcrumb />
@@ -144,7 +188,12 @@ export const LeadManagement = () => {
         />
 
         <LeadTable
-          leads={leads}
+          leads={leads.filter(lead => 
+            lead.firstname?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            lead.lastname?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            lead.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            lead.phone?.includes(searchTerm)
+          )}
           onEditClick={handleEditClick}
           onAssignClick={handleAssignClick}
           onDeleteClick={handleDeleteClick}
