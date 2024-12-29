@@ -144,6 +144,44 @@ export const LeadManagement = () => {
     }
   };
 
+  const handleAssignSubmit = async (leadId: string, installerId: string) => {
+    try {
+      const { error } = await supabase
+        .from("leads")
+        .update({ assignedto: installerId })
+        .eq("id", leadId);
+
+      if (error) {
+        console.error("Error assigning lead:", error);
+        toast({
+          title: "Erreur",
+          description: "Impossible d'assigner le lead",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      setLeads(leads.map(lead => 
+        lead.id === leadId 
+          ? { ...lead, assignedto: installerId }
+          : lead
+      ));
+
+      toast({
+        title: "Lead assigné",
+        description: "Le lead a été assigné avec succès.",
+      });
+      setAssignDialogOpen(false);
+    } catch (error) {
+      console.error("Unexpected error assigning lead:", error);
+      toast({
+        title: "Erreur",
+        description: "Une erreur est survenue lors de l'assignation du lead",
+        variant: "destructive",
+      });
+    }
+  };
+
   const getStatusColor = (status: LeadStatus) => {
     const colors = {
       new: "bg-[#1EAEDB]",

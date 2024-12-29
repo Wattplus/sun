@@ -31,7 +31,6 @@ export const LeadTable = ({
             <TableHead>Facture mensuelle</TableHead>
             <TableHead>Code postal</TableHead>
             <TableHead>Contact</TableHead>
-            <TableHead>Type de projet</TableHead>
             <TableHead>Actions</TableHead>
           </TableRow>
         </TableHeader>
@@ -73,9 +72,6 @@ export const LeadTable = ({
                     </div>
                   )}
                 </div>
-              </TableCell>
-              <TableCell>
-                {lead.projectType === 'residential' ? 'Résidentiel' : 'Professionnel'}
               </TableCell>
               <TableCell>
                 <div className="flex gap-2">
