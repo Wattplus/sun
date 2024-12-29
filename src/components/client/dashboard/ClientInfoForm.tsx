@@ -19,6 +19,7 @@ interface ClientInfo {
   phone: string;
   clientType: string;
   roofType: string;
+  roofOrientation: string;
   monthlyBillEuros: string;
   electricalType: string;
   address: string;
@@ -37,6 +38,7 @@ export const ClientInfoForm = ({ onMonthlyBillUpdate, initialValues = {} }: Clie
     phone: initialValues.phone || "",
     clientType: initialValues.clientType || "",
     roofType: initialValues.roofType || "",
+    roofOrientation: initialValues.roofOrientation || "",
     monthlyBillEuros: initialValues.monthlyBillEuros || "",
     electricalType: initialValues.electricalType || "monophase",
     address: initialValues.address || "",
@@ -58,6 +60,7 @@ export const ClientInfoForm = ({ onMonthlyBillUpdate, initialValues = {} }: Clie
     if (!clientInfo.phone) newErrors.phone = "Le téléphone est requis";
     if (!clientInfo.clientType) newErrors.clientType = "Le type de client est requis";
     if (!clientInfo.roofType) newErrors.roofType = "Le type de toit est requis";
+    if (!clientInfo.roofOrientation) newErrors.roofOrientation = "L'orientation du toit est requise";
     if (!clientInfo.monthlyBillEuros) newErrors.monthlyBillEuros = "La facture mensuelle est requise";
     if (!clientInfo.address) newErrors.address = "L'adresse est requise";
     if (!clientInfo.postalCode) newErrors.postalCode = "Le code postal est requis";
@@ -112,6 +115,7 @@ export const ClientInfoForm = ({ onMonthlyBillUpdate, initialValues = {} }: Clie
         <ProjectInfoFields
           clientType={clientInfo.clientType}
           roofType={clientInfo.roofType}
+          roofOrientation={clientInfo.roofOrientation}
           monthlyBillEuros={clientInfo.monthlyBillEuros}
           electricalType={clientInfo.electricalType}
           budget={clientInfo.budget}

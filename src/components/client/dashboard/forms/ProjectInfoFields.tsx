@@ -1,5 +1,6 @@
 import { ClientTypeSelect } from "../ClientTypeSelect";
 import { RoofTypeSelect } from "../RoofTypeSelect";
+import { RoofOrientationSelect } from "../RoofOrientationSelect";
 import { MonthlyBillInput } from "../MonthlyBillInput";
 import { ElectricalTypeSelect } from "../ElectricalTypeSelect";
 import { BudgetInput } from "../BudgetInput";
@@ -7,6 +8,7 @@ import { BudgetInput } from "../BudgetInput";
 interface ProjectInfoFieldsProps {
   clientType: string;
   roofType: string;
+  roofOrientation: string;
   monthlyBillEuros: string;
   electricalType: string;
   budget: string;
@@ -15,6 +17,7 @@ interface ProjectInfoFieldsProps {
   errors: {
     clientType?: string;
     roofType?: string;
+    roofOrientation?: string;
     monthlyBillEuros?: string;
     budget?: string;
   };
@@ -23,6 +26,7 @@ interface ProjectInfoFieldsProps {
 export const ProjectInfoFields = ({
   clientType,
   roofType,
+  roofOrientation,
   monthlyBillEuros,
   electricalType,
   budget,
@@ -44,6 +48,12 @@ export const ProjectInfoFields = ({
           error={errors.roofType}
         />
       </div>
+
+      <RoofOrientationSelect
+        value={roofOrientation}
+        onChange={(value) => onSelectChange(value, "roofOrientation")}
+        error={errors.roofOrientation}
+      />
 
       <div className="grid md:grid-cols-2 gap-4">
         <MonthlyBillInput
