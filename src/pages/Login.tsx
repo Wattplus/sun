@@ -28,11 +28,29 @@ export const Login = ({ isAdminLogin = false }: LoginProps) => {
             .from('profiles')
             .select('role')
             .eq('id', session.user.id)
-            .single();
+            .maybeSingle();
 
           if (profileError) {
             console.error('Profile fetch error:', profileError);
             throw profileError;
+          }
+
+          if (!profile) {
+            console.log("No profile found, creating default profile");
+            const { error: insertError } = await supabase
+              .from('profiles')
+              .insert([
+                { 
+                  id: session.user.id,
+                  email: session.user.email,
+                  role: 'user'
+                }
+              ]);
+
+            if (insertError) {
+              console.error('Profile creation error:', insertError);
+              throw insertError;
+            }
           }
 
           console.log("Profile data:", profile);
