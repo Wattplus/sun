@@ -47,7 +47,7 @@ export const createLead = async (formData: {
   }
 };
 
-export const checkExistingUser = async (email: string) => {
+export const checkExistingUser = async (email: string): Promise<string | null> => {
   try {
     const { data: userData } = await supabase.auth.signInWithOtp({
       email: email,
