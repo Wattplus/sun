@@ -26,32 +26,31 @@ export const Login = ({ isAdminLogin = false }: LoginProps) => {
           // Fetch user profile with role
           const { data: profile, error: profileError } = await supabase
             .from('profiles')
-            .select('role, email')
+            .select('role')
             .eq('id', session.user.id)
-            .maybeSingle();
+            .single();
 
           if (profileError) {
-            console.error('Profile fetch error:', profileError);
+            console.error('Erreur lors de la récupération du profil:', profileError);
             throw profileError;
           }
 
           console.log("Profile data:", profile);
           console.log("User role:", profile?.role);
-          console.log("User email:", profile?.email);
 
           const isAdmin = profile?.role === 'admin' || profile?.role === 'super_admin';
           console.log("Is admin user:", isAdmin);
 
           if (isAdminLogin) {
             if (isAdmin) {
-              console.log("Admin login successful - redirecting to /admin");
+              console.log("Connexion admin réussie - redirection vers /admin");
               toast({
                 title: "Connexion réussie",
                 description: "Bienvenue dans l'interface administrateur",
               });
               navigate("/admin");
             } else {
-              console.log("Non-admin user attempted admin login");
+              console.log("Utilisateur non-admin tentant d'accéder à l'interface admin");
               await supabase.auth.signOut();
               toast({
                 title: "Accès refusé",
@@ -62,15 +61,15 @@ export const Login = ({ isAdminLogin = false }: LoginProps) => {
             }
           } else {
             if (isAdmin) {
-              console.log("Admin user on regular login - redirecting to /admin");
+              console.log("Utilisateur admin sur login standard - redirection vers /admin");
               navigate("/admin");
             } else {
-              console.log("Regular user login - redirecting to /dashboard");
+              console.log("Connexion utilisateur standard - redirection vers /dashboard");
               navigate("/dashboard");
             }
           }
         } catch (error) {
-          console.error('Auth check error:', error);
+          console.error('Erreur de vérification:', error);
           toast({
             title: "Erreur",
             description: "Une erreur est survenue lors de la vérification de l'authentification.",
