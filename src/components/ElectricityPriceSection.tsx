@@ -29,24 +29,24 @@ const data = [
 
 export const ElectricityPriceSection = () => {
   return (
-    <section className="py-24 bg-gradient-to-br from-background-dark via-background to-background-dark">
-      <div className="container mx-auto px-4">
-        <div className="max-w-4xl mx-auto text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold mb-6 gradient-text">
+    <section className="py-12 sm:py-24 bg-gradient-to-br from-background-dark via-background to-background-dark">
+      <div className="container mx-auto px-4 sm:px-6">
+        <div className="max-w-4xl mx-auto text-center mb-8 sm:mb-16">
+          <h2 className="text-2xl sm:text-4xl font-bold mb-4 sm:mb-6 gradient-text">
             L'électricité ne cesse d'augmenter en France
           </h2>
-          <p className="text-lg text-blue-100 mb-8">
+          <p className="text-base sm:text-lg text-blue-100 mb-6 sm:mb-8 px-4">
             Les prix de l'électricité ont augmenté de plus de 95% depuis 2010.
             Protégez-vous contre les futures hausses en produisant votre propre énergie.
           </p>
         </div>
 
-        <div className="bg-secondary/50 rounded-xl p-6 mb-12 backdrop-blur-sm">
-          <div className="h-[400px]">
+        <div className="bg-secondary/50 rounded-xl p-4 sm:p-6 mb-8 sm:mb-12 backdrop-blur-sm">
+          <div className="h-[300px] sm:h-[400px]">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart
                 data={data}
-                margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
+                margin={{ top: 20, right: 20, left: 0, bottom: 0 }}
               >
                 <defs>
                   <linearGradient id="priceGradient" x1="0" y1="0" x2="0" y2="1">
@@ -59,21 +59,24 @@ export const ElectricityPriceSection = () => {
                   dataKey="year"
                   stroke="#94a3b8"
                   tick={{ fill: "#94a3b8" }}
+                  interval="preserveStartEnd"
+                  tickFormatter={(value) => value.slice(2)}
                 />
                 <YAxis
                   stroke="#94a3b8"
                   tick={{ fill: "#94a3b8" }}
                   tickFormatter={(value) => `${value}€`}
+                  width={60}
                 />
                 <Tooltip
                   contentStyle={{
                     backgroundColor: "#0B1221",
                     border: "1px solid #1EAEDB",
                     borderRadius: "8px",
+                    padding: "8px",
                   }}
-                  formatter={(value: number) =>
-                    `${value.toFixed(4)}€ / kWh`
-                  }
+                  formatter={(value: number) => [`${value.toFixed(4)}€ / kWh`]}
+                  labelFormatter={(label) => `Année ${label}`}
                 />
                 <Area
                   type="monotone"
@@ -87,17 +90,17 @@ export const ElectricityPriceSection = () => {
           </div>
         </div>
 
-        <div className="text-center">
+        <div className="text-center px-4">
           <div className="max-w-2xl mx-auto">
-            <h3 className="text-2xl font-semibold mb-6 text-white">
+            <h3 className="text-xl sm:text-2xl font-semibold mb-4 sm:mb-6 text-white">
               Investissez dans votre indépendance énergétique
             </h3>
-            <p className="text-blue-100 mb-8">
+            <p className="text-sm sm:text-base text-blue-100 mb-6 sm:mb-8">
               Les panneaux photovoltaïques vous permettent de produire votre propre électricité et de vous protéger contre les hausses de prix futures.
             </p>
             <Button
               size="lg"
-              className="glass-button group"
+              className="glass-button group w-full sm:w-auto"
               onClick={() => document.getElementById('lead-form')?.scrollIntoView({ behavior: 'smooth' })}
             >
               Je calcule mes économies
