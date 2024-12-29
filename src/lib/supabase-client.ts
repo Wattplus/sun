@@ -10,26 +10,6 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
   },
 });
 
-export const checkExistingUser = async (email: string) => {
-  try {
-    const { data, error } = await supabase
-      .from('profiles')
-      .select('id')
-      .eq('email', email)
-      .maybeSingle();
-
-    if (error) {
-      console.error('Error checking existing user:', error);
-      return null;
-    }
-
-    return data?.id;
-  } catch (error) {
-    console.error('Error in checkExistingUser:', error);
-    return null;
-  }
-};
-
 export const createLead = async (formData: {
   clientType: string;
   firstName: string;
@@ -64,6 +44,26 @@ export const createLead = async (formData: {
   } catch (error) {
     console.error('Error in createLead:', error);
     return { error };
+  }
+};
+
+export const checkExistingUser = async (email: string) => {
+  try {
+    const { data, error } = await supabase
+      .from('profiles')
+      .select('id')
+      .eq('email', email)
+      .maybeSingle();
+
+    if (error) {
+      console.error('Error checking existing user:', error);
+      return null;
+    }
+
+    return data?.id;
+  } catch (error) {
+    console.error('Error in checkExistingUser:', error);
+    return null;
   }
 };
 
