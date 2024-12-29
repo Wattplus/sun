@@ -17,7 +17,7 @@ export const PrivateRoute = () => {
         const { data: profile } = await supabase
           .from('profiles')
           .select('role')
-          .single();
+          .maybeSingle();
         
         const hasAdminRole = profile?.role === 'admin' || profile?.role === 'super_admin';
         console.log("User role:", profile?.role);

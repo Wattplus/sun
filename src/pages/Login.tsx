@@ -27,7 +27,7 @@ export const Login = ({ isAdminLogin = false }: LoginProps) => {
             .from('profiles')
             .select('role')
             .eq('id', session.user.id)
-            .single();
+            .maybeSingle();
 
           console.log("Profile data:", profile);
 
