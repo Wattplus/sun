@@ -1,8 +1,10 @@
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { MessageSquare } from "lucide-react";
+import { MessageSquare, User } from "lucide-react";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { MessageInput } from "./components/MessageInput";
+import { Badge } from "@/components/ui/badge";
+import { Avatar } from "@/components/ui/avatar";
 
 interface Message {
   id: string;
@@ -51,34 +53,38 @@ export function MessagesList({ onMessageClick }: MessagesListProps) {
 
   return (
     <div className="space-y-6">
-      <ScrollArea className="h-[500px] pr-4">
+      <ScrollArea className="h-[600px] pr-4">
         <div className="space-y-4">
           {messages.map((message) => (
             <div 
               key={message.id} 
-              className="bg-muted/50 rounded-lg p-4 space-y-4 cursor-pointer hover:bg-muted/70 transition-colors"
+              className="group bg-muted/30 hover:bg-muted/50 rounded-lg p-4 space-y-4 cursor-pointer transition-all duration-200 border border-primary/10 hover:border-primary/20"
               onClick={() => onMessageClick?.(message.id)}
             >
-              <div className="flex justify-between items-start">
-                <div className="text-sm text-muted-foreground">{message.date}</div>
-              </div>
-              <p className="text-sm">{message.content}</p>
-              {message.details && (
-                <div className="mt-4 space-y-2">
-                  {Object.entries(message.details).map(([key, value]) => (
-                    <div key={key} className="grid grid-cols-2 gap-2 text-sm">
-                      <span className="text-muted-foreground">{key}:</span>
-                      <span>{value}</span>
+              <div className="flex items-start justify-between gap-4">
+                <div className="flex items-center gap-3">
+                  <Avatar>
+                    <div className="bg-primary/10 text-primary w-10 h-10 rounded-full flex items-center justify-center">
+                      <User className="h-5 w-5" />
                     </div>
-                  ))}
+                  </Avatar>
+                  <div>
+                    <h3 className="font-medium">{message.details?.["Prénom pour le devis"]} {message.details?.["Nom pour le devis"]}</h3>
+                    <p className="text-sm text-muted-foreground">{message.details?.["Email"]}</p>
+                  </div>
                 </div>
-              )}
+                <div className="flex items-center gap-2">
+                  <Badge variant="secondary" className="bg-primary/10 text-primary hover:bg-primary/20">
+                    Nouveau LEAD
+                  </Badge>
+                  <span className="text-sm text-muted-foreground">{message.date}</span>
+                </div>
+              </div>
+              <p className="text-sm text-muted-foreground line-clamp-2">{message.content}</p>
             </div>
           ))}
         </div>
       </ScrollArea>
-
-      <MessageInput onSend={handleSendMessage} />
 
       {messages.length === 0 && (
         <div className="text-center py-12">
