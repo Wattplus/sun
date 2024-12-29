@@ -19,11 +19,11 @@ export const Login = ({ isAdminLogin = false }: LoginProps) => {
     } = supabase.auth.onAuthStateChange(async (event, session) => {
       if (event === "SIGNED_IN" && session) {
         try {
-          console.log("Auth state changed - SIGNED_IN detected");
-          console.log("Session user ID:", session.user.id);
-          console.log("Is admin login page:", isAdminLogin);
+          console.log("Vérification de l'authentification...");
+          console.log("ID utilisateur:", session.user.id);
+          console.log("Page de connexion admin:", isAdminLogin);
 
-          // Fetch user profile with role
+          // Récupérer le profil utilisateur avec le rôle
           const { data: profile, error: profileError } = await supabase
             .from('profiles')
             .select('role')
@@ -35,11 +35,11 @@ export const Login = ({ isAdminLogin = false }: LoginProps) => {
             throw profileError;
           }
 
-          console.log("Profile data:", profile);
-          console.log("User role:", profile?.role);
+          console.log("Données du profil:", profile);
+          console.log("Rôle utilisateur:", profile?.role);
 
           const isAdmin = profile?.role === 'admin' || profile?.role === 'super_admin';
-          console.log("Is admin user:", isAdmin);
+          console.log("Est administrateur:", isAdmin);
 
           if (isAdminLogin) {
             if (isAdmin) {
@@ -126,7 +126,7 @@ export const Login = ({ isAdminLogin = false }: LoginProps) => {
                 sign_up: {
                   email_label: 'Adresse email',
                   password_label: 'Mot de passe',
-                  button_label: 'S\'inscrire',
+                  button_label: "S'inscrire",
                 },
               },
             }}
