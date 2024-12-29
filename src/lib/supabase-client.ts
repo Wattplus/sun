@@ -24,9 +24,28 @@ export const sendEmail = async (email: string, firstName: string, password: stri
   }
 };
 
-// Fonction pour créer un nouveau compte client
+// Fonction pour créer ou connecter un compte client
 export const createClientAccount = async (email: string, password: string, userData: any) => {
   try {
+    // Vérifie d'abord si l'utilisateur existe
+    const { data: existingUser } = await supabase
+      .from('profiles')
+      .select('*')
+      .eq('email', email)
+      .single();
+
+    if (existingUser) {
+      // Si l'utilisateur existe, on essaie de le connecter
+      const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
+        email,
+        password
+      });
+
+      if (signInError) throw signInError;
+      return { data: signInData, error: null };
+    }
+
+    // Si l'utilisateur n'existe pas, on crée un nouveau compte
     const { data: authData, error: authError } = await supabase.auth.signUp({
       email,
       password,
