@@ -14,16 +14,26 @@ export const PrivateRoute = () => {
     const checkAdminStatus = async () => {
       if (isAuthenticated) {
         console.log("Checking admin status...");
-        const { data: profile } = await supabase
-          .from('profiles')
-          .select('role')
-          .maybeSingle();
-        
-        const hasAdminRole = profile?.role === 'admin' || profile?.role === 'super_admin';
-        console.log("User role:", profile?.role);
-        console.log("Has admin access:", hasAdminRole);
-        
-        setIsAdmin(hasAdminRole);
+        try {
+          const { data: profile, error } = await supabase
+            .from('profiles')
+            .select('role')
+            .eq('id', (await supabase.auth.getUser()).data.user?.id)
+            .maybeSingle();
+          
+          if (error) {
+            console.error('Error fetching profile:', error);
+            setIsAdmin(false);
+          } else {
+            const hasAdminRole = profile?.role === 'admin' || profile?.role === 'super_admin';
+            console.log("User role:", profile?.role);
+            console.log("Has admin access:", hasAdminRole);
+            setIsAdmin(hasAdminRole);
+          }
+        } catch (error) {
+          console.error('Admin check error:', error);
+          setIsAdmin(false);
+        }
         setCheckingAdmin(false);
       } else {
         setCheckingAdmin(false);

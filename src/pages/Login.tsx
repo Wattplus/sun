@@ -29,12 +29,12 @@ export const Login = ({ isAdminLogin = false }: LoginProps) => {
             .eq('id', session.user.id)
             .maybeSingle();
 
-          console.log("Profile data:", profile);
-
           if (error) {
             console.error('Profile fetch error:', error);
             throw error;
           }
+
+          console.log("Profile data:", profile);
 
           if (isAdminLogin) {
             if (profile?.role === 'admin' || profile?.role === 'super_admin') {
