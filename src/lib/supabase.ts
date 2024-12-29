@@ -4,17 +4,18 @@ import type { Message, Conversation } from '@/types/messages';
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
+// Check if environment variables are properly configured
 if (!supabaseUrl || !supabaseKey) {
   throw new Error(
-    'Missing environment variables: VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY must be defined'
+    'Missing Supabase configuration. Please set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in your environment variables.'
   );
 }
 
-// Validate URL format
-try {
-  new URL(supabaseUrl);
-} catch (error) {
-  throw new Error(`Invalid VITE_SUPABASE_URL: ${supabaseUrl}`);
+// Check if the URL contains placeholder text
+if (supabaseUrl.includes('[YOUR-ACTUAL-PROJECT-ID]')) {
+  throw new Error(
+    'Please replace [YOUR-ACTUAL-PROJECT-ID] with your actual Supabase project ID in VITE_SUPABASE_URL'
+  );
 }
 
 export const supabase = createClient(supabaseUrl, supabaseKey);
