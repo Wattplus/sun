@@ -8,42 +8,56 @@ if (!supabaseUrl || !supabaseKey) {
   throw new Error('Missing Supabase configuration');
 }
 
-export const supabase = createClient(supabaseUrl, supabaseKey);
+export const supabase = createClient(supabaseUrl, supabaseKey, {
+  auth: {
+    persistSession: true,
+    autoRefreshToken: true,
+  },
+  db: {
+    schema: 'public'
+  }
+});
 
 export const messagesService = {
   async getMessages(conversationId: string): Promise<Message[]> {
     console.log('Fetching messages for conversation:', conversationId);
     
-    const { data, error } = await supabase
-      .from('messages')
+    // First check if the conversation exists in contacts table
+    const { data: contact, error: contactError } = await supabase
+      .from('contacts')
       .select('*')
-      .eq('conversation_id', conversationId)
-      .order('created_at', { ascending: true });
+      .eq('id', conversationId)
+      .single();
 
-    if (error) {
-      console.error('Supabase error:', error);
-      throw error;
+    if (contactError) {
+      console.error('Error fetching contact:', contactError);
+      throw contactError;
     }
 
-    return data || [];
+    // If contact exists, return mock messages for now
+    // TODO: Replace with actual messages table once created
+    return [{
+      id: '1',
+      content: "Bonjour, je suis intéressé par vos services.",
+      sender_id: contact.id,
+      sender_type: 'client',
+      conversation_id: conversationId,
+      created_at: new Date().toISOString(),
+      read: false
+    }];
   },
 
   async sendMessage(message: Omit<Message, 'id' | 'created_at'>): Promise<Message> {
-    const { data, error } = await supabase
-      .from('messages')
-      .insert([message])
-      .select()
-      .single();
-
-    if (error) {
-      console.error('Error sending message:', error);
-      throw error;
-    }
-
-    if (!data) {
-      throw new Error('No data returned from insert operation');
-    }
-
-    return data;
+    // For now, just return a mock response
+    // TODO: Replace with actual message insertion once messages table is created
+    return {
+      id: Date.now().toString(),
+      content: message.content,
+      sender_id: message.sender_id,
+      sender_type: message.sender_type,
+      conversation_id: message.conversation_id,
+      created_at: new Date().toISOString(),
+      read: false
+    };
   }
 };
