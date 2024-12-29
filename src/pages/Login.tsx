@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Auth } from "@supabase/auth-ui-react";
 import { ThemeSupa } from "@supabase/auth-ui-shared";
 import { supabase } from "@/lib/supabase-client";
@@ -15,36 +15,41 @@ export const Login = ({ isAdminLogin = false }: LoginProps) => {
 
   useEffect(() => {
     const checkSession = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (session) {
-        // Vérifier si l'utilisateur est un admin
-        const { data: profile } = await supabase
-          .from('profiles')
-          .select('role')
-          .eq('id', session.user.id)
-          .single();
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session) {
+          // Vérifier si l'utilisateur est un admin
+          const { data: profile } = await supabase
+            .from('profiles')
+            .select('role')
+            .eq('id', session.user.id)
+            .single();
 
-        if (isAdminLogin) {
-          if (profile?.role === 'admin' || profile?.role === 'super_admin') {
-            navigate("/admin");
+          if (isAdminLogin) {
+            if (profile?.role === 'admin' || profile?.role === 'super_admin') {
+              navigate("/admin");
+            } else {
+              await supabase.auth.signOut();
+              toast({
+                title: "Accès refusé",
+                description: "Vous n'avez pas les droits d'administration nécessaires.",
+                variant: "destructive",
+              });
+              navigate("/");
+            }
           } else {
-            toast({
-              title: "Accès refusé",
-              description: "Vous n'avez pas les droits d'administration nécessaires.",
-              variant: "destructive",
-            });
-            navigate("/");
+            navigate("/dashboard");
           }
-        } else {
-          navigate("/dashboard");
         }
+      } catch (error) {
+        console.error('Auth check error:', error);
+        toast({
+          title: "Erreur",
+          description: "Une erreur est survenue lors de la vérification de l'authentification.",
+          variant: "destructive",
+        });
       }
     };
-
-    // Ne vérifier la session que si nous sommes sur la page de connexion admin
-    if (isAdminLogin) {
-      checkSession();
-    }
 
     const {
       data: { subscription },
@@ -61,6 +66,7 @@ export const Login = ({ isAdminLogin = false }: LoginProps) => {
           if (profile?.role === 'admin' || profile?.role === 'super_admin') {
             navigate("/admin");
           } else {
+            await supabase.auth.signOut();
             toast({
               title: "Accès refusé",
               description: "Vous n'avez pas les droits d'administration nécessaires.",
