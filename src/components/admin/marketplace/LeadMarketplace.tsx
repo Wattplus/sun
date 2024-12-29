@@ -28,12 +28,12 @@ export const LeadMarketplace = () => {
   const [priceFilter, setPriceFilter] = useState<"default" | "asc" | "desc">("default");
 
   const availableDepartments = Array.from(
-    new Set(mockLeads.map(lead => lead.postalCode.substring(0, 2)))
+    new Set(mockLeads.map(lead => lead.postalcode.substring(0, 2)))
   ).sort();
 
   const availableLeads = mockLeads.filter(lead => {
     if (projectTypeFilter !== 'all' && lead.projectType !== projectTypeFilter) return false;
-    if (selectedDepartments.length > 0 && !selectedDepartments.includes(lead.postalCode.substring(0, 2))) return false;
+    if (selectedDepartments.length > 0 && !selectedDepartments.includes(lead.postalcode.substring(0, 2))) return false;
     return lead.status === "qualified";
   });
 
@@ -41,7 +41,7 @@ export const LeadMarketplace = () => {
     setPurchasedLeads(prev => [...prev, lead.id]);
     toast({
       title: "Lead acheté avec succès",
-      description: `Le lead ${lead.firstName} ${lead.lastName} a été ajouté à votre liste.`,
+      description: `Le lead ${lead.firstname} ${lead.lastname} a été ajouté à votre liste.`,
     });
   };
 
@@ -60,7 +60,7 @@ export const LeadMarketplace = () => {
     setSelectedDepartments(selectedDepartments.filter(d => d !== department));
   };
 
-  const totalPrice = selectedLeads.reduce((sum, lead) => sum + lead.price, 0);
+  const totalPrice = selectedLeads.reduce((sum, lead) => sum + (lead.price || 0), 0);
   const userSubscriptionTier: SubscriptionTier = 'free';
 
   return (

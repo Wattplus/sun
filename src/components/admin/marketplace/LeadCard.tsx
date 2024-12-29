@@ -22,7 +22,7 @@ export const LeadCard = ({
   subscriptionTier = 'free'
 }: LeadCardProps) => {
   const { toast } = useToast();
-  const prices = calculateLeadPrice(lead, subscriptionTier);
+  const price = calculateLeadPrice(lead);
 
   const handlePurchase = async (type: 'mutualise' | 'exclusif', paymentMethod: 'prepaid' | 'direct') => {
     try {
@@ -92,19 +92,19 @@ export const LeadCard = ({
               <div className="space-y-2">
                 <div className="flex justify-between items-center">
                   <span className="text-sm text-muted-foreground">Compte prépayé</span>
-                  <span className="font-bold bg-gradient-to-r from-primary to-accent text-transparent bg-clip-text">{prices.mutualPrice}€</span>
+                  <span className="font-bold bg-gradient-to-r from-primary to-accent text-transparent bg-clip-text">{price}€</span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-sm text-muted-foreground">Prix standard</span>
-                  <span className="font-bold bg-gradient-to-r from-primary to-accent text-transparent bg-clip-text">{prices.exclusivePrice}€</span>
+                  <span className="font-bold bg-gradient-to-r from-primary to-accent text-transparent bg-clip-text">{price}€</span>
                 </div>
               </div>
             </div>
 
             <LeadCardActions
               onPurchase={handlePurchase}
-              mutualPrice={prices.mutualPrice}
-              exclusivePrice={prices.exclusivePrice}
+              mutualPrice={price}
+              exclusivePrice={price}
               canPurchaseMutual={true}
               canPurchaseExclusive={true}
               isProfessionalProject={lead.projectType === 'professional'}
