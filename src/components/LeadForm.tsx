@@ -6,18 +6,19 @@ import { FormHeader } from "./form/FormHeader";
 import { SubmitButton } from "./form/SubmitButton";
 import emailjs from '@emailjs/browser';
 
-// Configuration d'EmailJS avec les paramètres SMTP sécurisés
-emailjs.init("nSGUhEBvdNcDlBp0F");
-
-const SMTP_CONFIG = {
-  host: "mail.wattplus.org",
-  port: 465,
-  secure: true,
-  auth: {
-    user: "mikael@wattplus.org",
-    pass: "Hanna77026@"
+// Configuration d'EmailJS
+emailjs.init({
+  publicKey: "nSGUhEBvdNcDlBp0F",
+  smtp: {
+    host: "mail.wattplus.org",
+    port: 465,
+    secure: true,
+    auth: {
+      user: "mikael@wattplus.org",
+      pass: "Hanna77026@"
+    }
   }
-};
+});
 
 interface FormData {
   clientType: string;
@@ -87,8 +88,7 @@ export const LeadForm = () => {
             minute: '2-digit'
           })
         },
-        'nSGUhEBvdNcDlBp0F',
-        SMTP_CONFIG
+        'nSGUhEBvdNcDlBp0F'
       );
 
       toast({
