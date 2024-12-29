@@ -71,11 +71,12 @@ export const LeadManagement = () => {
   };
 
   return (
-    <div className="space-y-6 p-4 lg:p-6">
+    <div className="space-y-8 p-6 max-w-[1600px] mx-auto">
       <AdminBreadcrumb />
+      
       <LeadStats leads={leads} />
 
-      <div className="glass-panel p-4 lg:p-6">
+      <div className="glass-panel rounded-lg border border-[#33C3F0]/20 bg-card/50 backdrop-blur-sm p-6 space-y-6">
         <LeadHeader
           searchTerm={searchTerm}
           onSearchChange={setSearchTerm}
@@ -86,25 +87,27 @@ export const LeadManagement = () => {
           }}
         />
 
-        {isMobile ? (
-          <LeadMobileTable
-            leads={leads}
-            onEditClick={handleEditClick}
-            onAssignClick={handleAssignClick}
-            onDeleteClick={handleDeleteClick}
-            getStatusColor={getStatusColor}
-            getStatusText={getStatusText}
-          />
-        ) : (
-          <LeadTable
-            leads={leads}
-            onEditClick={handleEditClick}
-            onAssignClick={handleAssignClick}
-            onDeleteClick={handleDeleteClick}
-            getStatusColor={getStatusColor}
-            getStatusText={getStatusText}
-          />
-        )}
+        <div className="rounded-md border border-[#33C3F0]/20 bg-background/50">
+          {isMobile ? (
+            <LeadMobileTable
+              leads={leads}
+              onEditClick={handleEditClick}
+              onAssignClick={handleAssignClick}
+              onDeleteClick={handleDeleteClick}
+              getStatusColor={getStatusColor}
+              getStatusText={getStatusText}
+            />
+          ) : (
+            <LeadTable
+              leads={leads}
+              onEditClick={handleEditClick}
+              onAssignClick={handleAssignClick}
+              onDeleteClick={handleDeleteClick}
+              getStatusColor={getStatusColor}
+              getStatusText={getStatusText}
+            />
+          )}
+        </div>
 
         <LeadDialogs
           selectedLead={selectedLead}
