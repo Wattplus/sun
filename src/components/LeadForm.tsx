@@ -41,17 +41,6 @@ export const LeadForm = () => {
     }));
   };
 
-  const generateSecurePassword = () => {
-    const length = 12;
-    const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*";
-    let password = "";
-    for (let i = 0; i < length; i++) {
-      const randomIndex = Math.floor(Math.random() * charset.length);
-      password += charset[randomIndex];
-    }
-    return password;
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -62,8 +51,7 @@ export const LeadForm = () => {
     setIsSubmitting(true);
 
     try {
-      const generatedPassword = generateSecurePassword();
-      const success = await handleFormSubmission(formData, toast, navigate, generatedPassword);
+      const success = await handleFormSubmission(formData, toast, navigate);
 
       if (success) {
         toast({
