@@ -1,4 +1,4 @@
-import { ComplaintsTable, TransactionsTable } from './tables'
+import { ComplaintsTable, TransactionsTable, LeadsTable, InstallersTable, ProfilesTable, UsersTable, MessagesTable, LeadPurchasesTable } from './tables'
 
 export type Database = {
   public: {
@@ -13,169 +13,10 @@ export type Database = {
         Insert: Omit<TransactionsTable, 'id' | 'created_at'>
         Update: Partial<Omit<TransactionsTable, 'id' | 'created_at'>>
       }
-      messages: {
-        Row: {
-          created_at: string
-          id: number
-        }
-        Insert: {
-          created_at?: string
-          id?: number
-        }
-        Update: {
-          created_at?: string
-          id?: number
-        }
-        Relationships: []
-      }
-      profiles: {
-        Row: {
-          client_type: string | null
-          created_at: string
-          email: string
-          first_name: string | null
-          id: string
-          last_name: string | null
-          monthly_bill: string | null
-          phone: string | null
-          postal_code: string | null
-          role: string | null
-        }
-        Insert: {
-          client_type?: string | null
-          created_at?: string
-          email: string
-          first_name?: string | null
-          id: string
-          last_name?: string | null
-          monthly_bill?: string | null
-          phone?: string | null
-          postal_code?: string | null
-          role?: string | null
-        }
-        Update: {
-          client_type?: string | null
-          created_at?: string
-          email?: string
-          first_name?: string | null
-          id?: string
-          last_name?: string | null
-          monthly_bill?: string | null
-          phone?: string | null
-          postal_code?: string | null
-          role?: string | null
-        }
-        Relationships: []
-      }
-      users: {
-        Row: {
-          created_at: string | null
-          email: string
-          id: string
-        }
-        Insert: {
-          created_at?: string | null
-          email: string
-          id?: string
-        }
-        Update: {
-          created_at?: string | null
-          email?: string
-          id?: string
-        }
-        Relationships: []
-      }
       leads: {
-        Row: {
-          address: string | null
-          annual_consumption: number | null
-          assigned_installer: string | null
-          assignedto: string | null
-          city: string | null
-          clienttype: string
-          contact_attempts: number | null
-          created_at: string
-          electrical_installation: string | null
-          email: string
-          exclusive_until: string | null
-          firstname: string
-          id: string
-          last_contact_date: string | null
-          lastname: string
-          monthlybill: string
-          notes: string | null
-          phone: string
-          postalcode: string
-          price: number | null
-          property_type: string | null
-          purchasedby: string[] | null
-          quality_score: number | null
-          roof_surface: number | null
-          roof_type: string | null
-          source: string | null
-          status: string
-          verification_status: string | null
-        }
-        Insert: {
-          address?: string | null
-          annual_consumption?: number | null
-          assigned_installer?: string | null
-          assignedto?: string | null
-          city?: string | null
-          clienttype: string
-          contact_attempts?: number | null
-          created_at?: string
-          electrical_installation?: string | null
-          email: string
-          exclusive_until?: string | null
-          firstname: string
-          id?: string
-          last_contact_date?: string | null
-          lastname: string
-          monthlybill: string
-          notes?: string | null
-          phone: string
-          postalcode: string
-          price?: number | null
-          property_type?: string | null
-          purchasedby?: string[] | null
-          quality_score?: number | null
-          roof_surface?: number | null
-          roof_type?: string | null
-          source?: string | null
-          status: string
-          verification_status?: string | null
-        }
-        Update: {
-          address?: string | null
-          annual_consumption?: number | null
-          assigned_installer?: string | null
-          assignedto?: string | null
-          city?: string | null
-          clienttype?: string
-          contact_attempts?: number | null
-          created_at?: string
-          electrical_installation?: string | null
-          email?: string
-          exclusive_until?: string | null
-          firstname?: string
-          id?: string
-          last_contact_date?: string | null
-          lastname?: string
-          monthlybill?: string
-          notes?: string | null
-          phone?: string
-          postalcode?: string
-          price?: number | null
-          property_type?: string | null
-          purchasedby?: string[] | null
-          quality_score?: number | null
-          roof_surface?: number | null
-          roof_type?: string | null
-          source?: string | null
-          status?: string
-          verification_status?: string | null
-        }
+        Row: LeadsTable
+        Insert: Omit<LeadsTable, 'id' | 'created_at'>
+        Update: Partial<Omit<LeadsTable, 'id' | 'created_at'>>
         Relationships: [
           {
             foreignKeyName: "leads_assigned_installer_fkey"
@@ -183,49 +24,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "installers"
             referencedColumns: ["id"]
-          },
+          }
         ]
       }
       installers: {
-        Row: {
-          address: string
-          company_name: string
-          contact_name: string
-          created_at: string | null
-          credits: number
-          id: string
-          phone: string
-          postal_code: string
-          service_area: string[]
-          user_id: string
-          verified: boolean
-        }
-        Insert: {
-          address: string
-          company_name: string
-          contact_name: string
-          created_at?: string | null
-          credits?: number
-          id?: string
-          phone: string
-          postal_code: string
-          service_area: string[]
-          user_id: string
-          verified?: boolean
-        }
-        Update: {
-          address?: string
-          company_name?: string
-          contact_name?: string
-          created_at?: string | null
-          credits?: number
-          id?: string
-          phone?: string
-          postal_code?: string
-          service_area?: string[]
-          user_id?: string
-          verified?: boolean
-        }
+        Row: InstallersTable
+        Insert: Omit<InstallersTable, 'id'>
+        Update: Partial<Omit<InstallersTable, 'id'>>
         Relationships: [
           {
             foreignKeyName: "installers_user_id_fkey"
@@ -233,34 +38,31 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "users"
             referencedColumns: ["id"]
-          },
+          }
         ]
       }
+      profiles: {
+        Row: ProfilesTable
+        Insert: Omit<ProfilesTable, 'created_at'>
+        Update: Partial<Omit<ProfilesTable, 'created_at'>>
+        Relationships: []
+      }
+      users: {
+        Row: UsersTable
+        Insert: Omit<UsersTable, 'id'>
+        Update: Partial<Omit<UsersTable, 'id'>>
+        Relationships: []
+      }
+      messages: {
+        Row: MessagesTable
+        Insert: Partial<MessagesTable>
+        Update: Partial<MessagesTable>
+        Relationships: []
+      }
       lead_purchases: {
-        Row: {
-          amount: number
-          id: string
-          installer_id: string
-          lead_id: string
-          purchased_at: string | null
-          status: string
-        }
-        Insert: {
-          amount: number
-          id?: string
-          installer_id: string
-          lead_id: string
-          purchased_at?: string | null
-          status: string
-        }
-        Update: {
-          amount?: number
-          id?: string
-          installer_id?: string
-          lead_id?: string
-          purchased_at?: string | null
-          status?: string
-        }
+        Row: LeadPurchasesTable
+        Insert: Omit<LeadPurchasesTable, 'id'>
+        Update: Partial<Omit<LeadPurchasesTable, 'id'>>
         Relationships: [
           {
             foreignKeyName: "lead_purchases_installer_id_fkey"
@@ -275,45 +77,7 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "contacts"
             referencedColumns: ["id"]
-          },
-        ]
-      }
-      transactions: {
-        Row: {
-          amount: number
-          created_at: string
-          description: string | null
-          id: string
-          installer_id: string | null
-          status: string
-          type: string
-        }
-        Insert: {
-          amount: number
-          created_at?: string
-          description?: string | null
-          id?: string
-          installer_id?: string | null
-          status?: string
-          type: string
-        }
-        Update: {
-          amount?: number
-          created_at?: string
-          description?: string | null
-          id?: string
-          installer_id?: string | null
-          status?: string
-          type?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "transactions_installer_id_fkey"
-            columns: ["installer_id"]
-            isOneToOne: false
-            referencedRelation: "installers"
-            referencedColumns: ["id"]
-          },
+          }
         ]
       }
     }
