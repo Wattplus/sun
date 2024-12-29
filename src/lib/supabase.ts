@@ -23,10 +23,28 @@ export const messagesService = {
       throw new Error('Thread ID is required');
     }
 
+    // First, let's check if the table exists and log its structure
+    const { data: tableInfo, error: tableError } = await supabase
+      .from('messages')
+      .select('*')
+      .limit(1);
+
+    if (tableError) {
+      console.error('Error checking table:', tableError);
+      throw tableError;
+    }
+
+    // Log the structure of the first row if it exists
+    if (tableInfo && tableInfo.length > 0) {
+      console.log('Table structure:', Object.keys(tableInfo[0]));
+    } else {
+      console.log('Table is empty or does not exist');
+    }
+
     const { data, error } = await supabase
       .from('messages')
       .select('*')
-      .eq('thread_id', threadId)
+      .eq('id', threadId)
       .order('created_at', { ascending: true });
 
     if (error) {
@@ -44,7 +62,13 @@ export const messagesService = {
 
     const { data, error } = await supabase
       .from('messages')
-      .insert([message])
+      .insert([{
+        content: message.content,
+        sender_id: message.sender_id,
+        sender_type: message.sender_type,
+        id: message.thread_id, // Using thread_id as the message id for now
+        read: message.read
+      }])
       .select()
       .single();
 
