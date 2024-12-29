@@ -17,6 +17,12 @@ import { mockAvailableLeads } from "@/components/installer/dashboard/mockAvailab
 import { mockPurchasedLeads } from "@/components/installer/dashboard/mockPurchasedLeads";
 import AdminDashboard from "@/components/admin/AdminDashboard";
 import Admin from "@/pages/Admin";
+import StatisticsPage from "@/components/admin/statistics/StatisticsPage";
+import LeadManagement from "@/components/admin/LeadManagement";
+import InstallerManagement from "@/components/admin/InstallerManagement";
+import { LeadMarketplace } from "@/components/admin/marketplace/LeadMarketplace";
+import AdminSettingsPage from "@/components/admin/settings/SettingsPage";
+import AdminProfilePage from "@/components/admin/profile/ProfilePage";
 
 export function AppRoutes() {
   const navigate = useNavigate();
@@ -32,7 +38,13 @@ export function AppRoutes() {
       <Route path="/directory/:id" element={<InstallerProfile />} />
       <Route path="/admin" element={<Admin />}>
         <Route index element={<AdminDashboard />} />
+        <Route path="statistics" element={<StatisticsPage />} />
+        <Route path="leads" element={<LeadManagement />} />
+        <Route path="installers" element={<InstallerManagement />} />
+        <Route path="marketplace" element={<LeadMarketplace />} />
         <Route path="notifications" element={<NotificationsPage />} />
+        <Route path="settings" element={<AdminSettingsPage />} />
+        <Route path="profile" element={<AdminProfilePage />} />
       </Route>
       <Route path="/espace-installateur" element={<InstallerLayout />}>
         <Route index element={<InstallerDashboard />} />
