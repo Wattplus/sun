@@ -6,13 +6,10 @@ CREATE TABLE IF NOT EXISTS public.profiles (
     last_name text,
     phone text,
     postal_code text,
+    client_type text,
+    monthly_bill text,
     created_at timestamp with time zone default timezone('utc'::text, now()) not null
 );
-
--- Add missing columns if they don't exist
-ALTER TABLE public.profiles 
-ADD COLUMN IF NOT EXISTS client_type text,
-ADD COLUMN IF NOT EXISTS monthly_bill text;
 
 -- Enable RLS
 ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
