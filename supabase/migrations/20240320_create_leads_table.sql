@@ -1,14 +1,14 @@
 create table public.leads (
     id uuid default gen_random_uuid() primary key,
     created_at timestamp with time zone default timezone('utc'::text, now()) not null,
+    client_type text,
+    monthly_bill text,
     first_name text,
     last_name text,
     email text,
     phone text,
     postal_code text,
-    monthly_bill text,
-    clientType text,
-    status text default 'new'
+    status text default 'new'::text
 );
 
 -- Enable Row Level Security
