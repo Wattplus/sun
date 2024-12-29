@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Lead, LeadStatus } from "@/types/crm";
 import { useToast } from "@/components/ui/use-toast";
 import { LeadTable } from "./leads/LeadTable";
@@ -7,11 +7,10 @@ import { LeadStats } from "./leads/LeadStats";
 import { AdminBreadcrumb } from "./AdminBreadcrumb";
 import { LeadDialogs } from "./leads/LeadDialogs";
 import { mockInstallers } from "./InstallerManagement";
+import { supabase } from "@/lib/supabase-client";
 
-export const mockLeads: Lead[] = [];
-
-const LeadManagement = () => {
-  const [leads, setLeads] = useState<Lead[]>(mockLeads);
+export const LeadManagement = () => {
+  const [leads, setLeads] = useState<Lead[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
@@ -21,6 +20,40 @@ const LeadManagement = () => {
   const [leadToAssign, setLeadToAssign] = useState<Lead | null>(null);
   const [leadToDelete, setLeadToDelete] = useState<Lead | null>(null);
   const { toast } = useToast();
+
+  useEffect(() => {
+    fetchLeads();
+  }, []);
+
+  const fetchLeads = async () => {
+    try {
+      console.log("Fetching leads...");
+      const { data, error } = await supabase
+        .from("leads")
+        .select("*")
+        .order("created_at", { ascending: false });
+
+      if (error) {
+        console.error("Error fetching leads:", error);
+        toast({
+          title: "Erreur",
+          description: "Impossible de charger les leads",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      console.log("Leads fetched successfully:", data);
+      setLeads(data || []);
+    } catch (error) {
+      console.error("Unexpected error fetching leads:", error);
+      toast({
+        title: "Erreur",
+        description: "Une erreur est survenue lors du chargement des leads",
+        variant: "destructive",
+      });
+    }
+  };
 
   const getStatusColor = (status: LeadStatus) => {
     const colors = {
@@ -61,16 +94,40 @@ const LeadManagement = () => {
     setDeleteDialogOpen(true);
   };
 
-  const handleConfirmDelete = () => {
+  const handleConfirmDelete = async () => {
     if (!leadToDelete) return;
     
-    setLeads(leads.filter(lead => lead.id !== leadToDelete.id));
-    toast({
-      title: "Lead supprimé",
-      description: "Le lead a été supprimé avec succès.",
-    });
-    setDeleteDialogOpen(false);
-    setLeadToDelete(null);
+    try {
+      const { error } = await supabase
+        .from("leads")
+        .delete()
+        .eq("id", leadToDelete.id);
+
+      if (error) {
+        console.error("Error deleting lead:", error);
+        toast({
+          title: "Erreur",
+          description: "Impossible de supprimer le lead",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      setLeads(leads.filter(lead => lead.id !== leadToDelete.id));
+      toast({
+        title: "Lead supprimé",
+        description: "Le lead a été supprimé avec succès.",
+      });
+      setDeleteDialogOpen(false);
+      setLeadToDelete(null);
+    } catch (error) {
+      console.error("Unexpected error deleting lead:", error);
+      toast({
+        title: "Erreur",
+        description: "Une erreur est survenue lors de la suppression du lead",
+        variant: "destructive",
+      });
+    }
   };
 
   const handleEditClose = () => {
@@ -78,43 +135,90 @@ const LeadManagement = () => {
     setEditDialogOpen(false);
   };
 
-  const handleSaveLead = (updatedLead: Lead) => {
-    setLeads(leads.map(lead => lead.id === updatedLead.id ? updatedLead : lead));
-    toast({
-      title: "Lead mis à jour",
-      description: "Les modifications ont été enregistrées avec succès.",
-    });
-    handleEditClose();
+  const handleSaveLead = async (updatedLead: Lead) => {
+    try {
+      const { error } = await supabase
+        .from("leads")
+        .update(updatedLead)
+        .eq("id", updatedLead.id);
+
+      if (error) {
+        console.error("Error updating lead:", error);
+        toast({
+          title: "Erreur",
+          description: "Impossible de mettre à jour le lead",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      setLeads(leads.map(lead => lead.id === updatedLead.id ? updatedLead : lead));
+      toast({
+        title: "Lead mis à jour",
+        description: "Les modifications ont été enregistrées avec succès.",
+      });
+      handleEditClose();
+    } catch (error) {
+      console.error("Unexpected error updating lead:", error);
+      toast({
+        title: "Erreur",
+        description: "Une erreur est survenue lors de la mise à jour du lead",
+        variant: "destructive",
+      });
+    }
   };
 
-  const handleAssignSubmit = () => {
+  const handleAssignSubmit = async () => {
     if (!leadToAssign || !selectedInstallerId) return;
 
     const installer = mockInstallers.find(i => i.id === selectedInstallerId);
     if (!installer) return;
 
-    const updatedLead = {
-      ...leadToAssign,
-      status: "assigned" as LeadStatus,
-      assignedTo: installer.companyName
-    };
+    try {
+      const { error } = await supabase
+        .from("leads")
+        .update({
+          status: "assigned" as LeadStatus,
+          assignedTo: installer.companyName
+        })
+        .eq("id", leadToAssign.id);
 
-    setLeads(leads.map(lead => 
-      lead.id === updatedLead.id ? updatedLead : lead
-    ));
+      if (error) {
+        console.error("Error assigning lead:", error);
+        toast({
+          title: "Erreur",
+          description: "Impossible d'assigner le lead",
+          variant: "destructive",
+        });
+        return;
+      }
 
-    toast({
-      title: "Lead assigné avec succès",
-      description: `Le lead a été assigné à ${installer.companyName}`,
-    });
+      const updatedLead = {
+        ...leadToAssign,
+        status: "assigned" as LeadStatus,
+        assignedTo: installer.companyName
+      };
 
-    setAssignDialogOpen(false);
-    setSelectedInstallerId("");
-    setLeadToAssign(null);
-  };
+      setLeads(leads.map(lead => 
+        lead.id === updatedLead.id ? updatedLead : lead
+      ));
 
-  const exportToCSV = () => {
-    console.log("Exporting to CSV...");
+      toast({
+        title: "Lead assigné avec succès",
+        description: `Le lead a été assigné à ${installer.companyName}`,
+      });
+
+      setAssignDialogOpen(false);
+      setSelectedInstallerId("");
+      setLeadToAssign(null);
+    } catch (error) {
+      console.error("Unexpected error assigning lead:", error);
+      toast({
+        title: "Erreur",
+        description: "Une erreur est survenue lors de l'assignation du lead",
+        variant: "destructive",
+      });
+    }
   };
 
   return (
