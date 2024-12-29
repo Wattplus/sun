@@ -13,12 +13,17 @@ export const PrivateRoute = () => {
   useEffect(() => {
     const checkAdminStatus = async () => {
       if (isAuthenticated) {
+        console.log("Checking admin status...");
         const { data: profile } = await supabase
           .from('profiles')
           .select('role')
           .single();
         
-        setIsAdmin(profile?.role === 'admin' || profile?.role === 'super_admin');
+        const hasAdminRole = profile?.role === 'admin' || profile?.role === 'super_admin';
+        console.log("User role:", profile?.role);
+        console.log("Has admin access:", hasAdminRole);
+        
+        setIsAdmin(hasAdminRole);
       }
       setCheckingAdmin(false);
     };
@@ -35,12 +40,15 @@ export const PrivateRoute = () => {
   }
 
   if (!isAuthenticated) {
+    console.log("User not authenticated, redirecting to login");
     return <Navigate to="/login" />;
   }
 
   if (isAdminRoute && !isAdmin) {
+    console.log("Non-admin user attempting to access admin route, redirecting to home");
     return <Navigate to="/" />;
   }
 
+  console.log("Route access granted");
   return <Outlet />;
 };

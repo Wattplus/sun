@@ -19,39 +19,19 @@ export const Login = ({ isAdminLogin = false }: LoginProps) => {
     } = supabase.auth.onAuthStateChange(async (event, session) => {
       if (event === "SIGNED_IN" && session) {
         try {
-          console.log("Checking user role for:", session.user.id);
-          const { data: profile, error } = await supabase
-            .from('profiles')
-            .select('role')
-            .eq('id', session.user.id)
-            .single();
-
-          console.log("Profile data:", profile);
-          console.log("Profile error:", error);
-
-          if (error) {
-            console.error('Profile fetch error:', error);
-            throw error;
-          }
+          console.log("Auth state changed - SIGNED_IN detected");
+          console.log("Session user ID:", session.user.id);
+          console.log("Is admin login page:", isAdminLogin);
 
           if (isAdminLogin) {
-            if (profile?.role === 'admin' || profile?.role === 'super_admin') {
-              console.log("Admin login successful, redirecting to admin dashboard");
-              navigate("/admin");
-            } else {
-              console.log("Non-admin user attempted admin login");
-              await supabase.auth.signOut();
-              toast({
-                title: "Accès refusé",
-                description: "Vous n'avez pas les droits d'administration nécessaires.",
-                variant: "destructive",
-              });
-              navigate("/");
-            }
-          } else {
-            console.log("Regular user login, redirecting to dashboard");
-            navigate("/dashboard");
+            console.log("Admin login detected - redirecting to /admin");
+            navigate("/admin");
+            return;
           }
+
+          // Pour une connexion normale
+          console.log("Regular login detected - redirecting to /dashboard");
+          navigate("/dashboard");
         } catch (error) {
           console.error('Auth check error:', error);
           toast({
