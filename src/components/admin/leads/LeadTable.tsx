@@ -23,8 +23,12 @@ export const LeadTable = ({
   getStatusText,
 }: LeadTableProps) => {
   const formatDate = (dateString: string) => {
+    if (!dateString) return "Date non disponible";
+    
     try {
       const date = new Date(dateString);
+      if (isNaN(date.getTime())) return "Date invalide";
+      
       return date.toLocaleDateString('fr-FR', {
         day: '2-digit',
         month: '2-digit',
