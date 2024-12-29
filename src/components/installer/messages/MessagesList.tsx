@@ -1,14 +1,12 @@
-import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { MessageSquare, Send, Clock, User, CheckCircle2, Star, Archive, Trash2 } from "lucide-react";
-import { Textarea } from "@/components/ui/textarea";
-import { Button } from "@/components/ui/button";
+import { MessageSquare, Archive, Trash2, CheckCircle2 } from "lucide-react";
 import { useState } from "react";
-import { format } from "date-fns";
-import { fr } from "date-fns/locale";
-import { motion, AnimatePresence } from "framer-motion";
+import { useToast } from "@/hooks/use-toast";
+import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
+import { MessageHeader } from "./components/MessageHeader";
+import { MessageInput } from "./components/MessageInput";
+import { MessageItem } from "./components/MessageItem";
 
 interface Message {
   id: string;
@@ -51,42 +49,28 @@ const mockMessages: Message[] = [
 ];
 
 export function MessagesList({ onMessageSent }: MessagesListProps) {
-  const [newMessage, setNewMessage] = useState("");
   const [messages, setMessages] = useState(mockMessages);
   const [selectedMessages, setSelectedMessages] = useState<string[]>([]);
+  const { toast } = useToast();
 
-  const handleSendMessage = () => {
-    if (!newMessage.trim()) return;
-
+  const handleSendMessage = (content: string) => {
     const newMsg: Message = {
       id: Date.now().toString(),
       sender: {
         name: "Vous",
         type: "installer"
       },
-      content: newMessage,
+      content,
       date: new Date().toISOString().split('T')[0],
       read: true
     };
 
     setMessages(prev => [newMsg, ...prev]);
-    setNewMessage("");
     onMessageSent();
-  };
-
-  const formatDate = (dateString: string) => {
-    return format(new Date(dateString), "d MMMM yyyy", { locale: fr });
-  };
-
-  const getSenderBadge = (type: Message['sender']['type']) => {
-    switch (type) {
-      case 'admin':
-        return <Badge variant="default" className="bg-primary text-primary-foreground">Admin</Badge>;
-      case 'client':
-        return <Badge variant="default" className="bg-green-500">Client</Badge>;
-      case 'installer':
-        return <Badge variant="default" className="bg-orange-500">Installateur</Badge>;
-    }
+    toast({
+      title: "Message envoyé",
+      description: "Votre message a été envoyé avec succès"
+    });
   };
 
   const toggleMessageSelection = (messageId: string) => {
@@ -100,7 +84,6 @@ export function MessagesList({ onMessageSent }: MessagesListProps) {
   const handleBulkAction = (action: 'archive' | 'delete' | 'markRead') => {
     switch (action) {
       case 'archive':
-        // Implement archive logic
         toast({
           title: "Messages archivés",
           description: `${selectedMessages.length} messages ont été archivés`
@@ -108,19 +91,32 @@ export function MessagesList({ onMessageSent }: MessagesListProps) {
         break;
       case 'delete':
         setMessages(prev => prev.filter(msg => !selectedMessages.includes(msg.id)));
+        toast({
+          title: "Messages supprimés",
+          description: `${selectedMessages.length} messages ont été supprimés`
+        });
         break;
       case 'markRead':
         setMessages(prev => prev.map(msg => 
           selectedMessages.includes(msg.id) ? { ...msg, read: true } : msg
         ));
+        toast({
+          title: "Messages marqués comme lus",
+          description: `${selectedMessages.length} messages ont été marqués comme lus`
+        });
         break;
     }
     setSelectedMessages([]);
   };
 
+  const toggleMessageStar = (messageId: string) => {
+    setMessages(prev => prev.map(msg => 
+      msg.id === messageId ? { ...msg, starred: !msg.starred } : msg
+    ));
+  };
+
   return (
     <div className="space-y-6">
-      {/* Actions bar */}
       <div className="flex justify-between items-center">
         <div className="flex items-center gap-2">
           <Checkbox 
@@ -147,88 +143,24 @@ export function MessagesList({ onMessageSent }: MessagesListProps) {
             </div>
           )}
         </div>
-        <div className="flex items-center gap-3">
-          <MessageSquare className="h-5 w-5 text-primary" />
-          <span className="text-sm text-muted-foreground">
-            {messages.filter(m => !m.read).length} non lus
-          </span>
-        </div>
+        <MessageHeader unreadCount={messages.filter(m => !m.read).length} />
       </div>
 
       <ScrollArea className="h-[400px] pr-4">
-        <AnimatePresence>
-          <div className="space-y-2">
-            {messages.map((message) => (
-              <motion.div
-                key={message.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{ duration: 0.2 }}
-              >
-                <Card 
-                  className={`p-4 transition-all hover:shadow-md ${
-                    !message.read ? 'border-primary/50 bg-primary/5' : 'border-border/50'
-                  }`}
-                >
-                  <div className="flex items-center gap-4">
-                    <Checkbox 
-                      checked={selectedMessages.includes(message.id)}
-                      onCheckedChange={() => toggleMessageSelection(message.id)}
-                    />
-                    <div className="flex-1">
-                      <div className="flex justify-between items-start mb-2">
-                        <div className="flex items-center gap-2">
-                          <User className="h-4 w-4 text-muted-foreground" />
-                          <span className="font-medium">{message.sender.name}</span>
-                          {getSenderBadge(message.sender.type)}
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <Button variant="ghost" size="icon" className="h-8 w-8">
-                            <Star 
-                              className={`h-4 w-4 ${message.starred ? 'text-yellow-400 fill-yellow-400' : ''}`}
-                            />
-                          </Button>
-                          <Clock className="h-3 w-3 text-muted-foreground" />
-                          <span className="text-xs text-muted-foreground">
-                            {formatDate(message.date)}
-                          </span>
-                        </div>
-                      </div>
-                      <p className="text-sm text-muted-foreground leading-relaxed">
-                        {message.content}
-                      </p>
-                    </div>
-                  </div>
-                </Card>
-              </motion.div>
-            ))}
-          </div>
-        </AnimatePresence>
+        <div className="space-y-2">
+          {messages.map((message) => (
+            <MessageItem
+              key={message.id}
+              message={message}
+              selected={selectedMessages.includes(message.id)}
+              onSelect={toggleMessageSelection}
+              onToggleStar={toggleMessageStar}
+            />
+          ))}
+        </div>
       </ScrollArea>
 
-      <div className="flex flex-col gap-2 pt-4 border-t mt-4">
-        <Textarea
-          placeholder="Écrivez votre message..."
-          value={newMessage}
-          onChange={(e) => setNewMessage(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter' && !e.shiftKey) {
-              e.preventDefault();
-              handleSendMessage();
-            }
-          }}
-          className="min-h-[100px] bg-background/50"
-        />
-        <Button 
-          onClick={handleSendMessage}
-          className="self-end"
-          disabled={!newMessage.trim()}
-        >
-          <Send className="h-4 w-4 mr-2" />
-          Envoyer
-        </Button>
-      </div>
+      <MessageInput onSend={handleSendMessage} />
 
       {messages.length === 0 && (
         <div className="text-center py-12">
