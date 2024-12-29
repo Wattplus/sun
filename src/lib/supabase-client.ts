@@ -1,201 +1,131 @@
 import { createClient } from '@supabase/supabase-js';
-import emailjs from '@emailjs/browser';
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
-const EMAILJS_SERVICE_ID = 'service_611ohbh';
-const EMAILJS_TEMPLATE_ID = 'template_q11t4u8';
-const EMAILJS_PUBLIC_KEY = 'nSGUhEBvdNcDlBp0F';
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-if (!supabaseUrl || !supabaseKey) {
-  throw new Error('Missing Supabase environment variables');
-}
-
-export const supabase = createClient(supabaseUrl, supabaseKey, {
+export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
   auth: {
     autoRefreshToken: true,
     persistSession: true,
-    detectSessionInUrl: true
-  }
+  },
 });
 
-export const sendEmail = async (
-  email: string, 
-  firstName: string, 
-  lastName: string, 
-  phone: string, 
-  postalCode: string,
-  clientType: string,
-  monthlyBill: string,
-  password: string
-) => {
-  try {
-    console.log('Sending welcome email to:', email);
-    
-    const templateParams = {
-      to_email: email,
-      client_type: clientType,
-      first_name: firstName,
-      last_name: lastName,
-      email: email,
-      phone: phone,
-      postal_code: postalCode,
-      monthly_bill: monthlyBill,
-      password: password,
-      date: new Date().toLocaleDateString('fr-FR', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
-      })
-    };
-
-    const response = await emailjs.send(
-      EMAILJS_SERVICE_ID,
-      EMAILJS_TEMPLATE_ID,
-      templateParams,
-      EMAILJS_PUBLIC_KEY
-    );
-
-    console.log('Email sent successfully:', response);
-    return { error: null };
-  } catch (error) {
-    console.error('Error sending email:', error);
-    return { error };
-  }
-};
-
-const checkExistingUser = async (email: string) => {
+export const checkExistingUser = async (email: string) => {
   const { data, error } = await supabase
     .from('profiles')
     .select('id')
     .eq('email', email)
     .single();
 
-  if (error && error.code !== 'PGRST116') {
+  if (error) {
     console.error('Error checking existing user:', error);
-    return { error };
   }
 
-  return { data, error: null };
+  return data?.id;
 };
 
-export const createClientAccount = async (email: string, password: string, userData: any) => {
+export const createClientAccount = async (
+  email: string,
+  password: string,
+  metadata: {
+    firstName: string;
+    lastName: string;
+    phone: string;
+    postalCode: string;
+    clientType: string;
+    monthlyBill: string;
+  }
+) => {
   try {
-    console.log('Starting account creation process for:', email);
-
     // Vérifier si l'utilisateur existe déjà
-    const { data: existingUser, error: checkError } = await checkExistingUser(email);
+    const existingUserId = await checkExistingUser(email);
+    
+    if (existingUserId) {
+      console.log('User already exists, updating profile...');
+      // Mettre à jour le profil existant
+      const { error: updateError } = await supabase
+        .from('profiles')
+        .update({
+          first_name: metadata.firstName,
+          last_name: metadata.lastName,
+          phone: metadata.phone,
+          postal_code: metadata.postalCode,
+          client_type: metadata.clientType,
+          monthly_bill: metadata.monthlyBill,
+          updated_at: new Date().toISOString(),
+        })
+        .eq('id', existingUserId);
 
-    if (checkError) {
-      console.error('Error checking existing user:', checkError);
-      return { error: checkError };
+      if (updateError) throw updateError;
+      
+      return { data: { user: { id: existingUserId } }, error: null };
     }
 
-    let userId;
+    // Créer un nouveau compte si l'utilisateur n'existe pas
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: {
+          first_name: metadata.firstName,
+          last_name: metadata.lastName,
+          phone: metadata.phone,
+          postal_code: metadata.postalCode,
+          client_type: metadata.clientType,
+          monthly_bill: metadata.monthlyBill,
+        },
+      },
+    });
 
-    if (existingUser) {
-      console.log('User already exists, using existing ID:', existingUser.id);
-      userId = existingUser.id;
-    } else {
-      // Créer le compte avec le mot de passe généré
-      const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
+    if (error) throw error;
+
+    // Créer le profil dans la table profiles
+    const { error: profileError } = await supabase.from('profiles').insert([
+      {
+        id: data.user?.id,
         email,
-        password,
-        options: {
-          data: {
-            first_name: userData.firstName,
-            last_name: userData.lastName,
-            phone: userData.phone,
-            role: 'client'
-          }
-        }
-      });
+        first_name: metadata.firstName,
+        last_name: metadata.lastName,
+        phone: metadata.phone,
+        postal_code: metadata.postalCode,
+        client_type: metadata.clientType,
+        monthly_bill: metadata.monthlyBill,
+      },
+    ]);
 
-      if (signUpError) {
-        console.error('Error creating auth account:', signUpError);
-        return { error: signUpError };
-      }
+    if (profileError) throw profileError;
 
-      if (!signUpData.user?.id) {
-        console.error('No user ID available after auth operation');
-        return { error: new Error('Failed to get user ID') };
-      }
-
-      userId = signUpData.user.id;
-
-      // Envoyer l'email de bienvenue uniquement pour les nouveaux comptes
-      await sendEmail(
-        email,
-        userData.firstName,
-        userData.lastName,
-        userData.phone,
-        userData.postalCode,
-        userData.clientType,
-        userData.monthlyBill,
-        password
-      );
-    }
-
-    // Mettre à jour ou créer le profil
-    const { error: profileError } = await supabase
-      .from('profiles')
-      .upsert([
-        {
-          id: userId,
-          email: email,
-          first_name: userData.firstName,
-          last_name: userData.lastName,
-          phone: userData.phone,
-          postal_code: userData.postalCode,
-          client_type: userData.clientType,
-          monthly_bill: userData.monthlyBill
-        }
-      ], {
-        onConflict: 'id'
-      });
-
-    if (profileError) {
-      console.error('Error updating/creating profile:', profileError);
-      return { error: profileError };
-    }
-
-    return { data: { userId }, error: null };
+    return { data, error: null };
   } catch (error) {
-    console.error('Unexpected error in createClientAccount:', error);
-    return { error };
+    console.error('Error in createClientAccount:', error);
+    return { data: null, error };
   }
 };
 
-export const createLead = async (leadData: any) => {
+export const createLead = async (formData: {
+  clientType: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  monthlyBill: string;
+  postalCode: string;
+}) => {
   try {
-    console.log('Creating lead with data:', leadData);
-    
-    const { data, error } = await supabase
-      .from('leads')
-      .insert([
-        {
-          first_name: leadData.firstName,
-          last_name: leadData.lastName,
-          email: leadData.email,
-          phone: leadData.phone,
-          postal_code: leadData.postalCode,
-          monthly_bill: leadData.monthlyBill,
-          client_type: leadData.clientType,
-          status: 'new'
-        }
-      ])
-      .select()
-      .single();
+    const { error } = await supabase.from('leads').insert([
+      {
+        client_type: formData.clientType,
+        first_name: formData.firstName,
+        last_name: formData.lastName,
+        email: formData.email,
+        phone: formData.phone,
+        monthly_bill: formData.monthlyBill,
+        postal_code: formData.postalCode,
+        status: 'new',
+      },
+    ]);
 
-    if (error) {
-      console.error('Error creating lead:', error);
-      return { error };
-    }
-    
-    console.log('Lead created successfully:', data);
-    return { data, error: null };
+    return { error };
   } catch (error) {
     console.error('Error in createLead:', error);
     return { error };
