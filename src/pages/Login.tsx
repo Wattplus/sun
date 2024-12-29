@@ -19,20 +19,27 @@ export const Login = ({ isAdminLogin = false }: LoginProps) => {
     } = supabase.auth.onAuthStateChange(async (event, session) => {
       if (event === "SIGNED_IN" && session) {
         try {
-          // Vérifier si l'utilisateur est un admin
+          console.log("Checking user role for:", session.user.id);
           const { data: profile, error } = await supabase
             .from('profiles')
             .select('role')
             .eq('id', session.user.id)
             .single();
 
-          if (error) throw error;
+          console.log("Profile data:", profile);
+          console.log("Profile error:", error);
+
+          if (error) {
+            console.error('Profile fetch error:', error);
+            throw error;
+          }
 
           if (isAdminLogin) {
             if (profile?.role === 'admin' || profile?.role === 'super_admin') {
+              console.log("Admin login successful, redirecting to admin dashboard");
               navigate("/admin");
             } else {
-              // Si ce n'est pas un admin, déconnexion et redirection
+              console.log("Non-admin user attempted admin login");
               await supabase.auth.signOut();
               toast({
                 title: "Accès refusé",
@@ -42,7 +49,7 @@ export const Login = ({ isAdminLogin = false }: LoginProps) => {
               navigate("/");
             }
           } else {
-            // Pour une connexion normale, redirection vers le dashboard
+            console.log("Regular user login, redirecting to dashboard");
             navigate("/dashboard");
           }
         } catch (error) {
@@ -52,6 +59,7 @@ export const Login = ({ isAdminLogin = false }: LoginProps) => {
             description: "Une erreur est survenue lors de la vérification de l'authentification.",
             variant: "destructive",
           });
+          await supabase.auth.signOut();
         }
       }
     });
