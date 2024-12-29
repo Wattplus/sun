@@ -3,11 +3,12 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Lead, LeadStatus } from "@/types/lead";
-import { Edit, Trash2, UserPlus, Euro, Mail, Phone, MapPin, Shield, Building2, User2, CheckSquare } from "lucide-react";
-import { LeadPurchaseInfo } from "./LeadPurchaseInfo";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Euro, MapPin, Shield } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useState } from "react";
+import { LeadActions } from "./table/LeadActions";
+import { LeadContact } from "./table/LeadContact";
+import { LeadClientType } from "./table/LeadClientType";
 
 interface LeadTableProps {
   leads: Lead[];
@@ -110,7 +111,6 @@ export const LeadTable = ({
               </TableHead>
               <TableHead className="text-primary font-semibold">Type de client</TableHead>
               <TableHead className="text-primary font-semibold">Contact</TableHead>
-              <TableHead className="text-primary font-semibold">Coordonnées</TableHead>
               <TableHead className="text-primary font-semibold">Localisation</TableHead>
               <TableHead className="text-primary font-semibold">Facture mensuelle</TableHead>
               <TableHead className="text-primary font-semibold">Score</TableHead>
@@ -129,61 +129,10 @@ export const LeadTable = ({
                   />
                 </TableCell>
                 <TableCell>
-                  <div className="flex items-center gap-2">
-                    {lead.clienttype === 'particulier' ? (
-                      <User2 className="h-4 w-4 text-emerald-500" />
-                    ) : (
-                      <Building2 className="h-4 w-4 text-amber-500" />
-                    )}
-                    <Badge 
-                      variant="outline" 
-                      className={lead.clienttype === 'particulier' ? 'bg-emerald-500/10 text-emerald-600' : 'bg-amber-500/10 text-amber-600'}
-                    >
-                      {lead.clienttype === 'particulier' ? 'Particulier' : 'Professionnel'}
-                    </Badge>
-                  </div>
+                  <LeadClientType lead={lead} />
                 </TableCell>
                 <TableCell>
-                  <div className="font-medium">
-                    {lead.firstname} {lead.lastname}
-                  </div>
-                  <LeadPurchaseInfo lead={lead} />
-                </TableCell>
-                <TableCell>
-                  <div className="space-y-1.5">
-                    <TooltipProvider>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <a 
-                            href={`mailto:${lead.email}`} 
-                            className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors"
-                          >
-                            <Mail className="h-4 w-4" />
-                            <span className="truncate max-w-[200px]">{lead.email}</span>
-                          </a>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          Envoyer un email
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
-                    <TooltipProvider>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <a 
-                            href={`tel:${lead.phone}`} 
-                            className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors"
-                          >
-                            <Phone className="h-4 w-4" />
-                            <span>{lead.phone}</span>
-                          </a>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          Appeler
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
-                  </div>
+                  <LeadContact lead={lead} />
                 </TableCell>
                 <TableCell>
                   <div className="flex items-center gap-2">
@@ -219,59 +168,12 @@ export const LeadTable = ({
                   </Badge>
                 </TableCell>
                 <TableCell>
-                  <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <TooltipProvider>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => onEditClick(lead)}
-                            className="border-primary/20 hover:border-primary/40 hover:bg-primary/10"
-                          >
-                            <Edit className="h-4 w-4 text-primary" />
-                          </Button>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          Éditer
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
-                    <TooltipProvider>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => onAssignClick(lead)}
-                            disabled={lead.status === "assigned" || lead.status === "converted"}
-                            className="border-primary/20 hover:border-primary/40 hover:bg-primary/10"
-                          >
-                            <UserPlus className="h-4 w-4 text-primary" />
-                          </Button>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          Assigner
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
-                    <TooltipProvider>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <Button
-                            variant="destructive"
-                            size="sm"
-                            onClick={() => onDeleteClick(lead)}
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          Supprimer
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
-                  </div>
+                  <LeadActions
+                    lead={lead}
+                    onEditClick={onEditClick}
+                    onAssignClick={onAssignClick}
+                    onDeleteClick={onDeleteClick}
+                  />
                 </TableCell>
               </TableRow>
             ))}
