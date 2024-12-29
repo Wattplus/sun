@@ -1,5 +1,6 @@
 import { Routes, Route, useNavigate } from "react-router-dom";
 import { Index } from "@/pages/Index";
+import { Login } from "@/pages/Login";
 import { InstallerDashboard } from "@/components/installer/InstallerDashboard";
 import { InstallerLayout } from "@/components/installer/navigation/InstallerLayout";
 import { AccountPage } from "@/components/installer/account/AccountPage";
@@ -28,6 +29,7 @@ export function AppRoutes() {
 
   return (
     <Routes>
+      <Route path="/login" element={<Login />} />
       <Route path="/admin" element={<Admin />}>
         <Route index element={<AdminDashboard />} />
         <Route path="statistics" element={<StatisticsPage />} />
