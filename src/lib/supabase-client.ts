@@ -85,12 +85,12 @@ export const createClientAccount = async (
       password,
       options: {
         data: {
-          firstname: metadata.firstName,
-          lastname: metadata.lastName,
+          first_name: metadata.firstName,
+          last_name: metadata.lastName,
           phone: metadata.phone,
-          postalcode: metadata.postalCode,
-          clienttype: metadata.clientType.toLowerCase(),
-          monthlybill: metadata.monthlyBill,
+          postal_code: metadata.postalCode,
+          client_type: metadata.clientType.toLowerCase(),
+          monthly_bill: metadata.monthlyBill,
         },
       },
     });
@@ -101,12 +101,12 @@ export const createClientAccount = async (
       {
         id: authData.user?.id,
         email,
-        firstname: metadata.firstName,
-        lastname: metadata.lastName,
+        first_name: metadata.firstName,
+        last_name: metadata.lastName,
         phone: metadata.phone,
-        postalcode: metadata.postalCode,
-        clienttype: metadata.clientType.toLowerCase(),
-        monthlybill: metadata.monthlyBill,
+        postal_code: metadata.postalCode,
+        client_type: metadata.clientType.toLowerCase(),
+        monthly_bill: metadata.monthlyBill,
       },
     ]);
 
