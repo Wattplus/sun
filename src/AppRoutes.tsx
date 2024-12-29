@@ -7,6 +7,7 @@ import { InstallerDashboard } from "@/components/installer/InstallerDashboard";
 import { InstallerLayout } from "@/components/installer/navigation/InstallerLayout";
 import { AccountPage } from "@/components/installer/account/AccountPage";
 import { MessagesPage } from "@/components/installer/messages/MessagesPage";
+import { ConversationPage } from "@/components/installer/messages/ConversationPage";
 import { SettingsPage } from "@/components/installer/settings/SettingsPage";
 import { ProfilePage } from "@/components/installer/profile/ProfilePage";
 import { AllAvailableLeads } from "@/components/installer/dashboard/leads/AllAvailableLeads";
@@ -29,6 +30,8 @@ export function AppRoutes() {
       <Route path="/directory/:id" element={<InstallerProfile />} />
       <Route path="/espace-installateur" element={<InstallerLayout />}>
         <Route index element={<InstallerDashboard />} />
+        <Route path="messages" element={<MessagesPage />} />
+        <Route path="messages/:id" element={<ConversationPage />} />
         <Route 
           path="leads/nouveaux" 
           element={<AllAvailableLeads leads={mockAvailableLeads} onClose={handleClose} />} 
@@ -37,7 +40,6 @@ export function AppRoutes() {
           path="leads/achetes" 
           element={<AllPurchasedLeads leads={mockPurchasedLeads} onClose={handleClose} />} 
         />
-        <Route path="messages" element={<MessagesPage />} />
         <Route path="rapports" element={<ProfilePage />} />
         <Route path="parametres" element={<SettingsPage />} />
         <Route path="notifications" element={<NotificationsPage />} />

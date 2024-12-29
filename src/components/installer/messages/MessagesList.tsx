@@ -13,6 +13,10 @@ interface Message {
   };
 }
 
+interface MessagesListProps {
+  onMessageClick?: (id: string) => void;
+}
+
 const mockMessages: Message[] = [
   {
     id: "1",
@@ -34,7 +38,7 @@ const mockMessages: Message[] = [
   }
 ];
 
-export function MessagesList() {
+export function MessagesList({ onMessageClick }: MessagesListProps) {
   const [messages] = useState(mockMessages);
   const { toast } = useToast();
 
@@ -50,7 +54,11 @@ export function MessagesList() {
       <ScrollArea className="h-[500px] pr-4">
         <div className="space-y-4">
           {messages.map((message) => (
-            <div key={message.id} className="bg-muted/50 rounded-lg p-4 space-y-4">
+            <div 
+              key={message.id} 
+              className="bg-muted/50 rounded-lg p-4 space-y-4 cursor-pointer hover:bg-muted/70 transition-colors"
+              onClick={() => onMessageClick?.(message.id)}
+            >
               <div className="flex justify-between items-start">
                 <div className="text-sm text-muted-foreground">{message.date}</div>
               </div>
