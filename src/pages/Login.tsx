@@ -14,6 +14,38 @@ export const Login = ({ isAdminLogin = false }: LoginProps) => {
   const { toast } = useToast();
 
   useEffect(() => {
+    const checkCurrentSession = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session) {
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('role')
+          .eq('id', session.user.id)
+          .single();
+
+        const isAdmin = profile?.role === 'admin' || profile?.role === 'super_admin';
+        
+        if (isAdminLogin && !isAdmin) {
+          await supabase.auth.signOut();
+          toast({
+            title: "Accès refusé",
+            description: "Vous n'avez pas les droits d'administration nécessaires.",
+            variant: "destructive",
+          });
+        } else if (isAdminLogin && isAdmin) {
+          navigate("/admin");
+        } else if (!isAdminLogin && isAdmin) {
+          navigate("/admin");
+        } else {
+          navigate("/dashboard");
+        }
+      }
+    };
+
+    checkCurrentSession();
+  }, [isAdminLogin, navigate, toast]);
+
+  useEffect(() => {
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(async (event, session) => {
@@ -23,7 +55,6 @@ export const Login = ({ isAdminLogin = false }: LoginProps) => {
           console.log("ID utilisateur:", session.user.id);
           console.log("Page de connexion admin:", isAdminLogin);
 
-          // Récupérer le profil utilisateur avec le rôle
           const { data: profile, error: profileError } = await supabase
             .from('profiles')
             .select('role')
