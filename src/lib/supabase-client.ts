@@ -11,17 +11,23 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
 });
 
 export const checkExistingUser = async (email: string) => {
-  const { data, error } = await supabase
-    .from('profiles')
-    .select('id')
-    .eq('email', email)
-    .single();
+  try {
+    const { data, error } = await supabase
+      .from('profiles')
+      .select('id')
+      .eq('email', email)
+      .maybeSingle(); // Utilisation de maybeSingle au lieu de single
 
-  if (error) {
-    console.error('Error checking existing user:', error);
+    if (error) {
+      console.error('Error checking existing user:', error);
+      return null;
+    }
+
+    return data?.id;
+  } catch (error) {
+    console.error('Error in checkExistingUser:', error);
+    return null;
   }
-
-  return data?.id;
 };
 
 export const createClientAccount = async (
@@ -37,12 +43,10 @@ export const createClientAccount = async (
   }
 ) => {
   try {
-    // Vérifier si l'utilisateur existe déjà
     const existingUserId = await checkExistingUser(email);
     
     if (existingUserId) {
       console.log('User already exists, updating profile...');
-      // Mettre à jour le profil existant
       const { error: updateError } = await supabase
         .from('profiles')
         .update({
@@ -61,7 +65,6 @@ export const createClientAccount = async (
       return { data: { user: { id: existingUserId } }, error: null };
     }
 
-    // Créer un nouveau compte si l'utilisateur n'existe pas
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
@@ -79,7 +82,6 @@ export const createClientAccount = async (
 
     if (error) throw error;
 
-    // Créer le profil dans la table profiles
     const { error: profileError } = await supabase.from('profiles').insert([
       {
         id: data.user?.id,
@@ -124,6 +126,10 @@ export const createLead = async (formData: {
         status: 'new',
       },
     ]);
+
+    if (error) {
+      console.error('Error creating lead:', error);
+    }
 
     return { error };
   } catch (error) {
