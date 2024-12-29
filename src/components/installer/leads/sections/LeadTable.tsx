@@ -1,95 +1,109 @@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { motion } from "framer-motion";
-import { ArrowUpRight } from "lucide-react";
-import { Lead, InstallerLeadStatus } from "@/types/crm";
-import { Link } from "react-router-dom";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useLeadsSync } from "@/hooks/useLeadsSync";
-import { toast } from "sonner";
+import { Lead, LeadStatus } from "@/types/crm";
+import { Edit, Trash2, UserPlus } from "lucide-react";
 
 interface LeadTableProps {
   leads: Lead[];
-  getStatusColor: (status: string) => string;
+  onEditClick: (lead: Lead) => void;
+  onAssignClick: (lead: Lead) => void;
+  onDeleteClick: (lead: Lead) => void;
+  getStatusColor: (status: LeadStatus) => string;
+  getStatusText: (status: LeadStatus) => string;
 }
 
-export const LeadTable = ({ leads, getStatusColor }: LeadTableProps) => {
-  const { updateLead } = useLeadsSync();
-
-  const handleStatusChange = async (leadId: string, newStatus: InstallerLeadStatus) => {
-    try {
-      await updateLead({ id: leadId, installerStatus: newStatus });
-      toast.success("Statut mis à jour avec succès");
-    } catch (error) {
-      toast.error("Erreur lors de la mise à jour du statut");
-    }
-  };
-
+export const LeadTable = ({
+  leads,
+  onEditClick,
+  onAssignClick,
+  onDeleteClick,
+  getStatusColor,
+  getStatusText,
+}: LeadTableProps) => {
   return (
-    <ScrollArea className="h-[600px]">
+    <ScrollArea className="h-[600px] rounded-md border border-[#33C3F0]/20">
       <Table>
         <TableHeader>
-          <TableRow className="bg-primary/5">
-            <TableHead className="font-semibold">Type de projet</TableHead>
-            <TableHead className="font-semibold">Prénom</TableHead>
-            <TableHead className="font-semibold">Nom</TableHead>
-            <TableHead className="font-semibold">Email</TableHead>
-            <TableHead className="font-semibold">Téléphone</TableHead>
-            <TableHead className="font-semibold">Code postal</TableHead>
-            <TableHead className="font-semibold">Type de toit</TableHead>
-            <TableHead className="font-semibold">Facture mensuelle</TableHead>
-            <TableHead className="font-semibold">Statut</TableHead>
-            <TableHead className="font-semibold">Actions</TableHead>
+          <TableRow className="bg-[#1EAEDB]/5">
+            <TableHead>Type de client</TableHead>
+            <TableHead>Facture mensuelle</TableHead>
+            <TableHead>Code postal</TableHead>
+            <TableHead>Contact</TableHead>
+            <TableHead>Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {leads?.map((lead) => (
-            <TableRow key={lead.id} className="group hover:bg-primary/5">
+          {leads.map((lead) => (
+            <TableRow key={lead.id} className="hover:bg-[#1EAEDB]/5">
               <TableCell>
-                <Badge variant="outline" className={lead.projectType === 'professional' ? 'bg-amber-500/10 text-amber-600' : 'bg-emerald-500/10 text-emerald-600'}>
-                  {lead.projectType === 'professional' ? 'Professionnel' : 'Résidentiel'}
-                </Badge>
-              </TableCell>
-              <TableCell className="font-medium">{lead.firstName}</TableCell>
-              <TableCell>{lead.lastName}</TableCell>
-              <TableCell>{lead.email}</TableCell>
-              <TableCell>{lead.phone}</TableCell>
-              <TableCell>
-                <Badge variant="outline" className="bg-primary/10">
-                  {lead.postalCode}
-                </Badge>
-              </TableCell>
-              <TableCell>{lead.roofType || 'Non renseigné'}</TableCell>
-              <TableCell>{lead.monthlyBill ? `${lead.monthlyBill}€/mois` : 'Non renseigné'}</TableCell>
-              <TableCell>
-                <Select
-                  value={lead.installerStatus || 'nouveau'}
-                  onValueChange={(value: InstallerLeadStatus) => handleStatusChange(lead.id, value)}
-                >
-                  <SelectTrigger className="w-[140px]">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="nouveau">Nouveau</SelectItem>
-                    <SelectItem value="contacte">Contacté</SelectItem>
-                    <SelectItem value="devis_envoye">Devis envoyé</SelectItem>
-                    <SelectItem value="rdv_planifie">RDV planifié</SelectItem>
-                    <SelectItem value="negociation">En négociation</SelectItem>
-                    <SelectItem value="signe">Signé</SelectItem>
-                    <SelectItem value="perdu">Perdu</SelectItem>
-                  </SelectContent>
-                </Select>
+                {lead.clienttype === 'particulier' ? 'Particulier' : 'Professionnel'}
               </TableCell>
               <TableCell>
-                <Link to={`/espace-installateur/leads/${lead.id}`}>
-                  <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    className="p-2 rounded-full bg-primary/10 text-primary hover:bg-primary/20 transition-colors opacity-0 group-hover:opacity-100"
+                {lead.monthlybill ? `${lead.monthlybill} €` : 'Non renseigné €'}
+              </TableCell>
+              <TableCell>
+                {lead.postalcode ? (
+                  <Badge variant="outline" className="bg-primary/10">
+                    {lead.postalcode}
+                  </Badge>
+                ) : (
+                  <span className="text-sm text-muted-foreground">Non renseigné</span>
+                )}
+              </TableCell>
+              <TableCell>
+                <div className="space-y-1">
+                  <div className="font-medium">
+                    {`${lead.firstname || ''} ${lead.lastname || ''}`}
+                  </div>
+                  {lead.email && (
+                    <div className="text-sm text-muted-foreground">
+                      <a href={`mailto:${lead.email}`} className="hover:underline">
+                        {lead.email}
+                      </a>
+                    </div>
+                  )}
+                  {lead.phone && (
+                    <div className="text-sm text-muted-foreground">
+                      <a href={`tel:${lead.phone}`} className="hover:underline">
+                        {lead.phone}
+                      </a>
+                    </div>
+                  )}
+                </div>
+              </TableCell>
+              <TableCell>
+                <div className="flex gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => onEditClick(lead)}
+                    className="border-[#33C3F0]/20 hover:border-[#33C3F0]/40 hover:bg-[#33C3F0]/10"
                   >
-                    <ArrowUpRight className="h-4 w-4" />
-                  </motion.button>
-                </Link>
+                    <Edit className="h-4 w-4 mr-2 text-[#1EAEDB]" />
+                    Éditer
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => onAssignClick(lead)}
+                    disabled={lead.status === "assigned" || lead.status === "converted"}
+                    className="border-[#33C3F0]/20 hover:border-[#33C3F0]/40 hover:bg-[#33C3F0]/10"
+                  >
+                    <UserPlus className="h-4 w-4 mr-2 text-[#1EAEDB]" />
+                    Assigner
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => onDeleteClick(lead)}
+                    className="border-red-500/20 hover:border-red-500/40 hover:bg-red-500/10"
+                  >
+                    <Trash2 className="h-4 w-4 mr-2 text-red-500" />
+                    Supprimer
+                  </Button>
+                </div>
               </TableCell>
             </TableRow>
           ))}

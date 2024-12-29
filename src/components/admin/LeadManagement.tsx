@@ -243,7 +243,7 @@ export const LeadManagement = () => {
           setAssignDialogOpen={setAssignDialogOpen}
           setDeleteDialogOpen={setDeleteDialogOpen}
           setSelectedInstallerId={setSelectedInstallerId}
-          handleAssignSubmit={handleAssignSubmit}
+          handleAssignSubmit={() => leadToAssign && selectedInstallerId ? handleAssignSubmit(leadToAssign.id, selectedInstallerId) : undefined}
           handleConfirmDelete={handleConfirmDelete}
         />
       </div>
