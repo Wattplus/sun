@@ -4,14 +4,12 @@ import type { Message, Conversation } from '@/types/messages';
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-// Check if environment variables are properly configured
 if (!supabaseUrl || !supabaseKey) {
   throw new Error(
     'Missing Supabase configuration. Please set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in your environment variables.'
   );
 }
 
-// Check if the URL contains placeholder text
 if (supabaseUrl.includes('[YOUR-ACTUAL-PROJECT-ID]')) {
   throw new Error(
     'Please replace [YOUR-ACTUAL-PROJECT-ID] with your actual Supabase project ID in VITE_SUPABASE_URL'
@@ -26,18 +24,19 @@ export const messagesService = {
       throw new Error('conversationId is required');
     }
 
-    const { data, error } = await supabase
-      .from('messages')
-      .select('*')
-      .eq('conversation_id', conversationId)
-      .order('created_at', { ascending: true });
-    
-    if (error) {
+    try {
+      const { data, error } = await supabase
+        .from('messages')
+        .select('*')
+        .eq('conversation_id', conversationId)
+        .order('created_at', { ascending: true });
+      
+      if (error) throw error;
+      return data as Message[];
+    } catch (error) {
       console.error('Error fetching messages:', error);
       throw error;
     }
-
-    return data as Message[];
   },
 
   async sendMessage(message: Omit<Message, 'id' | 'created_at'>) {
@@ -45,17 +44,18 @@ export const messagesService = {
       throw new Error('conversation_id and content are required');
     }
 
-    const { data, error } = await supabase
-      .from('messages')
-      .insert([message])
-      .select()
-      .single();
-    
-    if (error) {
+    try {
+      const { data, error } = await supabase
+        .from('messages')
+        .insert([message])
+        .select()
+        .single();
+      
+      if (error) throw error;
+      return data as Message;
+    } catch (error) {
       console.error('Error sending message:', error);
       throw error;
     }
-
-    return data as Message;
   }
 };
