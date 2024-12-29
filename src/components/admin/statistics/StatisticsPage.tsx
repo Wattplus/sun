@@ -5,12 +5,12 @@ import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, Tool
 import { TrendingUp, Users, FileText, Target, ChartBar } from "lucide-react";
 
 const monthlyData = [
-  { month: 'Jan', leads: 65, conversions: 12, revenue: 4500 },
-  { month: 'Fév', leads: 78, conversions: 15, revenue: 5200 },
-  { month: 'Mar', leads: 82, conversions: 18, revenue: 6100 },
-  { month: 'Avr', leads: 95, conversions: 22, revenue: 7300 },
-  { month: 'Mai', leads: 110, conversions: 25, revenue: 8200 },
-  { month: 'Jun', leads: 125, conversions: 30, revenue: 9500 },
+  { month: 'Jan', leads: 0, conversions: 0, revenue: 0 },
+  { month: 'Fév', leads: 0, conversions: 0, revenue: 0 },
+  { month: 'Mar', leads: 0, conversions: 0, revenue: 0 },
+  { month: 'Avr', leads: 0, conversions: 0, revenue: 0 },
+  { month: 'Mai', leads: 0, conversions: 0, revenue: 0 },
+  { month: 'Jun', leads: 0, conversions: 0, revenue: 0 },
 ];
 
 const StatisticsPage = () => {
@@ -32,8 +32,8 @@ const StatisticsPage = () => {
             <Users className="h-4 w-4 text-primary" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">555</div>
-            <p className="text-xs text-muted-foreground">+12% ce mois</p>
+            <div className="text-2xl font-bold">0</div>
+            <p className="text-xs text-muted-foreground">+0% ce mois</p>
           </CardContent>
         </Card>
 
@@ -43,8 +43,8 @@ const StatisticsPage = () => {
             <Target className="h-4 w-4 text-primary" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">24%</div>
-            <p className="text-xs text-muted-foreground">+2.5% vs dernier mois</p>
+            <div className="text-2xl font-bold">0%</div>
+            <p className="text-xs text-muted-foreground">+0% vs dernier mois</p>
           </CardContent>
         </Card>
 
@@ -54,8 +54,8 @@ const StatisticsPage = () => {
             <FileText className="h-4 w-4 text-primary" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">133</div>
-            <p className="text-xs text-muted-foreground">+8% ce mois</p>
+            <div className="text-2xl font-bold">0</div>
+            <p className="text-xs text-muted-foreground">+0% ce mois</p>
           </CardContent>
         </Card>
 
@@ -65,7 +65,7 @@ const StatisticsPage = () => {
             <TrendingUp className="h-4 w-4 text-primary" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">+15%</div>
+            <div className="text-2xl font-bold">0%</div>
             <p className="text-xs text-muted-foreground">vs mois dernier</p>
           </CardContent>
         </Card>
