@@ -3,7 +3,7 @@ import { Card } from "@/components/ui/card";
 import StatCard from "./StatCard";
 import PerformanceChart from "./PerformanceChart";
 import { AdminBreadcrumb } from "./AdminBreadcrumb";
-import { RecentActivity } from "./RecentActivity";
+import RecentActivity from "./RecentActivity";
 import { supabase } from "@/lib/supabase-client";
 import { useToast } from "@/hooks/use-toast";
 import { Euro, TrendingUp, Users, CheckCircle, XCircle } from "lucide-react";
@@ -125,7 +125,7 @@ export default function AdminDashboard() {
       <div className="grid gap-4 md:grid-cols-2">
         <PerformanceChart data={[]} />
         <Card className="p-6">
-          <RecentActivity />
+          <RecentActivity leads={[]} installers={[]} />
         </Card>
       </div>
     </div>
