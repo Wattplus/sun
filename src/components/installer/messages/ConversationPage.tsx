@@ -2,7 +2,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { ChevronLeft, Send, Plus, Calendar, FileText } from "lucide-react";
+import { ChevronLeft, Send, Plus, Calendar, FileText, Home, Sun, Euro, MapPin, Phone, Mail } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { MessagesList } from "./MessagesList";
 import { useToast } from "@/hooks/use-toast";
@@ -58,7 +58,7 @@ export function ConversationPage() {
         <div className="grid grid-cols-12 gap-4">
           {/* Sidebar - Client Info */}
           <Card className="col-span-12 md:col-span-3 p-4 space-y-4">
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">
                 <Avatar>
                   <div className="bg-primary text-primary-foreground w-10 h-10 rounded-full flex items-center justify-center">
@@ -67,25 +67,62 @@ export function ConversationPage() {
                 </Avatar>
                 <div>
                   <h3 className="font-semibold">Accard Marie</h3>
-                  <Badge variant="secondary">Nouveau LEAD</Badge>
+                  <Badge variant="secondary" className="mt-1">Lead Photovoltaïque</Badge>
+                </div>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 gap-4 bg-secondary/5 p-4 rounded-lg">
+              <div className="flex items-center gap-2">
+                <Home className="h-4 w-4 text-primary" />
+                <div>
+                  <p className="text-sm text-muted-foreground">Type de projet</p>
+                  <p className="font-medium">Résidentiel - 35m²</p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <Sun className="h-4 w-4 text-primary" />
+                <div>
+                  <p className="text-sm text-muted-foreground">Orientation</p>
+                  <p className="font-medium">Plein Sud</p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <Euro className="h-4 w-4 text-primary" />
+                <div>
+                  <p className="text-sm text-muted-foreground">Facture mensuelle</p>
+                  <p className="font-medium">180€</p>
                 </div>
               </div>
             </div>
 
             <Separator />
 
-            <div className="space-y-4">
-              <div>
-                <p className="text-sm text-muted-foreground">Email</p>
-                <p className="font-medium">mlerrible@wanadoo.fr</p>
+            <div className="space-y-3">
+              <div className="flex items-center gap-2">
+                <Mail className="h-4 w-4 text-primary" />
+                <div>
+                  <p className="text-sm text-muted-foreground">Email</p>
+                  <p className="font-medium">mlerrible@wanadoo.fr</p>
+                </div>
               </div>
-              <div>
-                <p className="text-sm text-muted-foreground">Téléphone</p>
-                <p className="font-medium">0674909294</p>
+              
+              <div className="flex items-center gap-2">
+                <Phone className="h-4 w-4 text-primary" />
+                <div>
+                  <p className="text-sm text-muted-foreground">Téléphone</p>
+                  <p className="font-medium">0674909294</p>
+                </div>
               </div>
-              <div>
-                <p className="text-sm text-muted-foreground">Adresse</p>
-                <p className="font-medium">25380 longevelle les russey</p>
+              
+              <div className="flex items-center gap-2">
+                <MapPin className="h-4 w-4 text-primary" />
+                <div>
+                  <p className="text-sm text-muted-foreground">Adresse</p>
+                  <p className="font-medium">25380 longevelle les russey</p>
+                </div>
               </div>
             </div>
 
