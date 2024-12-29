@@ -27,6 +27,7 @@ export const AppRoutes = () => {
       
       {/* Protected routes */}
       <Route element={<PrivateRoute />}>
+        {/* Client routes */}
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/settings" element={<Settings />} />
@@ -38,8 +39,8 @@ export const AppRoutes = () => {
         <Route path="/admin/installers" element={<InstallerManagement />} />
         <Route path="/admin/marketplace" element={<LeadMarketplace />} />
         <Route path="/admin/notifications" element={<NotificationsPage />} />
-        <Route path="/admin/settings" element={<SettingsPage />} />
         <Route path="/admin/profile" element={<AdminProfilePage />} />
+        <Route path="/admin/settings" element={<SettingsPage />} />
       </Route>
 
       {/* Catch all route */}

@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { Card } from "@/components/ui/card";
 import StatCard from "./StatCard";
 import PerformanceChart from "./PerformanceChart";
 import { AdminBreadcrumb } from "./AdminBreadcrumb";
@@ -7,127 +6,108 @@ import RecentActivity from "./RecentActivity";
 import { supabase } from "@/lib/supabase-client";
 import { useToast } from "@/hooks/use-toast";
 import { Euro, TrendingUp, Users, CheckCircle, XCircle } from "lucide-react";
+import { Card } from "@/components/ui/card";
+import { Lead } from "@/types/crm";
 
-export default function AdminDashboard() {
-  const [stats, setStats] = useState({
-    totalLeads: 0,
-    convertedLeads: 0,
-    lostLeads: 0,
-    totalRevenue: 0,
-    averageRevenue: 0,
-  });
-  const { toast } = useToast();
+const AdminDashboard = () => {
+  const [leads, setLeads] = useState<Lead[]>([]);
+  const [installers, setInstallers] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const { toast } = useToast();
 
   useEffect(() => {
-    const fetchStats = async () => {
+    const fetchData = async () => {
       try {
-        console.log("Fetching stats...");
-        const { data: leads, error } = await supabase
-          .from("leads")
-          .select("*");
+        const { data: leadsData, error: leadsError } = await supabase
+          .from('leads')
+          .select('*')
+          .order('created_at', { ascending: false });
 
-        if (error) {
-          console.error("Error fetching leads:", error);
-          toast({
-            title: "Erreur",
-            description: "Impossible de charger les statistiques",
-            variant: "destructive" as const,
-          });
-          return;
-        }
+        if (leadsError) throw leadsError;
 
-        const totalLeads = leads?.length || 0;
-        const convertedLeads = leads?.filter(lead => lead.status === "converted").length || 0;
-        const lostLeads = leads?.filter(lead => lead.status === "lost").length || 0;
-        
-        // Calculate revenue (assuming each lead has a price field)
-        const totalRevenue = leads?.reduce((sum, lead) => sum + (lead.price || 0), 0) || 0;
-        const averageRevenue = totalLeads > 0 ? totalRevenue / totalLeads : 0;
+        const { data: installersData, error: installersError } = await supabase
+          .from('installers')
+          .select('*');
 
-        setStats({
-          totalLeads,
-          convertedLeads,
-          lostLeads,
-          totalRevenue,
-          averageRevenue,
-        });
+        if (installersError) throw installersError;
 
-        console.log("Stats fetched successfully:", { totalLeads, convertedLeads, lostLeads, totalRevenue, averageRevenue });
+        setLeads(leadsData || []);
+        setInstallers(installersData || []);
       } catch (error) {
-        console.error("Unexpected error fetching stats:", error);
+        console.error('Error fetching dashboard data:', error);
         toast({
           title: "Erreur",
-          description: "Une erreur est survenue lors du chargement des statistiques",
-          variant: "destructive" as const,
+          description: "Impossible de charger les données du tableau de bord",
+          variant: "destructive",
         });
       } finally {
         setIsLoading(false);
       }
     };
 
-    fetchStats();
+    fetchData();
   }, [toast]);
 
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary"></div>
-      </div>
-    );
-  }
-
-  const trendIcon = TrendingUp;
-  const trendColor = stats.convertedLeads > stats.lostLeads ? "green" : "red";
+  const totalLeads = leads.length;
+  const convertedLeads = leads.filter(lead => lead.status === 'converted').length;
+  const lostLeads = leads.filter(lead => lead.status === 'lost').length;
+  const conversionRate = totalLeads ? ((convertedLeads / totalLeads) * 100).toFixed(1) : '0';
+  
+  // Assuming each lead has a value of 100€ for this example
+  const leadValue = 100;
+  const totalRevenue = convertedLeads * leadValue;
+  const averageRevenue = totalLeads ? (totalRevenue / totalLeads).toFixed(2) : '0';
 
   return (
     <div className="space-y-6 p-6">
       <AdminBreadcrumb />
       
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
         <StatCard
-          title="Total des Leads"
-          value={stats.totalLeads.toString()}
-          change={`${((stats.convertedLeads / stats.totalLeads) * 100).toFixed(1)}% de conversion`}
+          title="Total Leads"
+          value={totalLeads.toString()}
           icon={Users}
-          trendIcon={trendIcon}
-          trendColor={trendColor}
+          trend="+12%"
+          trendUp={true}
         />
-        
         <StatCard
           title="Leads Convertis"
-          value={stats.convertedLeads.toString()}
-          change={`${((stats.convertedLeads / stats.totalLeads) * 100).toFixed(1)}% du total`}
+          value={convertedLeads.toString()}
           icon={CheckCircle}
-          trendIcon={trendIcon}
-          trendColor="green"
+          trend="+5%"
+          trendUp={true}
         />
-        
         <StatCard
-          title="Revenu Total"
-          value={`${stats.totalRevenue.toLocaleString()}€`}
-          change={`${stats.averageRevenue.toFixed(0)}€ par lead`}
+          title="Chiffre d'Affaires"
+          value={`${totalRevenue}€`}
           icon={Euro}
-          trendIcon={trendIcon}
-          trendColor="green"
+          trend="+8%"
+          trendUp={true}
         />
-        
         <StatCard
           title="Leads Perdus"
-          value={stats.lostLeads.toString()}
-          change={`${((stats.lostLeads / stats.totalLeads) * 100).toFixed(1)}% du total`}
+          value={lostLeads.toString()}
           icon={XCircle}
-          trendIcon={trendIcon}
-          trendColor="red"
+          trend="-3%"
+          trendUp={false}
+        />
+        <StatCard
+          title="Revenu Moyen/Lead"
+          value={`${averageRevenue}€`}
+          icon={TrendingUp}
+          trend="+2%"
+          trendUp={true}
         />
       </div>
 
       <div className="grid gap-4 md:grid-cols-2">
         <PerformanceChart data={[]} />
         <Card className="p-6">
-          <RecentActivity leads={[]} installers={[]} />
+          <RecentActivity leads={leads} installers={installers} />
         </Card>
       </div>
     </div>
   );
-}
+};
+
+export default AdminDashboard;
