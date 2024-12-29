@@ -1,8 +1,8 @@
 import { createLead } from "@/lib/supabase-client";
 import emailjs from '@emailjs/browser';
 
-// Initialize EmailJS with your public key
-emailjs.init("YOUR_PUBLIC_KEY"); // Replace this with your actual public key
+// Initialize EmailJS
+emailjs.init(import.meta.env.VITE_EMAILJS_PUBLIC_KEY);
 
 export const handleFormSubmission = async (
   formData: {
