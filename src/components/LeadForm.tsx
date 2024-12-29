@@ -4,13 +4,11 @@ import { Card } from "@/components/ui/card";
 import { useToast } from "@/components/ui/use-toast";
 import { ClientTypeForm } from "./lead-form/ClientTypeForm";
 import { PersonalInfoForm } from "./lead-form/PersonalInfoForm";
-import { initEmailJS, sendEmail } from "@/config/emailConfig";
 import { FormField } from "./form/FormField";
 import { FormHeader } from "./form/FormHeader";
 import { SubmitButton } from "./form/SubmitButton";
-
-// Initialisation d'EmailJS
-initEmailJS();
+import { createClientAccount, createLead } from "@/lib/supabase-client";
+import { useNavigate } from "react-router-dom";
 
 interface FormData {
   clientType: string;
@@ -20,10 +18,12 @@ interface FormData {
   phone: string;
   monthlyBill: string;
   postalCode: string;
+  password: string;
 }
 
 export const LeadForm = () => {
   const { toast } = useToast();
+  const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState<FormData>({
     clientType: "particulier",
@@ -33,6 +33,7 @@ export const LeadForm = () => {
     phone: "",
     monthlyBill: "",
     postalCode: "",
+    password: ""
   });
 
   const handleFieldChange = (field: keyof FormData, value: string) => {
@@ -47,35 +48,39 @@ export const LeadForm = () => {
     setIsSubmitting(true);
 
     try {
-      await sendEmail("template_lead", {
-        client_type: formData.clientType,
-        first_name: formData.firstName,
-        last_name: formData.lastName,
-        email: formData.email,
-        phone: formData.phone,
-        monthly_bill: formData.monthlyBill,
-        postal_code: formData.postalCode,
-      });
+      // Créer le compte client
+      const { error: accountError } = await createClientAccount(
+        formData.email,
+        formData.password,
+        {
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          phone: formData.phone
+        }
+      );
+
+      if (accountError) throw accountError;
+
+      // Créer le lead
+      const { error: leadError } = await createLead(formData);
+
+      if (leadError) throw leadError;
 
       toast({
-        title: "Formulaire envoyé",
-        description: "Nous vous contacterons dans les plus brefs délais.",
+        title: "Compte créé avec succès",
+        description: "Vous allez être redirigé vers votre espace client.",
       });
 
-      setFormData({
-        clientType: "particulier",
-        firstName: "",
-        lastName: "",
-        email: "",
-        phone: "",
-        monthlyBill: "",
-        postalCode: "",
-      });
+      // Rediriger vers l'espace client
+      setTimeout(() => {
+        navigate("/client-portal");
+      }, 2000);
+
     } catch (error) {
-      console.error("Erreur lors de l'envoi du formulaire:", error);
+      console.error("Erreur lors de la création du compte:", error);
       toast({
         title: "Erreur",
-        description: "Une erreur est survenue lors de l'envoi du formulaire.",
+        description: "Une erreur est survenue lors de la création de votre compte.",
         variant: "destructive",
       });
     } finally {
@@ -115,6 +120,17 @@ export const LeadForm = () => {
                 value={formData.postalCode}
                 onChange={(e) => handleFieldChange("postalCode", e.target.value)}
                 placeholder="Ex: 75001"
+                required
+                lightMode
+              />
+
+              <FormField
+                label="Mot de passe"
+                id="password"
+                type="password"
+                value={formData.password}
+                onChange={(e) => handleFieldChange("password", e.target.value)}
+                placeholder="Choisissez un mot de passe"
                 required
                 lightMode
               />

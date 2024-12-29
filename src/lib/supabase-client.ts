@@ -1,0 +1,59 @@
+import { createClient } from '@supabase/supabase-js';
+
+const supabaseUrl = 'https://your-project.supabase.co';
+const supabaseKey = 'your-anon-key';
+
+export const supabase = createClient(supabaseUrl, supabaseKey);
+
+// Fonction pour créer un nouveau compte client
+export const createClientAccount = async (email: string, password: string, userData: any) => {
+  try {
+    const { data: authData, error: authError } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: {
+          firstName: userData.firstName,
+          lastName: userData.lastName,
+          phone: userData.phone,
+          role: 'client'
+        }
+      }
+    });
+
+    if (authError) throw authError;
+
+    return { data: authData, error: null };
+  } catch (error) {
+    console.error('Error creating client account:', error);
+    return { data: null, error };
+  }
+};
+
+// Fonction pour créer un nouveau lead
+export const createLead = async (leadData: any) => {
+  try {
+    const { data, error } = await supabase
+      .from('leads')
+      .insert([
+        {
+          firstName: leadData.firstName,
+          lastName: leadData.lastName,
+          email: leadData.email,
+          phone: leadData.phone,
+          postalCode: leadData.postalCode,
+          monthlyBill: leadData.monthlyBill,
+          clientType: leadData.clientType,
+          status: 'new'
+        }
+      ])
+      .select()
+      .single();
+
+    if (error) throw error;
+    return { data, error: null };
+  } catch (error) {
+    console.error('Error creating lead:', error);
+    return { data: null, error };
+  }
+};
