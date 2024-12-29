@@ -24,8 +24,10 @@ export const PrivateRoute = () => {
         console.log("Has admin access:", hasAdminRole);
         
         setIsAdmin(hasAdminRole);
+        setCheckingAdmin(false);
+      } else {
+        setCheckingAdmin(false);
       }
-      setCheckingAdmin(false);
     };
 
     checkAdminStatus();
@@ -41,12 +43,12 @@ export const PrivateRoute = () => {
 
   if (!isAuthenticated) {
     console.log("User not authenticated, redirecting to login");
-    return <Navigate to="/login" />;
+    return <Navigate to={isAdminRoute ? "/admin/login" : "/login"} />;
   }
 
   if (isAdminRoute && !isAdmin) {
-    console.log("Non-admin user attempting to access admin route, redirecting to home");
-    return <Navigate to="/" />;
+    console.log("Non-admin user attempting to access admin route, redirecting to dashboard");
+    return <Navigate to="/dashboard" />;
   }
 
   console.log("Route access granted");

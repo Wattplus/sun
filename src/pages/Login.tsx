@@ -23,15 +23,37 @@ export const Login = ({ isAdminLogin = false }: LoginProps) => {
           console.log("Session user ID:", session.user.id);
           console.log("Is admin login page:", isAdminLogin);
 
-          if (isAdminLogin) {
-            console.log("Admin login detected - redirecting to /admin");
-            navigate("/admin");
-            return;
+          const { data: profile, error } = await supabase
+            .from('profiles')
+            .select('role')
+            .eq('id', session.user.id)
+            .single();
+
+          console.log("Profile data:", profile);
+
+          if (error) {
+            console.error('Profile fetch error:', error);
+            throw error;
           }
 
-          // Pour une connexion normale
-          console.log("Regular login detected - redirecting to /dashboard");
-          navigate("/dashboard");
+          if (isAdminLogin) {
+            if (profile?.role === 'admin' || profile?.role === 'super_admin') {
+              console.log("Admin login successful - redirecting to /admin");
+              navigate("/admin");
+            } else {
+              console.log("Non-admin user attempted admin login");
+              await supabase.auth.signOut();
+              toast({
+                title: "Accès refusé",
+                description: "Vous n'avez pas les droits d'administration nécessaires.",
+                variant: "destructive",
+              });
+              navigate("/login");
+            }
+          } else {
+            console.log("Regular login detected - redirecting to /dashboard");
+            navigate("/dashboard");
+          }
         } catch (error) {
           console.error('Auth check error:', error);
           toast({
