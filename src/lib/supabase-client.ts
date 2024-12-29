@@ -27,6 +27,7 @@ export const sendEmail = async (
     console.log('Attempting to send email to:', email);
     
     const templateParams = {
+      to_email: email,
       client_type: clientType,
       first_name: firstName,
       last_name: lastName,
@@ -148,7 +149,7 @@ export const createLead = async (leadData: any) => {
           phone: leadData.phone,
           postal_code: leadData.postalCode,
           monthly_bill: leadData.monthlyBill,
-          client_type: leadData.clientType,
+          clientType: leadData.clientType,
           status: 'new'
         }
       ])
