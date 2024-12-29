@@ -19,26 +19,21 @@ export function ThankYou() {
 
         <div className="grid md:grid-cols-2 gap-6 mt-8">
           <div className="space-y-6">
-            <h3 className="text-xl font-semibold text-primary mb-4">Nos coordonnées</h3>
+            <h3 className="text-xl font-semibold text-primary mb-4">À propos de nous</h3>
             
             <div className="flex items-center space-x-3 text-gray-200">
               <Phone className="h-5 w-5 text-primary" />
-              <span>01 23 45 67 89</span>
+              <span>09 77 77 41 64</span>
             </div>
             
             <div className="flex items-center space-x-3 text-gray-200">
               <Mail className="h-5 w-5 text-primary" />
-              <span>contact@sunprospect.fr</span>
+              <span>mikael@wattplus.org</span>
             </div>
             
-            <div className="flex items-center space-x-3 text-gray-200">
-              <MapPin className="h-5 w-5 text-primary" />
-              <span>123 Avenue du Soleil, 75001 Paris</span>
-            </div>
-            
-            <div className="flex items-center space-x-3 text-gray-200">
-              <Clock className="h-5 w-5 text-primary" />
-              <span>Lun-Ven: 9h-18h</span>
+            <div className="space-y-2 mt-4 text-gray-200">
+              <p>Expert en installations photovoltaïques depuis 2010.</p>
+              <p>Certifié QualiPV et RGE.</p>
             </div>
           </div>
 
