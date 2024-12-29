@@ -23,21 +23,24 @@ export const Login = ({ isAdminLogin = false }: LoginProps) => {
           console.log("Session user ID:", session.user.id);
           console.log("Is admin login page:", isAdminLogin);
 
-          const { data: profile, error } = await supabase
+          // Fetch user profile with role
+          const { data: profile, error: profileError } = await supabase
             .from('profiles')
             .select('role')
             .eq('id', session.user.id)
-            .maybeSingle();
+            .single();
 
-          if (error) {
-            console.error('Profile fetch error:', error);
-            throw error;
+          if (profileError) {
+            console.error('Profile fetch error:', profileError);
+            throw profileError;
           }
 
           console.log("Profile data:", profile);
 
+          const isAdmin = profile?.role === 'admin' || profile?.role === 'super_admin';
+
           if (isAdminLogin) {
-            if (profile?.role === 'admin' || profile?.role === 'super_admin') {
+            if (isAdmin) {
               console.log("Admin login successful - redirecting to /admin");
               navigate("/admin");
             } else {
@@ -51,8 +54,13 @@ export const Login = ({ isAdminLogin = false }: LoginProps) => {
               navigate("/login");
             }
           } else {
-            console.log("Regular login detected - redirecting to /dashboard");
-            navigate("/dashboard");
+            if (isAdmin) {
+              console.log("Admin user on regular login - redirecting to /admin");
+              navigate("/admin");
+            } else {
+              console.log("Regular user login - redirecting to /dashboard");
+              navigate("/dashboard");
+            }
           }
         } catch (error) {
           console.error('Auth check error:', error);
@@ -62,6 +70,7 @@ export const Login = ({ isAdminLogin = false }: LoginProps) => {
             variant: "destructive",
           });
           await supabase.auth.signOut();
+          navigate(isAdminLogin ? "/admin/login" : "/login");
         }
       }
     });
