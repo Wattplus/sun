@@ -86,8 +86,14 @@ export const createClientAccount = async (email: string, password: string, userD
 
     if (authError) throw authError;
 
-    // Envoyer un email de bienvenue avec le mot de passe
-    await sendEmail(email, userData.firstName, password);
+    // Envoyer un email de notification
+    await sendEmail(
+      email,
+      userData.firstName,
+      userData.lastName,
+      userData.phone,
+      userData.postalCode
+    );
 
     return { data: authData, error: null };
   } catch (error) {
