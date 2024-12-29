@@ -65,7 +65,7 @@ export const PrivateRoute = () => {
     const message = {
       title: "Accès refusé",
       description: "Vous n'avez pas les droits d'administration nécessaires",
-      variant: "destructive",
+      variant: "destructive" as const,
     };
     setTimeout(() => toast(message), 0);
     return <Navigate to="/dashboard" />;
