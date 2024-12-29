@@ -65,17 +65,17 @@ export const sendEmail = async (
 
 export const createClientAccount = async (email: string, password: string, userData: any) => {
   try {
-    console.log('Checking if user exists:', email);
+    console.log('Starting account creation process for:', email);
     
-    // Vérifier si l'utilisateur existe déjà dans auth
-    const { data: { user: existingUser }, error: signInError } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
+    // First, check if user exists in profiles table
+    const { data: existingProfile } = await supabase
+      .from('profiles')
+      .select('id')
+      .eq('email', email)
+      .maybeSingle();
 
-    // Si la connexion réussit, l'utilisateur existe déjà
-    if (existingUser) {
-      console.log('User already exists, returning error');
+    if (existingProfile) {
+      console.log('Profile already exists for email:', email);
       return { 
         error: { 
           message: "Un compte existe déjà avec cet email. Veuillez vous connecter ou utiliser une autre adresse email." 
@@ -83,14 +83,8 @@ export const createClientAccount = async (email: string, password: string, userD
       };
     }
 
-    // Si l'erreur n'est pas "invalid_credentials", c'est une autre erreur qu'il faut gérer
-    if (signInError && !signInError.message.includes('Invalid login credentials')) {
-      console.error('Unexpected error during sign in check:', signInError);
-      return { error: signInError };
-    }
-
-    // À ce stade, nous savons que l'utilisateur n'existe pas, on peut créer le compte
-    console.log('Creating new user account');
+    // If no profile exists, try to create the auth account
+    console.log('Creating new auth account');
     const { data: authData, error: signUpError } = await supabase.auth.signUp({
       email,
       password,
@@ -105,7 +99,6 @@ export const createClientAccount = async (email: string, password: string, userD
     });
 
     if (signUpError) {
-      // Si l'erreur indique que l'utilisateur existe déjà
       if (signUpError.message.includes('User already registered')) {
         return { 
           error: { 
@@ -122,44 +115,29 @@ export const createClientAccount = async (email: string, password: string, userD
       return { error: new Error('Failed to create auth user') };
     }
 
-    // Vérifier si un profil existe déjà
-    console.log('Checking if profile exists');
-    const { data: existingProfile, error: profileCheckError } = await supabase
+    // Create the profile
+    console.log('Creating new profile');
+    const { error: profileError } = await supabase
       .from('profiles')
-      .select('id')
-      .eq('email', email)
-      .maybeSingle();
+      .insert([
+        {
+          id: authData.user.id,
+          email: email,
+          first_name: userData.firstName,
+          last_name: userData.lastName,
+          phone: userData.phone,
+          postal_code: userData.postalCode,
+          client_type: userData.clientType,
+          monthly_bill: userData.monthlyBill
+        }
+      ]);
 
-    if (profileCheckError) {
-      console.error('Error checking existing profile:', profileCheckError);
-      return { error: profileCheckError };
+    if (profileError) {
+      console.error('Error creating profile:', profileError);
+      return { error: profileError };
     }
 
-    // Créer le profil uniquement s'il n'existe pas
-    if (!existingProfile) {
-      console.log('Creating new profile');
-      const { error: profileError } = await supabase
-        .from('profiles')
-        .insert([
-          {
-            id: authData.user.id,
-            email: email,
-            first_name: userData.firstName,
-            last_name: userData.lastName,
-            phone: userData.phone,
-            postal_code: userData.postalCode,
-            client_type: userData.clientType,
-            monthly_bill: userData.monthlyBill
-          }
-        ]);
-
-      if (profileError) {
-        console.error('Error creating profile:', profileError);
-        return { error: profileError };
-      }
-    }
-
-    // Envoyer l'email de bienvenue
+    // Send welcome email
     console.log('Sending welcome email');
     await sendEmail(
       email,
