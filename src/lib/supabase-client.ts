@@ -24,7 +24,7 @@ export const sendEmail = async (
   password: string
 ) => {
   try {
-    console.log('Tentative d\'envoi d\'email à:', email);
+    console.log('Attempting to send email to:', email);
     
     const templateParams = {
       client_type: clientType,
@@ -52,21 +52,22 @@ export const sendEmail = async (
     );
 
     if (response.status !== 200) {
-      throw new Error('Erreur lors de l\'envoi de l\'email');
+      throw new Error('Failed to send email');
     }
     
-    console.log('Email envoyé avec succès à:', email);
+    console.log('Email sent successfully to:', email);
     return { error: null };
   } catch (error) {
-    console.error('Erreur lors de l\'envoi de l\'email:', error);
+    console.error('Error sending email:', error);
     return { error };
   }
 };
 
 export const createClientAccount = async (email: string, password: string, userData: any) => {
   try {
-    console.log('Création du compte client avec les données:', userData);
+    console.log('Creating client account with data:', userData);
     
+    // Create auth account
     const { data: authData, error: signUpError } = await supabase.auth.signUp({
       email,
       password,
@@ -81,11 +82,12 @@ export const createClientAccount = async (email: string, password: string, userD
     });
 
     if (signUpError) {
-      console.error('Erreur lors de la création du compte:', signUpError);
+      console.error('Error creating auth account:', signUpError);
       return { error: signUpError };
     }
 
     if (authData.user) {
+      // Create profile
       const { error: profileError } = await supabase
         .from('profiles')
         .insert([
@@ -102,11 +104,12 @@ export const createClientAccount = async (email: string, password: string, userD
         ]);
 
       if (profileError) {
-        console.error('Erreur lors de la création du profil:', profileError);
+        console.error('Error creating profile:', profileError);
         return { error: profileError };
       }
     }
 
+    // Send welcome email
     await sendEmail(
       email,
       userData.firstName,
@@ -127,7 +130,7 @@ export const createClientAccount = async (email: string, password: string, userD
 
 export const createLead = async (leadData: any) => {
   try {
-    console.log('Création du lead avec les données:', leadData);
+    console.log('Creating lead with data:', leadData);
     
     const { data, error } = await supabase
       .from('leads')
