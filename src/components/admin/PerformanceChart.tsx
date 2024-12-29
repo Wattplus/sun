@@ -2,12 +2,12 @@ import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tool
 import { motion } from 'framer-motion';
 
 const data = [
-  { month: 'Jan', leads: 500, devis: 200, conversion: 40 },
-  { month: 'Fév', leads: 400, devis: 180, conversion: 45 },
-  { month: 'Mar', leads: 550, devis: 250, conversion: 45.5 },
-  { month: 'Avr', leads: 750, devis: 350, conversion: 46.7 },
-  { month: 'Mai', leads: 800, devis: 380, conversion: 47.5 },
-  { month: 'Juin', leads: 1000, devis: 480, conversion: 48 },
+  { month: 'Jan', leads: 0, devis: 0, conversion: 0 },
+  { month: 'Fév', leads: 0, devis: 0, conversion: 0 },
+  { month: 'Mar', leads: 0, devis: 0, conversion: 0 },
+  { month: 'Avr', leads: 0, devis: 0, conversion: 0 },
+  { month: 'Mai', leads: 0, devis: 0, conversion: 0 },
+  { month: 'Juin', leads: 0, devis: 0, conversion: 0 },
 ];
 
 const PerformanceChart = () => {

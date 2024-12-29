@@ -55,41 +55,41 @@ const AdminDashboard = () => {
             <motion.div variants={item}>
               <StatCard
                 title="Visiteurs"
-                value="2,543"
-                change="+15% ce mois"
+                value="0"
+                change="0% ce mois"
                 icon={Users}
                 trendIcon={TrendingUp}
-                trendColor="green"
+                trendColor="yellow"
               />
             </motion.div>
             <motion.div variants={item}>
               <StatCard
                 title="Devis générés"
-                value="384"
-                change="+12% cette semaine"
+                value="0"
+                change="0% cette semaine"
                 icon={FileText}
                 trendIcon={ArrowUpRight}
-                trendColor="green"
+                trendColor="yellow"
               />
             </motion.div>
             <motion.div variants={item}>
               <StatCard
                 title="Taux de conversion"
-                value="15.1%"
-                change="+3% ce mois"
+                value="0%"
+                change="0% ce mois"
                 icon={Target}
                 trendIcon={LineChart}
-                trendColor="green"
+                trendColor="yellow"
               />
             </motion.div>
             <motion.div variants={item}>
               <StatCard
                 title="Leads qualifiés"
-                value="156"
-                change="+18% cette semaine"
+                value="0"
+                change="0% cette semaine"
                 icon={Activity}
                 trendIcon={TrendingUp}
-                trendColor="green"
+                trendColor="yellow"
               />
             </motion.div>
           </motion.div>
@@ -106,22 +106,9 @@ const AdminDashboard = () => {
                 Top Installateurs
               </h2>
               <div className="space-y-4">
-                {[
-                  { name: "Électricité Plus", score: 98, leads: 45 },
-                  { name: "Solar Pro", score: 95, leads: 32 },
-                  { name: "Éco-Énergie Solutions", score: 92, leads: 28 }
-                ].map((installer, index) => (
-                  <div key={index} className="flex items-center justify-between p-3 bg-white/5 rounded-lg">
-                    <div className="flex items-center gap-3">
-                      <span className="text-lg font-semibold text-primary">{index + 1}</span>
-                      <span>{installer.name}</span>
-                    </div>
-                    <div className="flex items-center gap-4">
-                      <span className="text-sm text-white/70">{installer.leads} leads</span>
-                      <span className="text-emerald-400">{installer.score}%</span>
-                    </div>
-                  </div>
-                ))}
+                <div className="text-center text-white/70 py-8">
+                  Aucun installateur enregistré
+                </div>
               </div>
             </motion.div>
             <motion.div variants={item}>
