@@ -142,7 +142,14 @@ export const LeadForm = () => {
       // Créer le lead
       const { error: leadError } = await createLead(formData);
 
-      if (leadError) throw leadError;
+      if (leadError) {
+        toast({
+          title: "Erreur",
+          description: "Une erreur est survenue lors de la création de votre demande.",
+          variant: "destructive",
+        });
+        return;
+      }
 
       toast({
         title: "Compte créé avec succès",
