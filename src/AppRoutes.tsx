@@ -20,6 +20,7 @@ import InstallerManagement from "@/components/admin/InstallerManagement";
 import { LeadMarketplace } from "@/components/admin/marketplace/LeadMarketplace";
 import AdminSettingsPage from "@/components/admin/settings/SettingsPage";
 import AdminProfilePage from "@/components/admin/profile/ProfilePage";
+import { ThankYou } from "@/pages/ThankYou";
 
 export function AppRoutes() {
   const navigate = useNavigate();
@@ -42,6 +43,7 @@ export function AppRoutes() {
       </Route>
 
       <Route path="/" element={<Index />} />
+      <Route path="/thank-you" element={<ThankYou />} />
       
       <Route path="/espace-installateur" element={<InstallerLayout />}>
         <Route index element={<InstallerDashboard />} />
