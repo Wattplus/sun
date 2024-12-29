@@ -65,16 +65,3 @@ export const createLead = async (leadData: any) => {
     return { data: null, error };
   }
 };
-
-// Fonction pour envoyer l'email de bienvenue
-const sendWelcomeEmail = async (email: string, firstName: string, password: string) => {
-  try {
-    const { error } = await supabase.functions.invoke('send-welcome-email', {
-      body: { email, firstName, password }
-    });
-
-    if (error) throw error;
-  } catch (error) {
-    console.error('Error sending welcome email:', error);
-  }
-};
