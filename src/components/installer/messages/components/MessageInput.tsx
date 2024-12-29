@@ -28,11 +28,11 @@ export const MessageInput = ({ onSend }: MessageInputProps) => {
             handleSend();
           }
         }}
-        className="min-h-[100px] bg-background/50"
+        className="min-h-[80px] md:min-h-[100px] bg-background/50 text-sm md:text-base"
       />
       <Button 
         onClick={handleSend}
-        className="self-end"
+        className="self-end text-sm md:text-base"
         disabled={!content.trim()}
       >
         <Send className="h-4 w-4 mr-2" />
