@@ -9,6 +9,7 @@ import { LeadDialogs } from "./leads/LeadDialogs";
 import { useLeadOperations } from "@/hooks/useLeadOperations";
 import { getStatusColor, getStatusText } from "@/utils/leadStatus";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { Card } from "@/components/ui/card";
 
 export const LeadManagement = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -71,59 +72,74 @@ export const LeadManagement = () => {
   };
 
   return (
-    <div className="space-y-8 p-6 max-w-[1600px] mx-auto">
-      <AdminBreadcrumb />
-      
-      <LeadStats leads={leads} />
+    <div className="min-h-screen bg-gradient-to-b from-background/95 to-background/50 py-8">
+      <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+        <AdminBreadcrumb />
+        
+        <div className="space-y-6">
+          <div className="max-w-3xl">
+            <h1 className="text-3xl font-bold tracking-tight text-foreground mb-2">
+              Gestion des Leads
+            </h1>
+            <p className="text-muted-foreground text-lg">
+              Gérez efficacement vos prospects et suivez leur progression
+            </p>
+          </div>
 
-      <div className="glass-panel rounded-lg border border-[#33C3F0]/20 bg-card/50 backdrop-blur-sm p-6 space-y-6">
-        <LeadHeader
-          searchTerm={searchTerm}
-          onSearchChange={setSearchTerm}
-          onExportClick={() => console.log("Exporting to CSV...")}
-          onNewLeadClick={() => {
-            setSelectedLead(null);
-            setEditDialogOpen(true);
-          }}
-        />
+          <LeadStats leads={leads} />
 
-        <div className="rounded-md border border-[#33C3F0]/20 bg-background/50">
-          {isMobile ? (
-            <LeadMobileTable
-              leads={leads}
-              onEditClick={handleEditClick}
-              onAssignClick={handleAssignClick}
-              onDeleteClick={handleDeleteClick}
-              getStatusColor={getStatusColor}
-              getStatusText={getStatusText}
-            />
-          ) : (
-            <LeadTable
-              leads={leads}
-              onEditClick={handleEditClick}
-              onAssignClick={handleAssignClick}
-              onDeleteClick={handleDeleteClick}
-              getStatusColor={getStatusColor}
-              getStatusText={getStatusText}
-            />
-          )}
+          <Card className="overflow-hidden border-primary/10 bg-card/50 backdrop-blur-sm">
+            <div className="p-6 space-y-6">
+              <LeadHeader
+                searchTerm={searchTerm}
+                onSearchChange={setSearchTerm}
+                onExportClick={() => console.log("Exporting to CSV...")}
+                onNewLeadClick={() => {
+                  setSelectedLead(null);
+                  setEditDialogOpen(true);
+                }}
+              />
+
+              <div className="rounded-md border border-primary/10 bg-background/50">
+                {isMobile ? (
+                  <LeadMobileTable
+                    leads={leads}
+                    onEditClick={handleEditClick}
+                    onAssignClick={handleAssignClick}
+                    onDeleteClick={handleDeleteClick}
+                    getStatusColor={getStatusColor}
+                    getStatusText={getStatusText}
+                  />
+                ) : (
+                  <LeadTable
+                    leads={leads}
+                    onEditClick={handleEditClick}
+                    onAssignClick={handleAssignClick}
+                    onDeleteClick={handleDeleteClick}
+                    getStatusColor={getStatusColor}
+                    getStatusText={getStatusText}
+                  />
+                )}
+              </div>
+            </div>
+          </Card>
+
+          <LeadDialogs
+            selectedLead={selectedLead}
+            editDialogOpen={editDialogOpen}
+            assignDialogOpen={assignDialogOpen}
+            deleteDialogOpen={deleteDialogOpen}
+            selectedInstallerId={selectedInstallerId}
+            leadToAssign={leadToAssign}
+            onEditClose={handleEditClose}
+            onSaveLead={handleSaveLead}
+            setAssignDialogOpen={setAssignDialogOpen}
+            setDeleteDialogOpen={setDeleteDialogOpen}
+            setSelectedInstallerId={setSelectedInstallerId}
+            handleAssignSubmit={() => leadToAssign && selectedInstallerId ? handleAssignSubmit(leadToAssign.id, selectedInstallerId) : undefined}
+            handleConfirmDelete={handleConfirmDelete}
+          />
         </div>
-
-        <LeadDialogs
-          selectedLead={selectedLead}
-          editDialogOpen={editDialogOpen}
-          assignDialogOpen={assignDialogOpen}
-          deleteDialogOpen={deleteDialogOpen}
-          selectedInstallerId={selectedInstallerId}
-          leadToAssign={leadToAssign}
-          onEditClose={handleEditClose}
-          onSaveLead={handleSaveLead}
-          setAssignDialogOpen={setAssignDialogOpen}
-          setDeleteDialogOpen={setDeleteDialogOpen}
-          setSelectedInstallerId={setSelectedInstallerId}
-          handleAssignSubmit={() => leadToAssign && selectedInstallerId ? handleAssignSubmit(leadToAssign.id, selectedInstallerId) : undefined}
-          handleConfirmDelete={handleConfirmDelete}
-        />
       </div>
     </div>
   );
