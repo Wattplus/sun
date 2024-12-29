@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Lead, LeadStatus } from "@/types/crm";
-import { Edit, Trash2, UserPlus, Euro, Mail, Phone, MapPin, Users } from "lucide-react";
+import { Edit, Trash2, UserPlus, Euro, Mail, Phone, MapPin } from "lucide-react";
 import { LeadPurchaseInfo } from "./LeadPurchaseInfo";
 
 interface LeadTableProps {
@@ -33,7 +33,7 @@ export const LeadTable = ({
             <TableHead>Coordonnées</TableHead>
             <TableHead>Localisation</TableHead>
             <TableHead>Facture mensuelle</TableHead>
-            <TableHead>Revenus générés</TableHead>
+            <TableHead>Ventes</TableHead>
             <TableHead>Statut</TableHead>
             <TableHead>Actions</TableHead>
           </TableRow>
@@ -120,7 +120,7 @@ export const LeadTable = ({
                     className="border-[#33C3F0]/20 hover:border-[#33C3F0]/40 hover:bg-[#33C3F0]/10"
                   >
                     <UserPlus className="h-4 w-4 mr-2 text-[#1EAEDB]" />
-                    Assigner
+                    Vendre
                   </Button>
                   <Button
                     variant="destructive"
