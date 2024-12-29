@@ -24,6 +24,7 @@ import PricingSettings from "@/components/admin/pricing/PricingSettings";
 import TransactionMonitoring from "@/components/admin/transactions/TransactionMonitoring";
 import ComplaintManagement from "@/components/admin/complaints/ComplaintManagement";
 import DataExport from "@/components/admin/export/DataExport";
+import Login from "@/pages/Login";
 
 export function AppRoutes() {
   const navigate = useNavigate();
@@ -33,6 +34,8 @@ export function AppRoutes() {
 
   return (
     <Routes>
+      <Route path="/login" element={<Login />} />
+      
       <Route path="/admin" element={<Admin />}>
         <Route index element={<AdminDashboard />} />
         <Route path="statistics" element={<StatisticsPage />} />
