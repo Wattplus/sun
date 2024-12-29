@@ -56,23 +56,23 @@ export function EditLeadDialog({ lead, open, onOpenChange, onSave }: EditLeadDia
           <div className="grid gap-4 py-4">
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label htmlFor="firstName" className="text-sm font-medium">
+                <label htmlFor="firstname" className="text-sm font-medium">
                   Prénom
                 </label>
                 <Input
-                  id="firstName"
-                  value={formData.firstName || ""}
-                  onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
+                  id="firstname"
+                  value={formData.firstname || ""}
+                  onChange={(e) => setFormData({ ...formData, firstname: e.target.value })}
                 />
               </div>
               <div>
-                <label htmlFor="lastName" className="text-sm font-medium">
+                <label htmlFor="lastname" className="text-sm font-medium">
                   Nom
                 </label>
                 <Input
-                  id="lastName"
-                  value={formData.lastName || ""}
-                  onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
+                  id="lastname"
+                  value={formData.lastname || ""}
+                  onChange={(e) => setFormData({ ...formData, lastname: e.target.value })}
                 />
               </div>
             </div>
@@ -109,13 +109,13 @@ export function EditLeadDialog({ lead, open, onOpenChange, onSave }: EditLeadDia
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label htmlFor="postalCode" className="text-sm font-medium">
+                <label htmlFor="postalcode" className="text-sm font-medium">
                   Code postal
                 </label>
                 <Input
-                  id="postalCode"
-                  value={formData.postalCode || ""}
-                  onChange={(e) => setFormData({ ...formData, postalCode: e.target.value })}
+                  id="postalcode"
+                  value={formData.postalcode || ""}
+                  onChange={(e) => setFormData({ ...formData, postalcode: e.target.value })}
                 />
               </div>
               <div>
