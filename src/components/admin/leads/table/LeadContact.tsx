@@ -27,7 +27,7 @@ export const LeadContact = ({ lead }: LeadContactProps) => {
               </a>
             </TooltipTrigger>
             <TooltipContent>
-              Envoyer un email
+              <p>Envoyer un email</p>
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
@@ -43,7 +43,7 @@ export const LeadContact = ({ lead }: LeadContactProps) => {
               </a>
             </TooltipTrigger>
             <TooltipContent>
-              Appeler
+              <p>Appeler</p>
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>

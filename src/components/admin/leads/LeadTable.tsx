@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Lead, LeadStatus } from "@/types/lead";
-import { Euro, MapPin, Shield } from "lucide-react";
+import { Euro, MapPin, Shield, Trash } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useState } from "react";
 import { LeadActions } from "./table/LeadActions";
@@ -93,7 +93,7 @@ export const LeadTable = ({
             onClick={handleDeleteSelected}
             className="gap-2"
           >
-            <Trash2 className="h-4 w-4" />
+            <Trash className="h-4 w-4" />
             Supprimer la sélection
           </Button>
         </div>

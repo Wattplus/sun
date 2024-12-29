@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { Edit, Trash2, UserPlus } from "lucide-react";
+import { Edit, Trash, UserPlus } from "lucide-react";
 import { Lead } from "@/types/lead";
 
 interface LeadActionsProps {
@@ -26,7 +26,7 @@ export const LeadActions = ({ lead, onEditClick, onAssignClick, onDeleteClick }:
             </Button>
           </TooltipTrigger>
           <TooltipContent>
-            Éditer
+            <p>Éditer</p>
           </TooltipContent>
         </Tooltip>
       </TooltipProvider>
@@ -45,7 +45,7 @@ export const LeadActions = ({ lead, onEditClick, onAssignClick, onDeleteClick }:
             </Button>
           </TooltipTrigger>
           <TooltipContent>
-            Assigner
+            <p>Assigner</p>
           </TooltipContent>
         </Tooltip>
       </TooltipProvider>
@@ -58,11 +58,11 @@ export const LeadActions = ({ lead, onEditClick, onAssignClick, onDeleteClick }:
               size="sm"
               onClick={() => onDeleteClick(lead)}
             >
-              <Trash2 className="h-4 w-4" />
+              <Trash className="h-4 w-4" />
             </Button>
           </TooltipTrigger>
           <TooltipContent>
-            Supprimer
+            <p>Supprimer</p>
           </TooltipContent>
         </Tooltip>
       </TooltipProvider>
