@@ -32,10 +32,7 @@ export function AppRoutes() {
 
   return (
     <Routes>
-      <Route path="/" element={<Index />} />
-      <Route path="/client/*" element={<ClientPortal />} />
-      <Route path="/directory" element={<InstallerDirectory />} />
-      <Route path="/directory/:id" element={<InstallerProfile />} />
+      {/* Route admin en premier pour un accès direct */}
       <Route path="/admin" element={<Admin />}>
         <Route index element={<AdminDashboard />} />
         <Route path="statistics" element={<StatisticsPage />} />
@@ -46,6 +43,12 @@ export function AppRoutes() {
         <Route path="settings" element={<AdminSettingsPage />} />
         <Route path="profile" element={<AdminProfilePage />} />
       </Route>
+
+      <Route path="/" element={<Index />} />
+      <Route path="/client/*" element={<ClientPortal />} />
+      <Route path="/directory" element={<InstallerDirectory />} />
+      <Route path="/directory/:id" element={<InstallerProfile />} />
+      
       <Route path="/espace-installateur" element={<InstallerLayout />}>
         <Route index element={<InstallerDashboard />} />
         <Route path="messages" element={<MessagesPage />} />
