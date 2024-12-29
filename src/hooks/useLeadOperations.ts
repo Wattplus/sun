@@ -55,10 +55,6 @@ export const useLeadOperations = () => {
         });
       } else {
         console.log(`[useLeadOperations] ${data.length} leads récupérés`);
-        toast({
-          title: "Succès",
-          description: `${data.length} leads chargés`,
-        });
       }
     } catch (error) {
       console.error("[useLeadOperations] Erreur inattendue:", error);

@@ -12,6 +12,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { Card } from "@/components/ui/card";
 import { supabase } from "@/lib/supabase-client";
 import { useToast } from "@/components/ui/use-toast";
+import { useNavigate } from "react-router-dom";
 
 export const LeadManagement = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -27,6 +28,7 @@ export const LeadManagement = () => {
   const { leads, fetchLeads, deleteLead, updateLead, assignLead } = useLeadOperations();
   const isMobile = useIsMobile();
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const checkAuthAndFetchLeads = async () => {
@@ -41,6 +43,7 @@ export const LeadManagement = () => {
             description: "Impossible de vérifier votre session: " + sessionError.message,
             variant: "destructive",
           });
+          navigate("/login");
           return;
         }
 
@@ -51,6 +54,7 @@ export const LeadManagement = () => {
             description: "Vous devez être connecté pour accéder à cette page",
             variant: "destructive",
           });
+          navigate("/login");
           return;
         }
 
@@ -70,6 +74,20 @@ export const LeadManagement = () => {
     };
 
     checkAuthAndFetchLeads();
+
+    // Set up auth state change listener
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      console.log("LeadManagement: Auth state changed:", event, session?.user?.id);
+      if (event === 'SIGNED_OUT') {
+        navigate("/login");
+      } else if (event === 'SIGNED_IN' && !leads.length) {
+        fetchLeads();
+      }
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
   }, []);
 
   useEffect(() => {
