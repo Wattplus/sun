@@ -81,10 +81,11 @@ export const Footer = () => {
                   <p className="text-xs text-gray-400">Accédez à notre réseau de leads qualifiés</p>
                 </div>
               </Link>
-              <Link to="/login" className="block">
-                <p className="text-sm text-gray-400 hover:text-white transition-colors">
-                  Administration
-                </p>
+              <Link 
+                to="/login" 
+                className="inline-block text-sm text-gray-400 hover:text-white transition-colors cursor-pointer"
+              >
+                Administration
               </Link>
             </div>
           </div>
