@@ -32,25 +32,12 @@ export const PurchasedLeads = ({ leads }: { leads: Lead[] }) => {
     });
   };
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'nouveau': return 'bg-blue-500/5 text-blue-600 border-blue-200/20';
-      case 'contacte': return 'bg-yellow-500/5 text-yellow-600 border-yellow-200/20';
-      case 'devis_envoye': return 'bg-purple-500/5 text-purple-600 border-purple-200/20';
-      case 'rdv_planifie': return 'bg-green-500/5 text-green-600 border-green-200/20';
-      case 'negociation': return 'bg-orange-500/5 text-orange-600 border-orange-200/20';
-      case 'signe': return 'bg-emerald-500/5 text-emerald-600 border-emerald-200/20';
-      case 'perdu': return 'bg-red-500/5 text-red-600 border-red-200/20';
-      default: return 'bg-gray-500/5 text-gray-600 border-gray-200/20';
-    }
-  };
-
   const filteredLeads = localLeads.filter(lead => {
     const matchesSearch = 
-      lead.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      lead.lastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      lead.firstname.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      lead.lastname.toLowerCase().includes(searchTerm.toLowerCase()) ||
       lead.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      lead.postalCode.includes(searchTerm);
+      lead.postalcode.includes(searchTerm);
 
     const matchesStatus = statusFilter === "all" || lead.installerStatus === statusFilter;
 
@@ -85,7 +72,18 @@ export const PurchasedLeads = ({ leads }: { leads: Lead[] }) => {
         {isMobile ? (
           <LeadsTableMobile
             leads={filteredLeads}
-            getStatusColor={getStatusColor}
+            getStatusColor={(status) => {
+              switch (status) {
+                case 'nouveau': return 'bg-blue-500/5 text-blue-600 border-blue-200/20';
+                case 'contacte': return 'bg-yellow-500/5 text-yellow-600 border-yellow-200/20';
+                case 'devis_envoye': return 'bg-purple-500/5 text-purple-600 border-purple-200/20';
+                case 'rdv_planifie': return 'bg-green-500/5 text-green-600 border-green-200/20';
+                case 'negociation': return 'bg-orange-500/5 text-orange-600 border-orange-200/20';
+                case 'signe': return 'bg-emerald-500/5 text-emerald-600 border-emerald-200/20';
+                case 'perdu': return 'bg-red-500/5 text-red-600 border-red-200/20';
+                default: return 'bg-gray-500/5 text-gray-600 border-gray-200/20';
+              }
+            }}
             onStatusChange={handleStatusChange}
           />
         ) : (
@@ -120,20 +118,20 @@ export const PurchasedLeads = ({ leads }: { leads: Lead[] }) => {
                         {lead.projectType === 'professional' ? 'Professionnel' : 'Résidentiel'}
                       </Badge>
                     </TableCell>
-                    <TableCell className="font-medium">{lead.firstName}</TableCell>
-                    <TableCell>{lead.lastName}</TableCell>
+                    <TableCell className="font-medium">{lead.firstname}</TableCell>
+                    <TableCell>{lead.lastname}</TableCell>
                     <TableCell className="text-muted-foreground">{lead.email}</TableCell>
                     <TableCell>{lead.phone}</TableCell>
                     <TableCell>
                       <Badge variant="outline" className="bg-primary/5 border-primary/20">
-                        {lead.postalCode}
+                        {lead.postalcode}
                       </Badge>
                     </TableCell>
                     <TableCell className="text-muted-foreground">
                       {lead.roofType || "Non renseigné"}
                     </TableCell>
                     <TableCell className="text-muted-foreground">
-                      {lead.monthlyBill || "Non renseigné"}
+                      {lead.monthlybill || "Non renseigné"}
                     </TableCell>
                     <TableCell>
                       <Select 

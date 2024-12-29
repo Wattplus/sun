@@ -49,7 +49,6 @@ export const LeadsTable = ({ leads, selectedLeads, onSelectAll, onSelectLead }: 
           <TableHead className="text-primary">Code postal</TableHead>
           <TableHead className="text-primary">Type de toit</TableHead>
           <TableHead className="text-primary">Facture mensuelle</TableHead>
-          <TableHead className="text-primary">Installation électrique</TableHead>
           <TableHead className="text-primary w-[100px]">Action</TableHead>
         </TableRow>
       </TableHeader>
@@ -71,18 +70,17 @@ export const LeadsTable = ({ leads, selectedLeads, onSelectAll, onSelectLead }: 
                 {lead.projectType === 'professional' ? 'Professionnel' : 'Résidentiel'}
               </Badge>
             </TableCell>
-            <TableCell className="text-white">{lead.firstName}</TableCell>
+            <TableCell className="text-white">{lead.firstname}</TableCell>
             <TableCell className="text-white"><MaskedInfo /></TableCell>
             <TableCell className="text-white"><MaskedInfo /></TableCell>
             <TableCell className="text-white"><MaskedInfo /></TableCell>
             <TableCell className="text-white">
               <Badge variant="outline" className="bg-primary/10">
-                {lead.postalCode}
+                {lead.postalcode}
               </Badge>
             </TableCell>
             <TableCell className="text-white">{lead.roofType || "Non spécifié"}</TableCell>
-            <TableCell className="text-white">{lead.monthlyBill || "Non spécifié"}€</TableCell>
-            <TableCell className="text-white">{lead.electricalType || "Non spécifié"}</TableCell>
+            <TableCell className="text-white">{lead.monthlybill || "Non spécifié"}€</TableCell>
             <TableCell>
               <Button
                 onClick={() => onSelectLead(lead)}

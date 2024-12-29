@@ -138,7 +138,7 @@ export const LeadCard = ({ lead, status, onSelect, isSelected, onNoteAdd, onStat
                 </div>
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
                   <Clock className="h-4 w-4" />
-                  <span>Acheté le {new Date(lead.purchasedby?.[0]?.purchaseDate || "").toLocaleDateString()}</span>
+                  <span>Acheté le {new Date(lead.created_at).toLocaleDateString()}</span>
                 </div>
               </>
             )}
