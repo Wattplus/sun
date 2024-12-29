@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Lead, LeadStatus } from "@/types/crm";
 import { Edit, Trash2, UserPlus, Euro, Mail, Phone, MapPin, Users } from "lucide-react";
+import { LeadPurchaseInfo } from "./LeadPurchaseInfo";
 
 interface LeadTableProps {
   leads: Lead[];
@@ -22,11 +23,6 @@ export const LeadTable = ({
   getStatusColor,
   getStatusText,
 }: LeadTableProps) => {
-  const calculateRevenue = (lead: Lead) => {
-    const purchaseCount = lead.purchasedby?.length || 0;
-    return purchaseCount * 25; // 25€ par achat
-  };
-
   return (
     <ScrollArea className="h-[calc(100vh-300px)] rounded-md border border-[#33C3F0]/20">
       <Table>
@@ -98,20 +94,7 @@ export const LeadTable = ({
                 </div>
               </TableCell>
               <TableCell>
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2">
-                    <Users className="h-4 w-4 text-primary" />
-                    <span className="text-sm">
-                      {lead.purchasedby?.length || 0} installateur{lead.purchasedby?.length !== 1 ? 's' : ''}
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Euro className="h-4 w-4 text-emerald-500" />
-                    <Badge variant="outline" className="bg-emerald-500/10 text-emerald-600">
-                      {calculateRevenue(lead)}€
-                    </Badge>
-                  </div>
-                </div>
+                <LeadPurchaseInfo lead={lead} />
               </TableCell>
               <TableCell>
                 <Badge className={getStatusColor(lead.status)}>
