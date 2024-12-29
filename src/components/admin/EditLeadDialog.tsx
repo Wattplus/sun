@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
-import { Lead, LeadStatus } from "@/types/crm"
+import { Lead, LeadStatus, VerificationStatus } from "@/types/lead"
 import { useState, useEffect } from "react"
 import {
   Select,
@@ -136,7 +136,7 @@ export function EditLeadDialog({ lead, open, onOpenChange, onSave }: EditLeadDia
               <label htmlFor="verification_status" className="text-sm font-medium">Statut de vérification</label>
               <Select
                 value={formData.verification_status}
-                onValueChange={(value) => setFormData({ ...formData, verification_status: value })}
+                onValueChange={(value: VerificationStatus) => setFormData({ ...formData, verification_status: value })}
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Sélectionnez un statut" />
