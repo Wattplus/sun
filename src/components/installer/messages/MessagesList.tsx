@@ -23,20 +23,20 @@ interface MessagesListProps {
 const mockMessages: Message[] = [
   {
     id: "1",
-    content: "Installation de panneaux photovoltaïques sur toiture résidentielle. Surface disponible 45m², orientation sud-ouest, consommation annuelle 8500 kWh.",
+    content: "Bonjour, je souhaite installer des panneaux photovoltaïques sur ma maison. J'ai une surface de toit de 35m² orientée plein sud. Ma facture d'électricité est de 180€ par mois. Pouvez-vous me faire un devis ?",
     date: "28 DÉC.",
     details: {
       "Type de projet": "Résidentiel",
-      "Surface disponible": "45m²",
-      "Orientation": "Sud-Ouest",
-      "Consommation annuelle": "8500 kWh",
+      "Surface disponible": "35m²",
+      "Orientation": "Sud",
+      "Facture mensuelle": "180€",
       "Type de toiture": "Tuiles",
-      "Code Postal": "75012",
-      "Ville": "Paris",
-      "Numéro de téléphone": "0612345678",
-      "Email": "client@example.com",
-      "Prénom pour le devis": "Thomas",
-      "Nom pour le devis": "Martin"
+      "Code Postal": "25380",
+      "Ville": "Longevelle les Russey",
+      "Numéro de téléphone": "0674909294",
+      "Email": "mlerrible@wanadoo.fr",
+      "Prénom pour le devis": "Accard",
+      "Nom pour le devis": "Marie"
     }
   }
 ];
