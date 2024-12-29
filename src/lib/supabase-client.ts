@@ -1,7 +1,11 @@
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = 'https://your-project.supabase.co';
-const supabaseKey = 'your-anon-key';
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+
+if (!supabaseUrl || !supabaseKey) {
+  throw new Error('Missing Supabase environment variables');
+}
 
 export const supabase = createClient(supabaseUrl, supabaseKey);
 
@@ -22,6 +26,9 @@ export const createClientAccount = async (email: string, password: string, userD
     });
 
     if (authError) throw authError;
+
+    // Envoyer un email de bienvenue
+    await sendWelcomeEmail(email, userData.firstName);
 
     return { data: authData, error: null };
   } catch (error) {
@@ -55,5 +62,18 @@ export const createLead = async (leadData: any) => {
   } catch (error) {
     console.error('Error creating lead:', error);
     return { data: null, error };
+  }
+};
+
+// Fonction pour envoyer l'email de bienvenue
+const sendWelcomeEmail = async (email: string, firstName: string) => {
+  try {
+    const { error } = await supabase.functions.invoke('send-welcome-email', {
+      body: { email, firstName }
+    });
+
+    if (error) throw error;
+  } catch (error) {
+    console.error('Error sending welcome email:', error);
   }
 };
