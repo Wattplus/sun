@@ -30,6 +30,43 @@ export const checkExistingUser = async (email: string) => {
   }
 };
 
+export const createLead = async (formData: {
+  clientType: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  monthlyBill: string;
+  postalCode: string;
+}) => {
+  try {
+    console.log('Creating lead with data:', formData);
+    
+    const { error } = await supabase.from('leads').insert([
+      {
+        clienttype: formData.clientType.toLowerCase(),
+        firstname: formData.firstName,
+        lastname: formData.lastName,
+        email: formData.email,
+        phone: formData.phone,
+        monthlybill: formData.monthlyBill,
+        postalcode: formData.postalCode,
+        status: 'new',
+      },
+    ]);
+
+    if (error) {
+      console.error('Error creating lead:', error);
+      throw error;
+    }
+
+    return { error: null };
+  } catch (error) {
+    console.error('Error in createLead:', error);
+    return { error };
+  }
+};
+
 export const createClientAccount = async (
   email: string,
   password: string,
@@ -43,99 +80,41 @@ export const createClientAccount = async (
   }
 ) => {
   try {
-    const existingUserId = await checkExistingUser(email);
-    
-    if (existingUserId) {
-      console.log('User already exists, updating profile...');
-      const { error: updateError } = await supabase
-        .from('profiles')
-        .update({
-          first_name: metadata.firstName,
-          last_name: metadata.lastName,
-          phone: metadata.phone,
-          postal_code: metadata.postalCode,
-          client_type: metadata.clientType,
-          monthly_bill: metadata.monthlyBill,
-          updated_at: new Date().toISOString(),
-        })
-        .eq('id', existingUserId);
-
-      if (updateError) throw updateError;
-      
-      return { data: { user: { id: existingUserId } }, error: null };
-    }
-
-    const { data, error } = await supabase.auth.signUp({
+    const { data: authData, error: signUpError } = await supabase.auth.signUp({
       email,
       password,
       options: {
         data: {
-          first_name: metadata.firstName,
-          last_name: metadata.lastName,
+          firstname: metadata.firstName,
+          lastname: metadata.lastName,
           phone: metadata.phone,
-          postal_code: metadata.postalCode,
-          client_type: metadata.clientType,
-          monthly_bill: metadata.monthlyBill,
+          postalcode: metadata.postalCode,
+          clienttype: metadata.clientType.toLowerCase(),
+          monthlybill: metadata.monthlyBill,
         },
       },
     });
 
-    if (error) throw error;
+    if (signUpError) throw signUpError;
 
     const { error: profileError } = await supabase.from('profiles').insert([
       {
-        id: data.user?.id,
+        id: authData.user?.id,
         email,
-        first_name: metadata.firstName,
-        last_name: metadata.lastName,
+        firstname: metadata.firstName,
+        lastname: metadata.lastName,
         phone: metadata.phone,
-        postal_code: metadata.postalCode,
-        client_type: metadata.clientType,
-        monthly_bill: metadata.monthlyBill,
+        postalcode: metadata.postalCode,
+        clienttype: metadata.clientType.toLowerCase(),
+        monthlybill: metadata.monthlyBill,
       },
     ]);
 
     if (profileError) throw profileError;
 
-    return { data, error: null };
+    return { data: authData, error: null };
   } catch (error) {
     console.error('Error in createClientAccount:', error);
     return { data: null, error };
-  }
-};
-
-export const createLead = async (formData: {
-  clientType: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  phone: string;
-  monthlyBill: string;
-  postalCode: string;
-}) => {
-  try {
-    const { error } = await supabase.from('leads').insert([
-      {
-        client_type: formData.clientType,
-        first_name: formData.firstName,
-        last_name: formData.lastName,
-        email: formData.email,
-        phone: formData.phone,
-        monthly_bill: formData.monthlyBill,
-        postal_code: formData.postalCode,
-        status: 'new',
-        created_at: new Date().toISOString(),
-      },
-    ]);
-
-    if (error) {
-      console.error('Error creating lead:', error);
-      throw error;
-    }
-
-    return { error: null };
-  } catch (error) {
-    console.error('Error in createLead:', error);
-    return { error };
   }
 };

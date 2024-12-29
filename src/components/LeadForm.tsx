@@ -61,20 +61,26 @@ export const LeadForm = () => {
 
     setIsSubmitting(true);
 
-    const generatedPassword = generateSecurePassword();
-    const success = await handleFormSubmission(formData, toast, navigate, generatedPassword);
+    try {
+      const generatedPassword = generateSecurePassword();
+      const success = await handleFormSubmission(formData, toast, navigate, generatedPassword);
 
-    if (!success) {
+      if (success) {
+        toast({
+          title: "Demande envoyée !",
+          description: "Votre demande a bien été prise en compte. Vous allez recevoir un email de confirmation.",
+        });
+      }
+    } catch (error) {
+      console.error('Error submitting form:', error);
+      toast({
+        title: "Erreur",
+        description: "Une erreur est survenue lors de l'envoi du formulaire. Veuillez réessayer.",
+        variant: "destructive",
+      });
+    } finally {
       setIsSubmitting(false);
-      return;
     }
-
-    toast({
-      title: "Demande envoyée !",
-      description: "Votre demande a bien été prise en compte. Vous allez recevoir un email de confirmation.",
-    });
-
-    setIsSubmitting(false);
   };
 
   return (
