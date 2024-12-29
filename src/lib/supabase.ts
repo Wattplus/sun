@@ -23,9 +23,22 @@ export const messagesService = {
       throw new Error('Conversation ID is required');
     }
 
+    // First, let's log the table structure to help debug
+    const { data: tableInfo, error: tableError } = await supabase
+      .from('messages')
+      .select('*')
+      .limit(1);
+    
+    console.log('Table structure:', tableInfo);
+
+    if (tableError) {
+      console.error('Error checking table structure:', tableError);
+    }
+
     const { data, error } = await supabase
       .from('messages')
       .select('*')
+      // Using conversation_id for now, but we'll see the actual column name in the logs
       .eq('conversation_id', conversationId)
       .order('created_at', { ascending: true });
 
