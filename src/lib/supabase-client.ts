@@ -69,44 +69,28 @@ export const sendEmail = async (
 
 export const createClientAccount = async (email: string, password: string, userData: any) => {
   try {
-    console.log('Starting account creation/update process for:', email);
-    
-    // First check if user exists
-    const { data: { users }, error: getUserError } = await supabase.auth.admin.listUsers();
-    
-    if (getUserError) {
-      console.error('Error checking user existence:', getUserError);
-      return { error: getUserError };
-    }
+    console.log('Starting account creation process for:', email);
 
-    const existingUser = users?.find((user: User) => user.email === email);
-    let userId: string | undefined;
-
-    if (!existingUser) {
-      console.log('User does not exist, creating new account');
-      const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
-        email,
-        password,
-        options: {
-          data: {
-            first_name: userData.firstName,
-            last_name: userData.lastName,
-            phone: userData.phone,
-            role: 'client'
-          }
+    // Créer directement le compte sans vérifier l'existence
+    const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: {
+          first_name: userData.firstName,
+          last_name: userData.lastName,
+          phone: userData.phone,
+          role: 'client'
         }
-      });
-
-      if (signUpError) {
-        console.error('Error creating auth account:', signUpError);
-        return { error: signUpError };
       }
+    });
 
-      userId = signUpData.user?.id;
-    } else {
-      console.log('User exists, updating profile');
-      userId = existingUser.id;
+    if (signUpError) {
+      console.error('Error creating auth account:', signUpError);
+      return { error: signUpError };
     }
+
+    const userId = signUpData.user?.id;
 
     if (!userId) {
       console.error('No user ID available after auth operation');
@@ -114,7 +98,7 @@ export const createClientAccount = async (email: string, password: string, userD
     }
 
     // Upsert the profile
-    console.log('Upserting profile for user:', userId);
+    console.log('Creating profile for user:', userId);
     const { error: profileError } = await supabase
       .from('profiles')
       .upsert([
@@ -128,7 +112,7 @@ export const createClientAccount = async (email: string, password: string, userD
           client_type: userData.clientType,
           monthly_bill: userData.monthlyBill
         }
-      ], { onConflict: 'id' });
+      ]);
 
     if (profileError) {
       console.error('Error upserting profile:', profileError);
