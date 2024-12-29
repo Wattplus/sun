@@ -25,16 +25,23 @@ export const LeadManagement = () => {
   const isMobile = useIsMobile();
 
   useEffect(() => {
+    console.log("LeadManagement: Fetching leads...");
     fetchLeads();
   }, []);
 
+  useEffect(() => {
+    console.log("LeadManagement: Leads updated:", leads);
+  }, [leads]);
+
   const handleDeleteClick = (lead: Lead) => {
+    console.log("LeadManagement: Handling delete for lead:", lead);
     setLeadToDelete(lead);
     setDeleteDialogOpen(true);
   };
 
   const handleConfirmDelete = async () => {
     if (!leadToDelete) return;
+    console.log("LeadManagement: Confirming delete for lead:", leadToDelete);
     const success = await deleteLead(leadToDelete.id);
     if (success) {
       setDeleteDialogOpen(false);
@@ -43,11 +50,13 @@ export const LeadManagement = () => {
   };
 
   const handleEditClick = (lead: Lead) => {
+    console.log("LeadManagement: Handling edit for lead:", lead);
     setSelectedLead(lead);
     setEditDialogOpen(true);
   };
 
   const handleAssignClick = (lead: Lead) => {
+    console.log("LeadManagement: Handling assign for lead:", lead);
     setLeadToAssign(lead);
     setAssignDialogOpen(true);
   };
@@ -58,6 +67,7 @@ export const LeadManagement = () => {
   };
 
   const handleSaveLead = async (updatedLead: Lead) => {
+    console.log("LeadManagement: Saving lead:", updatedLead);
     const success = await updateLead(updatedLead);
     if (success) {
       handleEditClose();
@@ -65,6 +75,7 @@ export const LeadManagement = () => {
   };
 
   const handleAssignSubmit = async (leadId: string, installerId: string) => {
+    console.log("LeadManagement: Assigning lead:", { leadId, installerId });
     const success = await assignLead(leadId, installerId);
     if (success) {
       setAssignDialogOpen(false);

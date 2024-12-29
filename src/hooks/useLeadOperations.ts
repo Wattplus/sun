@@ -9,7 +9,7 @@ export const useLeadOperations = () => {
 
   const fetchLeads = async () => {
     try {
-      console.log("Fetching leads...");
+      console.log("useLeadOperations: Fetching leads...");
       const { data, error } = await supabase
         .from("leads")
         .select("*")
@@ -25,7 +25,7 @@ export const useLeadOperations = () => {
         return;
       }
 
-      console.log("Leads fetched successfully:", data);
+      console.log("useLeadOperations: Leads fetched successfully:", data);
       setLeads(data || []);
     } catch (error) {
       console.error("Unexpected error fetching leads:", error);
@@ -39,6 +39,7 @@ export const useLeadOperations = () => {
 
   const deleteLead = async (leadId: string) => {
     try {
+      console.log("useLeadOperations: Deleting lead:", leadId);
       const { error } = await supabase
         .from("leads")
         .delete()
@@ -73,6 +74,7 @@ export const useLeadOperations = () => {
 
   const updateLead = async (updatedLead: Lead) => {
     try {
+      console.log("useLeadOperations: Updating lead:", updatedLead);
       const { error } = await supabase
         .from("leads")
         .update(updatedLead)
@@ -107,6 +109,7 @@ export const useLeadOperations = () => {
 
   const assignLead = async (leadId: string, installerId: string) => {
     try {
+      console.log("useLeadOperations: Assigning lead:", { leadId, installerId });
       const { error } = await supabase
         .from("leads")
         .update({ assignedto: installerId })
