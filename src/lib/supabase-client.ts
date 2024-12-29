@@ -11,7 +11,13 @@ if (!supabaseUrl || !supabaseKey) {
   throw new Error('Missing Supabase environment variables');
 }
 
-export const supabase = createClient(supabaseUrl, supabaseKey);
+export const supabase = createClient(supabaseUrl, supabaseKey, {
+  auth: {
+    autoRefreshToken: true,
+    persistSession: true,
+    detectSessionInUrl: true
+  }
+});
 
 export const sendEmail = async (
   email: string, 
@@ -60,49 +66,79 @@ export const sendEmail = async (
   }
 };
 
+const checkExistingUser = async (email: string) => {
+  const { data, error } = await supabase
+    .from('profiles')
+    .select('id')
+    .eq('email', email)
+    .single();
+
+  if (error && error.code !== 'PGRST116') {
+    console.error('Error checking existing user:', error);
+    return { error };
+  }
+
+  return { data, error: null };
+};
+
 export const createClientAccount = async (email: string, password: string, userData: any) => {
   try {
     console.log('Starting account creation process for:', email);
 
     // Vérifier si l'utilisateur existe déjà
-    const { data: existingUser } = await supabase
-      .from('profiles')
-      .select('id')
-      .eq('email', email)
-      .single();
+    const { data: existingUser, error: checkError } = await checkExistingUser(email);
+
+    if (checkError) {
+      console.error('Error checking existing user:', checkError);
+      return { error: checkError };
+    }
+
+    let userId;
 
     if (existingUser) {
-      console.log('User already exists, skipping account creation');
-      return { data: { userId: existingUser.id }, error: null };
-    }
-
-    // Créer le compte avec le mot de passe généré
-    const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        data: {
-          first_name: userData.firstName,
-          last_name: userData.lastName,
-          phone: userData.phone,
-          role: 'client'
+      console.log('User already exists, using existing ID:', existingUser.id);
+      userId = existingUser.id;
+    } else {
+      // Créer le compte avec le mot de passe généré
+      const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: {
+            first_name: userData.firstName,
+            last_name: userData.lastName,
+            phone: userData.phone,
+            role: 'client'
+          }
         }
+      });
+
+      if (signUpError) {
+        console.error('Error creating auth account:', signUpError);
+        return { error: signUpError };
       }
-    });
 
-    if (signUpError) {
-      console.error('Error creating auth account:', signUpError);
-      return { error: signUpError };
+      if (!signUpData.user?.id) {
+        console.error('No user ID available after auth operation');
+        return { error: new Error('Failed to get user ID') };
+      }
+
+      userId = signUpData.user.id;
+
+      // Envoyer l'email de bienvenue uniquement pour les nouveaux comptes
+      await sendEmail(
+        email,
+        userData.firstName,
+        userData.lastName,
+        userData.phone,
+        userData.postalCode,
+        userData.clientType,
+        userData.monthlyBill,
+        password
+      );
     }
 
-    const userId = signUpData.user?.id;
-
-    if (!userId) {
-      console.error('No user ID available after auth operation');
-      return { error: new Error('Failed to get user ID') };
-    }
-
-    // Créer le profil pour le nouvel utilisateur
+    // Mettre à jour ou créer le profil
     const { error: profileError } = await supabase
       .from('profiles')
       .upsert([
@@ -116,24 +152,14 @@ export const createClientAccount = async (email: string, password: string, userD
           client_type: userData.clientType,
           monthly_bill: userData.monthlyBill
         }
-      ]);
+      ], {
+        onConflict: 'id'
+      });
 
     if (profileError) {
-      console.error('Error creating profile:', profileError);
+      console.error('Error updating/creating profile:', profileError);
       return { error: profileError };
     }
-
-    // Envoyer l'email de bienvenue uniquement pour les nouveaux comptes
-    await sendEmail(
-      email,
-      userData.firstName,
-      userData.lastName,
-      userData.phone,
-      userData.postalCode,
-      userData.clientType,
-      userData.monthlyBill,
-      password
-    );
 
     return { data: { userId }, error: null };
   } catch (error) {
@@ -165,13 +191,13 @@ export const createLead = async (leadData: any) => {
 
     if (error) {
       console.error('Error creating lead:', error);
-      throw error;
+      return { error };
     }
     
     console.log('Lead created successfully:', data);
     return { data, error: null };
   } catch (error) {
     console.error('Error in createLead:', error);
-    return { data: null, error };
+    return { error };
   }
 };
