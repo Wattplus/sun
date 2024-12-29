@@ -65,15 +65,16 @@ export const sendEmail = async (
 
 export const createClientAccount = async (email: string, password: string, userData: any) => {
   try {
-    console.log('Creating client account with data:', userData);
+    console.log('Checking if user exists:', email);
     
-    // Vérifie si l'utilisateur existe déjà dans auth
-    const { data: { user: existingAuthUser }, error: signInError } = await supabase.auth.signInWithPassword({
+    // Vérifier si l'utilisateur existe déjà dans auth
+    const { data: existingUser } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
 
-    if (existingAuthUser) {
+    if (existingUser?.user) {
+      console.log('User already exists, returning error');
       return { 
         error: { 
           message: "Un compte existe déjà avec cet email. Veuillez vous connecter ou utiliser une autre adresse email." 
@@ -81,7 +82,8 @@ export const createClientAccount = async (email: string, password: string, userD
       };
     }
 
-    // Si l'utilisateur n'existe pas dans auth, on le crée
+    // Si l'utilisateur n'existe pas, on le crée
+    console.log('Creating new user account');
     const { data: authData, error: signUpError } = await supabase.auth.signUp({
       email,
       password,
@@ -97,28 +99,30 @@ export const createClientAccount = async (email: string, password: string, userD
 
     if (signUpError) {
       console.error('Error creating auth account:', signUpError);
-      if (signUpError.message.includes('User already registered')) {
-        return { 
-          error: { 
-            message: "Un compte existe déjà avec cet email. Veuillez vous connecter ou utiliser une autre adresse email." 
-          }
-        };
-      }
       return { error: signUpError };
     }
 
     if (!authData.user) {
+      console.error('No user data returned from auth signup');
       return { error: new Error('Failed to create auth user') };
     }
 
-    // Créer le profil uniquement si l'utilisateur n'existe pas déjà
-    const { data: existingProfile } = await supabase
+    // Vérifier si un profil existe déjà
+    console.log('Checking if profile exists');
+    const { data: existingProfile, error: profileCheckError } = await supabase
       .from('profiles')
       .select('id')
       .eq('email', email)
-      .maybeSingle(); // Utilisation de maybeSingle au lieu de single
+      .maybeSingle();
 
+    if (profileCheckError) {
+      console.error('Error checking existing profile:', profileCheckError);
+      return { error: profileCheckError };
+    }
+
+    // Créer le profil uniquement s'il n'existe pas
     if (!existingProfile) {
+      console.log('Creating new profile');
       const { error: profileError } = await supabase
         .from('profiles')
         .insert([
@@ -141,6 +145,7 @@ export const createClientAccount = async (email: string, password: string, userD
     }
 
     // Envoyer l'email de bienvenue
+    console.log('Sending welcome email');
     await sendEmail(
       email,
       userData.firstName,
@@ -154,7 +159,7 @@ export const createClientAccount = async (email: string, password: string, userD
 
     return { data: authData, error: null };
   } catch (error) {
-    console.error('Error in createClientAccount:', error);
+    console.error('Unexpected error in createClientAccount:', error);
     return { error };
   }
 };
@@ -180,10 +185,15 @@ export const createLead = async (leadData: any) => {
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) {
+      console.error('Error creating lead:', error);
+      throw error;
+    }
+    
+    console.log('Lead created successfully:', data);
     return { data, error: null };
   } catch (error) {
-    console.error('Error creating lead:', error);
+    console.error('Error in createLead:', error);
     return { data: null, error };
   }
 };
