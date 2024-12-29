@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -16,52 +16,70 @@ export const ChatSection = () => {
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
-  const { data: messages = [], isLoading } = useQuery({
+  const { data: messages = [], isLoading, error } = useQuery({
     queryKey: ['messages', conversationId],
-    queryFn: () => messagesService.getMessages(conversationId!),
+    queryFn: () => {
+      if (!conversationId) throw new Error('Conversation ID is required');
+      return messagesService.getMessages(conversationId);
+    },
     enabled: !!conversationId,
   });
 
   const sendMessageMutation = useMutation({
-    mutationFn: (content: string) => messagesService.sendMessage({
-      content,
-      conversation_id: conversationId!,
-      sender_id: 'current-installer-id', // À remplacer par l'ID réel de l'installateur
-      sender_type: 'installer',
-      read: false,
-    }),
+    mutationFn: (content: string) => {
+      if (!conversationId) throw new Error('Conversation ID is required');
+      return messagesService.sendMessage({
+        content,
+        conversation_id: conversationId,
+        sender_id: 'current-installer-id',
+        sender_type: 'installer',
+        read: false,
+      });
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['messages', conversationId] });
       toast({
         title: "Message envoyé",
         description: "Votre message a été envoyé avec succès",
       });
+      setNewMessage("");
     },
     onError: (error) => {
+      console.error('Error sending message:', error);
       toast({
         title: "Erreur",
         description: "Une erreur est survenue lors de l'envoi du message",
         variant: "destructive",
       });
-      console.error('Error sending message:', error);
     },
   });
 
   const handleSendMessage = () => {
     if (!newMessage.trim()) return;
     sendMessageMutation.mutate(newMessage);
-    setNewMessage("");
   };
 
+  if (error) {
+    return (
+      <div className="flex items-center justify-center h-[600px] text-destructive">
+        Une erreur est survenue lors du chargement des messages
+      </div>
+    );
+  }
+
   if (isLoading) {
-    return <div className="flex items-center justify-center h-[600px]">Chargement...</div>;
+    return (
+      <div className="flex items-center justify-center h-[600px]">
+        Chargement des messages...
+      </div>
+    );
   }
 
   return (
     <div className="flex flex-col h-[600px]">
       <ScrollArea className="flex-1 p-4">
         <div className="space-y-4">
-          {messages.map((message) => (
+          {messages.map((message: Message) => (
             <div
               key={message.id}
               className={`flex gap-2 ${
