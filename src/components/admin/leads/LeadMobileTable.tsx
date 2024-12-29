@@ -25,10 +25,10 @@ export const LeadMobileTable = ({
 }: LeadMobileTableProps) => {
   return (
     <ScrollArea className="h-[calc(100vh-300px)]">
-      <div className="space-y-3 pb-4 px-2">
+      <div className="space-y-3 pb-4">
         {leads.map((lead) => (
           <Card key={lead.id} className="p-4 bg-background/50 backdrop-blur-md border-[#33C3F0]/20">
-            <div className="space-y-3">
+            <div className="space-y-4">
               {/* Header with name and status */}
               <div className="flex items-start justify-between">
                 <div className="space-y-1">
@@ -47,10 +47,10 @@ export const LeadMobileTable = ({
                     </Badge>
                   </div>
                 </div>
-                <div className="space-y-1">
+                <div className="flex flex-col items-end gap-2">
                   <div className="flex items-center gap-1.5 bg-primary/10 px-2 py-1 rounded-full">
                     <Euro className="h-3.5 w-3.5 text-primary" />
-                    <span className="text-sm font-medium text-primary">{lead.monthlybill}€</span>
+                    <span className="text-sm font-medium text-primary">{lead.monthlybill}€/mois</span>
                   </div>
                   <LeadPurchaseInfo lead={lead} />
                 </div>
