@@ -3,9 +3,9 @@ import emailjs from '@emailjs/browser';
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
-const EMAILJS_SERVICE_ID = 'service_wattplus';  // Assurez-vous que cet ID correspond à votre service EmailJS
-const EMAILJS_TEMPLATE_ID = 'template_q11t4u8'; // Assurez-vous que cet ID correspond à votre template EmailJS
-const EMAILJS_PUBLIC_KEY = 'nSGUhEBvdNcDlBp0F';  // Assurez-vous que cette clé correspond à votre clé publique EmailJS
+const EMAILJS_SERVICE_ID = 'service_wattplus';
+const EMAILJS_TEMPLATE_ID = 'template_q11t4u8';
+const EMAILJS_PUBLIC_KEY = 'nSGUhEBvdNcDlBp0F';
 
 if (!supabaseUrl || !supabaseKey) {
   throw new Error('Missing Supabase environment variables');
@@ -65,6 +65,21 @@ export const sendEmail = async (
 
 export const createClientAccount = async (email: string, password: string, userData: any) => {
   try {
+    // Vérifier si l'utilisateur existe déjà
+    const { data: existingUser } = await supabase
+      .from('profiles')
+      .select('*')
+      .eq('email', email)
+      .single();
+
+    if (existingUser) {
+      return { 
+        error: {
+          message: "Un compte existe déjà avec cet email. Veuillez vous connecter ou utiliser un autre email."
+        }
+      };
+    }
+
     // Créer le compte auth
     const { data: authData, error: authError } = await supabase.auth.signUp({
       email,

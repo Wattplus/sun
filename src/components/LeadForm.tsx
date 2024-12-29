@@ -123,11 +123,21 @@ export const LeadForm = () => {
         {
           firstName: formData.firstName,
           lastName: formData.lastName,
-          phone: formData.phone
+          phone: formData.phone,
+          postalCode: formData.postalCode,
+          clientType: formData.clientType,
+          monthlyBill: formData.monthlyBill
         }
       );
 
-      if (accountError) throw accountError;
+      if (accountError) {
+        toast({
+          title: "Erreur",
+          description: accountError.message || "Une erreur est survenue lors de la création de votre compte.",
+          variant: "destructive",
+        });
+        return;
+      }
 
       // Créer le lead
       const { error: leadError } = await createLead(formData);
