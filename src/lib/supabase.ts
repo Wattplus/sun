@@ -11,17 +11,20 @@ if (!supabaseUrl || !supabaseKey) {
   );
 }
 
-if (supabaseKey === '[YOUR-ACTUAL-ANON-KEY]') {
-  throw new Error(
-    'Please replace [YOUR-ACTUAL-ANON-KEY] with your actual Supabase anon key in VITE_SUPABASE_ANON_KEY'
-  );
-}
-
 export const supabase = createClient(supabaseUrl, supabaseKey, {
   auth: {
     persistSession: true,
     autoRefreshToken: true,
   },
+  db: {
+    schema: 'public'
+  },
+  global: {
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${supabaseKey}`
+    }
+  }
 });
 
 // Log the configuration (sans la clé complète pour la sécurité)
