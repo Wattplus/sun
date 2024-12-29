@@ -1,4 +1,4 @@
-import { Home, Sun, Euro, MapPin, Phone, Mail, Plus, Calendar } from "lucide-react";
+import { Home, Sun, Euro, MapPin, Phone, Mail, Plus, Calendar, FileText, Video, MessageSquare } from "lucide-react";
 import { Avatar } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -91,6 +91,25 @@ export const LeadInfoSidebar = ({ onQuickAction }: LeadInfoSidebarProps) => {
           <Euro className="h-4 w-4 mr-2" />
           Percevoir le paiement
         </Button>
+        
+        <Button 
+          variant="outline" 
+          className="w-full justify-start"
+          onClick={() => onQuickAction('devis')}
+        >
+          <FileText className="h-4 w-4 mr-2" />
+          Envoyer un devis
+        </Button>
+
+        <Button 
+          variant="outline" 
+          className="w-full justify-start"
+          onClick={() => onQuickAction('visio')}
+        >
+          <Video className="h-4 w-4 mr-2" />
+          Planifier un RDV visio
+        </Button>
+
         <Button 
           variant="outline" 
           className="w-full justify-start"
@@ -99,13 +118,23 @@ export const LeadInfoSidebar = ({ onQuickAction }: LeadInfoSidebarProps) => {
           <Plus className="h-4 w-4 mr-2" />
           Ajouter une note
         </Button>
+
         <Button 
           variant="outline" 
           className="w-full justify-start"
           onClick={() => onQuickAction('rappel')}
         >
           <Calendar className="h-4 w-4 mr-2" />
-          Ajouter un rappel de suivi
+          Ajouter un rappel
+        </Button>
+
+        <Button 
+          variant="outline" 
+          className="w-full justify-start"
+          onClick={() => onQuickAction('message')}
+        >
+          <MessageSquare className="h-4 w-4 mr-2" />
+          Envoyer un SMS
         </Button>
       </div>
     </Card>

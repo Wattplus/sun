@@ -32,6 +32,24 @@ export function ConversationPage() {
           description: "Redirection vers la page de paiement"
         });
         break;
+      case 'devis':
+        toast({
+          title: "Devis",
+          description: "Redirection vers la création de devis"
+        });
+        break;
+      case 'visio':
+        toast({
+          title: "Visioconférence",
+          description: "Planification d'un rendez-vous visio"
+        });
+        break;
+      case 'message':
+        toast({
+          title: "SMS",
+          description: "Envoi d'un SMS au client"
+        });
+        break;
     }
   };
 
