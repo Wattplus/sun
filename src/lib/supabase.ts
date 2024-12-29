@@ -11,7 +11,17 @@ if (!supabaseUrl || !supabaseKey) {
   );
 }
 
-export const supabase = createClient(supabaseUrl, supabaseKey);
+export const supabase = createClient(supabaseUrl, supabaseKey, {
+  auth: {
+    persistSession: true,
+    autoRefreshToken: true,
+  },
+  global: {
+    headers: {
+      'apikey': supabaseKey,
+    },
+  },
+});
 
 // Log the configuration (sans la clé complète pour la sécurité)
 console.log('Supabase URL:', supabaseUrl);
