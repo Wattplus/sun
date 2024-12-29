@@ -1,5 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
 import emailjs from '@emailjs/browser';
+import { User } from '@supabase/supabase-js';
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
@@ -72,9 +73,14 @@ export const createClientAccount = async (email: string, password: string, userD
     
     // First check if user exists
     const { data: { users }, error: getUserError } = await supabase.auth.admin.listUsers();
-    const existingUser = users?.find(user => user.email === email);
+    
+    if (getUserError) {
+      console.error('Error checking user existence:', getUserError);
+      return { error: getUserError };
+    }
 
-    let userId;
+    const existingUser = users?.find((user: User) => user.email === email);
+    let userId: string | undefined;
 
     if (!existingUser) {
       console.log('User does not exist, creating new account');
