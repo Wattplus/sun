@@ -2,7 +2,7 @@ import { Lead, LeadStatus } from "@/types/crm";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Edit, Trash2, UserPlus, Phone, Mail, Euro } from "lucide-react";
+import { Edit, Trash2, UserPlus, Phone, Mail, Euro, MapPin } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface LeadMobileTableProps {
@@ -24,16 +24,17 @@ export const LeadMobileTable = ({
 }: LeadMobileTableProps) => {
   return (
     <ScrollArea className="h-[calc(100vh-300px)]">
-      <div className="space-y-4 pb-4">
+      <div className="space-y-3 pb-4 px-2">
         {leads.map((lead) => (
-          <Card key={lead.id} className="p-4 bg-background/50 backdrop-blur-md">
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h3 className="font-medium text-lg">
+          <Card key={lead.id} className="p-4 bg-background/50 backdrop-blur-md border-[#33C3F0]/20">
+            <div className="space-y-3">
+              {/* Header with name and status */}
+              <div className="flex items-start justify-between">
+                <div className="space-y-1">
+                  <h3 className="font-medium text-base">
                     {lead.firstname} {lead.lastname}
                   </h3>
-                  <div className="flex items-center gap-2 mt-1">
+                  <div className="flex flex-wrap gap-2">
                     <Badge className={getStatusColor(lead.status)}>
                       {getStatusText(lead.status)}
                     </Badge>
@@ -45,52 +46,55 @@ export const LeadMobileTable = ({
                     </Badge>
                   </div>
                 </div>
-                <div className="flex items-center gap-2">
-                  <Euro className="h-4 w-4 text-green-500" />
-                  <span className="font-medium">{lead.monthlybill}€</span>
+                <div className="flex items-center gap-1.5 bg-primary/10 px-2 py-1 rounded-full">
+                  <Euro className="h-3.5 w-3.5 text-primary" />
+                  <span className="text-sm font-medium text-primary">{lead.monthlybill}€</span>
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 gap-3">
+              {/* Contact Information */}
+              <div className="space-y-2">
                 <a 
                   href={`mailto:${lead.email}`} 
                   className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors"
                 >
-                  <Mail className="h-4 w-4" />
-                  <span>{lead.email}</span>
+                  <Mail className="h-4 w-4 shrink-0" />
+                  <span className="truncate">{lead.email}</span>
                 </a>
                 <a 
                   href={`tel:${lead.phone}`} 
                   className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors"
                 >
-                  <Phone className="h-4 w-4" />
+                  <Phone className="h-4 w-4 shrink-0" />
                   <span>{lead.phone}</span>
                 </a>
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <MapPin className="h-4 w-4 shrink-0" />
                   <Badge variant="outline" className="bg-primary/10">
                     {lead.postalcode}
                   </Badge>
                 </div>
               </div>
 
-              <div className="flex gap-2 pt-2 border-t border-border">
+              {/* Actions */}
+              <div className="flex gap-2 pt-2 border-t border-[#33C3F0]/20">
                 <Button
                   variant="outline"
                   size="sm"
                   onClick={() => onEditClick(lead)}
-                  className="flex-1"
+                  className="flex-1 border-[#33C3F0]/20 hover:border-[#33C3F0]/40 hover:bg-[#33C3F0]/10"
                 >
-                  <Edit className="h-4 w-4 mr-2" />
+                  <Edit className="h-4 w-4 mr-2 text-[#1EAEDB]" />
                   Éditer
                 </Button>
                 <Button
                   variant="outline"
                   size="sm"
                   onClick={() => onAssignClick(lead)}
-                  className="flex-1"
                   disabled={lead.status === "assigned" || lead.status === "converted"}
+                  className="flex-1 border-[#33C3F0]/20 hover:border-[#33C3F0]/40 hover:bg-[#33C3F0]/10"
                 >
-                  <UserPlus className="h-4 w-4 mr-2" />
+                  <UserPlus className="h-4 w-4 mr-2 text-[#1EAEDB]" />
                   Assigner
                 </Button>
                 <Button
