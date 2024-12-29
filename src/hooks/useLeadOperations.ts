@@ -133,7 +133,7 @@ export const useLeadOperations = () => {
       console.log("useLeadOperations: Attribution du lead:", { leadId, installerId });
       const { error } = await supabase
         .from("leads")
-        .update({ assignedto: installerId })
+        .update({ assignedto: installerId, status: 'assigned' })
         .eq("id", leadId);
 
       if (error) {
@@ -146,12 +146,7 @@ export const useLeadOperations = () => {
         return false;
       }
 
-      setLeads(leads.map(lead => 
-        lead.id === leadId 
-          ? { ...lead, assignedto: installerId }
-          : lead
-      ));
-
+      await fetchLeads(); // Recharger tous les leads pour avoir les données à jour
       toast({
         title: "Lead assigné",
         description: "Le lead a été assigné avec succès.",
