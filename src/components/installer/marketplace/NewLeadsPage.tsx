@@ -125,6 +125,11 @@ export const NewLeadsPage = () => {
     window.location.href = '/espace-installateur/compte/prepaye';
   };
 
+  const handleExport = () => {
+    // Implement export functionality here
+    console.log("Export functionality to be implemented");
+  };
+
   const filteredLeads = availableLeads
     .filter(lead => projectTypeFilter === "all" || lead.clienttype === projectTypeFilter)
     .filter(lead => selectedDepartments.length === 0 || selectedDepartments.includes(lead.postalcode.substring(0, 2)))
@@ -140,6 +145,7 @@ export const NewLeadsPage = () => {
         <LeadsHeader 
           onToggleFilters={() => setShowFilters(!showFilters)}
           onPrepaidAccount={handlePrepaidAccount}
+          onExport={handleExport}
         />
 
         {showFilters && (

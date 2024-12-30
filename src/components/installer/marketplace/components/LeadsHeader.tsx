@@ -3,8 +3,8 @@ import { Filter, FileDown, Wallet } from "lucide-react";
 
 interface LeadsHeaderProps {
   onToggleFilters: () => void;
-  onExport: () => void;
   onPrepaidAccount: () => void;
+  onExport: () => void;
 }
 
 export const LeadsHeader = ({ onToggleFilters, onExport, onPrepaidAccount }: LeadsHeaderProps) => {
