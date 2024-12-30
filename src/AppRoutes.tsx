@@ -9,6 +9,7 @@ import Admin from "@/pages/Admin";
 import { ThankYou } from "@/pages/ThankYou";
 import ClientPortal from "@/pages/ClientPortal";
 import { InstallerProfile } from "@/pages/InstallerProfile";
+import { CheckoutPage } from "@/pages/installer/payment/CheckoutPage";
 
 // Admin Components
 import AdminDashboard from "@/components/admin/AdminDashboard";
@@ -61,6 +62,7 @@ export function AppRoutes() {
         <Route path="parametres" element={<InstallerSettings />} />
         <Route path="notifications" element={<NotificationsPage />} />
         <Route path="mon-compte" element={<ProfilePage />} />
+        <Route path="checkout" element={<CheckoutPage />} />
       </Route>
       
       {/* Admin Routes */}

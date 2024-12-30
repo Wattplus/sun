@@ -1,8 +1,10 @@
 import { useNewLeads } from "@/hooks/useNewLeads";
 import { LeadsHeader } from "./components/LeadsHeader";
 import { NewLeadsContent } from "./components/NewLeadsContent";
+import { useNavigate } from "react-router-dom";
 
 export const NewLeadsPage = () => {
+  const navigate = useNavigate();
   const {
     selectedLeads,
     showFilters,
@@ -18,7 +20,6 @@ export const NewLeadsPage = () => {
     setPriceFilter,
     handleLeadSelect,
     handleSelectAll,
-    handlePurchase,
     calculateTotalPrice,
   } = useNewLeads();
 
@@ -31,6 +32,11 @@ export const NewLeadsPage = () => {
 
   const handleExport = () => {
     console.log("Export functionality to be implemented");
+  };
+
+  const handlePurchase = () => {
+    const leadIds = selectedLeads.map(lead => lead.id).join(",");
+    navigate(`/espace-installateur/checkout?leads=${leadIds}`);
   };
 
   const availableDepartments = Array.from(
