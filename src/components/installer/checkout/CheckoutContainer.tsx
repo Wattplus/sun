@@ -20,6 +20,7 @@ export const CheckoutContainer = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [isLoading, setIsLoading] = useState(true);
+  const [isProcessing, setIsProcessing] = useState(false);
   const [leads, setLeads] = useState<Lead[]>([]);
   const [total, setTotal] = useState(0);
   const [installerInfo, setInstallerInfo] = useState<InstallerInfo | null>(null);
@@ -116,8 +117,15 @@ export const CheckoutContainer = () => {
       return;
     }
 
-    setIsLoading(true);
+    setIsProcessing(true);
     try {
+      const { data: session } = await supabase.auth.getSession();
+      if (!session?.session) {
+        toast.error("Vous devez être connecté");
+        navigate("/login");
+        return;
+      }
+
       const { data, error } = await supabase.functions.invoke("create-lead-checkout", {
         body: {
           leads: leads.map(lead => ({
@@ -141,12 +149,13 @@ export const CheckoutContainer = () => {
         return;
       }
 
+      // Redirection vers Stripe
       window.location.href = data.url;
     } catch (error) {
       console.error("Error in handleCheckout:", error);
       toast.error("Une erreur est survenue lors de la création du paiement");
     } finally {
-      setIsLoading(false);
+      setIsProcessing(false);
     }
   };
 
@@ -176,7 +185,7 @@ export const CheckoutContainer = () => {
         />
         
         <CheckoutActions 
-          isLoading={isLoading} 
+          isLoading={isProcessing}
           onCheckout={handleCheckout}
           leadsCount={leads.length}
         />
