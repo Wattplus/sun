@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Lead } from "@/types/crm";
 import { Card } from "@/components/ui/card";
 import { toast } from "sonner";
@@ -8,6 +8,7 @@ import { LeadsFilters } from "../dashboard/LeadsFilters";
 import { LeadsHeader } from "./components/LeadsHeader";
 import { LeadsSelection } from "./components/LeadsSelection";
 import { useLeadOperations } from "@/hooks/useLeadOperations";
+import { supabase } from "@/lib/supabase-client";
 
 export const NewLeadsPage = () => {
   const [selectedLeads, setSelectedLeads] = useState<Lead[]>([]);
@@ -15,13 +16,38 @@ export const NewLeadsPage = () => {
   const [projectTypeFilter, setProjectTypeFilter] = useState("all");
   const [selectedDepartments, setSelectedDepartments] = useState<string[]>([]);
   const [priceFilter, setPriceFilter] = useState<"default" | "asc" | "desc">("default");
+  const [balance, setBalance] = useState(0);
   
   const { leads } = useLeadOperations();
   const availableLeads = leads.filter(lead => !lead.purchasedby?.length);
-  
-  const balance = 150; // TODO: Fetch from Supabase
-  const hasEnoughBalance = balance >= selectedLeads.length * 26;
 
+  useEffect(() => {
+    const fetchBalance = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session?.user?.id) return;
+
+      const { data: installer } = await supabase
+        .from('installers')
+        .select('credits')
+        .eq('user_id', session.user.id)
+        .single();
+
+      if (installer) {
+        setBalance(installer.credits);
+      }
+    };
+
+    fetchBalance();
+  }, []);
+
+  const calculateTotalPrice = () => {
+    return selectedLeads.reduce((total, lead) => {
+      return total + (lead.projectType === 'professional' ? 49 : 26);
+    }, 0);
+  };
+
+  const hasEnoughBalance = balance >= calculateTotalPrice();
+  
   console.log("[NewLeadsPage] Available leads:", availableLeads.length);
   
   const availableDepartments = Array.from(
@@ -42,28 +68,61 @@ export const NewLeadsPage = () => {
     );
   };
 
-  const handlePurchase = () => {
-    if (!hasEnoughBalance) {
+  const handlePurchase = async (paymentMethod: 'prepaid' | 'direct') => {
+    const totalPrice = calculateTotalPrice();
+
+    if (paymentMethod === 'prepaid' && !hasEnoughBalance) {
       toast.error("Solde insuffisant", {
         description: "Veuillez recharger votre compte pour acheter ces leads.",
       });
       return;
     }
-    toast.success("Redirection vers le paiement...");
-  };
 
-  const handleExport = () => {
-    if (selectedLeads.length === 0) {
-      toast.error("Aucun lead sélectionné", {
-        description: "Veuillez sélectionner au moins un lead à exporter.",
-      });
-      return;
+    try {
+      if (paymentMethod === 'prepaid') {
+        // Déduire du solde prépayé
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session?.user?.id) {
+          toast.error("Erreur d'authentification");
+          return;
+        }
+
+        const { error } = await supabase.rpc('deduct_credits', {
+          amount: totalPrice,
+          user_id: session.user.id
+        });
+
+        if (error) throw error;
+
+        toast.success("Leads achetés avec succès !");
+      } else {
+        // Redirection vers la page de paiement Stripe
+        const response = await fetch("https://dqzsycxxgltztufrhams.supabase.co/functions/v1/create-lead-checkout", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            leads: selectedLeads.map(lead => ({
+              id: lead.id,
+              price: lead.projectType === 'professional' ? 49 : 26
+            }))
+          }),
+        });
+
+        if (!response.ok) throw new Error();
+
+        const { url } = await response.json();
+        if (url) window.location.href = url;
+      }
+    } catch (error) {
+      console.error("Erreur lors de l'achat:", error);
+      toast.error("Une erreur est survenue lors de l'achat");
     }
-    toast.success("Export des leads en cours...");
   };
 
   const handlePrepaidAccount = () => {
-    toast.success("Redirection vers la page de rechargement...");
+    window.location.href = '/espace-installateur/compte/prepaye';
   };
 
   const filteredLeads = availableLeads
@@ -80,7 +139,6 @@ export const NewLeadsPage = () => {
       <div className="max-w-[1400px] mx-auto p-6 space-y-8">
         <LeadsHeader 
           onToggleFilters={() => setShowFilters(!showFilters)}
-          onExport={handleExport}
           onPrepaidAccount={handlePrepaidAccount}
         />
 
@@ -104,6 +162,7 @@ export const NewLeadsPage = () => {
           onClearSelection={() => setSelectedLeads([])}
           onPurchase={handlePurchase}
           hasEnoughBalance={hasEnoughBalance}
+          totalPrice={calculateTotalPrice()}
         />
         
         <LeadsSummaryCards 
