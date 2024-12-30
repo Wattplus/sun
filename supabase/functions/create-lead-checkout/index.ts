@@ -40,18 +40,23 @@ serve(async (req) => {
 
     console.log('Creating Stripe checkout session...');
     const session = await stripe.checkout.sessions.create({
+      payment_method_types: ['card'],
       line_items: leads.map(lead => ({
-        price: lead.clienttype === 'professional' 
-          ? 'price_1Qa0nUFOePj4Hv47Ih00CR8k'  // 49€ for professional leads
-          : 'price_1QaAlfFOePj4Hv475LWE2bGQ',  // 26€ for individual leads
+        price_data: {
+          currency: 'eur',
+          product_data: {
+            name: `Lead - ${lead.firstname} ${lead.lastname}`,
+            description: `Lead from ${lead.postalcode} - ${lead.clienttype}`,
+          },
+          unit_amount: lead.clienttype === 'professional' ? 4900 : 2600, // 49€ or 26€ in cents
+        },
         quantity: 1,
       })),
       mode: 'payment',
-      success_url: `${req.headers.get('origin')}/espace-installateur?success=true`,
-      cancel_url: `${req.headers.get('origin')}/espace-installateur?canceled=true`,
+      success_url: `${req.headers.get('origin')}/espace-installateur/leads/achetes?success=true`,
+      cancel_url: `${req.headers.get('origin')}/espace-installateur/leads/nouveaux?canceled=true`,
       metadata: {
         leadIds: leads.map(lead => lead.id).join(','),
-        type: leads[0].type
       }
     });
 
