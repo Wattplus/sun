@@ -419,6 +419,13 @@ export type Database = {
         }
         Returns: undefined
       }
+      deduct_credits: {
+        Args: {
+          amount: number
+          user_id: string
+        }
+        Returns: undefined
+      }
     }
     Enums: {
       [_ in never]: never
