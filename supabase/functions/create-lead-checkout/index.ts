@@ -33,16 +33,13 @@ serve(async (req) => {
     }
 
     const lineItems = leads.map(lead => {
-      const basePrice = lead.clientType === 'professional' ? 49 : 26
-      const finalPrice = lead.type === 'exclusif' ? basePrice * 2 : basePrice
-      
-      console.log('Calculated price for lead:', {
-        leadId: lead.id,
-        clientType: lead.clientType,
-        type: lead.type,
-        basePrice,
-        finalPrice
-      })
+      if (!lead.price || isNaN(lead.price)) {
+        console.error('Invalid price for lead:', lead)
+        throw new Error(`Invalid price for lead ${lead.id}`)
+      }
+
+      const priceInCents = Math.round(lead.price * 100)
+      console.log('Calculated price in cents:', priceInCents)
 
       return {
         price_data: {
@@ -51,7 +48,7 @@ serve(async (req) => {
             name: `Lead ${lead.clientType === 'professional' ? 'Professionnel' : 'Particulier'}`,
             description: `Achat ${lead.type === 'mutualise' ? 'mutualisé' : 'exclusif'} du lead #${lead.id}`,
           },
-          unit_amount: Math.round(finalPrice * 100), // Convert to cents
+          unit_amount: priceInCents,
         },
         quantity: 1,
       }

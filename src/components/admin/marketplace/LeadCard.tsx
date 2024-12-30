@@ -23,7 +23,7 @@ export const LeadCard = ({
   const [isExpanded, setIsExpanded] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
-  const price = lead.clienttype === 'professional' ? 49 : 26;
+  const basePrice = lead.clienttype === 'professional' ? 49 : 26;
 
   const handlePurchase = async (type: 'mutualise' | 'exclusif', paymentMethod: 'prepaid' | 'direct') => {
     try {
@@ -40,15 +40,15 @@ export const LeadCard = ({
       }
 
       console.log('Creating checkout session...');
-      const finalPrice = type === 'exclusif' ? price * 2 : price;
+      const finalPrice = type === 'exclusif' ? basePrice * 2 : basePrice;
       
       const { data, error } = await supabase.functions.invoke('create-lead-checkout', {
         body: { 
           leads: [{
             id: lead.id,
             type: type,
-            price: finalPrice,
-            clientType: lead.clienttype
+            clientType: lead.clienttype,
+            price: finalPrice
           }]
         }
       });
@@ -115,8 +115,8 @@ export const LeadCard = ({
             {showActions && status === "available" && (
               <LeadCardActions
                 onPurchase={handlePurchase}
-                mutualPrice={price}
-                exclusivePrice={price * 2}
+                mutualPrice={basePrice}
+                exclusivePrice={basePrice * 2}
                 canPurchaseMutual={true}
                 canPurchaseExclusive={true}
                 isProfessionalProject={lead.clienttype === 'professional'}
