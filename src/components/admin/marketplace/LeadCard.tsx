@@ -24,8 +24,8 @@ export const LeadCard = ({
   const { toast } = useToast();
   const price = lead.clienttype === 'professional' ? 49 : 26;
 
-  const handlePurchase = async (paymentMethod: 'prepaid' | 'direct') => {
-    console.log('Handling purchase:', { lead, paymentMethod });
+  const handlePurchase = async (type: 'mutualise' | 'exclusif', paymentMethod: 'prepaid' | 'direct') => {
+    console.log('Handling purchase:', { lead, type, paymentMethod });
     
     try {
       if (paymentMethod === 'prepaid') {
@@ -68,7 +68,17 @@ export const LeadCard = ({
     <Card className="overflow-hidden border-primary/10 bg-card/50 backdrop-blur-sm">
       <div className="p-6 space-y-6">
         <LeadCardHeader
-          lead={lead}
+          firstName={lead.firstname}
+          lastName={lead.lastname}
+          postalCode={lead.postalcode}
+          createdAt={lead.created_at}
+          projectType={lead.clienttype}
+          budget={lead.price || 0}
+          purchasedBy={lead.purchasedby?.map(p => ({
+            installerId: p.toString(),
+            purchaseType: 'mutualise',
+            purchaseDate: new Date().toISOString()
+          }))}
           isExpanded={isExpanded}
           onToggleExpand={() => setIsExpanded(!isExpanded)}
           status={status}

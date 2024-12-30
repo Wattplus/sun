@@ -61,7 +61,6 @@ export const LeadMarketplace = () => {
   };
 
   const totalPrice = selectedLeads.reduce((sum, lead) => sum + (lead.price || 0), 0);
-  const userSubscriptionTier: SubscriptionTier = 'free';
 
   return (
     <div className="space-y-6">
@@ -131,8 +130,8 @@ export const LeadMarketplace = () => {
               key={lead.id} 
               lead={lead} 
               onPurchase={handlePurchase}
-              isPurchased={purchasedLeads.includes(lead.id)}
-              subscriptionTier={userSubscriptionTier}
+              status={purchasedLeads.includes(lead.id) ? "purchased" : "available"}
+              showActions={!purchasedLeads.includes(lead.id)}
             />
           ))}
         </div>

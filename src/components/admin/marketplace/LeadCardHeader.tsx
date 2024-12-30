@@ -1,6 +1,7 @@
 import { Badge } from "@/components/ui/badge";
 import { MapPin, Clock, Users, UserPlus } from "lucide-react";
 import { differenceInDays } from "date-fns";
+import { Lead } from "@/types/crm";
 
 interface LeadCardHeaderProps {
   firstName: string;
@@ -10,6 +11,9 @@ interface LeadCardHeaderProps {
   projectType: string;
   budget: number;
   purchasedBy?: Array<{ installerId: string; purchaseType: string; purchaseDate: string; }>;
+  isExpanded?: boolean;
+  onToggleExpand?: () => void;
+  status?: "available" | "purchased";
 }
 
 const getAgeLabel = (createdAt: string) => {
@@ -26,7 +30,10 @@ export const LeadCardHeader = ({
   createdAt, 
   projectType,
   budget,
-  purchasedBy = []
+  purchasedBy = [],
+  isExpanded,
+  onToggleExpand,
+  status
 }: LeadCardHeaderProps) => {
   const purchaseCount = purchasedBy.length;
   const remainingPurchases = 3 - purchaseCount;
