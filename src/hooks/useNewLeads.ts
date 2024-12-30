@@ -1,75 +1,17 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Lead } from "@/types/crm";
-import { supabase } from "@/lib/supabase-client";
 import { toast } from "sonner";
+import { useLeadsFetching } from "./leads/useLeadsFetching";
+import { useInstallerBalance } from "./installer/useInstallerBalance";
 
 export const useNewLeads = () => {
+  const { leads } = useLeadsFetching();
+  const { balance } = useInstallerBalance();
   const [selectedLeads, setSelectedLeads] = useState<Lead[]>([]);
   const [showFilters, setShowFilters] = useState(false);
   const [projectTypeFilter, setProjectTypeFilter] = useState("all");
   const [selectedDepartments, setSelectedDepartments] = useState<string[]>([]);
   const [priceFilter, setPriceFilter] = useState<"default" | "asc" | "desc">("default");
-  const [balance, setBalance] = useState(0);
-  const [leads, setLeads] = useState<Lead[]>([]);
-
-  // Fetch leads from Supabase
-  useEffect(() => {
-    const fetchLeads = async () => {
-      try {
-        const { data, error } = await supabase
-          .from('leads')
-          .select('*')
-          .eq('status', 'new')
-          .is('purchasedby', null);
-
-        if (error) {
-          console.error("Error fetching leads:", error);
-          toast.error("Erreur lors de la récupération des leads");
-          return;
-        }
-
-        console.log("Fetched leads:", data);
-        setLeads(data || []);
-      } catch (error) {
-        console.error("Error in fetchLeads:", error);
-        toast.error("Erreur lors de la récupération des leads");
-      }
-    };
-
-    fetchLeads();
-  }, []);
-
-  // Fetch installer balance
-  useEffect(() => {
-    const fetchBalance = async () => {
-      try {
-        const { data: { session } } = await supabase.auth.getSession();
-        if (!session?.user?.id) {
-          console.log("No session found");
-          return;
-        }
-
-        const { data: installer, error } = await supabase
-          .from('installers')
-          .select('credits')
-          .eq('user_id', session.user.id)
-          .maybeSingle();
-
-        if (error) {
-          console.error("Error fetching installer credits:", error);
-          toast.error("Erreur lors de la récupération du solde");
-          return;
-        }
-
-        setBalance(installer?.credits || 0);
-      } catch (error) {
-        console.error("Error in fetchBalance:", error);
-        toast.error("Erreur lors de la récupération du solde");
-      }
-    };
-
-    fetchBalance();
-  }, []);
 
   const calculateTotalPrice = () => {
     return selectedLeads.reduce((total, lead) => {
