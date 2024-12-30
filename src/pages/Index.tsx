@@ -13,8 +13,30 @@ import { TechnicalSpecs } from "@/components/TechnicalSpecs";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { Helmet } from "react-helmet";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { supabase } from "@/lib/supabase-client";
 
 export const Index = () => {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const checkSession = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      console.log("Index: Checking session...", session);
+    };
+
+    checkSession();
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      console.log("Index: Auth state changed:", event, session?.user?.id);
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, [navigate]);
+
   return (
     <>
       <Helmet>
@@ -22,11 +44,11 @@ export const Index = () => {
         <meta name="description" content="Expert en installation de panneaux solaires photovoltaïques. Obtenez un devis gratuit pour votre projet d'énergie solaire et bénéficiez des meilleures aides." />
         <meta name="keywords" content="panneaux solaires, photovoltaïque, installation solaire, énergie renouvelable, devis solaire" />
         <meta name="robots" content="index, follow" />
-        <link rel="canonical" href="https://votre-domaine.fr" />
+        <link rel="canonical" href="https://sun-prospect-connector.lovable.app" />
         <meta property="og:title" content="Installation Panneaux Solaires - Expert Photovoltaïque" />
         <meta property="og:description" content="Expert en installation de panneaux solaires photovoltaïques. Obtenez un devis gratuit pour votre projet d'énergie solaire." />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://votre-domaine.fr" />
+        <meta property="og:url" content="https://sun-prospect-connector.lovable.app" />
       </Helmet>
 
       <div className="min-h-screen bg-gradient-to-b from-background/80 to-background">
