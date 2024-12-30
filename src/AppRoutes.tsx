@@ -23,6 +23,15 @@ import TransactionMonitoring from "@/components/admin/transactions/TransactionMo
 import ComplaintManagement from "@/components/admin/complaints/ComplaintManagement";
 import DataExport from "@/components/admin/export/DataExport";
 
+// Installer Components
+import { InstallerLayout } from "@/components/installer/navigation/InstallerLayout";
+import { InstallerDashboard } from "@/components/installer/InstallerDashboard";
+import { NewLeadsPage } from "@/components/installer/marketplace/NewLeadsPage";
+import { PurchasedLeadsPage } from "@/components/installer/leads/PurchasedLeadsPage";
+import { MessagesPage } from "@/components/installer/messages/MessagesPage";
+import { ProfilePage } from "@/components/installer/profile/ProfilePage";
+import { SettingsPage as InstallerSettings } from "@/components/installer/settings/SettingsPage";
+
 export function AppRoutes() {
   const navigate = useNavigate();
 
@@ -42,8 +51,19 @@ export function AppRoutes() {
       <Route path="/login" element={<Login />} />
       <Route path="/thank-you" element={<ThankYou />} />
       <Route path="/client" element={<ClientPortal />} />
-      <Route path="/espace-installateur" element={<InstallerProfile />} />
       
+      {/* Installer Routes */}
+      <Route path="/espace-installateur" element={<InstallerLayout />}>
+        <Route index element={<InstallerDashboard />} />
+        <Route path="leads/nouveaux" element={<NewLeadsPage />} />
+        <Route path="leads/achetes" element={<PurchasedLeadsPage />} />
+        <Route path="messages" element={<MessagesPage />} />
+        <Route path="parametres" element={<InstallerSettings />} />
+        <Route path="notifications" element={<NotificationsPage />} />
+        <Route path="mon-compte" element={<ProfilePage />} />
+      </Route>
+      
+      {/* Admin Routes */}
       <Route path="/admin" element={<Admin />}>
         <Route index element={<AdminDashboard />} />
         <Route path="statistics" element={<StatisticsPage />} />
