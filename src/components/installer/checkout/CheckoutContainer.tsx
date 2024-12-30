@@ -4,9 +4,9 @@ import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/lib/supabase-client";
 import { Lead } from "@/types/crm";
-import { CheckoutHeader } from "./CheckoutHeader";
-import { CheckoutSummary } from "./CheckoutSummary";
-import { CheckoutActions } from "./CheckoutActions";
+import { CheckoutHeader } from "./sections/CheckoutHeader";
+import { LeadsList } from "./sections/LeadsList";
+import { CheckoutActions } from "./sections/CheckoutActions";
 import { CompanyInfoCard } from "./CompanyInfoCard";
 import { PaymentMethodsCard } from "./PaymentMethodsCard";
 
@@ -34,7 +34,6 @@ export const CheckoutContainer = () => {
           return;
         }
 
-        // Fetch installer info using maybeSingle() instead of single()
         const { data: installerData, error: installerError } = await supabase
           .from("installers")
           .select("company_name, address, postal_code")
@@ -170,7 +169,7 @@ export const CheckoutContainer = () => {
 
         <PaymentMethodsCard />
 
-        <CheckoutSummary 
+        <LeadsList 
           leads={leads} 
           total={total}
           onDeleteLead={handleDeleteLead}
