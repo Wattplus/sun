@@ -33,7 +33,6 @@ serve(async (req) => {
     }
 
     const lineItems = leads.map(lead => {
-      // Ensure price is a valid number in euros
       const price = Number(lead.price)
       console.log('Processing price:', { leadId: lead.id, price })
       
@@ -42,7 +41,6 @@ serve(async (req) => {
         throw new Error(`Invalid price for lead ${lead.id}`)
       }
 
-      // Convert price to cents for Stripe
       const priceInCents = Math.round(price * 100)
       console.log('Processing lead payment:', {
         leadId: lead.id,
@@ -78,6 +76,10 @@ serve(async (req) => {
       },
       allow_promotion_codes: true,
       billing_address_collection: 'required',
+      locale: 'fr',
+      payment_intent_data: {
+        capture_method: 'automatic',
+      },
     })
 
     console.log('Checkout session created successfully:', session.id)

@@ -126,6 +126,7 @@ export const CheckoutContainer = () => {
         return;
       }
 
+      console.log("Creating checkout session for leads:", leads);
       const { data, error } = await supabase.functions.invoke("create-lead-checkout", {
         body: {
           leads: leads.map(lead => ({
@@ -149,7 +150,7 @@ export const CheckoutContainer = () => {
         return;
       }
 
-      // Redirection vers Stripe
+      console.log("Redirecting to Stripe checkout:", data.url);
       window.location.href = data.url;
     } catch (error) {
       console.error("Error in handleCheckout:", error);
