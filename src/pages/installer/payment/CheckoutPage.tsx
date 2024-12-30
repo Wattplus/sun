@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { ArrowLeft, CreditCard, Loader2 } from "lucide-react";
-import { motion } from "framer-motion";
-import { supabase } from "@/lib/supabase-client";
+import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
+import { supabase } from "@/lib/supabase-client";
 import { Lead } from "@/types/crm";
+import { CheckoutHeader } from "@/components/installer/checkout/CheckoutHeader";
+import { CheckoutSummary } from "@/components/installer/checkout/CheckoutSummary";
+import { CheckoutActions } from "@/components/installer/checkout/CheckoutActions";
 
 export const CheckoutPage = () => {
   const navigate = useNavigate();
@@ -54,7 +54,6 @@ export const CheckoutPage = () => {
         console.log("Fetched leads:", data);
         setLeads(data);
         
-        // Calculate total price based on lead type
         const totalPrice = data.reduce((sum, lead) => {
           const basePrice = lead.clienttype === 'professional' ? 49 : 26;
           return sum + basePrice;
@@ -80,13 +79,6 @@ export const CheckoutPage = () => {
 
     setIsLoading(true);
     try {
-      const { data: session } = await supabase.auth.getSession();
-      if (!session?.session) {
-        toast.error("Vous devez être connecté");
-        navigate("/login");
-        return;
-      }
-
       const { data, error } = await supabase.functions.invoke("create-lead-checkout", {
         body: {
           leads: leads.map(lead => ({
@@ -105,10 +97,12 @@ export const CheckoutPage = () => {
       }
 
       if (!data?.url) {
+        console.error("No checkout URL returned:", data);
         toast.error("Erreur: URL de paiement manquante");
         return;
       }
 
+      console.log("Redirecting to checkout URL:", data.url);
       window.location.href = data.url;
     } catch (error) {
       console.error("Error in handleCheckout:", error);
@@ -129,76 +123,13 @@ export const CheckoutPage = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-background/80 to-background p-6">
       <div className="max-w-2xl mx-auto space-y-6">
-        <Button
-          variant="ghost"
-          onClick={() => navigate(-1)}
-          className="text-white/60 hover:text-white"
-        >
-          <ArrowLeft className="w-4 h-4 mr-2" />
-          Retour
-        </Button>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3 }}
-        >
-          <Card className="p-6 bg-white/5 backdrop-blur-sm border-primary/20">
-            <div className="space-y-6">
-              <div className="flex items-center gap-3">
-                <div className="p-3 rounded-xl bg-primary/10">
-                  <CreditCard className="w-6 h-6 text-primary" />
-                </div>
-                <div>
-                  <h1 className="text-2xl font-bold">Paiement</h1>
-                  <p className="text-white/60">
-                    Achat de {leads.length} lead{leads.length > 1 ? "s" : ""}
-                  </p>
-                </div>
-              </div>
-
-              <div className="space-y-4">
-                {leads.map((lead) => (
-                  <div
-                    key={lead.id}
-                    className="flex justify-between items-center p-4 rounded-lg bg-white/5"
-                  >
-                    <div>
-                      <p className="font-medium">{lead.firstname} {lead.lastname}</p>
-                      <p className="text-sm text-white/60">{lead.postalcode}</p>
-                      <p className="text-sm text-primary/80">
-                        {lead.clienttype === 'professional' ? 'Professionnel' : 'Particulier'}
-                      </p>
-                    </div>
-                    <p className="font-medium">{lead.clienttype === 'professional' ? '49€' : '26€'}</p>
-                  </div>
-                ))}
-
-                <div className="pt-4 border-t border-white/10">
-                  <div className="flex justify-between items-center">
-                    <p className="font-medium">Total</p>
-                    <p className="text-xl font-bold">{total}€</p>
-                  </div>
-                </div>
-              </div>
-
-              <Button
-                onClick={handleCheckout}
-                disabled={isLoading || leads.length === 0}
-                className="w-full bg-primary hover:bg-primary/90 text-white font-semibold py-6 text-lg"
-              >
-                {isLoading ? (
-                  <>
-                    <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                    Chargement...
-                  </>
-                ) : (
-                  "Procéder au paiement"
-                )}
-              </Button>
-            </div>
-          </Card>
-        </motion.div>
+        <CheckoutHeader />
+        <CheckoutSummary leads={leads} total={total} />
+        <CheckoutActions 
+          isLoading={isLoading} 
+          onCheckout={handleCheckout}
+          leadsCount={leads.length}
+        />
       </div>
     </div>
   );
