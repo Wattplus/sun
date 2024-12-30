@@ -63,23 +63,18 @@ export const useNewLeads = () => {
 
         toast.success("Leads achetés avec succès !");
       } else {
-        const response = await fetch("https://dqzsycxxgltztufrhams.supabase.co/functions/v1/create-lead-checkout", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
+        // Use Supabase client to call the edge function
+        const { data, error } = await supabase.functions.invoke('create-lead-checkout', {
+          body: {
             leads: selectedLeads.map(lead => ({
               id: lead.id,
               price: lead.clienttype === 'professional' ? 49 : 26
             }))
-          }),
+          }
         });
 
-        if (!response.ok) throw new Error();
-
-        const { url } = await response.json();
-        if (url) window.location.href = url;
+        if (error) throw error;
+        if (data?.url) window.location.href = data.url;
       }
     } catch (error) {
       console.error("Erreur lors de l'achat:", error);
