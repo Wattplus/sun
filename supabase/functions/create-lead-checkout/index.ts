@@ -87,18 +87,13 @@ serve(async (req) => {
       customer_email: leads[0]?.email,
       submit_type: 'pay',
       expires_at: Math.floor(Date.now() / 1000) + (30 * 60), // Expire in 30 minutes
-      ui_mode: 'embedded',
-      return_url: `${req.headers.get('origin')}/espace-installateur/leads/achetes?success=true&session_id={CHECKOUT_SESSION_ID}`,
+      ui_mode: 'hosted',
     })
 
     console.log('Checkout session created successfully:', session.id)
 
     return new Response(
-      JSON.stringify({ 
-        url: session.url,
-        clientSecret: session.client_secret,
-        sessionId: session.id
-      }),
+      JSON.stringify({ url: session.url }),
       {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         status: 200,
@@ -107,11 +102,7 @@ serve(async (req) => {
   } catch (error) {
     console.error('Error in create-lead-checkout:', error)
     return new Response(
-      JSON.stringify({ 
-        error: error.message,
-        details: error.toString(),
-        stack: error.stack
-      }),
+      JSON.stringify({ error: error.message }),
       {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         status: 400,

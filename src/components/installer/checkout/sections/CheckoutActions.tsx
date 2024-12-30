@@ -7,12 +7,12 @@ interface CheckoutActionsProps {
   leadsCount: number;
 }
 
-export const CheckoutActions = ({ isLoading, onCheckout }: CheckoutActionsProps) => {
+export const CheckoutActions = ({ isLoading, onCheckout, leadsCount }: CheckoutActionsProps) => {
   return (
     <div className="space-y-4">
       <Button
         onClick={onCheckout}
-        disabled={isLoading}
+        disabled={isLoading || leadsCount === 0}
         className="w-full bg-primary hover:bg-primary/90 text-white font-semibold py-6 text-lg"
       >
         {isLoading ? (
