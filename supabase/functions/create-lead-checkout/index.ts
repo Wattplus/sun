@@ -22,7 +22,13 @@ serve(async (req) => {
 
     console.log('Received leads:', leads);
 
-    const stripe = new Stripe(Deno.env.get('STRIPE_SECRET_KEY') || '', {
+    const stripeSecretKey = Deno.env.get('STRIPE_SECRET_KEY');
+    if (!stripeSecretKey) {
+      console.error('STRIPE_SECRET_KEY is not set');
+      throw new Error('Stripe secret key is not configured');
+    }
+
+    const stripe = new Stripe(stripeSecretKey, {
       apiVersion: '2023-10-16',
     });
 
