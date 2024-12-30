@@ -53,7 +53,13 @@ export const CheckoutPage = () => {
 
         console.log("Fetched leads:", data);
         setLeads(data);
-        const totalPrice = data.reduce((sum, lead) => sum + (lead.price || 25), 0);
+        
+        // Calculate total price based on lead type
+        const totalPrice = data.reduce((sum, lead) => {
+          const basePrice = lead.clienttype === 'professional' ? 49 : 26;
+          return sum + basePrice;
+        }, 0);
+        
         setTotal(totalPrice);
       } catch (error) {
         console.error("Error in fetchLeads:", error);
@@ -85,8 +91,9 @@ export const CheckoutPage = () => {
         body: {
           leads: leads.map(lead => ({
             id: lead.id,
-            price: lead.price || 25,
-            type: "mutualise"
+            type: "mutualise",
+            clientType: lead.clienttype,
+            price: lead.clienttype === 'professional' ? 49 : 26
           }))
         }
       });
@@ -159,8 +166,11 @@ export const CheckoutPage = () => {
                     <div>
                       <p className="font-medium">{lead.firstname} {lead.lastname}</p>
                       <p className="text-sm text-white/60">{lead.postalcode}</p>
+                      <p className="text-sm text-primary/80">
+                        {lead.clienttype === 'professional' ? 'Professionnel' : 'Particulier'}
+                      </p>
                     </div>
-                    <p className="font-medium">{lead.price || 25}€</p>
+                    <p className="font-medium">{lead.clienttype === 'professional' ? '49€' : '26€'}</p>
                   </div>
                 ))}
 
