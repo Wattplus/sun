@@ -1,33 +1,39 @@
+import { useEffect } from "react";
 import { DashboardTabs } from "./DashboardTabs";
-import { motion } from "framer-motion";
+import { useLeadOperations } from "@/hooks/useLeadOperations";
 
-export const DashboardContent = () => {
+export function DashboardContent() {
+  const { leads, fetchLeads } = useLeadOperations();
+
+  useEffect(() => {
+    console.log("[DashboardContent] Initializing and fetching leads");
+    fetchLeads();
+
+    // Set up real-time subscription for new leads
+    const channel = supabase
+      .channel('public:leads')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'leads'
+        },
+        (payload) => {
+          console.log('[DashboardContent] Real-time update received:', payload);
+          fetchLeads(); // Refresh leads when changes occur
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [fetchLeads]);
+
   return (
-    <div className="space-y-8 px-4 sm:px-6 py-8">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="max-w-7xl mx-auto"
-      >
-        <p className="text-muted-foreground">
-          {new Date().toLocaleDateString('fr-FR', { 
-            weekday: 'long', 
-            year: 'numeric', 
-            month: 'long', 
-            day: 'numeric' 
-          })}
-        </p>
-      </motion.div>
-
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.2 }}
-        className="max-w-7xl mx-auto"
-      >
-        <DashboardTabs />
-      </motion.div>
+    <div className="space-y-8">
+      <DashboardTabs />
     </div>
   );
-};
+}

@@ -7,7 +7,7 @@ export const useLeadOperations = () => {
   const [leads, setLeads] = useState<Lead[]>([]);
   const { toast } = useToast();
 
-  const fetchLeads = async () => {
+  const fetchLeads = useCallback(async () => {
     try {
       console.log("[useLeadOperations] Début de fetchLeads");
       const { data: { session } } = await supabase.auth.getSession();
@@ -33,9 +33,6 @@ export const useLeadOperations = () => {
 
       if (error) {
         console.error("[useLeadOperations] Erreur Supabase:", error);
-        console.error("[useLeadOperations] Code d'erreur:", error.code);
-        console.error("[useLeadOperations] Message d'erreur:", error.message);
-        console.error("[useLeadOperations] Détails:", error.details);
         toast({
           title: "Erreur",
           description: "Impossible de charger les leads: " + error.message,
@@ -49,25 +46,18 @@ export const useLeadOperations = () => {
       
       if (!data || data.length === 0) {
         console.log("[useLeadOperations] Aucun lead trouvé");
-        toast({
-          title: "Information",
-          description: "Aucun lead disponible pour le moment",
-        });
       } else {
         console.log(`[useLeadOperations] ${data.length} leads récupérés`);
       }
     } catch (error) {
       console.error("[useLeadOperations] Erreur inattendue:", error);
-      if (error instanceof Error) {
-        console.error("[useLeadOperations] Stack trace:", error.stack);
-      }
       toast({
         title: "Erreur",
         description: "Une erreur inattendue est survenue lors du chargement des leads",
         variant: "destructive",
       });
     }
-  };
+  }, [toast]);
 
   const deleteLead = async (leadId: string) => {
     try {

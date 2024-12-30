@@ -7,26 +7,21 @@ import { LeadCard } from "../LeadCard";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
+import { useLeadOperations } from "@/hooks/useLeadOperations";
 
-interface LeadsOverviewProps {
-  availableLeads: Lead[];
-  purchasedLeads: Lead[];
-  onShowAllAvailable: () => void;
-  onShowAllPurchased: () => void;
-}
-
-export const LeadsOverview = ({
-  availableLeads,
-  purchasedLeads,
-  onShowAllAvailable,
-  onShowAllPurchased,
-}: LeadsOverviewProps) => {
+export const LeadsOverview = () => {
   const navigate = useNavigate();
+  const { leads } = useLeadOperations();
+  
+  // Filter available leads (not purchased)
+  const availableLeads = leads.filter(lead => !lead.purchasedby?.length);
+  // Filter purchased leads
+  const purchasedLeads = leads.filter(lead => lead.purchasedby?.length);
 
   useEffect(() => {
     console.log("[LeadsOverview] Available leads:", availableLeads.length);
     console.log("[LeadsOverview] Purchased leads:", purchasedLeads.length);
-  }, [availableLeads, purchasedLeads]);
+  }, [availableLeads.length, purchasedLeads.length]);
 
   const handleNavigateToAvailable = () => {
     navigate("/espace-installateur/marketplace");
