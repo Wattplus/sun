@@ -1,39 +1,39 @@
+import { useState } from "react";
 import { Lead } from "@/types/crm";
 import { Card } from "@/components/ui/card";
 import { useToast } from "@/components/ui/use-toast";
-import { calculateLeadPrice } from "@/utils/leadPricing";
-import { SubscriptionTier } from "@/types/subscription";
 import { LeadCardHeader } from "./LeadCardHeader";
 import { LeadCardActions } from "./LeadCardActions";
 import { LeadInfoDisplay } from "@/components/installer/marketplace/LeadInfoDisplay";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase } from "@/lib/supabase-client";
 
 interface LeadCardProps {
   lead: Lead;
-  onPurchase: (lead: Lead) => void;
-  isPurchased?: boolean;
-  showFullDetails?: boolean;
-  subscriptionTier?: SubscriptionTier;
+  onPurchase?: (lead: Lead) => void;
+  status?: "available" | "purchased";
+  showActions?: boolean;
 }
 
 export const LeadCard = ({ 
   lead, 
   onPurchase, 
-  isPurchased = false,
-  subscriptionTier = 'free'
+  status = "available",
+  showActions = true 
 }: LeadCardProps) => {
+  const [isExpanded, setIsExpanded] = useState(false);
   const { toast } = useToast();
-  const price = calculateLeadPrice(lead);
+  const price = lead.clienttype === 'professional' ? 49 : 26;
 
-  const handlePurchase = async (type: 'mutualise' | 'exclusif', paymentMethod: 'prepaid' | 'direct') => {
+  const handlePurchase = async (paymentMethod: 'prepaid' | 'direct') => {
+    console.log('Handling purchase:', { lead, paymentMethod });
+    
     try {
       if (paymentMethod === 'prepaid') {
-        // Prix spécial pour compte prépayé
         toast({
           title: "Paiement avec solde prépayé",
           description: "Le lead sera débité de votre solde prépayé.",
         });
-        onPurchase(lead);
+        onPurchase?.(lead);
       } else {
         console.log('Creating checkout session for lead:', lead);
         
@@ -58,45 +58,36 @@ export const LeadCard = ({
       console.error("Erreur d'achat:", error);
       toast({
         title: "Erreur",
-        description: "Une erreur est survenue lors de l'achat du lead.",
+        description: "Une erreur est survenue lors de l'achat du lead",
         variant: "destructive",
       });
     }
   };
 
   return (
-    <Card className="group relative overflow-hidden transition-all duration-500 hover:scale-[1.02] bg-white/80 backdrop-blur-sm border border-primary/10 hover:border-primary/20 shadow-lg hover:shadow-primary/10">
-      <div className="absolute inset-0 opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-700">
-        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
-      </div>
+    <Card className="overflow-hidden border-primary/10 bg-card/50 backdrop-blur-sm">
+      <div className="p-6 space-y-6">
+        <LeadCardHeader
+          lead={lead}
+          isExpanded={isExpanded}
+          onToggleExpand={() => setIsExpanded(!isExpanded)}
+          status={status}
+        />
 
-      <div className="relative p-6 space-y-6">
-        <LeadInfoDisplay lead={lead} />
-
-        {!isPurchased && (
-          <div className="mt-auto space-y-4">
-            <div className="p-4 bg-gradient-to-br from-white to-primary/5 rounded-lg border border-primary/10">
-              <h4 className="text-sm font-medium text-secondary mb-3">Options d'achat :</h4>
-              <div className="space-y-2">
-                <div className="flex justify-between items-center">
-                  <span className="text-sm text-muted-foreground">Compte prépayé</span>
-                  <span className="font-bold bg-gradient-to-r from-primary to-accent text-transparent bg-clip-text">{price}€</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-sm text-muted-foreground">Prix standard</span>
-                  <span className="font-bold bg-gradient-to-r from-primary to-accent text-transparent bg-clip-text">{price}€</span>
-                </div>
-              </div>
-            </div>
-
-            <LeadCardActions
-              onPurchase={handlePurchase}
-              mutualPrice={price}
-              exclusivePrice={price}
-              canPurchaseMutual={true}
-              canPurchaseExclusive={true}
-              isProfessionalProject={lead.clienttype === 'professional'}
-            />
+        {isExpanded && (
+          <div className="space-y-6 pt-4 border-t border-primary/10">
+            <LeadInfoDisplay lead={lead} />
+            
+            {showActions && status === "available" && (
+              <LeadCardActions
+                onPurchase={handlePurchase}
+                mutualPrice={price}
+                exclusivePrice={price}
+                canPurchaseMutual={true}
+                canPurchaseExclusive={true}
+                isProfessionalProject={lead.clienttype === 'professional'}
+              />
+            )}
           </div>
         )}
       </div>
