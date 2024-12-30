@@ -52,8 +52,116 @@ export const useLeadOperations = () => {
     }
   }, [toast]);
 
+  const deleteLead = async (leadId: string): Promise<boolean> => {
+    try {
+      console.log("[useLeadOperations] Suppression du lead:", leadId);
+      const { error } = await supabase
+        .from("leads")
+        .delete()
+        .eq("id", leadId);
+
+      if (error) {
+        console.error("[useLeadOperations] Erreur lors de la suppression:", error);
+        toast({
+          title: "Erreur",
+          description: "Impossible de supprimer le lead: " + error.message,
+          variant: "destructive",
+        });
+        return false;
+      }
+
+      await fetchLeads();
+      toast({
+        title: "Succès",
+        description: "Le lead a été supprimé avec succès",
+      });
+      return true;
+    } catch (error) {
+      console.error("[useLeadOperations] Erreur inattendue lors de la suppression:", error);
+      toast({
+        title: "Erreur",
+        description: "Une erreur inattendue est survenue lors de la suppression",
+        variant: "destructive",
+      });
+      return false;
+    }
+  };
+
+  const updateLead = async (lead: Lead): Promise<boolean> => {
+    try {
+      console.log("[useLeadOperations] Mise à jour du lead:", lead);
+      const { error } = await supabase
+        .from("leads")
+        .update(lead)
+        .eq("id", lead.id);
+
+      if (error) {
+        console.error("[useLeadOperations] Erreur lors de la mise à jour:", error);
+        toast({
+          title: "Erreur",
+          description: "Impossible de mettre à jour le lead: " + error.message,
+          variant: "destructive",
+        });
+        return false;
+      }
+
+      await fetchLeads();
+      toast({
+        title: "Succès",
+        description: "Le lead a été mis à jour avec succès",
+      });
+      return true;
+    } catch (error) {
+      console.error("[useLeadOperations] Erreur inattendue lors de la mise à jour:", error);
+      toast({
+        title: "Erreur",
+        description: "Une erreur inattendue est survenue lors de la mise à jour",
+        variant: "destructive",
+      });
+      return false;
+    }
+  };
+
+  const assignLead = async (leadId: string, installerId: string): Promise<boolean> => {
+    try {
+      console.log("[useLeadOperations] Attribution du lead:", { leadId, installerId });
+      const { error } = await supabase
+        .from("leads")
+        .update({ assigned_installer: installerId, status: "assigned" })
+        .eq("id", leadId);
+
+      if (error) {
+        console.error("[useLeadOperations] Erreur lors de l'attribution:", error);
+        toast({
+          title: "Erreur",
+          description: "Impossible d'attribuer le lead: " + error.message,
+          variant: "destructive",
+        });
+        return false;
+      }
+
+      await fetchLeads();
+      toast({
+        title: "Succès",
+        description: "Le lead a été attribué avec succès",
+      });
+      return true;
+    } catch (error) {
+      console.error("[useLeadOperations] Erreur inattendue lors de l'attribution:", error);
+      toast({
+        title: "Erreur",
+        description: "Une erreur inattendue est survenue lors de l'attribution",
+        variant: "destructive",
+      });
+      return false;
+    }
+  };
+
   return {
     leads,
     fetchLeads,
+    deleteLead,
+    updateLead,
+    assignLead,
   };
 };
