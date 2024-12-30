@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { DashboardTabs } from "./DashboardTabs";
 import { useLeadOperations } from "@/hooks/useLeadOperations";
+import { supabase } from "@/lib/supabase-client";
 
 export function DashboardContent() {
   const { leads, fetchLeads } = useLeadOperations();
@@ -33,7 +34,7 @@ export function DashboardContent() {
 
   return (
     <div className="space-y-8">
-      <DashboardTabs />
+      <DashboardTabs leads={leads} />
     </div>
   );
 }

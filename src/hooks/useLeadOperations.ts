@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { Lead } from "@/types/crm";
 import { useToast } from "@/components/ui/use-toast";
 import { supabase } from "@/lib/supabase-client";
@@ -23,7 +23,6 @@ export const useLeadOperations = () => {
       }
 
       console.log("[useLeadOperations] Session active, utilisateur:", session.user.id);
-      console.log("[useLeadOperations] URL de l'application:", window.location.origin);
       console.log("[useLeadOperations] Récupération des leads depuis Supabase...");
       
       const { data, error } = await supabase
