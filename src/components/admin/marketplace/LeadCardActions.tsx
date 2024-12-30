@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Wallet, CreditCard } from "lucide-react";
+import { Wallet, CreditCard, Loader2 } from "lucide-react";
 
 interface LeadCardActionsProps {
   onPurchase: (type: 'mutualise' | 'exclusif', paymentMethod: 'prepaid' | 'direct') => void;
@@ -8,6 +8,7 @@ interface LeadCardActionsProps {
   canPurchaseMutual: boolean;
   canPurchaseExclusive: boolean;
   isProfessionalProject: boolean;
+  isLoading?: boolean;
 }
 
 export const LeadCardActions = ({
@@ -17,6 +18,7 @@ export const LeadCardActions = ({
   canPurchaseMutual,
   canPurchaseExclusive,
   isProfessionalProject,
+  isLoading = false,
 }: LeadCardActionsProps) => {
   return (
     <div className="space-y-4">
@@ -29,18 +31,26 @@ export const LeadCardActions = ({
             variant="outline"
             className="w-full bg-[#1EAEDB]/10 hover:bg-[#1EAEDB]/20 border-[#1EAEDB]/20 hover:border-[#1EAEDB]/40"
             onClick={() => onPurchase('mutualise', 'prepaid')}
-            disabled={!canPurchaseMutual}
+            disabled={!canPurchaseMutual || isLoading}
           >
-            <Wallet className="w-4 h-4 mr-2" />
+            {isLoading ? (
+              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+            ) : (
+              <Wallet className="w-4 h-4 mr-2" />
+            )}
             Compte prépayé
           </Button>
           <Button
             variant="outline"
             className="w-full bg-[#1EAEDB]/10 hover:bg-[#1EAEDB]/20 border-[#1EAEDB]/20 hover:border-[#1EAEDB]/40"
             onClick={() => onPurchase('mutualise', 'direct')}
-            disabled={!canPurchaseMutual}
+            disabled={!canPurchaseMutual || isLoading}
           >
-            <CreditCard className="w-4 h-4 mr-2" />
+            {isLoading ? (
+              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+            ) : (
+              <CreditCard className="w-4 h-4 mr-2" />
+            )}
             Carte bancaire
           </Button>
         </div>

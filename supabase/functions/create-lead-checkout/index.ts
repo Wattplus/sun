@@ -17,7 +17,6 @@ console.log('Loading create-lead-checkout function...')
 serve(async (req) => {
   console.log('Received request:', req.method, req.url)
 
-  // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
     console.log('Handling CORS preflight request')
     return new Response(null, {
@@ -27,7 +26,7 @@ serve(async (req) => {
 
   try {
     const { leads } = await req.json()
-    console.log('Received leads for checkout:', leads)
+    console.log('Processing leads for checkout:', leads)
 
     if (!leads || !Array.isArray(leads) || leads.length === 0) {
       throw new Error('Invalid leads data')
@@ -40,12 +39,12 @@ serve(async (req) => {
           name: `Lead ${lead.clientType === 'professional' ? 'Professionnel' : 'Particulier'}`,
           description: `Achat ${lead.type === 'mutualise' ? 'mutualisé' : 'exclusif'} du lead #${lead.id}`,
         },
-        unit_amount: Math.round(lead.price * 100), // Conversion en centimes pour Stripe
+        unit_amount: Math.round(lead.price * 100),
       },
       quantity: 1,
     }))
 
-    console.log('Creating Stripe checkout session with line items:', lineItems)
+    console.log('Creating Stripe checkout session with items:', lineItems)
 
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
@@ -56,9 +55,11 @@ serve(async (req) => {
       metadata: {
         leads: JSON.stringify(leads.map(l => l.id)),
       },
+      allow_promotion_codes: true,
+      billing_address_collection: 'required',
     })
 
-    console.log('Checkout session created:', session.id)
+    console.log('Checkout session created successfully:', session.id)
 
     return new Response(
       JSON.stringify({ url: session.url }),

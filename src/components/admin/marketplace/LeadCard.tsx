@@ -21,47 +21,61 @@ export const LeadCard = ({
   showActions = true 
 }: LeadCardProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
   const price = lead.clienttype === 'professional' ? 49 : 26;
 
   const handlePurchase = async (type: 'mutualise' | 'exclusif', paymentMethod: 'prepaid' | 'direct') => {
-    console.log('Handling purchase:', { lead, type, paymentMethod });
-    
     try {
+      setIsLoading(true);
+      console.log('Handling purchase:', { lead, type, paymentMethod });
+      
       if (paymentMethod === 'prepaid') {
         toast({
           title: "Paiement avec solde prépayé",
           description: "Le lead sera débité de votre solde prépayé.",
         });
         onPurchase?.(lead);
-      } else {
-        console.log('Creating checkout session for lead:', lead);
-        
-        const { data, error } = await supabase.functions.invoke('create-lead-checkout', {
-          body: { 
-            leads: [{
-              id: lead.id,
-              type: type,
-              price: price,
-              clientType: lead.clienttype
-            }]
-          }
-        });
-
-        if (error) {
-          console.error('Error creating checkout session:', error);
-          throw error;
-        }
-
-        if (!data?.url) {
-          console.error('No checkout URL returned:', data);
-          throw new Error('No checkout URL returned');
-        }
-
-        console.log('Redirecting to checkout URL:', data.url);
-        // Utiliser window.location.href pour la redirection
-        window.location.href = data.url;
+        return;
       }
+
+      console.log('Creating checkout session...');
+      const finalPrice = type === 'exclusif' ? price * 2 : price;
+      
+      const { data, error } = await supabase.functions.invoke('create-lead-checkout', {
+        body: { 
+          leads: [{
+            id: lead.id,
+            type: type,
+            price: finalPrice,
+            clientType: lead.clienttype
+          }]
+        }
+      });
+
+      if (error) {
+        console.error('Error creating checkout session:', error);
+        toast({
+          title: "Erreur",
+          description: "Impossible de créer la session de paiement",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      if (!data?.url) {
+        console.error('No checkout URL returned:', data);
+        toast({
+          title: "Erreur",
+          description: "URL de paiement invalide",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      console.log('Redirecting to checkout URL:', data.url);
+      window.location.href = data.url;
+      
     } catch (error) {
       console.error("Erreur d'achat:", error);
       toast({
@@ -69,6 +83,8 @@ export const LeadCard = ({
         description: "Une erreur est survenue lors de l'achat du lead",
         variant: "destructive",
       });
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -104,6 +120,7 @@ export const LeadCard = ({
                 canPurchaseMutual={true}
                 canPurchaseExclusive={true}
                 isProfessionalProject={lead.clienttype === 'professional'}
+                isLoading={isLoading}
               />
             )}
           </div>
