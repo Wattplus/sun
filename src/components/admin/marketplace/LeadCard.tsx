@@ -6,6 +6,7 @@ import { SubscriptionTier } from "@/types/subscription";
 import { LeadCardHeader } from "./LeadCardHeader";
 import { LeadCardActions } from "./LeadCardActions";
 import { LeadInfoDisplay } from "@/components/installer/marketplace/LeadInfoDisplay";
+import { supabase } from "@/integrations/supabase/client";
 
 interface LeadCardProps {
   lead: Lead;
@@ -28,46 +29,30 @@ export const LeadCard = ({
     try {
       if (paymentMethod === 'prepaid') {
         // Prix spécial pour compte prépayé
-        const priceId = lead.projectType === 'professional'
-          ? 'price_1Qa0nUFOePj4Hv47Ih00CR8k' // 49€ pour les leads pro
-          : 'price_1QaAlfFOePj4Hv475LWE2bGQ'; // 26€ pour les particuliers
-
         toast({
           title: "Paiement avec solde prépayé",
           description: "Le lead sera débité de votre solde prépayé.",
         });
         onPurchase(lead);
       } else {
-        // Prix standard pour paiement direct
-        let priceId;
-        if (lead.projectType === 'professional') {
-          priceId = 'price_1Qa0nUFOePj4Hv47Ih00CR8k'; // 49€ pour les leads pro
-        } else {
-          priceId = 'price_1QaAlfFOePj4Hv475LWE2bGQ'; // 26€ pour les particuliers
-        }
-
-        const response = await fetch("https://dqzsycxxgltztufrhams.supabase.co/functions/v1/create-lead-checkout", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${process.env.SUPABASE_ANON_KEY}`,
-          },
-          body: JSON.stringify({
-            leadId: lead.id,
-            type,
-            priceId,
-            subscriptionTier
-          }),
+        console.log('Creating checkout session for lead:', lead);
+        
+        const { data, error } = await supabase.functions.invoke('create-lead-checkout', {
+          body: { leads: [lead] }
         });
 
-        if (!response.ok) {
-          throw new Error("Erreur lors de la création de la session de paiement");
+        if (error) {
+          console.error('Error creating checkout session:', error);
+          throw error;
         }
 
-        const { url } = await response.json();
-        if (url) {
-          window.location.href = url;
+        if (!data?.url) {
+          console.error('No checkout URL returned:', data);
+          throw new Error('No checkout URL returned');
         }
+
+        console.log('Redirecting to checkout URL:', data.url);
+        window.location.href = data.url;
       }
     } catch (error) {
       console.error("Erreur d'achat:", error);
@@ -110,7 +95,7 @@ export const LeadCard = ({
               exclusivePrice={price}
               canPurchaseMutual={true}
               canPurchaseExclusive={true}
-              isProfessionalProject={lead.projectType === 'professional'}
+              isProfessionalProject={lead.clienttype === 'professional'}
             />
           </div>
         )}
