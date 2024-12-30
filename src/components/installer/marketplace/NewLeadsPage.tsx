@@ -23,17 +23,29 @@ export const NewLeadsPage = () => {
 
   useEffect(() => {
     const fetchBalance = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session?.user?.id) return;
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session?.user?.id) {
+          console.log("No session found");
+          return;
+        }
 
-      const { data: installer } = await supabase
-        .from('installers')
-        .select('credits')
-        .eq('user_id', session.user.id)
-        .single();
+        const { data: installer, error } = await supabase
+          .from('installers')
+          .select('credits')
+          .eq('user_id', session.user.id)
+          .maybeSingle();
 
-      if (installer) {
-        setBalance(installer.credits);
+        if (error) {
+          console.error("Error fetching installer credits:", error);
+          toast.error("Erreur lors de la récupération du solde");
+          return;
+        }
+
+        setBalance(installer?.credits || 0);
+      } catch (error) {
+        console.error("Error in fetchBalance:", error);
+        toast.error("Erreur lors de la récupération du solde");
       }
     };
 
@@ -42,7 +54,7 @@ export const NewLeadsPage = () => {
 
   const calculateTotalPrice = () => {
     return selectedLeads.reduce((total, lead) => {
-      return total + (lead.projectType === 'professional' ? 49 : 26);
+      return total + (lead.clienttype === 'professional' ? 49 : 26);
     }, 0);
   };
 
@@ -80,7 +92,6 @@ export const NewLeadsPage = () => {
 
     try {
       if (paymentMethod === 'prepaid') {
-        // Déduire du solde prépayé
         const { data: { session } } = await supabase.auth.getSession();
         if (!session?.user?.id) {
           toast.error("Erreur d'authentification");
@@ -96,7 +107,6 @@ export const NewLeadsPage = () => {
 
         toast.success("Leads achetés avec succès !");
       } else {
-        // Redirection vers la page de paiement Stripe
         const response = await fetch("https://dqzsycxxgltztufrhams.supabase.co/functions/v1/create-lead-checkout", {
           method: "POST",
           headers: {
@@ -105,7 +115,7 @@ export const NewLeadsPage = () => {
           body: JSON.stringify({
             leads: selectedLeads.map(lead => ({
               id: lead.id,
-              price: lead.projectType === 'professional' ? 49 : 26
+              price: lead.clienttype === 'professional' ? 49 : 26
             }))
           }),
         });
@@ -126,7 +136,6 @@ export const NewLeadsPage = () => {
   };
 
   const handleExport = () => {
-    // Implement export functionality here
     console.log("Export functionality to be implemented");
   };
 
