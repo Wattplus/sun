@@ -68,7 +68,7 @@ export const useNewLeads = () => {
             leads: selectedLeads.map(lead => ({
               id: lead.id,
               priceId: lead.clienttype === 'professional' 
-                ? 'price_1Qa0nUFOePj4Hv47Ih00CR8k' // 59€ pour les leads pro
+                ? 'price_1Qa0nUFOePj4Hv47Ih00CR8k' // 49€ pour les leads pro
                 : 'price_1QaAlfFOePj4Hv475LWE2bGQ', // 26€ pour les particuliers
               type: 'mutualise'
             }))
