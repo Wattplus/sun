@@ -38,7 +38,14 @@ export const LeadCard = ({
         console.log('Creating checkout session for lead:', lead);
         
         const { data, error } = await supabase.functions.invoke('create-lead-checkout', {
-          body: { leads: [lead] }
+          body: { 
+            leads: [{
+              id: lead.id,
+              type: type,
+              price: price,
+              clientType: lead.clienttype
+            }]
+          }
         });
 
         if (error) {
@@ -52,6 +59,7 @@ export const LeadCard = ({
         }
 
         console.log('Redirecting to checkout URL:', data.url);
+        // Utiliser window.location.href pour la redirection
         window.location.href = data.url;
       }
     } catch (error) {
@@ -92,7 +100,7 @@ export const LeadCard = ({
               <LeadCardActions
                 onPurchase={handlePurchase}
                 mutualPrice={price}
-                exclusivePrice={price}
+                exclusivePrice={price * 2}
                 canPurchaseMutual={true}
                 canPurchaseExclusive={true}
                 isProfessionalProject={lead.clienttype === 'professional'}

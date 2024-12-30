@@ -27,7 +27,7 @@ serve(async (req) => {
 
   try {
     const { leads } = await req.json()
-    console.log('Received leads:', leads)
+    console.log('Received leads for checkout:', leads)
 
     if (!leads || !Array.isArray(leads) || leads.length === 0) {
       throw new Error('Invalid leads data')
@@ -37,10 +37,10 @@ serve(async (req) => {
       price_data: {
         currency: 'eur',
         product_data: {
-          name: `Lead - ${lead.firstname} ${lead.lastname}`,
-          description: `Lead pour ${lead.clienttype === 'professional' ? 'professionnel' : 'particulier'} - ${lead.postalcode}`,
+          name: `Lead ${lead.clientType === 'professional' ? 'Professionnel' : 'Particulier'}`,
+          description: `Achat ${lead.type === 'mutualise' ? 'mutualisé' : 'exclusif'} du lead #${lead.id}`,
         },
-        unit_amount: lead.clienttype === 'professional' ? 4900 : 2600,
+        unit_amount: Math.round(lead.price * 100), // Conversion en centimes pour Stripe
       },
       quantity: 1,
     }))
@@ -53,6 +53,9 @@ serve(async (req) => {
       mode: 'payment',
       success_url: `${req.headers.get('origin')}/espace-installateur/leads/achetes?success=true`,
       cancel_url: `${req.headers.get('origin')}/espace-installateur/leads/nouveaux?canceled=true`,
+      metadata: {
+        leads: JSON.stringify(leads.map(l => l.id)),
+      },
     })
 
     console.log('Checkout session created:', session.id)
