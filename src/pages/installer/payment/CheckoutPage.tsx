@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { Loader2, ArrowLeft, CreditCard } from "lucide-react";
+import { Loader2, ArrowLeft } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/lib/supabase-client";
 import { Lead } from "@/types/crm";
@@ -92,14 +92,14 @@ export const CheckoutPage = () => {
         }, 0);
         setTotal(totalPrice);
       } catch (error) {
-        console.error("Error in fetchLeads:", error);
+        console.error("Error in fetchData:", error);
         toast.error("Une erreur est survenue");
       } finally {
         setIsLoading(false);
       }
     };
 
-    fetchLeads();
+    fetchData();
   }, [navigate, searchParams]);
 
   const handleDeleteLead = (leadId: string) => {
