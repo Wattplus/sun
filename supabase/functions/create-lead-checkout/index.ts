@@ -33,7 +33,7 @@ serve(async (req) => {
     }
 
     const lineItems = leads.map(lead => {
-      // Validate price
+      // Validate price and ensure it's a positive number
       const price = Number(lead.price)
       if (isNaN(price) || price <= 0) {
         console.error('Invalid price for lead:', { lead, price })
