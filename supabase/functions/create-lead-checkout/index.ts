@@ -32,17 +32,30 @@ serve(async (req) => {
       throw new Error('Invalid leads data')
     }
 
-    const lineItems = leads.map(lead => ({
-      price_data: {
-        currency: 'eur',
-        product_data: {
-          name: `Lead ${lead.clientType === 'professional' ? 'Professionnel' : 'Particulier'}`,
-          description: `Achat ${lead.type === 'mutualise' ? 'mutualisé' : 'exclusif'} du lead #${lead.id}`,
+    const lineItems = leads.map(lead => {
+      const basePrice = lead.clientType === 'professional' ? 49 : 26
+      const finalPrice = lead.type === 'exclusif' ? basePrice * 2 : basePrice
+      
+      console.log('Calculated price for lead:', {
+        leadId: lead.id,
+        clientType: lead.clientType,
+        type: lead.type,
+        basePrice,
+        finalPrice
+      })
+
+      return {
+        price_data: {
+          currency: 'eur',
+          product_data: {
+            name: `Lead ${lead.clientType === 'professional' ? 'Professionnel' : 'Particulier'}`,
+            description: `Achat ${lead.type === 'mutualise' ? 'mutualisé' : 'exclusif'} du lead #${lead.id}`,
+          },
+          unit_amount: Math.round(finalPrice * 100), // Convert to cents
         },
-        unit_amount: Math.round(lead.price * 100),
-      },
-      quantity: 1,
-    }))
+        quantity: 1,
+      }
+    })
 
     console.log('Creating Stripe checkout session with items:', lineItems)
 
@@ -71,7 +84,11 @@ serve(async (req) => {
   } catch (error) {
     console.error('Error in create-lead-checkout:', error)
     return new Response(
-      JSON.stringify({ error: error.message }),
+      JSON.stringify({ 
+        error: error.message,
+        details: error.toString(),
+        stack: error.stack
+      }),
       {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         status: 400,

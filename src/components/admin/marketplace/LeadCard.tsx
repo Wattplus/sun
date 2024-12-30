@@ -57,7 +57,7 @@ export const LeadCard = ({
         console.error('Error creating checkout session:', error);
         toast({
           title: "Erreur",
-          description: "Impossible de créer la session de paiement",
+          description: "Impossible de créer la session de paiement. Veuillez réessayer.",
           variant: "destructive",
         });
         return;
@@ -67,7 +67,7 @@ export const LeadCard = ({
         console.error('No checkout URL returned:', data);
         toast({
           title: "Erreur",
-          description: "URL de paiement invalide",
+          description: "URL de paiement invalide. Veuillez réessayer.",
           variant: "destructive",
         });
         return;
@@ -80,7 +80,7 @@ export const LeadCard = ({
       console.error("Erreur d'achat:", error);
       toast({
         title: "Erreur",
-        description: "Une erreur est survenue lors de l'achat du lead",
+        description: "Une erreur est survenue lors de l'achat du lead. Veuillez réessayer.",
         variant: "destructive",
       });
     } finally {
