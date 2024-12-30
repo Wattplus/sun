@@ -28,7 +28,7 @@ export const LeadCard = ({
     try {
       if (paymentMethod === 'prepaid') {
         // Prix spécial pour compte prépayé
-        const priceId = 'price_1QaAlfFOePj4Hv475LWE2bGQ';
+        const priceId = 'price_1QaAlfFOePj4Hv475LWE2bGQ'; // Prix fixe de 26€ pour les particuliers
         toast({
           title: "Paiement avec solde prépayé",
           description: "Le lead sera débité de votre solde prépayé.",
@@ -40,7 +40,7 @@ export const LeadCard = ({
         if (lead.projectType === 'professional') {
           priceId = 'price_1Qa0nUFOePj4Hv47Ih00CR8k'; // 59€ pour les leads pro
         } else {
-          priceId = 'price_1QZyKUFOePj4Hv47qEFQ1KzF'; // Prix standard
+          priceId = 'price_1QaAlfFOePj4Hv475LWE2bGQ'; // 26€ pour les particuliers
         }
 
         const response = await fetch("https://dqzsycxxgltztufrhams.supabase.co/functions/v1/create-lead-checkout", {

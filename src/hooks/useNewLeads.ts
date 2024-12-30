@@ -63,12 +63,14 @@ export const useNewLeads = () => {
 
         toast.success("Leads achetés avec succès !");
       } else {
-        // Use Supabase client to call the edge function
         const { data, error } = await supabase.functions.invoke('create-lead-checkout', {
           body: {
             leads: selectedLeads.map(lead => ({
               id: lead.id,
-              price: lead.clienttype === 'professional' ? 49 : 26
+              priceId: lead.clienttype === 'professional' 
+                ? 'price_1Qa0nUFOePj4Hv47Ih00CR8k' // 59€ pour les leads pro
+                : 'price_1QaAlfFOePj4Hv475LWE2bGQ', // 26€ pour les particuliers
+              type: 'mutualise'
             }))
           }
         });
