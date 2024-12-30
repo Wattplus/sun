@@ -1,14 +1,13 @@
 import { useState } from "react";
 import { Lead } from "@/types/crm";
-import { InstallerLayout } from "../navigation/InstallerLayout";
 import { Card } from "@/components/ui/card";
-import { mockAvailableLeads } from "../dashboard/mockAvailableLeads";
 import { toast } from "sonner";
 import { LeadsTable } from "./components/LeadsTable";
 import { LeadsSummaryCards } from "./components/LeadsSummaryCards";
 import { LeadsFilters } from "../dashboard/LeadsFilters";
 import { LeadsHeader } from "./components/LeadsHeader";
 import { LeadsSelection } from "./components/LeadsSelection";
+import { useLeadOperations } from "@/hooks/useLeadOperations";
 
 export const NewLeadsPage = () => {
   const [selectedLeads, setSelectedLeads] = useState<Lead[]>([]);
@@ -17,9 +16,17 @@ export const NewLeadsPage = () => {
   const [selectedDepartments, setSelectedDepartments] = useState<string[]>([]);
   const [priceFilter, setPriceFilter] = useState<"default" | "asc" | "desc">("default");
   
-  const balance = 150;
+  const { leads } = useLeadOperations();
+  const availableLeads = leads.filter(lead => !lead.purchasedby?.length);
+  
+  const balance = 150; // TODO: Fetch from Supabase
   const hasEnoughBalance = balance >= selectedLeads.length * 26;
-  const availableDepartments = Array.from(new Set(mockAvailableLeads.map(lead => lead.postalcode.substring(0, 2))));
+
+  console.log("[NewLeadsPage] Available leads:", availableLeads.length);
+  
+  const availableDepartments = Array.from(
+    new Set(availableLeads.map(lead => lead.postalcode.substring(0, 2)))
+  );
 
   const handleLeadSelect = (lead: Lead) => {
     setSelectedLeads(prev => 
@@ -31,7 +38,7 @@ export const NewLeadsPage = () => {
 
   const handleSelectAll = () => {
     setSelectedLeads(prev => 
-      prev.length === mockAvailableLeads.length ? [] : [...mockAvailableLeads]
+      prev.length === availableLeads.length ? [] : [...availableLeads]
     );
   };
 
@@ -59,12 +66,12 @@ export const NewLeadsPage = () => {
     toast.success("Redirection vers la page de rechargement...");
   };
 
-  const filteredLeads = mockAvailableLeads
-    .filter(lead => projectTypeFilter === "all" || lead.projectType === projectTypeFilter)
+  const filteredLeads = availableLeads
+    .filter(lead => projectTypeFilter === "all" || lead.clienttype === projectTypeFilter)
     .filter(lead => selectedDepartments.length === 0 || selectedDepartments.includes(lead.postalcode.substring(0, 2)))
     .sort((a, b) => {
-      if (priceFilter === "asc") return a.price - b.price;
-      if (priceFilter === "desc") return b.price - a.price;
+      if (priceFilter === "asc") return (a.price || 0) - (b.price || 0);
+      if (priceFilter === "desc") return (b.price || 0) - (a.price || 0);
       return 0;
     });
 
@@ -100,7 +107,7 @@ export const NewLeadsPage = () => {
         />
         
         <LeadsSummaryCards 
-          availableLeads={mockAvailableLeads}
+          availableLeads={availableLeads}
           selectedLeads={selectedLeads}
           balance={balance}
           onPrepaidAccount={handlePrepaidAccount}

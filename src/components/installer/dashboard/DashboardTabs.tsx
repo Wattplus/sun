@@ -2,14 +2,21 @@ import { Card } from "@/components/ui/card";
 import { PrepaidBalance } from "./PrepaidBalance";
 import { StatsCards } from "./StatsCards";
 import { useState } from "react";
-import { mockAvailableLeads } from "./mockAvailableLeads";
-import { mockPurchasedLeads } from "./mockPurchasedLeads";
 import { motion } from "framer-motion";
 import { LeadsOverview } from "./leads/LeadsOverview";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useLeadOperations } from "@/hooks/useLeadOperations";
 
 export function DashboardTabs() {
   const [activeSection, setActiveSection] = useState<'overview' | 'available' | 'purchased'>('overview');
+  const { leads } = useLeadOperations();
+
+  // Filter leads based on their status
+  const availableLeads = leads.filter(lead => !lead.purchasedby?.length);
+  const purchasedLeads = leads.filter(lead => lead.purchasedby?.length);
+
+  console.log("[DashboardTabs] Available leads:", availableLeads.length);
+  console.log("[DashboardTabs] Purchased leads:", purchasedLeads.length);
 
   return (
     <div className="space-y-8">
@@ -45,15 +52,15 @@ export function DashboardTabs() {
           </TabsList>
           <TabsContent value="overview" className="space-y-6">
             <LeadsOverview 
-              availableLeads={mockAvailableLeads.slice(0, 4)}
-              purchasedLeads={mockPurchasedLeads.slice(0, 4)}
+              availableLeads={availableLeads.slice(0, 4)}
+              purchasedLeads={purchasedLeads.slice(0, 4)}
               onShowAllAvailable={() => setActiveSection('available')}
               onShowAllPurchased={() => setActiveSection('purchased')}
             />
           </TabsContent>
           <TabsContent value="available">
             <LeadsOverview 
-              availableLeads={mockAvailableLeads}
+              availableLeads={availableLeads}
               purchasedLeads={[]}
               onShowAllAvailable={() => {}}
               onShowAllPurchased={() => {}}
@@ -62,7 +69,7 @@ export function DashboardTabs() {
           <TabsContent value="purchased">
             <LeadsOverview 
               availableLeads={[]}
-              purchasedLeads={mockPurchasedLeads}
+              purchasedLeads={purchasedLeads}
               onShowAllAvailable={() => {}}
               onShowAllPurchased={() => {}}
             />

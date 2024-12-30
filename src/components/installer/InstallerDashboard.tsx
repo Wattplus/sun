@@ -2,8 +2,17 @@ import { DashboardHeader } from "./dashboard/DashboardHeader";
 import { DashboardContent } from "./dashboard/DashboardContent";
 import { InstallerBreadcrumb } from "./navigation/InstallerBreadcrumb";
 import { motion } from "framer-motion";
+import { useLeadOperations } from "@/hooks/useLeadOperations";
+import { useEffect } from "react";
 
 export function InstallerDashboard() {
+  const { fetchLeads } = useLeadOperations();
+
+  useEffect(() => {
+    console.log("[InstallerDashboard] Initializing dashboard");
+    fetchLeads();
+  }, [fetchLeads]);
+
   return (
     <div className="min-h-screen bg-background relative overflow-hidden">
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary/5 via-transparent to-transparent"></div>
