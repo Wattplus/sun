@@ -87,7 +87,6 @@ serve(async (req) => {
       customer_email: leads[0]?.email,
       submit_type: 'pay',
       expires_at: Math.floor(Date.now() / 1000) + (30 * 60), // Expire in 30 minutes
-      ui_mode: 'hosted',
     })
 
     console.log('Checkout session created successfully:', session.id)
