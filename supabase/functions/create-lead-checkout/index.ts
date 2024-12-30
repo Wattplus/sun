@@ -80,6 +80,8 @@ serve(async (req) => {
       payment_intent_data: {
         capture_method: 'automatic',
       },
+      customer_email: leads[0]?.email,
+      submit_type: 'pay',
     })
 
     console.log('Checkout session created successfully:', session.id)
