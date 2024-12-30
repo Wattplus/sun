@@ -6,9 +6,9 @@ import { supabase } from "@/lib/supabase-client";
 import Index from "@/pages/Index";
 import Login from "@/pages/Login";
 import Admin from "@/pages/Admin";
-import ThankYou from "@/pages/ThankYou";
+import { ThankYou } from "@/pages/ThankYou";
 import ClientPortal from "@/pages/ClientPortal";
-import InstallerProfile from "@/pages/InstallerProfile";
+import { InstallerProfile } from "@/pages/InstallerProfile";
 
 // Admin Components
 import AdminDashboard from "@/components/admin/AdminDashboard";
