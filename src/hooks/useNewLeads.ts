@@ -63,20 +63,31 @@ export const useNewLeads = () => {
 
         toast.success("Leads achetés avec succès !");
       } else {
+        console.log('Creating checkout session for leads:', selectedLeads);
         const { data, error } = await supabase.functions.invoke('create-lead-checkout', {
           body: {
             leads: selectedLeads.map(lead => ({
               id: lead.id,
               priceId: lead.clienttype === 'professional' 
-                ? 'price_1Qa0nUFOePj4Hv47Ih00CR8k' // 49€ pour les leads pro
-                : 'price_1QaAlfFOePj4Hv475LWE2bGQ', // 26€ pour les particuliers
+                ? 'price_1Qa0nUFOePj4Hv47Ih00CR8k'
+                : 'price_1QaAlfFOePj4Hv475LWE2bGQ',
               type: 'mutualise'
             }))
           }
         });
 
-        if (error) throw error;
-        if (data?.url) window.location.href = data.url;
+        if (error) {
+          console.error('Error creating checkout session:', error);
+          throw error;
+        }
+
+        if (!data?.url) {
+          console.error('No checkout URL returned:', data);
+          throw new Error('No checkout URL returned');
+        }
+
+        console.log('Redirecting to checkout URL:', data.url);
+        window.location.href = data.url;
       }
     } catch (error) {
       console.error("Erreur lors de l'achat:", error);
