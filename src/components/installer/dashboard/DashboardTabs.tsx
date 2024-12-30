@@ -1,23 +1,13 @@
 import { Card } from "@/components/ui/card";
 import { PrepaidBalance } from "./PrepaidBalance";
 import { StatsCards } from "./StatsCards";
-import { useState } from "react";
 import { motion } from "framer-motion";
 import { LeadsOverview } from "./leads/LeadsOverview";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useLeadOperations } from "@/hooks/useLeadOperations";
 import { Lead } from "@/types/crm";
 
-interface LeadsOverviewProps {
-  availableLeads: Lead[];
-  purchasedLeads: Lead[];
-  onShowAllAvailable: () => void;
-  onShowAllPurchased: () => void;
-}
-
 export function DashboardTabs({ leads }: { leads: Lead[] }) {
-  const [activeSection, setActiveSection] = useState<'overview' | 'available' | 'purchased'>('overview');
-
   // Filter leads based on their status
   const availableLeads = leads.filter(lead => !lead.purchasedby?.length);
   const purchasedLeads = leads.filter(lead => lead.purchasedby?.length);

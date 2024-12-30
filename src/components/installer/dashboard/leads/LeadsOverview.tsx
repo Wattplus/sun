@@ -1,7 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ChevronRight, Sparkles, Users } from "lucide-react";
-import { Lead } from "@/types/crm";
 import { motion } from "framer-motion";
 import { LeadCard } from "../LeadCard";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -11,24 +10,23 @@ import { useLeadOperations } from "@/hooks/useLeadOperations";
 
 export const LeadsOverview = () => {
   const navigate = useNavigate();
-  const { leads } = useLeadOperations();
+  const { leads, fetchLeads } = useLeadOperations();
   
   // Filter available leads (not purchased)
-  const availableLeads = leads.filter(lead => !lead.purchasedby?.length);
+  const availableLeads = leads.filter(lead => !lead.purchasedby?.length).slice(0, 4);
   // Filter purchased leads
-  const purchasedLeads = leads.filter(lead => lead.purchasedby?.length);
+  const purchasedLeads = leads.filter(lead => lead.purchasedby?.length).slice(0, 4);
 
   useEffect(() => {
-    console.log("[LeadsOverview] Available leads:", availableLeads.length);
-    console.log("[LeadsOverview] Purchased leads:", purchasedLeads.length);
-  }, [availableLeads.length, purchasedLeads.length]);
+    fetchLeads();
+  }, [fetchLeads]);
 
   const handleNavigateToAvailable = () => {
-    navigate("/espace-installateur/marketplace");
+    navigate("/espace-installateur/leads/nouveaux");
   };
 
   const handleNavigateToPurchased = () => {
-    navigate("/espace-installateur/leads");
+    navigate("/espace-installateur/leads/achetes");
   };
 
   return (
