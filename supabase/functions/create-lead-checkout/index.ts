@@ -56,6 +56,9 @@ serve(async (req) => {
           product_data: {
             name: `Lead ${lead.clientType === 'professional' ? 'Professionnel' : 'Particulier'}`,
             description: `Achat ${lead.type === 'mutualise' ? 'mutualisé' : 'exclusif'} du lead #${lead.id}`,
+            metadata: {
+              lead_id: lead.id,
+            },
           },
           unit_amount: priceInCents,
         },
@@ -69,7 +72,7 @@ serve(async (req) => {
       payment_method_types: ['card'],
       line_items: lineItems,
       mode: 'payment',
-      success_url: `${req.headers.get('origin')}/espace-installateur/leads/achetes?success=true`,
+      success_url: `${req.headers.get('origin')}/espace-installateur/leads/achetes?success=true&session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${req.headers.get('origin')}/espace-installateur/leads/nouveaux?canceled=true`,
       metadata: {
         leads: JSON.stringify(leads.map(l => l.id)),
@@ -79,9 +82,13 @@ serve(async (req) => {
       locale: 'fr',
       payment_intent_data: {
         capture_method: 'automatic',
+        metadata: {
+          leads: JSON.stringify(leads.map(l => l.id)),
+        },
       },
       customer_email: leads[0]?.email,
       submit_type: 'pay',
+      expires_at: Math.floor(Date.now() / 1000) + (30 * 60), // Expire in 30 minutes
     })
 
     console.log('Checkout session created successfully:', session.id)

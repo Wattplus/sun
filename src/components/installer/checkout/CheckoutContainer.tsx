@@ -134,7 +134,7 @@ export const CheckoutContainer = () => {
             type: "mutualise",
             clientType: lead.clienttype,
             price: lead.clienttype === 'professional' ? 49 : 26,
-            email: session.session.user.email
+            email: lead.email
           }))
         }
       });
