@@ -58,28 +58,13 @@ export function DashboardTabs({ leads }: { leads: Lead[] }) {
             <TabsTrigger value="purchased">Leads achetés</TabsTrigger>
           </TabsList>
           <TabsContent value="overview" className="space-y-6">
-            <LeadsOverview 
-              availableLeads={availableLeads.slice(0, 4)}
-              purchasedLeads={purchasedLeads.slice(0, 4)}
-              onShowAllAvailable={() => setActiveSection('available')}
-              onShowAllPurchased={() => setActiveSection('purchased')}
-            />
+            <LeadsOverview />
           </TabsContent>
           <TabsContent value="available">
-            <LeadsOverview 
-              availableLeads={availableLeads}
-              purchasedLeads={[]}
-              onShowAllAvailable={() => {}}
-              onShowAllPurchased={() => {}}
-            />
+            <LeadsOverview />
           </TabsContent>
           <TabsContent value="purchased">
-            <LeadsOverview 
-              availableLeads={[]}
-              purchasedLeads={purchasedLeads}
-              onShowAllAvailable={() => {}}
-              onShowAllPurchased={() => {}}
-            />
+            <LeadsOverview />
           </TabsContent>
         </Tabs>
       </motion.div>
