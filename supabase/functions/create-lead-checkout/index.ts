@@ -1,16 +1,10 @@
-import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.38.4'
-import Stripe from 'https://esm.sh/stripe@13.6.0?target=deno'
+import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
+import Stripe from "https://esm.sh/stripe@13.6.0?target=deno"
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 }
-
-const stripe = new Stripe(Deno.env.get('STRIPE_SECRET_KEY') || '', {
-  apiVersion: '2023-10-16',
-  httpClient: Stripe.createFetchHttpClient(),
-})
 
 console.log('Loading create-lead-checkout function...')
 
@@ -31,6 +25,11 @@ serve(async (req) => {
     if (!leads || !Array.isArray(leads) || leads.length === 0) {
       throw new Error('Invalid leads data')
     }
+
+    const stripe = new Stripe(Deno.env.get('STRIPE_SECRET_KEY') || '', {
+      apiVersion: '2023-10-16',
+      httpClient: Stripe.createFetchHttpClient(),
+    })
 
     const lineItems = leads.map(lead => {
       const price = Number(lead.price)
@@ -66,7 +65,7 @@ serve(async (req) => {
       }
     })
 
-    console.log('Creating Stripe checkout session with items:', lineItems)
+    console.log('Creating Stripe checkout session...')
 
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
@@ -77,7 +76,6 @@ serve(async (req) => {
       metadata: {
         leads: JSON.stringify(leads.map(l => l.id)),
       },
-      allow_promotion_codes: true,
       billing_address_collection: 'required',
       locale: 'fr',
       payment_intent_data: {
@@ -89,12 +87,18 @@ serve(async (req) => {
       customer_email: leads[0]?.email,
       submit_type: 'pay',
       expires_at: Math.floor(Date.now() / 1000) + (30 * 60), // Expire in 30 minutes
+      ui_mode: 'embedded',
+      return_url: `${req.headers.get('origin')}/espace-installateur/leads/achetes?success=true&session_id={CHECKOUT_SESSION_ID}`,
     })
 
     console.log('Checkout session created successfully:', session.id)
 
     return new Response(
-      JSON.stringify({ url: session.url }),
+      JSON.stringify({ 
+        url: session.url,
+        clientSecret: session.client_secret,
+        sessionId: session.id
+      }),
       {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         status: 200,
