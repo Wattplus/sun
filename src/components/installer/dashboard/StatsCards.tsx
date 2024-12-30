@@ -1,6 +1,6 @@
 import { Card } from "@/components/ui/card";
 import { motion } from "framer-motion";
-import { TrendingUp, Users, Star, Clock, Euro, FileText, CheckCircle, AlertCircle } from "lucide-react";
+import { TrendingUp, Users, Euro, FileText } from "lucide-react";
 import { useLeadOperations } from "@/hooks/useLeadOperations";
 import { useEffect, useState } from "react";
 
@@ -11,36 +11,12 @@ export const StatsCards = () => {
       title: "Leads disponibles",
       value: "0",
       change: "+0% cette semaine",
-      icon: TrendingUp,
-      color: "text-primary",
-      bgColor: "bg-primary/5"
-    },
-    {
-      title: "Leads achetés",
-      value: "0",
-      change: "+0% ce mois",
       icon: Users,
       color: "text-primary",
       bgColor: "bg-primary/5"
     },
     {
-      title: "Taux de conversion",
-      value: "0%",
-      change: "+0% ce trimestre",
-      icon: Star,
-      color: "text-primary",
-      bgColor: "bg-primary/5"
-    },
-    {
-      title: "Temps moyen",
-      value: "0j",
-      change: "0j ce mois",
-      icon: Clock,
-      color: "text-primary",
-      bgColor: "bg-primary/5"
-    },
-    {
-      title: "Chiffre d'affaires",
+      title: "Investissement total",
       value: "0€",
       change: "+0% ce mois",
       icon: Euro,
@@ -48,26 +24,18 @@ export const StatsCards = () => {
       bgColor: "bg-primary/5"
     },
     {
-      title: "Devis envoyés",
+      title: "Leads achetés",
       value: "0",
-      change: "+0 cette semaine",
+      change: "+0% ce mois",
       icon: FileText,
       color: "text-primary",
       bgColor: "bg-primary/5"
     },
     {
-      title: "Projets signés",
-      value: "0",
-      change: "+0 ce mois",
-      icon: CheckCircle,
-      color: "text-primary",
-      bgColor: "bg-primary/5"
-    },
-    {
-      title: "En attente",
-      value: "0",
-      change: "-0 cette semaine",
-      icon: AlertCircle,
+      title: "ROI estimé",
+      value: "0%",
+      change: "+0% ce trimestre",
+      icon: TrendingUp,
       color: "text-primary",
       bgColor: "bg-primary/5"
     }
@@ -82,6 +50,12 @@ export const StatsCards = () => {
       console.log("[StatsCards] Available leads:", availableLeads.length);
       console.log("[StatsCards] Purchased leads:", purchasedLeads.length);
 
+      // Calculer l'investissement total (25€ par lead acheté)
+      const totalInvestment = purchasedLeads.length * 25;
+      
+      // Calculer le ROI estimé (exemple: 300% de retour sur investissement)
+      const estimatedROI = totalInvestment > 0 ? 300 : 0;
+
       setStats(prevStats => {
         const newStats = [...prevStats];
         newStats[0] = {
@@ -91,8 +65,18 @@ export const StatsCards = () => {
         };
         newStats[1] = {
           ...newStats[1],
-          value: purchasedLeads.length.toString(),
+          value: `${totalInvestment}€`,
           change: "+8% ce mois"
+        };
+        newStats[2] = {
+          ...newStats[2],
+          value: purchasedLeads.length.toString(),
+          change: "+15% ce mois"
+        };
+        newStats[3] = {
+          ...newStats[3],
+          value: `${estimatedROI}%`,
+          change: "+5% ce trimestre"
         };
         return newStats;
       });
