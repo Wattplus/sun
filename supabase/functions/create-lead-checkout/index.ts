@@ -33,13 +33,21 @@ serve(async (req) => {
     }
 
     const lineItems = leads.map(lead => {
-      if (!lead.price || isNaN(lead.price)) {
-        console.error('Invalid price for lead:', lead)
+      // Validate price
+      const price = Number(lead.price)
+      if (isNaN(price) || price <= 0) {
+        console.error('Invalid price for lead:', { lead, price })
         throw new Error(`Invalid price for lead ${lead.id}`)
       }
 
-      const priceInCents = Math.round(lead.price * 100)
-      console.log('Calculated price in cents:', priceInCents)
+      const priceInCents = Math.round(price * 100)
+      console.log('Processing lead payment:', {
+        leadId: lead.id,
+        clientType: lead.clientType,
+        type: lead.type,
+        price: price,
+        priceInCents: priceInCents
+      })
 
       return {
         price_data: {
