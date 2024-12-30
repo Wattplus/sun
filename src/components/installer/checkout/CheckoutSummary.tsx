@@ -1,12 +1,15 @@
 import { Lead } from "@/types/crm";
 import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Trash2 } from "lucide-react";
 
 interface CheckoutSummaryProps {
   leads: Lead[];
   total: number;
+  onDeleteLead: (leadId: string) => void;
 }
 
-export const CheckoutSummary = ({ leads, total }: CheckoutSummaryProps) => {
+export const CheckoutSummary = ({ leads, total, onDeleteLead }: CheckoutSummaryProps) => {
   return (
     <Card className="p-6 bg-white/5 backdrop-blur-sm border-primary/20">
       <div className="space-y-6">
@@ -29,9 +32,19 @@ export const CheckoutSummary = ({ leads, total }: CheckoutSummaryProps) => {
                   </span>
                 </div>
               </div>
-              <p className="font-medium text-lg">
-                {lead.clienttype === 'professional' ? '49€' : '26€'}
-              </p>
+              <div className="flex items-center gap-4">
+                <p className="font-medium text-lg">
+                  {lead.clienttype === 'professional' ? '49€' : '26€'}
+                </p>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => onDeleteLead(lead.id)}
+                  className="text-red-400 hover:text-red-300 hover:bg-red-400/10"
+                >
+                  <Trash2 className="h-4 w-4" />
+                </Button>
+              </div>
             </div>
           ))}
         </div>
