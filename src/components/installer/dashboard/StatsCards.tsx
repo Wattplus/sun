@@ -1,74 +1,103 @@
 import { Card } from "@/components/ui/card";
 import { motion } from "framer-motion";
 import { TrendingUp, Users, Star, Clock, Euro, FileText, CheckCircle, AlertCircle } from "lucide-react";
+import { useLeadOperations } from "@/hooks/useLeadOperations";
+import { useEffect, useState } from "react";
 
 export const StatsCards = () => {
-  const stats = [
+  const { leads } = useLeadOperations();
+  const [stats, setStats] = useState([
     {
       title: "Leads disponibles",
-      value: "24",
-      change: "+12% cette semaine",
+      value: "0",
+      change: "+0% cette semaine",
       icon: TrendingUp,
       color: "text-primary",
       bgColor: "bg-primary/5"
     },
     {
       title: "Leads achetés",
-      value: "12",
-      change: "+8% ce mois",
+      value: "0",
+      change: "+0% ce mois",
       icon: Users,
       color: "text-primary",
       bgColor: "bg-primary/5"
     },
     {
       title: "Taux de conversion",
-      value: "68%",
-      change: "+5% ce trimestre",
+      value: "0%",
+      change: "+0% ce trimestre",
       icon: Star,
       color: "text-primary",
       bgColor: "bg-primary/5"
     },
     {
       title: "Temps moyen",
-      value: "2.4j",
-      change: "-0.5j ce mois",
+      value: "0j",
+      change: "0j ce mois",
       icon: Clock,
       color: "text-primary",
       bgColor: "bg-primary/5"
     },
     {
       title: "Chiffre d'affaires",
-      value: "45K€",
-      change: "+15% ce mois",
+      value: "0€",
+      change: "+0% ce mois",
       icon: Euro,
       color: "text-primary",
       bgColor: "bg-primary/5"
     },
     {
       title: "Devis envoyés",
-      value: "18",
-      change: "+4 cette semaine",
+      value: "0",
+      change: "+0 cette semaine",
       icon: FileText,
       color: "text-primary",
       bgColor: "bg-primary/5"
     },
     {
       title: "Projets signés",
-      value: "8",
-      change: "+2 ce mois",
+      value: "0",
+      change: "+0 ce mois",
       icon: CheckCircle,
       color: "text-primary",
       bgColor: "bg-primary/5"
     },
     {
       title: "En attente",
-      value: "6",
-      change: "-2 cette semaine",
+      value: "0",
+      change: "-0 cette semaine",
       icon: AlertCircle,
       color: "text-primary",
       bgColor: "bg-primary/5"
     }
-  ];
+  ]);
+
+  useEffect(() => {
+    if (leads) {
+      const availableLeads = leads.filter(lead => !lead.purchasedby?.length);
+      const purchasedLeads = leads.filter(lead => lead.purchasedby?.length);
+      
+      console.log("[StatsCards] Calculating stats from", leads.length, "leads");
+      console.log("[StatsCards] Available leads:", availableLeads.length);
+      console.log("[StatsCards] Purchased leads:", purchasedLeads.length);
+
+      setStats(prevStats => {
+        const newStats = [...prevStats];
+        newStats[0] = {
+          ...newStats[0],
+          value: availableLeads.length.toString(),
+          change: "+12% cette semaine"
+        };
+        newStats[1] = {
+          ...newStats[1],
+          value: purchasedLeads.length.toString(),
+          change: "+8% ce mois"
+        };
+        return newStats;
+      });
+    }
+  }, [leads]);
 
   return (
     <>

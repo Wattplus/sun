@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { LeadCard } from "../LeadCard";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 interface LeadsOverviewProps {
   availableLeads: Lead[];
@@ -21,6 +22,11 @@ export const LeadsOverview = ({
   onShowAllPurchased,
 }: LeadsOverviewProps) => {
   const navigate = useNavigate();
+
+  useEffect(() => {
+    console.log("[LeadsOverview] Available leads:", availableLeads.length);
+    console.log("[LeadsOverview] Purchased leads:", purchasedLeads.length);
+  }, [availableLeads, purchasedLeads]);
 
   const handleNavigateToAvailable = () => {
     navigate("/espace-installateur/marketplace");
@@ -73,6 +79,11 @@ export const LeadsOverview = ({
                       onStatusChange={() => {}}
                     />
                   ))}
+                  {availableLeads.length === 0 && (
+                    <p className="text-center text-muted-foreground py-8">
+                      Aucun lead disponible pour le moment
+                    </p>
+                  )}
                 </div>
               </ScrollArea>
               <Button 
@@ -125,6 +136,11 @@ export const LeadsOverview = ({
                       onStatusChange={() => {}}
                     />
                   ))}
+                  {purchasedLeads.length === 0 && (
+                    <p className="text-center text-muted-foreground py-8">
+                      Aucun lead acheté pour le moment
+                    </p>
+                  )}
                 </div>
               </ScrollArea>
               <Button 
