@@ -15,10 +15,10 @@ serve(async (req) => {
 
   try {
     console.log('Creating payment session...');
-    const { leadId, type, priceId } = await req.json();
+    const { leads } = await req.json();
 
-    if (!leadId || !type || !priceId) {
-      throw new Error('Missing required parameters');
+    if (!leads || !Array.isArray(leads)) {
+      throw new Error('Invalid leads data');
     }
 
     const stripe = new Stripe(Deno.env.get('STRIPE_SECRET_KEY') || '', {
@@ -27,18 +27,16 @@ serve(async (req) => {
 
     console.log('Creating Stripe checkout session...');
     const session = await stripe.checkout.sessions.create({
-      line_items: [
-        {
-          price: priceId,
-          quantity: 1,
-        },
-      ],
+      line_items: leads.map(lead => ({
+        price: lead.priceId,
+        quantity: 1,
+      })),
       mode: 'payment',
-      success_url: `${req.headers.get('origin')}/espace-installateur?success=true&leadId=${leadId}`,
+      success_url: `${req.headers.get('origin')}/espace-installateur?success=true`,
       cancel_url: `${req.headers.get('origin')}/espace-installateur?canceled=true`,
       metadata: {
-        leadId,
-        type
+        leadIds: leads.map(lead => lead.id).join(','),
+        type: leads[0].type
       }
     });
 
