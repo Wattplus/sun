@@ -1,0 +1,4 @@
+project_id = "dqzsycxxgltztufrhams"
+
+[functions.create-lead-checkout]
+verify_jwt = false

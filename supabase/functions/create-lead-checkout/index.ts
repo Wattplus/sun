@@ -4,12 +4,16 @@ import Stripe from 'https://esm.sh/stripe@14.21.0';
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+  'Access-Control-Allow-Methods': 'POST, OPTIONS',
 };
 
 serve(async (req) => {
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
-    return new Response(null, { headers: corsHeaders });
+    return new Response(null, { 
+      headers: corsHeaders,
+      status: 204
+    });
   }
 
   try {
@@ -17,6 +21,7 @@ serve(async (req) => {
     const { leads } = await req.json();
 
     if (!leads || !Array.isArray(leads)) {
+      console.error('Invalid leads data received:', leads);
       throw new Error('Invalid leads data');
     }
 
@@ -30,6 +35,7 @@ serve(async (req) => {
 
     const stripe = new Stripe(stripeSecretKey, {
       apiVersion: '2023-10-16',
+      httpClient: Stripe.createFetchHttpClient(),
     });
 
     console.log('Creating Stripe checkout session...');
@@ -53,16 +59,25 @@ serve(async (req) => {
     return new Response(
       JSON.stringify({ url: session.url }),
       { 
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        headers: { 
+          ...corsHeaders, 
+          'Content-Type': 'application/json'
+        },
         status: 200,
       }
     );
   } catch (error) {
     console.error('Error creating payment session:', error);
     return new Response(
-      JSON.stringify({ error: error.message }),
+      JSON.stringify({ 
+        error: error.message,
+        details: error.toString()
+      }),
       { 
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        headers: { 
+          ...corsHeaders, 
+          'Content-Type': 'application/json'
+        },
         status: 500,
       }
     );
