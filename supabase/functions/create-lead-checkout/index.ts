@@ -35,7 +35,9 @@ serve(async (req) => {
     console.log('Creating Stripe checkout session...');
     const session = await stripe.checkout.sessions.create({
       line_items: leads.map(lead => ({
-        price: lead.priceId,
+        price: lead.clienttype === 'professional' 
+          ? 'price_1Qa0nUFOePj4Hv47Ih00CR8k'  // 49€ for professional leads
+          : 'price_1QaAlfFOePj4Hv475LWE2bGQ',  // 26€ for individual leads
         quantity: 1,
       })),
       mode: 'payment',
