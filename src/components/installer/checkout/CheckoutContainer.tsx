@@ -34,15 +34,16 @@ export const CheckoutContainer = () => {
           return;
         }
 
-        // Fetch installer info
+        // Fetch installer info using maybeSingle() instead of single()
         const { data: installerData, error: installerError } = await supabase
           .from("installers")
           .select("company_name, address, postal_code")
           .eq("user_id", session.session.user.id)
-          .single();
+          .maybeSingle();
 
         if (installerError) {
           console.error("Error fetching installer:", installerError);
+          toast.error("Erreur lors du chargement des informations de l'installateur");
         } else if (installerData) {
           setInstallerInfo({
             companyName: installerData.company_name,
