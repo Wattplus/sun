@@ -3,6 +3,7 @@ import { Lead } from "@/types/crm";
 import { toast } from "sonner";
 import { useLeadsFetching } from "./leads/useLeadsFetching";
 import { useInstallerBalance } from "./installer/useInstallerBalance";
+import { supabase } from "@/integrations/supabase/client";
 
 export const useNewLeads = () => {
   const { leads } = useLeadsFetching();
