@@ -12,6 +12,34 @@ export const useNewLeads = () => {
   const [balance, setBalance] = useState(0);
   const [leads, setLeads] = useState<Lead[]>([]);
 
+  // Fetch leads from Supabase
+  useEffect(() => {
+    const fetchLeads = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('leads')
+          .select('*')
+          .eq('status', 'new')
+          .is('purchasedby', null);
+
+        if (error) {
+          console.error("Error fetching leads:", error);
+          toast.error("Erreur lors de la récupération des leads");
+          return;
+        }
+
+        console.log("Fetched leads:", data);
+        setLeads(data || []);
+      } catch (error) {
+        console.error("Error in fetchLeads:", error);
+        toast.error("Erreur lors de la récupération des leads");
+      }
+    };
+
+    fetchLeads();
+  }, []);
+
+  // Fetch installer balance
   useEffect(() => {
     const fetchBalance = async () => {
       try {
