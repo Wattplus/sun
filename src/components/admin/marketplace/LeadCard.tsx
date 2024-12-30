@@ -40,7 +40,8 @@ export const LeadCard = ({
       }
 
       console.log('Creating checkout session...');
-      const finalPrice = Math.round(type === 'exclusif' ? basePrice * 2 : basePrice);
+      // Calculate price in euros (not cents)
+      const finalPrice = type === 'exclusif' ? basePrice * 2 : basePrice;
       console.log('Final price calculated:', { basePrice, finalPrice, type });
       
       const { data, error } = await supabase.functions.invoke('create-lead-checkout', {

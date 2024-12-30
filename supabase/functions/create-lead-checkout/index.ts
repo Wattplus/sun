@@ -33,16 +33,17 @@ serve(async (req) => {
     }
 
     const lineItems = leads.map(lead => {
-      // Validate price and ensure it's a positive integer
-      const price = Math.round(Number(lead.price))
-      console.log('Processing price:', { leadId: lead.id, rawPrice: lead.price, processedPrice: price })
+      // Ensure price is a valid number in euros
+      const price = Number(lead.price)
+      console.log('Processing price:', { leadId: lead.id, price })
       
       if (isNaN(price) || price <= 0) {
         console.error('Invalid price for lead:', { lead, price })
         throw new Error(`Invalid price for lead ${lead.id}`)
       }
 
-      const priceInCents = price * 100
+      // Convert price to cents for Stripe
+      const priceInCents = Math.round(price * 100)
       console.log('Processing lead payment:', {
         leadId: lead.id,
         clientType: lead.clientType,
