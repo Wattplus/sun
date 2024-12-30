@@ -40,7 +40,7 @@ export const LeadCard = ({
       }
 
       console.log('Creating checkout session...');
-      const finalPrice = type === 'exclusif' ? basePrice * 2 : basePrice;
+      const finalPrice = Math.round(type === 'exclusif' ? basePrice * 2 : basePrice);
       console.log('Final price calculated:', { basePrice, finalPrice, type });
       
       const { data, error } = await supabase.functions.invoke('create-lead-checkout', {
@@ -49,7 +49,7 @@ export const LeadCard = ({
             id: lead.id,
             type: type,
             clientType: lead.clienttype,
-            price: finalPrice // Price is already a number from basePrice calculation
+            price: finalPrice
           }]
         }
       });
