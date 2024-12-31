@@ -5,10 +5,9 @@ import { RechargeOptions } from "@/components/installer/dashboard/prepaid/Rechar
 import { useInstallerBalance } from "@/hooks/installer/useInstallerBalance";
 import { supabase } from "@/lib/supabase-client";
 import { useToast } from "@/hooks/use-toast";
-import { RefreshCw, CreditCard, History, HelpCircle } from "lucide-react";
+import { CreditCard, History, HelpCircle, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SavedCards } from "@/components/installer/dashboard/prepaid/SavedCards";
-import { PrepaidStats } from "@/components/installer/dashboard/prepaid/PrepaidStats";
 import { TransactionHistory } from "@/components/installer/dashboard/prepaid/TransactionHistory";
 import { Card } from "@/components/ui/card";
 import { motion } from "framer-motion";
@@ -121,13 +120,10 @@ export const PrepaidAccountPage = () => {
         </div>
 
         <div className="grid gap-8">
-          {/* Section Solde et Stats */}
-          <div className="grid md:grid-cols-4 gap-6">
+          {/* Section Solde */}
+          <div className="grid md:grid-cols-2 gap-6">
             <div className="md:col-span-2">
               <PrepaidBalanceDisplay balance={balance || 0} />
-            </div>
-            <div className="md:col-span-2">
-              <PrepaidStats />
             </div>
           </div>
 
