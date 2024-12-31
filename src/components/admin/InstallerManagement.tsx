@@ -10,6 +10,7 @@ import { transformDatabaseToInstaller, transformInstallerToDatabase } from "@/ut
 import { Installer } from "@/types/crm";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 
 export const InstallerManagement = () => {
   const [installers, setInstallers] = useState<DatabaseInstallerData[]>([]);
@@ -17,6 +18,7 @@ export const InstallerManagement = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [dialogOpen, setDialogOpen] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [selectedInstallers, setSelectedInstallers] = useState<string[]>([]);
   
   const isMobile = useMediaQuery("(max-width: 768px)");
 
@@ -61,8 +63,8 @@ export const InstallerManagement = () => {
         .upsert({ 
           ...dbInstaller,
           user_id: installer.id,
-          verified: true, // Ensure verified is true
-          status: "active" // Ensure status is active
+          verified: true,
+          status: "active"
         })
         .select()
         .single();
@@ -71,10 +73,37 @@ export const InstallerManagement = () => {
 
       toast.success(installer.id ? "Installateur modifié avec succès" : "Nouvel installateur créé avec succès");
       setDialogOpen(false);
-      fetchInstallers(); // Refresh the list
+      fetchInstallers();
     } catch (error) {
       console.error('Error saving installer:', error);
       toast.error("Erreur lors de l'enregistrement de l'installateur");
+    }
+  };
+
+  const handleSelectInstaller = (installerId: string, checked: boolean) => {
+    setSelectedInstallers(prev => {
+      if (checked) {
+        return [...prev, installerId];
+      }
+      return prev.filter(id => id !== installerId);
+    });
+  };
+
+  const handleDeleteSelected = async () => {
+    try {
+      const { error } = await supabase
+        .from('installers')
+        .delete()
+        .in('id', selectedInstallers);
+
+      if (error) throw error;
+
+      toast.success(`${selectedInstallers.length} installateur(s) supprimé(s) avec succès`);
+      setSelectedInstallers([]);
+      fetchInstallers();
+    } catch (error) {
+      console.error('Error deleting installers:', error);
+      toast.error("Erreur lors de la suppression des installateurs");
     }
   };
 
@@ -101,6 +130,12 @@ export const InstallerManagement = () => {
           searchTerm={searchTerm}
           onSearchChange={setSearchTerm}
           onNewInstaller={handleNewInstaller}
+          selectedCount={selectedInstallers.length}
+          onDeleteSelected={() => {
+            if (selectedInstallers.length > 0) {
+              handleDeleteSelected();
+            }
+          }}
         />
         
         {isMobile ? (
@@ -118,6 +153,9 @@ export const InstallerManagement = () => {
                   handleEditInstaller(dbInstaller);
                 }
               }}
+              selectedInstallers={selectedInstallers}
+              onSelectInstaller={handleSelectInstaller}
+              onDeleteSelected={handleDeleteSelected}
             />
           </Card>
         )}

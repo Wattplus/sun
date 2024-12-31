@@ -3,15 +3,25 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Installer } from "@/types/crm";
-import { Edit, Eye, Star, Award, BadgeCheck } from "lucide-react";
+import { Edit, Eye, Star, Award, BadgeCheck, Trash2 } from "lucide-react";
 import { getRatingBadge } from "./InstallerBadges";
+import { Checkbox } from "@/components/ui/checkbox";
 
 interface InstallerTableProps {
   installers: Installer[];
   onEditInstaller: (installer: Installer) => void;
+  selectedInstallers: string[];
+  onSelectInstaller: (installerId: string, checked: boolean) => void;
+  onDeleteSelected: () => void;
 }
 
-export const InstallerTable = ({ installers, onEditInstaller }: InstallerTableProps) => {
+export const InstallerTable = ({ 
+  installers, 
+  onEditInstaller, 
+  selectedInstallers,
+  onSelectInstaller,
+  onDeleteSelected
+}: InstallerTableProps) => {
   const getPerformanceBadge = (conversionRate: number) => {
     if (conversionRate >= 80) return <Award className="h-5 w-5 text-yellow-500" />;
     if (conversionRate >= 60) return <BadgeCheck className="h-5 w-5 text-emerald-500" />;
@@ -20,7 +30,7 @@ export const InstallerTable = ({ installers, onEditInstaller }: InstallerTablePr
 
   const renderStars = (conversionRate: number) => {
     const stars = [];
-    const fullStars = Math.floor(conversionRate / 20); // 1 star per 20% conversion rate
+    const fullStars = Math.floor(conversionRate / 20);
 
     for (let i = 0; i < 5; i++) {
       stars.push(
@@ -41,6 +51,16 @@ export const InstallerTable = ({ installers, onEditInstaller }: InstallerTablePr
       <Table>
         <TableHeader>
           <TableRow className="bg-[#1EAEDB]/5">
+            <TableHead className="w-[50px]">
+              <Checkbox 
+                checked={selectedInstallers.length === installers.length && installers.length > 0}
+                onCheckedChange={(checked) => {
+                  installers.forEach(installer => 
+                    onSelectInstaller(installer.id, checked === true)
+                  );
+                }}
+              />
+            </TableHead>
             <TableHead>Société</TableHead>
             <TableHead>Contact</TableHead>
             <TableHead>Zone</TableHead>
@@ -52,6 +72,12 @@ export const InstallerTable = ({ installers, onEditInstaller }: InstallerTablePr
         <TableBody>
           {installers.map((installer) => (
             <TableRow key={installer.id} className="hover:bg-[#1EAEDB]/5">
+              <TableCell>
+                <Checkbox 
+                  checked={selectedInstallers.includes(installer.id)}
+                  onCheckedChange={(checked) => onSelectInstaller(installer.id, checked === true)}
+                />
+              </TableCell>
               <TableCell className="font-medium">
                 <div className="flex items-center gap-2">
                   {getPerformanceBadge(installer.conversionRate)}
