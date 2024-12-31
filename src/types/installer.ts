@@ -54,7 +54,6 @@ export interface DatabaseInstallerData {
   service_area: string[]
   credits: number
   verified: boolean
-  created_at?: string
   website?: string
   description?: string
   experience_years?: number
