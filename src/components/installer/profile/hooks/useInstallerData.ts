@@ -1,7 +1,7 @@
-import { useState, useEffect } from "react"
-import { supabase } from "@/integrations/supabase/client"
-import { useToast } from "@/hooks/use-toast"
-import type { InstallerData, InstallerFormData } from "../types/installer"
+import { useState, useEffect } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
+import { InstallerFormData, InstallerData, VisibilitySettings } from "../types/installer";
 
 const defaultFormData: InstallerFormData = {
   firstName: "",
@@ -37,74 +37,77 @@ const defaultFormData: InstallerFormData = {
     acceptDirectMessages: true,
     showCertifications: true,
   }
-}
+};
 
 export const useInstallerData = () => {
-  const { toast } = useToast()
-  const [formData, setFormData] = useState<InstallerFormData>(defaultFormData)
-  const [loading, setLoading] = useState(true)
+  const { toast } = useToast();
+  const [formData, setFormData] = useState<InstallerFormData>(defaultFormData);
+  const [loading, setLoading] = useState(true);
+  const [installer, setInstaller] = useState<InstallerData | null>(null);
 
   useEffect(() => {
     const loadInstallerData = async () => {
       try {
-        const { data: { user } } = await supabase.auth.getUser()
+        const { data: { user } } = await supabase.auth.getUser();
         if (!user) {
-          setLoading(false)
-          return
+          setLoading(false);
+          return;
         }
 
-        const { data: installer, error } = await supabase
+        const { data: installerData, error } = await supabase
           .from('installers')
           .select()
           .eq('user_id', user.id)
-          .maybeSingle()
+          .maybeSingle();
 
-        if (error) throw error
+        if (error) throw error;
 
-        if (installer) {
-          const [firstName = "", lastName = ""] = (installer.contact_name || "").split(" ")
+        if (installerData) {
+          setInstaller(installerData);
+          const [firstName = "", lastName = ""] = (installerData.contact_name || "").split(" ");
           
           setFormData({
             firstName,
             lastName,
             email: user.email || "",
-            phone: installer.phone || "",
-            company: installer.company_name || "",
-            siret: installer.siret || "",
-            website: installer.website || "",
-            description: installer.description || "",
-            experience: installer.experience_years?.toString() || "",
-            panelBrands: Array.isArray(installer.panel_brands) ? installer.panel_brands.join(', ') : "",
-            inverterBrands: Array.isArray(installer.inverter_brands) ? installer.inverter_brands.join(', ') : "",
-            guaranteeYears: installer.warranty_years?.toString() || "",
-            service_area: installer.service_area || [],
-            certifications: installer.certifications as InstallerFormData['certifications'] || defaultFormData.certifications,
-            installationTypes: installer.installation_types as InstallerFormData['installationTypes'] || defaultFormData.installationTypes,
-            maintenanceServices: installer.maintenance_services || false,
-            address: installer.address || "",
-            postal_code: installer.postal_code || "",
-            city: installer.city || "",
-            visibility_settings: installer.visibility_settings as InstallerFormData['visibility_settings'] || defaultFormData.visibility_settings,
-          })
+            phone: installerData.phone || "",
+            company: installerData.company_name || "",
+            siret: installerData.siret || "",
+            website: installerData.website || "",
+            description: installerData.description || "",
+            experience: installerData.experience_years?.toString() || "",
+            panelBrands: Array.isArray(installerData.panel_brands) ? installerData.panel_brands.join(', ') : "",
+            inverterBrands: Array.isArray(installerData.inverter_brands) ? installerData.inverter_brands.join(', ') : "",
+            guaranteeYears: installerData.warranty_years?.toString() || "",
+            service_area: installerData.service_area || [],
+            certifications: installerData.certifications as InstallerFormData['certifications'] || defaultFormData.certifications,
+            installationTypes: installerData.installation_types as InstallerFormData['installationTypes'] || defaultFormData.installationTypes,
+            maintenanceServices: installerData.maintenance_services || false,
+            address: installerData.address || "",
+            postal_code: installerData.postal_code || "",
+            city: installerData.city || "",
+            visibility_settings: installerData.visibility_settings as VisibilitySettings || defaultFormData.visibility_settings,
+          });
         }
       } catch (error) {
-        console.error('Error loading installer data:', error)
+        console.error('Error loading installer data:', error);
         toast({
           title: "Erreur",
           description: "Impossible de charger les données de l'installateur",
           variant: "destructive"
-        })
+        });
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
-    }
+    };
 
-    loadInstallerData()
-  }, [toast])
+    loadInstallerData();
+  }, [toast]);
 
   return {
     formData,
     setFormData,
-    loading
-  }
-}
+    loading,
+    installer
+  };
+};

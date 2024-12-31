@@ -1,3 +1,5 @@
+import { Json } from "@/integrations/supabase/types";
+
 export interface VisibilitySettings {
   showPhoneNumber: boolean;
   highlightProfile: boolean;
@@ -48,28 +50,20 @@ export interface InstallerData {
   credits: number;
   verified: boolean;
   created_at: string;
-  city: string;
-  website: string;
-  description: string;
-  experience_years: number;
-  panel_brands: string[];
-  inverter_brands: string[];
-  warranty_years: number;
-  siret: string;
-  certifications: {
-    qualiPV: boolean;
-    rge: boolean;
-    qualibat: boolean;
-  };
-  installation_types: {
-    residential: boolean;
-    commercial: boolean;
-    industrial: boolean;
-  };
-  maintenance_services: boolean;
-  visibility_settings: VisibilitySettings;
-  subscription_plan: string;
-  profile_views: number;
-  conversion_rate: number;
-  satisfied_clients: number;
+  city?: string;
+  website?: string;
+  description?: string;
+  experience_years?: number;
+  panel_brands?: string[];
+  inverter_brands?: string[];
+  warranty_years?: number;
+  certifications?: Json;
+  installation_types?: Json;
+  maintenance_services?: boolean;
+  visibility_settings?: Json;
+  subscription_plan?: string;
+  profile_views?: number;
+  conversion_rate?: number;
+  satisfied_clients?: number;
+  siret?: string;
 }
