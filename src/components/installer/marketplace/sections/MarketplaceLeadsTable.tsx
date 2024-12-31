@@ -99,6 +99,13 @@ export const MarketplaceLeadsTable = ({
                   <p>{lead.firstname}</p>
                 </div>
                 <div>
+                  <span className="text-muted-foreground">Nom:</span>
+                  <p className="flex items-center gap-1">
+                    <Lock className="h-3 w-3" />
+                    <span className="text-muted-foreground">Masqué</span>
+                  </p>
+                </div>
+                <div>
                   <span className="text-muted-foreground">Code postal:</span>
                   <p>{lead.postalcode}</p>
                 </div>
@@ -106,22 +113,20 @@ export const MarketplaceLeadsTable = ({
                   <span className="text-muted-foreground">Facture:</span>
                   <p>{lead.monthlybill}€</p>
                 </div>
-                <div>
+                <div className="col-span-2">
                   <span className="text-muted-foreground">Prix:</span>
-                  <p>{lead.price}€</p>
+                  <p className="font-semibold text-primary">{lead.price}€</p>
                 </div>
               </div>
 
-              <div className="flex items-center justify-between pt-2 border-t border-primary/10">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="w-full bg-primary/10 hover:bg-primary/20 border-primary/20"
-                  onClick={() => onLeadSelect(lead)}
-                >
-                  {selectedLeads.some(l => l.id === lead.id) ? "Désélectionner" : "Sélectionner"}
-                </Button>
-              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                className="w-full bg-primary/10 hover:bg-primary/20 border-primary/20"
+                onClick={() => onLeadSelect(lead)}
+              >
+                {selectedLeads.some(l => l.id === lead.id) ? "Désélectionner" : "Sélectionner"}
+              </Button>
             </Card>
           ))}
         </div>
@@ -173,19 +178,27 @@ export const MarketplaceLeadsTable = ({
                     <TableCell>
                       <Badge variant="outline" className="flex items-center gap-2 bg-primary/10 text-primary">
                         {getProjectIcon(lead.clienttype)}
-                        <span>
-                          {getClientTypeLabel(lead.clienttype)}
-                        </span>
+                        <span>{getClientTypeLabel(lead.clienttype)}</span>
                       </Badge>
                     </TableCell>
                     <TableCell>{lead.firstname}</TableCell>
-                    <TableCell>{lead.lastname}</TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-1">
+                        <Lock className="h-3 w-3" />
+                        <span className="text-muted-foreground">Masqué</span>
+                      </div>
+                    </TableCell>
                     <TableCell>{lead.postalcode}</TableCell>
                     <TableCell>{lead.monthlybill}€</TableCell>
-                    <TableCell>{lead.price}€</TableCell>
+                    <TableCell className="font-semibold text-primary">{lead.price}€</TableCell>
                     <TableCell className="text-right">
-                      <Button variant="ghost" size="icon">
-                        <Lock className="h-4 w-4" />
+                      <Button
+                        onClick={() => onLeadSelect(lead)}
+                        variant="outline"
+                        size="sm"
+                        className="bg-primary/10 hover:bg-primary/20 border-primary/20"
+                      >
+                        {selectedLeads.some(l => l.id === lead.id) ? "Désélectionner" : "Sélectionner"}
                       </Button>
                     </TableCell>
                   </TableRow>
