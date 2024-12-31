@@ -4,9 +4,9 @@ import { ProfileVisibilityOptions } from "@/components/installer/profile/Profile
 import { PremiumFeatures } from "@/components/installer/profile/PremiumFeatures"
 import { BasicInfoSection } from "@/components/installer/profile/sections/BasicInfoSection"
 import { SolarSpecificSection } from "@/components/installer/profile/sections/SolarSpecificSection"
-import { InterventionZonesSection } from "./sections/InterventionZonesSection"
-import { ProfileHeader } from "../profile/components/ProfileHeader"
-import { useProfileForm } from "../profile/hooks/useProfileForm"
+import { InterventionZonesSection } from "@/components/installer/account/sections/InterventionZonesSection"
+import { ProfileHeader } from "@/components/installer/profile/components/ProfileHeader"
+import { useProfileForm } from "@/components/installer/profile/hooks/useProfileForm"
 
 export const ProfileSection = () => {
   const {
