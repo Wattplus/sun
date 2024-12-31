@@ -6,6 +6,7 @@ import { LeadCardHeader } from "./LeadCardHeader";
 import { LeadCardActions } from "./LeadCardActions";
 import { LeadInfoDisplay } from "@/components/installer/marketplace/LeadInfoDisplay";
 import { supabase } from "@/lib/supabase-client";
+import { differenceInDays } from "date-fns";
 
 interface LeadCardProps {
   lead: Lead;
@@ -23,7 +24,16 @@ export const LeadCard = ({
   const [isExpanded, setIsExpanded] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
-  const basePrice = lead.clienttype === 'professional' ? 49 : 26;
+
+  const calculateBasePrice = (createdAt: string) => {
+    const daysOld = differenceInDays(new Date(), new Date(createdAt));
+    if (daysOld >= 45) return 15;
+    if (daysOld >= 30) return 19;
+    if (daysOld >= 15) return 21;
+    return lead.clienttype === 'professional' ? 49 : 26;
+  };
+
+  const basePrice = calculateBasePrice(lead.created_at);
 
   const handlePurchase = async (type: 'mutualise' | 'exclusif', paymentMethod: 'prepaid' | 'direct') => {
     try {
@@ -40,7 +50,6 @@ export const LeadCard = ({
       }
 
       console.log('Creating checkout session...');
-      // Calculate price in euros (not cents)
       const finalPrice = type === 'exclusif' ? basePrice * 2 : basePrice;
       console.log('Final price calculated:', { basePrice, finalPrice, type });
       
