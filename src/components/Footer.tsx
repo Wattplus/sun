@@ -61,7 +61,7 @@ export const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link to="/admin/login" className="text-muted-foreground hover:text-primary">
+                <Link to="/admin" className="text-muted-foreground hover:text-primary">
                   Connexion admin
                 </Link>
               </li>
