@@ -7,10 +7,12 @@ import { InstallerTable } from "./installer/InstallerTable";
 import { InstallerMobileTable } from "./installer/InstallerMobileTable";
 import { InstallerHeader } from "./installer/InstallerHeader";
 import { EditInstallerDialog } from "./EditInstallerDialog";
+import { transformDatabaseToInstaller, transformInstallerToDatabase } from "@/utils/installerTransform";
+import { Installer } from "@/types/crm";
 
 export const InstallerManagement = () => {
   const [installers, setInstallers] = useState<DatabaseInstallerData[]>(mockInstallers);
-  const [selectedInstaller, setSelectedInstaller] = useState<DatabaseInstallerData | null>(null);
+  const [selectedInstaller, setSelectedInstaller] = useState<Installer | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [dialogOpen, setDialogOpen] = useState(false);
   
@@ -31,8 +33,8 @@ export const InstallerManagement = () => {
     fetchInstallers();
   }, []);
 
-  const handleEditInstaller = (installer: DatabaseInstallerData) => {
-    setSelectedInstaller(installer);
+  const handleEditInstaller = (dbInstaller: DatabaseInstallerData) => {
+    setSelectedInstaller(transformDatabaseToInstaller(dbInstaller));
     setDialogOpen(true);
   };
 
@@ -41,11 +43,12 @@ export const InstallerManagement = () => {
     setDialogOpen(true);
   };
 
-  const handleSaveInstaller = (installer: DatabaseInstallerData) => {
+  const handleSaveInstaller = (installer: Installer) => {
+    const dbInstaller = transformInstallerToDatabase(installer);
     if (selectedInstaller) {
-      setInstallers(installers.map(i => i.id === installer.id ? installer : i));
+      setInstallers(installers.map(i => i.id === installer.id ? { ...dbInstaller, id: installer.id } as DatabaseInstallerData : i));
     } else {
-      setInstallers([...installers, installer]);
+      setInstallers([...installers, { ...dbInstaller, id: crypto.randomUUID() } as DatabaseInstallerData]);
     }
   };
 
@@ -72,8 +75,8 @@ export const InstallerManagement = () => {
         ) : (
           <Card className="overflow-hidden border-primary/10 bg-card/50 backdrop-blur-sm">
             <InstallerTable 
-              installers={filteredInstallers}
-              onEditInstaller={handleEditInstaller}
+              installers={filteredInstallers.map(transformDatabaseToInstaller)}
+              onEditInstaller={(installer) => handleEditInstaller(installers.find(i => i.id === installer.id)!)}
             />
           </Card>
         )}

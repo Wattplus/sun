@@ -23,20 +23,20 @@ export const InstallerMobileTable = ({ installers, onEditInstaller }: InstallerM
                   <p className="text-sm text-muted-foreground">{installer.contact_name}</p>
                 </div>
                 <Badge className={
-                  installer.status === "active" 
+                  (installer.status || 'pending') === "active" 
                     ? "bg-emerald-500" 
-                    : installer.status === "inactive" 
+                    : (installer.status || 'pending') === "inactive" 
                     ? "bg-gray-500" 
                     : "bg-blue-500"
                 }>
-                  {installer.status === "active" ? "Actif" : installer.status === "inactive" ? "Inactif" : "En attente"}
+                  {(installer.status || 'pending') === "active" ? "Actif" : (installer.status || 'pending') === "inactive" ? "Inactif" : "En attente"}
                 </Badge>
               </div>
 
               <div className="space-y-1">
                 <p className="text-sm">{installer.email}</p>
                 <p className="text-sm">{installer.phone}</p>
-                <p className="text-sm">{installer.address}, {installer.postal_code} {installer.city}</p>
+                <p className="text-sm">{installer.address}, {installer.postal_code}</p>
               </div>
 
               <div className="flex flex-wrap gap-1">
@@ -52,7 +52,7 @@ export const InstallerMobileTable = ({ installers, onEditInstaller }: InstallerM
               </div>
 
               <div className="flex flex-wrap gap-2">
-                {Object.entries(installer.certifications).map(([cert, value]) => 
+                {installer.certifications && Object.entries(installer.certifications).map(([cert, value]) => 
                   value && (
                     <Badge 
                       key={cert}
