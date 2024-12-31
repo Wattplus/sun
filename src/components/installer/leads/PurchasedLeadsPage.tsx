@@ -4,14 +4,16 @@ import { supabase } from "@/lib/supabase-client";
 import { LeadTable } from "./sections/LeadTable";
 import { LeadStats } from "./sections/LeadStats";
 import { LeadFilters } from "./sections/LeadFilters";
-import { InstallerBreadcrumb } from "../../installer/navigation/InstallerBreadcrumb";
 import { useToast } from "@/components/ui/use-toast";
 import { Card } from "@/components/ui/card";
 import { Loader2 } from "lucide-react";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { AlertCircle } from "lucide-react";
 
 export const PurchasedLeadsPage = () => {
   const [leads, setLeads] = useState<Lead[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -21,11 +23,13 @@ export const PurchasedLeadsPage = () => {
   const fetchLeads = async () => {
     try {
       setLoading(true);
+      setError(null);
       console.log("Fetching purchased leads...");
       
       const { data: session } = await supabase.auth.getSession();
       if (!session?.session?.user) {
         console.log("No authenticated user found");
+        setError("Vous devez être connecté pour accéder à cette page");
         return;
       }
 
@@ -33,10 +37,17 @@ export const PurchasedLeadsPage = () => {
         .from("installers")
         .select("id")
         .eq("user_id", session.session.user.id)
-        .single();
+        .maybeSingle();
 
       if (installerError) {
         console.error("Error fetching installer:", installerError);
+        setError("Une erreur est survenue lors de la récupération de votre profil");
+        return;
+      }
+
+      if (!installerData) {
+        console.log("No installer profile found");
+        setError("Aucun profil installateur trouvé. Veuillez contacter le support.");
         return;
       }
 
@@ -48,11 +59,7 @@ export const PurchasedLeadsPage = () => {
 
       if (error) {
         console.error("Error fetching leads:", error);
-        toast({
-          title: "Erreur",
-          description: "Impossible de charger les leads",
-          variant: "destructive",
-        });
+        setError("Impossible de charger vos leads");
         return;
       }
 
@@ -60,11 +67,7 @@ export const PurchasedLeadsPage = () => {
       setLeads(data || []);
     } catch (error) {
       console.error("Unexpected error fetching leads:", error);
-      toast({
-        title: "Erreur",
-        description: "Une erreur est survenue lors du chargement des leads",
-        variant: "destructive",
-      });
+      setError("Une erreur inattendue s'est produite");
     } finally {
       setLoading(false);
     }
@@ -96,8 +99,20 @@ export const PurchasedLeadsPage = () => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
+      <div className="flex items-center justify-center min-h-[400px]">
         <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="p-6">
+        <Alert variant="destructive">
+          <AlertCircle className="h-4 w-4" />
+          <AlertTitle>Erreur</AlertTitle>
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
       </div>
     );
   }
