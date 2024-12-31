@@ -2,9 +2,10 @@ import { useEffect } from "react";
 import { DashboardTabs } from "./DashboardTabs";
 import { useLeadOperations } from "@/hooks/useLeadOperations";
 import { supabase } from "@/lib/supabase-client";
+import { Loader2 } from "lucide-react";
 
 export function DashboardContent() {
-  const { leads, fetchLeads } = useLeadOperations();
+  const { leads, fetchLeads, isLoading } = useLeadOperations();
 
   useEffect(() => {
     console.log("[DashboardContent] Initializing and fetching leads");
@@ -36,12 +37,21 @@ export function DashboardContent() {
 
   // Log the current number of leads for debugging
   useEffect(() => {
-    console.log("[DashboardContent] Current leads count:", leads.length);
+    console.log("[DashboardContent] Current leads count:", leads?.length);
+    console.log("[DashboardContent] Current leads data:", leads);
   }, [leads]);
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-8">
-      <DashboardTabs leads={leads} />
+      <DashboardTabs leads={leads || []} />
     </div>
   );
 }
