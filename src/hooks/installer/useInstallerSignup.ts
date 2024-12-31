@@ -30,6 +30,7 @@ export const useInstallerSignup = () => {
         throw new Error("Les mots de passe ne correspondent pas")
       }
 
+      // 1. Créer l'utilisateur avec auth.signUp
       const { data: authData, error: authError } = await supabase.auth.signUp({
         email: formData.email,
         password: formData.password,
@@ -51,9 +52,22 @@ export const useInstallerSignup = () => {
 
       if (!authData.user) throw new Error("Erreur lors de la création du compte")
 
-      // Attendre un court instant pour s'assurer que l'utilisateur est créé
-      await new Promise(resolve => setTimeout(resolve, 1000))
+      // 2. Attendre que l'utilisateur soit créé dans la table users
+      await new Promise(resolve => setTimeout(resolve, 2000))
 
+      // 3. Vérifier que l'utilisateur existe bien dans la table users
+      const { data: userData, error: userError } = await supabase
+        .from('users')
+        .select('id')
+        .eq('id', authData.user.id)
+        .single()
+
+      if (userError || !userData) {
+        console.error("User verification error:", userError)
+        throw new Error("Erreur lors de la vérification du compte utilisateur")
+      }
+
+      // 4. Créer l'entrée dans la table installers
       const { error: installerError } = await supabase
         .from("installers")
         .insert([
