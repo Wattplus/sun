@@ -32,6 +32,7 @@ import { NewLeadsPage } from "@/components/installer/marketplace/NewLeadsPage";
 import { PurchasedLeadsPage } from "@/components/installer/leads/PurchasedLeadsPage";
 import { MessagesPage } from "@/components/installer/messages/MessagesPage";
 import { SettingsPage as InstallerSettings } from "@/components/installer/settings/SettingsPage";
+import { AccountPage } from "@/components/installer/account/AccountPage";
 
 export function AppRoutes() {
   const navigate = useNavigate();
@@ -63,7 +64,7 @@ export function AppRoutes() {
         <Route path="notifications" element={<NotificationsPage />} />
         <Route path="mon-compte/prepaid" element={<PrepaidAccountPage />} />
         <Route path="checkout" element={<CheckoutPage />} />
-        <Route path="profil" element={<NewProfilePage />} />
+        <Route path="profil" element={<AccountPage />} />
       </Route>
       
       {/* Admin Routes */}

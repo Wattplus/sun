@@ -9,7 +9,8 @@ import {
   FileText, 
   Settings, 
   Bell,
-  Menu
+  Menu,
+  User
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
@@ -39,6 +40,11 @@ const navigation = [
     name: "Rapports", 
     href: "/espace-installateur/rapports", 
     icon: FileText 
+  },
+  {
+    name: "Profil",
+    href: "/espace-installateur/profil",
+    icon: User
   },
   { 
     name: "Paramètres", 
