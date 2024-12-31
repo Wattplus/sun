@@ -5,7 +5,7 @@ import { Card } from "@/components/ui/card";
 import { useState } from "react";
 import { ProfileSection } from "./ProfileSection";
 import { Button } from "@/components/ui/button";
-import { Loader2 } from "lucide-react";
+import { Loader2, User, CreditCard, Wallet } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/lib/supabase-client";
 import { useQueryClient } from "@tanstack/react-query";
@@ -35,13 +35,8 @@ export const AccountPage = () => {
   const clearCache = async () => {
     setIsClearing(true);
     try {
-      // Clear Supabase cache
       await supabase.auth.refreshSession();
-      
-      // Clear React Query cache
       await queryClient.invalidateQueries();
-      
-      // Clear localStorage
       localStorage.clear();
       
       toast({
@@ -49,7 +44,6 @@ export const AccountPage = () => {
         description: "Le cache a été vidé avec succès. La page va se recharger.",
       });
       
-      // Reload the page after a short delay
       setTimeout(() => {
         window.location.reload();
       }, 1500);
@@ -67,53 +61,64 @@ export const AccountPage = () => {
   };
 
   return (
-    <div className="p-6 space-y-6">
-      <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold">Mon Compte</h1>
-        <Button 
-          variant="outline" 
-          onClick={clearCache}
-          disabled={isClearing}
-          className="bg-background/50 backdrop-blur-sm"
-        >
-          {isClearing ? (
-            <>
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Vidage du cache...
-            </>
-          ) : (
-            'Vider le cache'
-          )}
-        </Button>
+    <div className="min-h-screen bg-gradient-to-b from-background/80 to-background p-6 space-y-8">
+      <div className="max-w-[1600px] mx-auto space-y-8">
+        <div className="flex justify-between items-center">
+          <h1 className="text-3xl font-bold text-white">Mon Compte</h1>
+          <Button 
+            variant="outline" 
+            onClick={clearCache}
+            disabled={isClearing}
+            className="bg-background/50 backdrop-blur-sm border-primary/20 hover:bg-primary/20"
+          >
+            {isClearing ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Vidage du cache...
+              </>
+            ) : (
+              'Vider le cache'
+            )}
+          </Button>
+        </div>
+        
+        <Tabs defaultValue="profile" className="space-y-6">
+          <TabsList className="bg-white/10 border-primary/20">
+            <TabsTrigger value="profile" className="text-white data-[state=active]:bg-primary flex gap-2">
+              <User className="h-4 w-4" />
+              Profil
+            </TabsTrigger>
+            <TabsTrigger value="payment" className="text-white data-[state=active]:bg-primary flex gap-2">
+              <CreditCard className="h-4 w-4" />
+              Moyens de paiement
+            </TabsTrigger>
+            <TabsTrigger value="prepaid" className="text-white data-[state=active]:bg-primary flex gap-2">
+              <Wallet className="h-4 w-4" />
+              Compte prépayé
+            </TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="profile">
+            <ProfileSection />
+          </TabsContent>
+
+          <TabsContent value="payment">
+            <Card className="p-6 bg-background/50 backdrop-blur-sm border-primary/20">
+              <SavedCards
+                cards={cards}
+                onDeleteCard={handleDeleteCard}
+                onAddCard={handleAddCard}
+              />
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="prepaid">
+            <Card className="p-6 bg-background/50 backdrop-blur-sm border-primary/20">
+              <PrepaidBalance balance={150} />
+            </Card>
+          </TabsContent>
+        </Tabs>
       </div>
-      
-      <Tabs defaultValue="profile" className="w-full">
-        <TabsList>
-          <TabsTrigger value="profile">Profil</TabsTrigger>
-          <TabsTrigger value="payment">Moyens de paiement</TabsTrigger>
-          <TabsTrigger value="prepaid">Compte prépayé</TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="profile">
-          <ProfileSection />
-        </TabsContent>
-
-        <TabsContent value="payment">
-          <Card className="p-6">
-            <SavedCards
-              cards={cards}
-              onDeleteCard={handleDeleteCard}
-              onAddCard={handleAddCard}
-            />
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="prepaid">
-          <Card className="p-6">
-            <PrepaidBalance balance={150} />
-          </Card>
-        </TabsContent>
-      </Tabs>
     </div>
   );
 };
