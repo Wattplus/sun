@@ -22,7 +22,7 @@ export const LeadsSummaryCards = ({
   const isLowBalance = balance < 200;
 
   const handleRechargeClick = () => {
-    navigate("/espace-installateur/compte/prepaid");
+    navigate("/espace-installateur/mon-compte/prepaid");
   };
 
   return (
