@@ -8,8 +8,8 @@ export const useInstallerForm = (
   formData: InstallerFormData,
   setFormData: (data: InstallerFormData) => void
 ) => {
-  const { toast } = useToast()
   const [loading, setLoading] = useState(false)
+  const { toast } = useToast()
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -24,7 +24,7 @@ export const useInstallerForm = (
       setFormData({
         ...formData,
         [category]: {
-          ...(formData[category as keyof InstallerFormData] as Record<string, boolean>),
+          ...(formData[category as keyof typeof formData] as Record<string, boolean>),
           [item]: checked
         }
       })
@@ -63,14 +63,13 @@ export const useInstallerForm = (
         inverter_brands: formData.inverterBrands.split(",").map(brand => brand.trim()),
         warranty_years: parseInt(formData.guaranteeYears) || null,
         service_area: formData.service_area,
-        certifications: formData.certifications as Json,
-        installation_types: formData.installationTypes as Json,
+        certifications: formData.certifications as unknown as Json,
+        installation_types: formData.installationTypes as unknown as Json,
         maintenance_services: formData.maintenanceServices,
         address: formData.address,
         postal_code: formData.postal_code,
         city: formData.city,
-        siret: formData.siret,
-        visibility_settings: formData.visibility_settings as Json
+        visibility_settings: formData.visibility_settings as unknown as Json
       }
 
       const { error } = await supabase

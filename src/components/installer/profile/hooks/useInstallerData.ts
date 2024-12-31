@@ -41,13 +41,17 @@ const defaultFormData: InstallerFormData = {
 
 export const useInstallerData = () => {
   const [formData, setFormData] = useState<InstallerFormData>(defaultFormData)
+  const [loading, setLoading] = useState(true)
   const { toast } = useToast()
 
   useEffect(() => {
     const loadInstallerData = async () => {
       try {
         const { data: { user } } = await supabase.auth.getUser()
-        if (!user) return
+        if (!user) {
+          setLoading(false)
+          return
+        }
 
         const { data: installer, error } = await supabase
           .from("installers")
@@ -55,7 +59,17 @@ export const useInstallerData = () => {
           .eq("user_id", user.id)
           .single()
 
-        if (error) throw error
+        if (error) {
+          if (error.code === "PGRST116") {
+            // No profile found
+            toast({
+              title: "Profil non trouvé",
+              description: "Veuillez créer votre profil installateur",
+            })
+          } else {
+            throw error
+          }
+        }
 
         if (installer) {
           const [firstName, lastName] = (installer.contact_name || "").split(" ")
@@ -74,13 +88,13 @@ export const useInstallerData = () => {
             inverterBrands: Array.isArray(installer.inverter_brands) ? installer.inverter_brands.join(", ") : "",
             guaranteeYears: installer.warranty_years?.toString() || "",
             service_area: installer.service_area || [],
-            certifications: installer.certifications as InstallerFormData["certifications"],
-            installationTypes: installer.installation_types as InstallerFormData["installationTypes"],
+            certifications: installer.certifications as InstallerData["certifications"],
+            installationTypes: installer.installation_types as InstallerData["installation_types"],
             maintenanceServices: installer.maintenance_services || false,
             address: installer.address || "",
             postal_code: installer.postal_code || "",
             city: installer.city || "",
-            visibility_settings: installer.visibility_settings as InstallerFormData["visibility_settings"],
+            visibility_settings: installer.visibility_settings as InstallerData["visibility_settings"],
           })
         }
       } catch (error) {
@@ -90,11 +104,13 @@ export const useInstallerData = () => {
           description: "Impossible de charger les données de l'installateur",
           variant: "destructive"
         })
+      } finally {
+        setLoading(false)
       }
     }
 
     loadInstallerData()
   }, [toast])
 
-  return { formData, setFormData }
+  return { formData, setFormData, loading }
 }
