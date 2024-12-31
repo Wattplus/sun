@@ -1,16 +1,16 @@
 import { Routes, Route } from "react-router-dom"
-import { Login } from "@/pages/Login"
+import Login from "@/pages/Login"
 import { ProtectedRoute } from "@/routes/ProtectedRoute"
-import { AdminLayout } from "@/components/admin/AdminLayout"
-import { AdminDashboard } from "@/components/admin/AdminDashboard"
+import AdminLayout from "@/components/admin/AdminLayout"
+import AdminDashboard from "@/components/admin/AdminDashboard"
 import { InstallerManagement } from "@/components/admin/InstallerManagement"
 import { LeadManagement } from "@/components/admin/LeadManagement"
-import { ComplaintManagement } from "@/components/admin/complaints/ComplaintManagement"
-import { DataExport } from "@/components/admin/export/DataExport"
-import { NotificationsPage } from "@/components/admin/notifications/NotificationsPage"
-import { PricingSettings } from "@/components/admin/pricing/PricingSettings"
-import { ProfilePage } from "@/components/admin/profile/ProfilePage"
-import { SettingsPage } from "@/components/admin/settings/SettingsPage"
+import ComplaintManagement from "@/components/admin/complaints/ComplaintManagement"
+import DataExport from "@/components/admin/export/DataExport"
+import NotificationsPage from "@/components/admin/notifications/NotificationsPage"
+import PricingSettings from "@/components/admin/pricing/PricingSettings"
+import ProfilePage from "@/components/admin/profile/ProfilePage"
+import SettingsPage from "@/components/admin/settings/SettingsPage"
 import StatisticsPage from "@/components/admin/statistics/StatisticsPage"
 import { InstallerSignup } from "@/pages/installer/auth/InstallerSignup"
 import { InstallerLogin } from "@/pages/installer/auth/InstallerLogin"
@@ -50,7 +50,7 @@ export const AppRoutes = () => {
       </Route>
 
       <Route
-        path="/espace-installateur"
+        path="/espace-installateur/*"
         element={
           <ProtectedRoute requiredRole={["installer"]}>
             <InstallerLayout />
