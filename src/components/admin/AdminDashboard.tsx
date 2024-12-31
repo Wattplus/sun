@@ -9,7 +9,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 
-const AdminDashboard = () => {
+export default function AdminDashboard() {
   const isMobile = useIsMobile();
   const [showMenu, setShowMenu] = useState(false);
 
@@ -180,6 +180,4 @@ const AdminDashboard = () => {
       )}
     </div>
   );
-};
-
-export default AdminDashboard;
+}

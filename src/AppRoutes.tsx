@@ -1,9 +1,9 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import { Index } from "@/pages/Index";
-import { Login } from "@/pages/Login";
+import Login from "@/pages/Login";
 import { ProtectedRoute } from "@/routes/ProtectedRoute";
-import { AdminLayout } from "@/components/admin/AdminLayout";
-import { AdminDashboard } from "@/components/admin/AdminDashboard";
+import AdminLayout from "@/components/admin/AdminLayout";
+import AdminDashboard from "@/components/admin/AdminDashboard";
 import { InstallerManagement } from "@/components/admin/InstallerManagement";
 import { LeadManagement } from "@/components/admin/LeadManagement";
 import { InstallerSpace } from "@/pages/installer/InstallerSpace";

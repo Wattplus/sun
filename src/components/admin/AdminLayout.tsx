@@ -1,6 +1,6 @@
 import { Outlet } from "react-router-dom"
 
-const AdminLayout = () => {
+export default function AdminLayout() {
   return (
     <div className="min-h-screen bg-background">
       <div className="container mx-auto py-8">
@@ -9,5 +9,3 @@ const AdminLayout = () => {
     </div>
   )
 }
-
-export default AdminLayout
