@@ -19,26 +19,24 @@ export const useInstallerSubmit = (onSave: (installer: Installer) => void, onOpe
         .from('installers')
         .upsert({ 
           ...dbData,
-          user_id: formData.id,
-          verified: true,
-          status: "active"
+          verified: true, // Always set verified to true when admin creates/updates
+          status: 'active' // Set status to active
         })
 
-      if (error) {
-        console.error('Database error:', error)
-        if (error.message?.includes("installers_siret_unique")) {
-          setSiretError("Ce numéro SIRET est déjà utilisé par un autre installateur")
-          return
-        }
-        throw error
-      }
+      if (error) throw error
 
-      toast.success("Modifications enregistrées avec succès")
+      toast.success(formData.id ? "Installateur modifié avec succès" : "Nouvel installateur créé avec succès")
       onSave(formData)
       onOpenChange(false)
-    } catch (error: any) {
+    } catch (error) {
       console.error('Error saving installer:', error)
-      toast.error("Erreur lors de l'enregistrement des modifications")
+      if (error instanceof Error) {
+        if (error.message.includes('siret')) {
+          setSiretError("Ce numéro SIRET est invalide ou déjà utilisé")
+        } else {
+          toast.error("Erreur lors de l'enregistrement de l'installateur")
+        }
+      }
     } finally {
       setIsSaving(false)
     }
