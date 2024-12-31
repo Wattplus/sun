@@ -42,10 +42,11 @@ export const useInstallerSignup = () => {
         }
       })
 
+      // Check specifically for user_already_exists error
       if (authError) {
-        if (authError.message.includes("already registered")) {
+        if (authError.message.includes("User already registered")) {
           setUserExists(true)
-          throw new Error("Un compte existe déjà avec cette adresse email")
+          return // Exit early without throwing error to prevent toast
         }
         throw authError
       }
@@ -102,7 +103,10 @@ export const useInstallerSignup = () => {
       setShowSuccessDialog(true)
     } catch (error: any) {
       console.error("Signup error:", error)
-      toast.error(error.message || "Erreur lors de la création du compte")
+      // Only show toast if it's not a user_already_exists error
+      if (!userExists) {
+        toast.error(error.message || "Erreur lors de la création du compte")
+      }
     } finally {
       setLoading(false)
     }
