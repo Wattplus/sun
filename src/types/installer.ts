@@ -2,14 +2,12 @@ export interface Certifications {
   qualiPV: boolean;
   rge: boolean;
   qualibat: boolean;
-  [key: string]: boolean;
 }
 
 export interface InstallationTypes {
   residential: boolean;
   commercial: boolean;
   industrial: boolean;
-  [key: string]: boolean;
 }
 
 export interface VisibilitySettings {
@@ -17,36 +15,6 @@ export interface VisibilitySettings {
   highlightProfile: boolean;
   acceptDirectMessages: boolean;
   showCertifications: boolean;
-  [key: string]: boolean;
-}
-
-export interface DatabaseInstallerData {
-  id: string;
-  user_id: string;
-  company_name: string;
-  contact_name: string;
-  phone: string;
-  address: string;
-  postal_code: string;
-  city: string;
-  service_area: string[];
-  credits: number;
-  verified: boolean;
-  website?: string;
-  description?: string;
-  experience_years?: number;
-  panel_brands?: string[];
-  inverter_brands?: string[];
-  warranty_years?: number;
-  certifications: Certifications;
-  installation_types: InstallationTypes;
-  maintenance_services: boolean;
-  visibility_settings: VisibilitySettings;
-  subscription_plan?: string;
-  profile_views?: number;
-  conversion_rate?: number;
-  satisfied_clients?: number;
-  created_at?: string;
 }
 
 export interface InstallerFormData {
@@ -69,6 +37,18 @@ export interface InstallerFormData {
   visibility_settings: VisibilitySettings;
 }
 
+export interface DatabaseInstallerData extends InstallerFormData {
+  id: string;
+  user_id: string;
+  credits: number;
+  verified: boolean;
+  created_at?: string;
+  subscription_plan?: string;
+  profile_views?: number;
+  conversion_rate?: number;
+  satisfied_clients?: number;
+}
+
 export const convertDbToFormFormat = (data: DatabaseInstallerData): InstallerFormData => {
   return {
     company_name: data.company_name || "",
@@ -84,10 +64,23 @@ export const convertDbToFormFormat = (data: DatabaseInstallerData): InstallerFor
     panel_brands: data.panel_brands || [],
     inverter_brands: data.inverter_brands || [],
     warranty_years: data.warranty_years || 0,
-    certifications: data.certifications,
-    installation_types: data.installation_types,
-    maintenance_services: data.maintenance_services,
-    visibility_settings: data.visibility_settings
+    certifications: data.certifications || {
+      qualiPV: false,
+      rge: false,
+      qualibat: false
+    },
+    installation_types: data.installation_types || {
+      residential: false,
+      commercial: false,
+      industrial: false
+    },
+    maintenance_services: data.maintenance_services || false,
+    visibility_settings: data.visibility_settings || {
+      showPhoneNumber: true,
+      highlightProfile: false,
+      acceptDirectMessages: true,
+      showCertifications: true
+    }
   };
 };
 
