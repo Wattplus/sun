@@ -4,6 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Lock, Home, Building2, Factory } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Lead } from "@/types/crm";
+import { Card } from "@/components/ui/card";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface MarketplaceLeadsTableProps {
   leads: Lead[];
@@ -17,6 +19,8 @@ export const MarketplaceLeadsTable = ({
   selectedLeads, 
   onLeadSelect,
 }: MarketplaceLeadsTableProps) => {
+  const isMobile = useIsMobile();
+
   const getProjectIcon = (clientType: string) => {
     switch (clientType) {
       case 'professional':
@@ -38,6 +42,59 @@ export const MarketplaceLeadsTable = ({
         return 'Résidentiel';
     }
   };
+
+  if (isMobile) {
+    return (
+      <div className="space-y-4 p-4">
+        <h2 className="text-lg font-medium mb-4">Leads disponibles</h2>
+        {leads.map((lead) => (
+          <Card key={lead.id} className="p-4 space-y-4 bg-background/50 backdrop-blur-sm border-primary/10">
+            <div className="flex items-center justify-between">
+              <Badge variant="outline" className="flex items-center gap-2 bg-primary/10 text-primary">
+                {getProjectIcon(lead.clienttype)}
+                <span>{getClientTypeLabel(lead.clienttype)}</span>
+              </Badge>
+              <Checkbox
+                checked={selectedLeads.some(l => l.id === lead.id)}
+                onCheckedChange={() => onLeadSelect(lead)}
+                className="border-primary/50"
+              />
+            </div>
+            
+            <div className="grid grid-cols-2 gap-2 text-sm">
+              <div>
+                <span className="text-muted-foreground">Prénom:</span>
+                <p>{lead.firstname}</p>
+              </div>
+              <div>
+                <span className="text-muted-foreground">Code postal:</span>
+                <p>{lead.postalcode}</p>
+              </div>
+              <div>
+                <span className="text-muted-foreground">Facture:</span>
+                <p>{lead.monthlybill}€</p>
+              </div>
+              <div>
+                <span className="text-muted-foreground">Prix:</span>
+                <p>{lead.price}€</p>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-between pt-2 border-t border-primary/10">
+              <Button
+                variant="outline"
+                size="sm"
+                className="w-full bg-primary/10 hover:bg-primary/20 border-primary/20"
+                onClick={() => onLeadSelect(lead)}
+              >
+                {selectedLeads.some(l => l.id === lead.id) ? "Désélectionner" : "Sélectionner"}
+              </Button>
+            </div>
+          </Card>
+        ))}
+      </div>
+    );
+  }
 
   return (
     <div className="p-6">
@@ -66,6 +123,7 @@ export const MarketplaceLeadsTable = ({
                   <Checkbox
                     checked={selectedLeads.some(l => l.id === lead.id)}
                     onCheckedChange={() => onLeadSelect(lead)}
+                    className="border-primary/50"
                   />
                 </TableCell>
                 <TableCell>
