@@ -1,96 +1,60 @@
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
-import { supabase } from "@/integrations/supabase/client";
-import { toast } from "sonner";
-import { Save, Award } from "lucide-react";
+import { Card } from "@/components/ui/card"
+import { Checkbox } from "@/components/ui/checkbox"
+import { Label } from "@/components/ui/label"
+import { Award } from "lucide-react"
+import { motion } from "framer-motion"
 
 interface CertificationsSectionProps {
-  data: any;
+  certifications: {
+    qualiPV: boolean;
+    rge: boolean;
+    qualibat: boolean;
+  };
+  handleCheckboxChange: (field: string, checked: boolean) => void;
 }
 
-export const CertificationsSection = ({ data }: CertificationsSectionProps) => {
-  const [certifications, setCertifications] = useState(data?.certifications || {
-    qualiPV: false,
-    rge: false,
-    qualibat: false,
-  });
-
-  const handleToggle = (cert: string) => {
-    setCertifications(prev => ({
-      ...prev,
-      [cert]: !prev[cert]
-    }));
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
-      const { error } = await supabase
-        .from("installers")
-        .update({ certifications })
-        .eq("id", data.id);
-
-      if (error) throw error;
-      toast.success("Certifications mises à jour avec succès");
-    } catch (error) {
-      console.error("Error updating certifications:", error);
-      toast.error("Erreur lors de la mise à jour");
-    }
-  };
-
+export const CertificationsSection = ({ certifications, handleCheckboxChange }: CertificationsSectionProps) => {
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <Card className="p-6 space-y-4">
-          <div className="flex items-center gap-3">
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, delay: 0.2 }}
+    >
+      <Card className="p-6 bg-background/50 backdrop-blur-sm border-primary/20">
+        <div className="flex items-center gap-3 mb-4">
+          <div className="p-2 rounded-lg bg-primary/10">
             <Award className="h-5 w-5 text-primary" />
-            <h3 className="font-semibold">QualiPV</h3>
           </div>
+          <h3 className="text-lg font-semibold text-white">Certifications</h3>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="flex items-center space-x-2">
-            <Switch
+            <Checkbox
+              id="qualiPV"
               checked={certifications.qualiPV}
-              onCheckedChange={() => handleToggle("qualiPV")}
+              onCheckedChange={(checked) => handleCheckboxChange('certifications.qualiPV', checked as boolean)}
             />
-            <Label>Certification QualiPV</Label>
-          </div>
-        </Card>
-
-        <Card className="p-6 space-y-4">
-          <div className="flex items-center gap-3">
-            <Award className="h-5 w-5 text-primary" />
-            <h3 className="font-semibold">RGE</h3>
+            <Label htmlFor="qualiPV" className="text-white">QualiPV</Label>
           </div>
           <div className="flex items-center space-x-2">
-            <Switch
+            <Checkbox
+              id="rge"
               checked={certifications.rge}
-              onCheckedChange={() => handleToggle("rge")}
+              onCheckedChange={(checked) => handleCheckboxChange('certifications.rge', checked as boolean)}
             />
-            <Label>Certification RGE</Label>
-          </div>
-        </Card>
-
-        <Card className="p-6 space-y-4">
-          <div className="flex items-center gap-3">
-            <Award className="h-5 w-5 text-primary" />
-            <h3 className="font-semibold">Qualibat</h3>
+            <Label htmlFor="rge" className="text-white">RGE</Label>
           </div>
           <div className="flex items-center space-x-2">
-            <Switch
+            <Checkbox
+              id="qualibat"
               checked={certifications.qualibat}
-              onCheckedChange={() => handleToggle("qualibat")}
+              onCheckedChange={(checked) => handleCheckboxChange('certifications.qualibat', checked as boolean)}
             />
-            <Label>Certification Qualibat</Label>
+            <Label htmlFor="qualibat" className="text-white">Qualibat</Label>
           </div>
-        </Card>
-      </div>
-
-      <Button type="submit" className="w-full md:w-auto">
-        <Save className="w-4 h-4 mr-2" />
-        Enregistrer les certifications
-      </Button>
-    </form>
-  );
-};
+        </div>
+      </Card>
+    </motion.div>
+  )
+}
