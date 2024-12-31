@@ -1,6 +1,14 @@
 import type { Json } from "@/integrations/supabase/types"
 
-export interface ProfileFormData {
+export interface VisibilityOptions {
+  showPhoneNumber: boolean
+  highlightProfile: boolean
+  acceptDirectMessages: boolean
+  showCertifications: boolean
+  [key: string]: boolean
+}
+
+export interface InstallerFormData {
   firstName: string
   lastName: string
   email: string
@@ -25,16 +33,10 @@ export interface ProfileFormData {
     industrial: boolean
   }
   maintenanceServices: boolean
-  address?: string
-  postal_code?: string
-}
-
-export interface VisibilityOptions {
-  showPhoneNumber: boolean
-  highlightProfile: boolean
-  acceptDirectMessages: boolean
-  showCertifications: boolean
-  [key: string]: boolean
+  address: string
+  postal_code: string
+  city?: string
+  visibility_settings: VisibilityOptions
 }
 
 export interface InstallerData {
@@ -48,7 +50,7 @@ export interface InstallerData {
   service_area: string[]
   credits: number
   verified: boolean
-  created_at: string
+  created_at?: string
   city?: string
   website?: string
   description?: string
@@ -64,4 +66,5 @@ export interface InstallerData {
   profile_views?: number
   conversion_rate?: number
   satisfied_clients?: number
+  siret?: string
 }

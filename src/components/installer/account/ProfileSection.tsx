@@ -1,23 +1,20 @@
 import { Button } from "@/components/ui/button"
 import { ProfileStats } from "@/components/installer/profile/ProfileStats"
-import { ProfileVisibilityOptions } from "@/components/installer/profile/ProfileVisibilityOptions"
-import { PremiumFeatures } from "@/components/installer/profile/PremiumFeatures"
 import { BasicInfoSection } from "@/components/installer/profile/sections/BasicInfoSection"
 import { SolarSpecificSection } from "@/components/installer/profile/sections/SolarSpecificSection"
 import { InterventionZonesSection } from "./sections/InterventionZonesSection"
 import { ProfileHeader } from "../profile/components/ProfileHeader"
-import { useProfileForm } from "../profile/hooks/useProfileForm"
+import { useInstallerData } from "../profile/hooks/useInstallerData"
+import { useInstallerForm } from "../profile/hooks/useInstallerForm"
 
 export const ProfileSection = () => {
+  const { formData, setFormData } = useInstallerData()
   const {
-    formData,
-    visibilityOptions,
     handleChange,
     handleCheckboxChange,
-    handleToggleChange,
     handleZonesChange,
     handleSubmit
-  } = useProfileForm()
+  } = useInstallerForm(formData, setFormData)
 
   return (
     <div className="space-y-6">
@@ -45,14 +42,6 @@ export const ProfileSection = () => {
           Enregistrer les modifications
         </Button>
       </form>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <PremiumFeatures />
-        <ProfileVisibilityOptions 
-          options={visibilityOptions}
-          onToggle={handleToggleChange}
-        />
-      </div>
     </div>
   )
 }

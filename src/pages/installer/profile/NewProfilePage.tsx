@@ -87,7 +87,17 @@ export const NewProfilePage = () => {
           </TabsContent>
 
           <TabsContent value="certifications">
-            <CertificationsSection data={profileData} />
+            <CertificationsSection
+              certifications={profileData?.certifications || {
+                qualiPV: false,
+                rge: false,
+                qualibat: false
+              }}
+              handleCheckboxChange={(field, checked) => {
+                // Handle certification changes
+                console.log(field, checked);
+              }}
+            />
           </TabsContent>
 
           <TabsContent value="zones">
