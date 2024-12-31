@@ -37,6 +37,7 @@ export const mockInstallers: DatabaseInstallerData[] = [
       acceptDirectMessages: true
     },
     credits: 100,
-    verified: true
+    verified: true,
+    created_at: new Date().toISOString()
   }
 ];

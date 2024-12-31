@@ -5,15 +5,30 @@ import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { mockInstallers } from "@/components/admin/mockData";
 import { DatabaseInstallerData } from "@/types/installer";
-import { MapPin, Phone, Mail, Globe, Award, CheckCircle } from "lucide-react";
+import { MapPin, Phone, Mail, Globe } from "lucide-react";
 
 const InstallerDirectory = () => {
   const [installers, setInstallers] = useState<DatabaseInstallerData[]>([]);
 
   useEffect(() => {
-    // Simulate fetching installers from an API or database
     setInstallers(mockInstallers);
   }, []);
+
+  const getCertifications = (certifications: any) => {
+    const certs = [];
+    if (certifications.qualiPV) certs.push("QualiPV");
+    if (certifications.rge) certs.push("RGE");
+    if (certifications.qualibat) certs.push("Qualibat");
+    return certs;
+  };
+
+  const getInstallationTypes = (types: any) => {
+    const installTypes = [];
+    if (types.residential) installTypes.push("Résidentiel");
+    if (types.commercial) installTypes.push("Commercial");
+    if (types.industrial) installTypes.push("Industriel");
+    return installTypes;
+  };
 
   return (
     <ScrollArea className="h-full">
@@ -29,7 +44,7 @@ const InstallerDirectory = () => {
                   <Badge>{installer.postal_code}</Badge>
                 </div>
               </div>
-              <div className="flex flex-col items-end">
+              <div className="flex flex-col items-end gap-2">
                 <Button variant="outline" className="flex items-center gap-1">
                   <Phone className="h-4 w-4" />
                   {installer.phone}
@@ -38,26 +53,28 @@ const InstallerDirectory = () => {
                   <Mail className="h-4 w-4" />
                   {installer.email}
                 </Button>
-                <Button variant="outline" className="flex items-center gap-1">
-                  <Globe className="h-4 w-4" />
-                  {installer.website}
-                </Button>
+                {installer.website && (
+                  <Button variant="outline" className="flex items-center gap-1">
+                    <Globe className="h-4 w-4" />
+                    {installer.website}
+                  </Button>
+                )}
               </div>
             </div>
             <div className="mt-4">
               <h4 className="font-medium">Certifications:</h4>
               <div className="flex gap-2">
-                {installer.certifications.qualiPV && <Badge>QualiPV</Badge>}
-                {installer.certifications.rge && <Badge>RGE</Badge>}
-                {installer.certifications.qualibat && <Badge>Qualibat</Badge>}
+                {getCertifications(installer.certifications).map((cert) => (
+                  <Badge key={cert}>{cert}</Badge>
+                ))}
               </div>
             </div>
             <div className="mt-4">
               <h4 className="font-medium">Services d'installation:</h4>
               <div className="flex gap-2">
-                {installer.installation_types.residential && <Badge>Résidentiel</Badge>}
-                {installer.installation_types.commercial && <Badge>Commercial</Badge>}
-                {installer.installation_types.industrial && <Badge>Industriel</Badge>}
+                {getInstallationTypes(installer.installation_types).map((type) => (
+                  <Badge key={type}>{type}</Badge>
+                ))}
               </div>
             </div>
             <div className="mt-4">
