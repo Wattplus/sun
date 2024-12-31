@@ -35,6 +35,7 @@ export const PurchasedLeadsPage = () => {
         return;
       }
 
+      // Vérifier si l'utilisateur a un profil installateur
       const { data: installerData, error: installerError } = await supabase
         .from("installers")
         .select("id")
@@ -53,6 +54,7 @@ export const PurchasedLeadsPage = () => {
         return;
       }
 
+      // Récupérer les leads achetés
       const { data, error } = await supabase
         .from("leads")
         .select("*")
@@ -93,7 +95,7 @@ export const PurchasedLeadsPage = () => {
             {error}
             {error === "Vous n'avez pas encore créé votre profil installateur" && (
               <Button 
-                onClick={() => navigate("/espace-installateur/mon-compte")}
+                onClick={() => navigate("/espace-installateur/profil")}
                 className="mt-4 w-full sm:w-auto"
                 variant="default"
               >

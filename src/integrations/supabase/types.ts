@@ -543,6 +543,12 @@ export type Database = {
         }
         Returns: undefined
       }
+      create_test_installer: {
+        Args: {
+          user_id: string
+        }
+        Returns: undefined
+      }
       deduct_credits: {
         Args: {
           amount: number
