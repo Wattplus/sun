@@ -1,22 +1,28 @@
 import { Lead } from "@/types/crm";
+import { differenceInDays } from "date-fns";
 
 export const calculateLeadPrice = (lead: Lead): number => {
-  const basePrice = 25;
-  let multiplier = 1;
-
-  // Add price modifiers based on lead properties
-  if (lead.projectType === 'professional') {
-    multiplier *= 1.5;
+  if (lead.clienttype === 'professional') {
+    return 49;
   }
 
-  // Add recency bonus (leads less than 24h old)
-  const leadDate = new Date(lead.created_at);
-  const now = new Date();
-  const hoursDiff = (now.getTime() - leadDate.getTime()) / (1000 * 60 * 60);
+  const daysOld = differenceInDays(new Date(), new Date(lead.created_at));
   
-  if (hoursDiff <= 24) {
-    multiplier *= 1.2;
+  if (daysOld >= 45) return 15;
+  if (daysOld >= 30) return 19;
+  if (daysOld >= 15) return 21;
+  return 26;
+};
+
+export const getLeadPriceId = (lead: Lead): string => {
+  if (lead.clienttype === 'professional') {
+    return 'price_1Qa0nUFOePj4Hv47Ih00CR8k'; // 49€
   }
 
-  return Math.round(basePrice * multiplier);
+  const daysOld = differenceInDays(new Date(), new Date(lead.created_at));
+  
+  if (daysOld >= 45) return 'price_1QbzyKFOePj4Hv47zISfJkUz'; // 15€
+  if (daysOld >= 30) return 'price_1QbzxlFOePj4Hv47XHGG9Vwt'; // 19€
+  if (daysOld >= 15) return 'price_1QbzwKFOePj4Hv47XHGG9Vwt'; // 21€
+  return 'price_1QaAlfFOePj4Hv475LWE2bGQ'; // 26€
 };

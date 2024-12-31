@@ -4,6 +4,7 @@ import { toast } from "sonner";
 import { useLeadsFetching } from "./leads/useLeadsFetching";
 import { useInstallerBalance } from "./installer/useInstallerBalance";
 import { supabase } from "@/integrations/supabase/client";
+import { differenceInDays } from "date-fns";
 
 export const useNewLeads = () => {
   const { leads } = useLeadsFetching();
@@ -14,9 +15,28 @@ export const useNewLeads = () => {
   const [selectedDepartments, setSelectedDepartments] = useState<string[]>([]);
   const [priceFilter, setPriceFilter] = useState<"default" | "asc" | "desc">("default");
 
+  const getLeadPrice = (createdAt: string) => {
+    const daysOld = differenceInDays(new Date(), new Date(createdAt));
+    if (daysOld >= 45) return 15;
+    if (daysOld >= 30) return 19;
+    if (daysOld >= 15) return 21;
+    return 26;
+  };
+
+  const getPriceId = (createdAt: string, isProLead: boolean) => {
+    if (isProLead) return 'price_1Qa0nUFOePj4Hv47Ih00CR8k'; // 49€ for pro leads
+    
+    const daysOld = differenceInDays(new Date(), new Date(createdAt));
+    if (daysOld >= 45) return 'price_1QbzyKFOePj4Hv47zISfJkUz'; // 15€
+    if (daysOld >= 30) return 'price_1QbzxlFOePj4Hv47XHGG9Vwt'; // 19€
+    if (daysOld >= 15) return 'price_1QbzwKFOePj4Hv47XHGG9Vwt'; // 21€
+    return 'price_1QaAlfFOePj4Hv475LWE2bGQ'; // 26€
+  };
+
   const calculateTotalPrice = () => {
     return selectedLeads.reduce((total, lead) => {
-      return total + (lead.clienttype === 'professional' ? 49 : 26);
+      if (lead.clienttype === 'professional') return total + 49;
+      return total + getLeadPrice(lead.created_at);
     }, 0);
   };
 
@@ -68,9 +88,7 @@ export const useNewLeads = () => {
           body: {
             leads: selectedLeads.map(lead => ({
               id: lead.id,
-              priceId: lead.clienttype === 'professional' 
-                ? 'price_1Qa0nUFOePj4Hv47Ih00CR8k'
-                : 'price_1QaAlfFOePj4Hv475LWE2bGQ',
+              priceId: getPriceId(lead.created_at, lead.clienttype === 'professional'),
               type: 'mutualise'
             }))
           }
@@ -112,5 +130,6 @@ export const useNewLeads = () => {
     handleSelectAll,
     handlePurchase,
     calculateTotalPrice,
+    getLeadPrice,
   };
 };
