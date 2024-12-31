@@ -36,10 +36,11 @@ export interface InstallerFormData {
   address: string
   postal_code: string
   city?: string
-  visibility_settings?: VisibilityOptions
+  visibility_settings: VisibilityOptions
 }
 
 export interface InstallerData {
+  id: string
   user_id: string
   company_name: string
   contact_name: string
@@ -65,4 +66,5 @@ export interface InstallerData {
   profile_views?: number
   conversion_rate?: number
   satisfied_clients?: number
+  siret?: string
 }

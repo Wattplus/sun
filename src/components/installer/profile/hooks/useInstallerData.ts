@@ -30,6 +30,7 @@ const defaultFormData: InstallerFormData = {
   maintenanceServices: false,
   address: "",
   postal_code: "",
+  city: "",
   visibility_settings: {
     showPhoneNumber: true,
     highlightProfile: false,
@@ -78,8 +79,8 @@ export const useInstallerData = () => {
             maintenanceServices: installer.maintenance_services || false,
             address: installer.address || "",
             postal_code: installer.postal_code || "",
-            city: installer.city,
-            visibility_settings: installer.visibility_settings as VisibilityOptions || defaultFormData.visibility_settings,
+            city: installer.city || "",
+            visibility_settings: (installer.visibility_settings as VisibilityOptions) || defaultFormData.visibility_settings,
           })
         }
       } catch (error) {
