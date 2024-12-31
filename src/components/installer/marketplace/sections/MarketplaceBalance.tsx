@@ -1,7 +1,16 @@
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Euro, CreditCard, Info, ShoppingCart, Wallet } from "lucide-react";
+import { 
+  Euro, 
+  CreditCard, 
+  Info, 
+  ShoppingCart, 
+  Wallet,
+  Building2,
+  Home,
+  Factory
+} from "lucide-react";
 import { Lead } from "@/types/crm";
 
 interface MarketplaceBalanceProps {
@@ -10,117 +19,94 @@ interface MarketplaceBalanceProps {
   onPurchase: () => void;
 }
 
-export const MarketplaceBalance = ({ 
-  balance, 
+export const MarketplaceBalance = ({
+  balance,
   selectedLeads,
-  onPurchase 
+  onPurchase
 }: MarketplaceBalanceProps) => {
-  const rechargeAmounts = [50, 100, 200, 500, 1000, 1500];
-  const totalPrice = selectedLeads.reduce((sum, lead) => sum + lead.price, 0);
+  const totalPrice = selectedLeads.reduce((sum, lead) => sum + (lead.price || 0), 0);
+  const hasEnoughBalance = balance >= totalPrice;
+
+  const getProjectIcon = (type: string) => {
+    switch (type) {
+      case 'residential':
+        return <Home className="h-4 w-4" />;
+      case 'professional':
+        return <Building2 className="h-4 w-4" />;
+      case 'industrial':
+        return <Factory className="h-4 w-4" />;
+      default:
+        return <Home className="h-4 w-4" />;
+    }
+  };
 
   return (
-    <>
+    <div className="space-y-4">
       <Card className="p-6 bg-background/50 backdrop-blur-sm border-primary/10">
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="p-3 rounded-full bg-primary/10">
-                <Euro className="h-5 w-5 text-primary" />
-              </div>
-              <div>
-                <p className="text-sm text-muted-foreground">Solde disponible</p>
-                <p className="text-3xl font-bold text-primary">{balance}€</p>
-              </div>
+            <div className="flex items-center gap-2">
+              <Wallet className="h-5 w-5 text-primary" />
+              <h3 className="text-lg font-medium">Solde disponible</h3>
             </div>
+            <span className="text-2xl font-bold">{balance}€</span>
           </div>
 
-          <div>
-            <p className="text-sm font-medium mb-3">Options de rechargement</p>
-            <div className="grid grid-cols-3 gap-2">
-              {rechargeAmounts.map((amount) => (
+          {selectedLeads.length > 0 && (
+            <div className="space-y-4 pt-4 border-t border-primary/10">
+              <div className="space-y-2">
+                {selectedLeads.map((lead) => (
+                  <div key={lead.id} className="flex items-center justify-between text-sm">
+                    <div className="flex items-center gap-2">
+                      {getProjectIcon(lead.clienttype)}
+                      <span>
+                        {lead.firstname} {lead.lastname} - {lead.postalcode}
+                      </span>
+                    </div>
+                    <Badge variant="outline" className="bg-primary/10">
+                      {lead.price}€
+                    </Badge>
+                  </div>
+                ))}
+              </div>
+
+              <div className="flex items-center justify-between pt-2 border-t border-primary/10">
+                <span className="font-medium">Total</span>
+                <span className="font-bold">{totalPrice}€</span>
+              </div>
+
+              <div className="space-y-2">
                 <Button
-                  key={amount}
-                  variant="outline"
-                  size="sm"
-                  className="w-full bg-primary/5 hover:bg-primary/10 border-primary/20"
+                  onClick={onPurchase}
+                  className="w-full"
+                  disabled={!hasEnoughBalance}
                 >
-                  {amount}€
+                  <ShoppingCart className="h-4 w-4 mr-2" />
+                  Acheter les leads
                 </Button>
-              ))}
-            </div>
-          </div>
-        </div>
-      </Card>
 
-      {selectedLeads.length > 0 && (
-        <Card className="p-6 bg-background/50 backdrop-blur-sm border-primary/10">
-          <div className="space-y-4">
-            <div className="flex items-center gap-2 text-primary">
-              <ShoppingCart className="h-5 w-5" />
-              <h3 className="font-medium">Panier ({selectedLeads.length})</h3>
-            </div>
-            <div className="space-y-2">
-              {selectedLeads.map(lead => (
-                <div key={lead.id} className="flex justify-between text-sm">
-                  <span>{lead.firstname} {lead.lastname}</span>
-                  <span className="font-medium">{lead.price}€</span>
+                {!hasEnoughBalance && (
+                  <div className="flex items-center gap-2 text-sm text-yellow-500">
+                    <Info className="h-4 w-4" />
+                    <span>Solde insuffisant</span>
+                  </div>
+                )}
+
+                <div className="flex gap-2">
+                  <Button variant="outline" className="w-full">
+                    <CreditCard className="h-4 w-4 mr-2" />
+                    Payer par carte
+                  </Button>
+                  <Button variant="outline" className="w-full">
+                    <Euro className="h-4 w-4 mr-2" />
+                    Compte prépayé
+                  </Button>
                 </div>
-              ))}
-              <div className="border-t border-primary/10 pt-2 mt-2 flex justify-between font-medium">
-                <span>Total</span>
-                <span className="text-primary">{totalPrice}€</span>
               </div>
             </div>
-            <div className="grid grid-cols-2 gap-2">
-              <Button 
-                variant="outline"
-                className="w-full bg-primary/10 hover:bg-primary/20 border-primary/20"
-                onClick={onPurchase}
-              >
-                <Wallet className="h-4 w-4 mr-2" />
-                Compte prépayé
-              </Button>
-              <Button 
-                variant="outline"
-                className="w-full bg-primary/10 hover:bg-primary/20 border-primary/20"
-                onClick={onPurchase}
-              >
-                <CreditCard className="h-4 w-4 mr-2" />
-                Carte bancaire
-              </Button>
-            </div>
-          </div>
-        </Card>
-      )}
-
-      <Card className="p-6 bg-background/50 backdrop-blur-sm border-primary/10">
-        <div className="space-y-4">
-          <div className="flex items-center gap-2 text-primary">
-            <Info className="h-5 w-5" />
-            <h3 className="font-medium">Pourquoi acheter ces leads ?</h3>
-          </div>
-          <ul className="space-y-3">
-            <li className="flex items-center gap-3">
-              <Badge variant="secondary" className="h-6 w-6 rounded-full p-1 bg-primary/10">
-                1
-              </Badge>
-              Leads qualifiés et vérifiés
-            </li>
-            <li className="flex items-center gap-3">
-              <Badge variant="secondary" className="h-6 w-6 rounded-full p-1 bg-primary/10">
-                2
-              </Badge>
-              Projets à fort potentiel
-            </li>
-            <li className="flex items-center gap-3">
-              <Badge variant="secondary" className="h-6 w-6 rounded-full p-1 bg-primary/10">
-                3
-              </Badge>
-              Contact rapide recommandé
-            </li>
-          </ul>
+          )}
         </div>
       </Card>
-    </>
+    </div>
   );
 };
