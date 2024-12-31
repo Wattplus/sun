@@ -3,20 +3,17 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Label } from "@/components/ui/label"
 import { Building2 } from "lucide-react"
 import { motion } from "framer-motion"
+import { InstallationTypes } from "@/types/installer"
 
 interface InstallationTypesSectionProps {
-  installationTypes: {
-    residential: boolean;
-    commercial: boolean;
-    industrial: boolean;
-  };
-  maintenanceServices: boolean;
+  installation_types: InstallationTypes;
+  maintenance_services: boolean;
   handleCheckboxChange: (field: string, checked: boolean) => void;
 }
 
 export const InstallationTypesSection = ({ 
-  installationTypes, 
-  maintenanceServices, 
+  installation_types, 
+  maintenance_services, 
   handleCheckboxChange 
 }: InstallationTypesSectionProps) => {
   return (
@@ -38,24 +35,24 @@ export const InstallationTypesSection = ({
             <div className="flex items-center space-x-2">
               <Checkbox
                 id="residential"
-                checked={installationTypes.residential}
-                onCheckedChange={(checked) => handleCheckboxChange('installationTypes.residential', checked as boolean)}
+                checked={installation_types.residential}
+                onCheckedChange={(checked) => handleCheckboxChange('installation_types.residential', checked as boolean)}
               />
               <Label htmlFor="residential" className="text-white">Résidentiel</Label>
             </div>
             <div className="flex items-center space-x-2">
               <Checkbox
                 id="commercial"
-                checked={installationTypes.commercial}
-                onCheckedChange={(checked) => handleCheckboxChange('installationTypes.commercial', checked as boolean)}
+                checked={installation_types.commercial}
+                onCheckedChange={(checked) => handleCheckboxChange('installation_types.commercial', checked as boolean)}
               />
               <Label htmlFor="commercial" className="text-white">Commercial</Label>
             </div>
             <div className="flex items-center space-x-2">
               <Checkbox
                 id="industrial"
-                checked={installationTypes.industrial}
-                onCheckedChange={(checked) => handleCheckboxChange('installationTypes.industrial', checked as boolean)}
+                checked={installation_types.industrial}
+                onCheckedChange={(checked) => handleCheckboxChange('installation_types.industrial', checked as boolean)}
               />
               <Label htmlFor="industrial" className="text-white">Industriel</Label>
             </div>
@@ -63,11 +60,11 @@ export const InstallationTypesSection = ({
 
           <div className="flex items-center space-x-2 pt-2">
             <Checkbox
-              id="maintenanceServices"
-              checked={maintenanceServices}
-              onCheckedChange={(checked) => handleCheckboxChange('maintenanceServices', checked as boolean)}
+              id="maintenance_services"
+              checked={maintenance_services}
+              onCheckedChange={(checked) => handleCheckboxChange('maintenance_services', checked as boolean)}
             />
-            <Label htmlFor="maintenanceServices" className="text-white">
+            <Label htmlFor="maintenance_services" className="text-white">
               Propose des services de maintenance et d'entretien
             </Label>
           </div>
