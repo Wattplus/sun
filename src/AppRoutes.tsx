@@ -1,17 +1,40 @@
 import { Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
-import Login from "./pages/Login";
 import Admin from "./pages/Admin";
 import ThankYou from "./pages/ThankYou";
 import InstallerSignup from "./pages/installer/InstallerSignup";
 import { InstallerDashboard } from "@/components/installer/InstallerDashboard";
+import { LeadManagement } from "@/components/admin/leads/LeadManagement";
+import { InstallerManagement } from "@/components/admin/InstallerManagement";
+import { ComplaintManagement } from "@/components/admin/complaints/ComplaintManagement";
+import { DataExport } from "@/components/admin/export/DataExport";
+import { NotificationsPage } from "@/components/admin/notifications/NotificationsPage";
+import { PricingSettings } from "@/components/admin/pricing/PricingSettings";
+import { ProfilePage } from "@/components/admin/profile/ProfilePage";
+import { SettingsPage } from "@/components/admin/settings/SettingsPage";
+import { StatisticsPage } from "@/components/admin/statistics/StatisticsPage";
+import { TransactionMonitoring } from "@/components/admin/transactions/TransactionMonitoring";
+import { UserManagement } from "@/components/admin/users/UserManagement";
+import { LeadMarketplace } from "@/components/admin/marketplace/LeadMarketplace";
 
 export const AppRoutes = () => {
   return (
     <Routes>
       <Route path="/" element={<Index />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/admin" element={<Admin />} />
+      <Route path="/admin" element={<Admin />}>
+        <Route path="leads" element={<LeadManagement />} />
+        <Route path="installers" element={<InstallerManagement />} />
+        <Route path="marketplace" element={<LeadMarketplace />} />
+        <Route path="users" element={<UserManagement />} />
+        <Route path="pricing" element={<PricingSettings />} />
+        <Route path="transactions" element={<TransactionMonitoring />} />
+        <Route path="complaints" element={<ComplaintManagement />} />
+        <Route path="export" element={<DataExport />} />
+        <Route path="notifications" element={<NotificationsPage />} />
+        <Route path="settings" element={<SettingsPage />} />
+        <Route path="profile" element={<ProfilePage />} />
+        <Route path="statistics" element={<StatisticsPage />} />
+      </Route>
       <Route path="/thank-you" element={<ThankYou />} />
       <Route path="/espace-installateur/inscription" element={<InstallerSignup />} />
       <Route path="/espace-installateur" element={<InstallerDashboard />} />
