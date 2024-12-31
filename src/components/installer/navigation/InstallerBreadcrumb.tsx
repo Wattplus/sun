@@ -46,7 +46,7 @@ export const InstallerBreadcrumb = () => {
             className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors"
           >
             <span className="flex items-center">
-              <Home className="h-4 w-4" />
+              <Home size={16} />
             </span>
             <span className="hidden sm:inline">Accueil</span>
           </Link>
@@ -61,7 +61,7 @@ export const InstallerBreadcrumb = () => {
             <React.Fragment key={path}>
               <BreadcrumbSeparator>
                 <span className="flex items-center">
-                  <ChevronRight className="h-4 w-4" />
+                  <ChevronRight size={16} />
                 </span>
               </BreadcrumbSeparator>
               <BreadcrumbItem>
@@ -69,7 +69,7 @@ export const InstallerBreadcrumb = () => {
                   <BreadcrumbPage className="font-medium flex items-center gap-2">
                     {Icon && (
                       <span className="flex items-center">
-                        <Icon className="h-4 w-4" />
+                        <Icon size={16} />
                       </span>
                     )}
                     {breadcrumbTitles[segment] || segment}
@@ -81,7 +81,7 @@ export const InstallerBreadcrumb = () => {
                   >
                     {Icon && (
                       <span className="flex items-center">
-                        <Icon className="h-4 w-4" />
+                        <Icon size={16} />
                       </span>
                     )}
                     {breadcrumbTitles[segment] || segment}
