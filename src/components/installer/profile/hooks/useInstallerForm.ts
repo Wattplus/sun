@@ -1,27 +1,54 @@
-import { useState } from "react"
-import { supabase } from "@/integrations/supabase/client"
-import { useToast } from "@/hooks/use-toast"
-import type { InstallerFormData, VisibilitySettings } from "../types/installer"
-import type { Json } from "@/integrations/supabase/types"
+import { useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
+import { InstallerFormData } from "../types/installer.types";
 
-export const useInstallerForm = (formData: InstallerFormData, setFormData: (data: InstallerFormData) => void) => {
-  const { toast } = useToast()
-  const [loading, setLoading] = useState(false)
+export const useInstallerForm = (
+  formData: InstallerFormData, 
+  setFormData: (data: InstallerFormData) => void
+) => {
+  const { toast } = useToast();
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
       ...formData,
       [e.target.id]: e.target.value,
-    })
-  }
+    });
+  };
+
+  const handleCheckboxChange = (field: string, checked: boolean) => {
+    if (field.includes('.')) {
+      const [category, item] = field.split('.');
+      setFormData(prev => ({
+        ...prev,
+        [category]: {
+          ...(prev[category as keyof typeof prev] as Record<string, boolean>),
+          [item]: checked
+        }
+      }));
+    } else {
+      setFormData(prev => ({
+        ...prev,
+        [field]: checked
+      }));
+    }
+  };
+
+  const handleZonesChange = (zones: string[]) => {
+    setFormData(prev => ({
+      ...prev,
+      service_area: zones
+    }));
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setLoading(true)
+    e.preventDefault();
+    setLoading(true);
 
     try {
-      const { data: { user } } = await supabase.auth.getUser()
-      if (!user) throw new Error("User not found")
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error("User not found");
 
       const installerData = {
         user_id: user.id,
@@ -35,41 +62,43 @@ export const useInstallerForm = (formData: InstallerFormData, setFormData: (data
         inverter_brands: formData.inverterBrands.split(',').map(brand => brand.trim()),
         warranty_years: parseInt(formData.guaranteeYears) || null,
         service_area: formData.service_area,
-        certifications: formData.certifications as Json,
-        installation_types: formData.installationTypes as Json,
+        certifications: formData.certifications,
+        installation_types: formData.installationTypes,
         maintenance_services: formData.maintenanceServices,
         address: formData.address,
         postal_code: formData.postal_code,
         city: formData.city,
         siret: formData.siret,
-        visibility_settings: formData.visibility_settings as Json
-      }
+        visibility_settings: formData.visibility_settings
+      };
 
       const { error } = await supabase
         .from('installers')
-        .upsert([installerData])
+        .upsert([installerData]);
 
-      if (error) throw error
+      if (error) throw error;
 
       toast({
         title: "Succès",
         description: "Votre profil a été mis à jour avec succès",
-      })
+      });
     } catch (error) {
-      console.error('Error updating installer:', error)
+      console.error('Error updating installer:', error);
       toast({
         title: "Erreur",
         description: "Une erreur est survenue lors de la mise à jour du profil",
         variant: "destructive"
-      })
+      });
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   return {
     handleChange,
+    handleCheckboxChange,
+    handleZonesChange,
     handleSubmit,
     loading
-  }
-}
+  };
+};
