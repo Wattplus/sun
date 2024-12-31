@@ -4,17 +4,17 @@ import Admin from "./pages/Admin";
 import ThankYou from "./pages/ThankYou";
 import InstallerSignup from "./pages/installer/InstallerSignup";
 import { InstallerDashboard } from "@/components/installer/InstallerDashboard";
-import { LeadManagement } from "@/components/admin/leads/LeadManagement";
-import { InstallerManagement } from "@/components/admin/InstallerManagement";
-import { ComplaintManagement } from "@/components/admin/complaints/ComplaintManagement";
-import { DataExport } from "@/components/admin/export/DataExport";
-import { NotificationsPage } from "@/components/admin/notifications/NotificationsPage";
-import { PricingSettings } from "@/components/admin/pricing/PricingSettings";
-import { ProfilePage } from "@/components/admin/profile/ProfilePage";
-import { SettingsPage } from "@/components/admin/settings/SettingsPage";
-import { StatisticsPage } from "@/components/admin/statistics/StatisticsPage";
-import { TransactionMonitoring } from "@/components/admin/transactions/TransactionMonitoring";
-import { UserManagement } from "@/components/admin/users/UserManagement";
+import LeadManagement from "@/components/admin/LeadManagement";
+import InstallerManagement from "@/components/admin/InstallerManagement";
+import ComplaintManagement from "@/components/admin/complaints/ComplaintManagement";
+import DataExport from "@/components/admin/export/DataExport";
+import NotificationsPage from "@/components/admin/notifications/NotificationsPage";
+import PricingSettings from "@/components/admin/pricing/PricingSettings";
+import ProfilePage from "@/components/admin/profile/ProfilePage";
+import SettingsPage from "@/components/admin/settings/SettingsPage";
+import StatisticsPage from "@/components/admin/statistics/StatisticsPage";
+import TransactionMonitoring from "@/components/admin/transactions/TransactionMonitoring";
+import UserManagement from "@/components/admin/users/UserManagement";
 import { LeadMarketplace } from "@/components/admin/marketplace/LeadMarketplace";
 
 export const AppRoutes = () => {
