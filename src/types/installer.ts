@@ -11,6 +11,7 @@ export interface VisibilitySettings {
   highlightProfile: boolean;
   showCertifications: boolean;
   acceptDirectMessages: boolean;
+  [key: string]: boolean;
 }
 
 export interface Certifications {
@@ -56,11 +57,14 @@ export interface DatabaseInstallerData {
 }
 
 export interface InstallerFormData {
-  company_name: string;
-  contact_name: string;
+  firstName: string;
+  lastName: string;
+  company: string;
   email: string;
   phone: string;
   siret: string;
+  company_name: string;
+  contact_name: string;
   address: string;
   postal_code: string;
   city: string;
@@ -75,17 +79,21 @@ export interface InstallerFormData {
   installation_types: InstallationTypes;
   maintenance_services: boolean;
   visibility_settings: VisibilitySettings;
-  firstName?: string;
-  lastName?: string;
-  company?: string;
+  experience: string;
+  panelBrands: string;
+  inverterBrands: string;
+  guaranteeYears: string;
 }
 
 export const defaultFormData: InstallerFormData = {
-  company_name: "",
-  contact_name: "",
+  firstName: "",
+  lastName: "",
+  company: "",
   email: "",
   phone: "",
   siret: "",
+  company_name: "",
+  contact_name: "",
   address: "",
   postal_code: "",
   city: "",
@@ -113,23 +121,27 @@ export const defaultFormData: InstallerFormData = {
     showCertifications: true,
     acceptDirectMessages: true
   },
-  firstName: "",
-  lastName: "",
-  company: ""
+  experience: "",
+  panelBrands: "",
+  inverterBrands: "",
+  guaranteeYears: ""
 };
 
 export function transformDatabaseToForm(data: DatabaseInstallerData): InstallerFormData {
   const [firstName = "", lastName = ""] = data.contact_name.split(" ");
   
   return {
-    company_name: data.company_name,
-    contact_name: data.contact_name,
+    firstName,
+    lastName,
+    company: data.company_name,
     email: data.email,
     phone: data.phone,
     siret: data.siret,
+    company_name: data.company_name,
+    contact_name: data.contact_name,
     address: data.address,
     postal_code: data.postal_code,
-    city: data.city,
+    city: data.city || "",
     website: data.website || "",
     description: data.description || "",
     experience_years: data.experience_years || 0,
@@ -141,17 +153,18 @@ export function transformDatabaseToForm(data: DatabaseInstallerData): InstallerF
     installation_types: data.installation_types,
     maintenance_services: data.maintenance_services,
     visibility_settings: data.visibility_settings,
-    firstName,
-    lastName,
-    company: data.company_name
+    experience: String(data.experience_years || ""),
+    panelBrands: (data.panel_brands || []).join(", "),
+    inverterBrands: (data.inverter_brands || []).join(", "),
+    guaranteeYears: String(data.warranty_years || "")
   };
 }
 
-export function transformFormToDatabase(formData: InstallerFormData): Omit<DatabaseInstallerData, "id"> {
+export function transformFormToDatabase(formData: InstallerFormData): DatabaseInstallerData {
   return {
     user_id: "", // This should be set by the caller
     company_name: formData.company_name,
-    contact_name: `${formData.firstName} ${formData.lastName}`.trim() || formData.contact_name,
+    contact_name: `${formData.firstName} ${formData.lastName}`.trim(),
     email: formData.email,
     phone: formData.phone,
     siret: formData.siret,
@@ -160,10 +173,10 @@ export function transformFormToDatabase(formData: InstallerFormData): Omit<Datab
     city: formData.city,
     website: formData.website,
     description: formData.description,
-    experience_years: formData.experience_years,
-    panel_brands: formData.panel_brands,
-    inverter_brands: formData.inverter_brands,
-    warranty_years: formData.warranty_years,
+    experience_years: Number(formData.experience) || formData.experience_years,
+    panel_brands: formData.panelBrands.split(",").map(s => s.trim()),
+    inverter_brands: formData.inverterBrands.split(",").map(s => s.trim()),
+    warranty_years: Number(formData.guaranteeYears) || formData.warranty_years,
     service_area: formData.service_area,
     certifications: formData.certifications,
     installation_types: formData.installation_types,
