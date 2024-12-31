@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react"
 import { supabase } from "@/integrations/supabase/client"
-import { ProfileFormData, VisibilityOptions } from "../types/profile"
+import { ProfileFormData, VisibilityOptions, Certifications, InstallationTypes } from "../types/profile"
 import { useToast } from "@/hooks/use-toast"
 
 const defaultFormData: ProfileFormData = {
@@ -58,6 +58,9 @@ export const useProfileForm = () => {
 
         if (installer) {
           const [firstName, lastName] = (installer.contact_name || "").split(" ")
+          const certifications = installer.certifications as Certifications
+          const installation_types = installer.installation_types as InstallationTypes
+          const visibility_settings = installer.visibility_settings as VisibilityOptions
           
           setFormData({
             firstName: firstName || "",
@@ -73,13 +76,13 @@ export const useProfileForm = () => {
             inverterBrands: Array.isArray(installer.inverter_brands) ? installer.inverter_brands.join(', ') : "",
             guaranteeYears: installer.warranty_years?.toString() || "",
             service_area: installer.service_area || [],
-            certifications: installer.certifications as ProfileFormData['certifications'] || defaultFormData.certifications,
-            installationTypes: installer.installation_types as ProfileFormData['installationTypes'] || defaultFormData.installationTypes,
+            certifications,
+            installationTypes: installation_types,
             maintenanceServices: installer.maintenance_services || false,
           })
 
           if (installer.visibility_settings) {
-            setVisibilityOptions(installer.visibility_settings as VisibilityOptions)
+            setVisibilityOptions(visibility_settings)
           }
         }
       } catch (error) {
@@ -105,33 +108,33 @@ export const useProfileForm = () => {
   const handleCheckboxChange = (field: string, checked: boolean) => {
     if (field.includes('.')) {
       const [category, item] = field.split('.')
-      setFormData({
-        ...formData,
+      setFormData(prev => ({
+        ...prev,
         [category]: {
-          ...formData[category as keyof ProfileFormData],
+          ...prev[category as keyof ProfileFormData],
           [item]: checked
         }
-      })
+      }))
     } else {
-      setFormData({
-        ...formData,
+      setFormData(prev => ({
+        ...prev,
         [field]: checked
-      })
+      }))
     }
   }
 
   const handleToggleChange = (field: keyof VisibilityOptions, checked: boolean) => {
-    setVisibilityOptions({
-      ...visibilityOptions,
+    setVisibilityOptions(prev => ({
+      ...prev,
       [field]: checked,
-    })
+    }))
   }
 
   const handleZonesChange = (zones: string[]) => {
-    setFormData({
-      ...formData,
+    setFormData(prev => ({
+      ...prev,
       service_area: zones
-    })
+    }))
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -140,33 +143,25 @@ export const useProfileForm = () => {
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) throw new Error("User not found")
 
-      const { data: installer, error: installerError } = await supabase
-        .from('installers')
-        .select()
-        .eq('user_id', user.id)
-        .single()
-
-      if (installerError) throw installerError
-
       const { error: updateError } = await supabase
         .from('installers')
         .update({
-          service_area: formData.service_area,
-          company_name: formData.company,
           contact_name: `${formData.firstName} ${formData.lastName}`,
           phone: formData.phone,
+          company_name: formData.company,
           website: formData.website,
           description: formData.description,
           experience_years: parseInt(formData.experience),
           panel_brands: formData.panelBrands.split(',').map(brand => brand.trim()),
           inverter_brands: formData.inverterBrands.split(',').map(brand => brand.trim()),
           warranty_years: parseInt(formData.guaranteeYears),
+          service_area: formData.service_area,
           certifications: formData.certifications,
           installation_types: formData.installationTypes,
           maintenance_services: formData.maintenanceServices,
           visibility_settings: visibilityOptions
         })
-        .eq('id', installer.id)
+        .eq('user_id', user.id)
 
       if (updateError) throw updateError
 

@@ -1,10 +1,3 @@
-export interface VisibilityOptions {
-  showPhoneNumber: boolean;
-  highlightProfile: boolean;
-  acceptDirectMessages: boolean;
-  showCertifications: boolean;
-}
-
 export interface Certifications {
   qualiPV: boolean;
   rge: boolean;
@@ -15,6 +8,13 @@ export interface InstallationTypes {
   residential: boolean;
   commercial: boolean;
   industrial: boolean;
+}
+
+export interface VisibilityOptions {
+  showPhoneNumber: boolean;
+  highlightProfile: boolean;
+  acceptDirectMessages: boolean;
+  showCertifications: boolean;
 }
 
 export interface ProfileFormData {
