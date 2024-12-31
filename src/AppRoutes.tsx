@@ -21,10 +21,12 @@ import { InstallerLayout } from "@/components/installer/navigation/InstallerLayo
 import { MarketplacePage } from "@/components/installer/marketplace/MarketplacePage"
 import { PurchasedLeadsPage } from "@/components/installer/leads/PurchasedLeadsPage"
 import { SettingsPage as InstallerSettingsPage } from "@/components/installer/settings/SettingsPage"
+import { Index } from "@/pages/Index"
 
 export const AppRoutes = () => {
   return (
     <Routes>
+      <Route path="/" element={<Index />} />
       <Route path="/login" element={<Login />} />
       <Route path="/connexion-installateur" element={<InstallerLogin />} />
       <Route path="/devenir-installateur" element={<InstallerSignup />} />
