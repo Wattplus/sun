@@ -1,6 +1,6 @@
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Euro, RefreshCw } from "lucide-react";
+import { Euro, RefreshCw, TrendingUp } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { motion } from "framer-motion";
 import { QuickTopUpButtons } from "./prepaid/QuickTopUpButtons";
@@ -69,6 +69,10 @@ export const PrepaidBalance = ({ balance = 0 }: PrepaidBalanceProps) => {
                 </span>
                 <span className="text-2xl font-semibold text-white/80">€</span>
               </motion.div>
+              <div className="flex items-center gap-2 mt-2">
+                <TrendingUp className="h-4 w-4 text-emerald-400" />
+                <span className="text-sm text-emerald-400">+15% ce mois</span>
+              </div>
             </div>
             <Button
               variant="outline"
