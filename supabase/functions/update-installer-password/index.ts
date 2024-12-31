@@ -26,13 +26,25 @@ Deno.serve(async (req) => {
     // Verify the request is authenticated
     const authHeader = req.headers.get('Authorization')
     if (!authHeader) {
-      throw new Error('No authorization header')
+      return new Response(
+        JSON.stringify({ error: 'No authorization header' }),
+        { 
+          status: 401,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        }
+      )
     }
 
     const { email, password } = await req.json()
 
     if (!email || !password) {
-      throw new Error('Email and password are required')
+      return new Response(
+        JSON.stringify({ error: 'Email and password are required' }),
+        { 
+          status: 400,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        }
+      )
     }
 
     // Get user by email
@@ -40,7 +52,13 @@ Deno.serve(async (req) => {
     
     if (getUserError || !user) {
       console.error('Error getting user:', getUserError)
-      throw new Error('User not found')
+      return new Response(
+        JSON.stringify({ error: 'User not found' }),
+        { 
+          status: 404,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        }
+      )
     }
 
     // Update the user's password
@@ -51,7 +69,13 @@ Deno.serve(async (req) => {
 
     if (updateError) {
       console.error('Error updating password:', updateError)
-      throw updateError
+      return new Response(
+        JSON.stringify({ error: updateError.message }),
+        { 
+          status: 400,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        }
+      )
     }
 
     return new Response(
@@ -67,7 +91,7 @@ Deno.serve(async (req) => {
       JSON.stringify({ error: error.message }),
       {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        status: 400,
+        status: 500,
       }
     )
   }

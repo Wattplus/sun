@@ -48,7 +48,10 @@ export function ChangePasswordDialog({ open, onOpenChange }: ChangePasswordDialo
         body: { email, password }
       })
 
-      if (error) throw error
+      if (error) {
+        console.error("Function error:", error)
+        throw new Error(error.message || "Erreur lors de la mise à jour du mot de passe")
+      }
 
       toast.success("Mot de passe mis à jour avec succès")
       onOpenChange(false)
