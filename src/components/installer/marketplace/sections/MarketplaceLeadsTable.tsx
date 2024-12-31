@@ -19,14 +19,23 @@ export const MarketplaceLeadsTable = ({
 }: MarketplaceLeadsTableProps) => {
   const getProjectIcon = (clientType: string) => {
     switch (clientType) {
-      case 'residential':
-        return <Home className="h-4 w-4" />;
       case 'professional':
         return <Building2 className="h-4 w-4" />;
       case 'industrial':
         return <Factory className="h-4 w-4" />;
       default:
         return <Home className="h-4 w-4" />;
+    }
+  };
+
+  const getClientTypeLabel = (clientType: string) => {
+    switch (clientType) {
+      case 'professional':
+        return 'Professionnel';
+      case 'industrial':
+        return 'Industriel';
+      default:
+        return 'Résidentiel';
     }
   };
 
@@ -62,8 +71,7 @@ export const MarketplaceLeadsTable = ({
                   <Badge variant="outline" className="flex items-center gap-2 bg-primary/10 text-primary">
                     {getProjectIcon(lead.clienttype)}
                     <span>
-                      {lead.clienttype === 'professional' ? 'Professionnel' : 
-                       lead.clienttype === 'industrial' ? 'Industriel' : 'Résidentiel'}
+                      {getClientTypeLabel(lead.clienttype)}
                     </span>
                   </Badge>
                 </TableCell>
