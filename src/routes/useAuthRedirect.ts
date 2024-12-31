@@ -15,6 +15,20 @@ export const useAuthRedirect = () => {
           return
         }
 
+        // Vérifier si l'utilisateur est un installateur
+        const { data: installer } = await supabase
+          .from('installers')
+          .select()
+          .eq('user_id', session.user.id)
+          .maybeSingle()
+
+        if (installer) {
+          console.log("Installer found, redirecting to installer dashboard")
+          navigate('/espace-installateur')
+          return
+        }
+
+        // Vérifier le rôle dans la table profiles
         const { data: profile } = await supabase
           .from('profiles')
           .select('role')
@@ -29,18 +43,6 @@ export const useAuthRedirect = () => {
         // Redirection basée sur le rôle
         if (profile.role === 'admin' || profile.role === 'super_admin') {
           navigate('/admin/leads')
-          return
-        }
-
-        // Vérifier si l'utilisateur est un installateur
-        const { data: installer } = await supabase
-          .from('installers')
-          .select()
-          .eq('user_id', session.user.id)
-          .maybeSingle()
-
-        if (installer) {
-          navigate('/espace-installateur')
         } else {
           navigate('/')
         }
@@ -57,6 +59,19 @@ export const useAuthRedirect = () => {
       
       if (event === 'SIGNED_IN' && session) {
         try {
+          // Vérifier d'abord si l'utilisateur est un installateur
+          const { data: installer } = await supabase
+            .from('installers')
+            .select()
+            .eq('user_id', session.user.id)
+            .maybeSingle()
+
+          if (installer) {
+            console.log("Installer found, redirecting to installer dashboard")
+            navigate('/espace-installateur')
+            return
+          }
+
           const { data: profile } = await supabase
             .from('profiles')
             .select('role')
@@ -68,21 +83,9 @@ export const useAuthRedirect = () => {
             return
           }
 
-          // Redirection basée sur le rôle après connexion
+          // Redirection basée sur le rôle
           if (profile.role === 'admin' || profile.role === 'super_admin') {
             navigate('/admin/leads')
-            return
-          }
-
-          // Vérifier si l'utilisateur est un installateur
-          const { data: installer } = await supabase
-            .from('installers')
-            .select()
-            .eq('user_id', session.user.id)
-            .maybeSingle()
-
-          if (installer) {
-            navigate('/espace-installateur')
           } else {
             navigate('/')
           }
