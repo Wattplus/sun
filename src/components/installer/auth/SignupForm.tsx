@@ -6,10 +6,12 @@ import { Card } from "@/components/ui/card"
 import { toast } from "sonner"
 import { motion } from "framer-motion"
 import { InstallerFormFields } from "./form/InstallerFormFields"
+import { Alert, AlertDescription } from "@/components/ui/alert"
 
 export const SignupForm = () => {
   const navigate = useNavigate()
   const [loading, setLoading] = useState(false)
+  const [userExists, setUserExists] = useState(false)
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -29,11 +31,16 @@ export const SignupForm = () => {
       ...formData,
       [e.target.id]: e.target.value,
     })
+    // Reset the userExists error when they change the email
+    if (e.target.id === "email") {
+      setUserExists(false)
+    }
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
+    setUserExists(false)
 
     try {
       if (formData.password !== formData.confirmPassword) {
@@ -45,7 +52,14 @@ export const SignupForm = () => {
         password: formData.password,
       })
 
-      if (authError) throw authError
+      if (authError) {
+        if (authError.message.includes("already registered")) {
+          setUserExists(true)
+          throw new Error("Un compte existe déjà avec cette adresse email")
+        }
+        throw authError
+      }
+      
       if (!authData.user) throw new Error("Erreur lors de la création du compte")
 
       const { error: installerError } = await supabase
@@ -102,6 +116,21 @@ export const SignupForm = () => {
       transition={{ delay: 0.3 }}
     >
       <Card className="p-8 bg-card/50 backdrop-blur-sm border-primary/20">
+        {userExists && (
+          <Alert className="mb-6 bg-primary/5 border-primary/20">
+            <AlertDescription className="text-primary">
+              Un compte existe déjà avec cette adresse email.{" "}
+              <Button 
+                variant="link" 
+                className="p-0 text-primary hover:text-primary-light h-auto font-semibold"
+                onClick={() => navigate("/login")}
+              >
+                Se connecter
+              </Button>
+            </AlertDescription>
+          </Alert>
+        )}
+
         <form onSubmit={handleSubmit} className="space-y-4">
           <InstallerFormFields formData={formData} handleChange={handleChange} />
 
