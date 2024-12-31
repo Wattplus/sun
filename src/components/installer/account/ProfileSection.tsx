@@ -2,13 +2,13 @@ import { useState, useEffect } from "react"
 import { useToast } from "@/hooks/use-toast"
 import { supabase } from "@/lib/supabase-client"
 import { useNavigate } from "react-router-dom"
-import { ProfileHeader } from "./sections/ProfileHeader"
 import { ProfileForm } from "./sections/ProfileForm"
 import { InterventionZonesSection } from "./sections/InterventionZonesSection"
 import { Card } from "@/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
-import { Camera } from "lucide-react"
+import { Camera, User, MapPin, Building2, Phone, Mail, Globe } from "lucide-react"
+import { motion } from "framer-motion"
 
 export const ProfileSection = () => {
   const { toast } = useToast()
@@ -80,7 +80,6 @@ export const ProfileSection = () => {
   }
 
   const handleZonesChange = (zones: string[]) => {
-    console.log("Updating zones:", zones)
     setFormData(prev => ({
       ...prev,
       service_area: zones
@@ -140,14 +139,14 @@ export const ProfileSection = () => {
   }
 
   return (
-    <div className="space-y-6">
-      {/* En-tête du profil avec avatar */}
-      <Card className="p-6 bg-secondary/80 backdrop-blur-sm border-primary/20">
-        <div className="flex items-center gap-6">
+    <div className="max-w-5xl mx-auto space-y-8">
+      {/* Header Card with Profile Overview */}
+      <Card className="p-8 bg-gradient-to-br from-background/80 to-background/60 backdrop-blur-lg border-primary/20">
+        <div className="flex flex-col md:flex-row items-start md:items-center gap-6">
           <div className="relative">
-            <Avatar className="h-24 w-24">
+            <Avatar className="h-24 w-24 border-2 border-primary/20">
               <AvatarImage src="/placeholder.svg" />
-              <AvatarFallback>
+              <AvatarFallback className="bg-primary/10">
                 {formData.firstName && formData.lastName 
                   ? `${formData.firstName[0]}${formData.lastName[0]}`
                   : "IN"}
@@ -156,7 +155,7 @@ export const ProfileSection = () => {
             <Button
               size="icon"
               variant="outline"
-              className="absolute bottom-0 right-0 bg-secondary hover:bg-secondary-dark"
+              className="absolute bottom-0 right-0 bg-background/80 hover:bg-background border-primary/20"
               onClick={() => {
                 toast({
                   title: "Fonctionnalité à venir",
@@ -167,28 +166,75 @@ export const ProfileSection = () => {
               <Camera className="h-4 w-4" />
             </Button>
           </div>
-          <div>
-            <h2 className="text-2xl font-bold text-white">{formData.company || "Votre entreprise"}</h2>
-            <p className="text-white/60">{formData.description || "Ajoutez une description de votre entreprise"}</p>
+          
+          <div className="flex-1 space-y-2">
+            <h2 className="text-2xl font-bold text-gradient">{formData.company || "Votre entreprise"}</h2>
+            <p className="text-muted-foreground">{formData.description || "Ajoutez une description de votre entreprise"}</p>
+            
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <User className="h-4 w-4 text-primary" />
+                <span>{formData.firstName} {formData.lastName}</span>
+              </div>
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <MapPin className="h-4 w-4 text-primary" />
+                <span>Sainte-Luce-sur-Loire, 44980</span>
+              </div>
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <Building2 className="h-4 w-4 text-primary" />
+                <span>{formData.siret || "SIRET non renseigné"}</span>
+              </div>
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <Phone className="h-4 w-4 text-primary" />
+                <span>{formData.phone || "Téléphone non renseigné"}</span>
+              </div>
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <Mail className="h-4 w-4 text-primary" />
+                <span>{formData.email}</span>
+              </div>
+              {formData.website && (
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <Globe className="h-4 w-4 text-primary" />
+                  <span>{formData.website}</span>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </Card>
 
       <form onSubmit={handleSubmit} className="space-y-6">
-        <ProfileForm formData={formData} handleChange={handleChange} />
-        
-        <InterventionZonesSection 
-          selectedZones={formData.service_area}
-          onZonesChange={handleZonesChange}
-        />
-
-        <Button 
-          type="submit" 
-          className="w-full md:w-auto"
-          disabled={isLoading}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
         >
-          {isLoading ? "Enregistrement..." : "Enregistrer les modifications"}
-        </Button>
+          <ProfileForm 
+            formData={formData} 
+            handleChange={handleChange}
+          />
+        </motion.div>
+        
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+        >
+          <InterventionZonesSection 
+            selectedZones={formData.service_area}
+            onZonesChange={handleZonesChange}
+          />
+        </motion.div>
+
+        <div className="flex justify-end">
+          <Button 
+            type="submit" 
+            className="w-full md:w-auto"
+            disabled={isLoading}
+          >
+            {isLoading ? "Enregistrement..." : "Enregistrer les modifications"}
+          </Button>
+        </div>
       </form>
     </div>
   )
