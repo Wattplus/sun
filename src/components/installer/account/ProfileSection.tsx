@@ -4,6 +4,11 @@ import { supabase } from "@/lib/supabase-client"
 import { useNavigate } from "react-router-dom"
 import { ProfileHeader } from "./sections/ProfileHeader"
 import { ProfileForm } from "./sections/ProfileForm"
+import { InterventionZonesSection } from "./sections/InterventionZonesSection"
+import { Card } from "@/components/ui/card"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Button } from "@/components/ui/button"
+import { Camera } from "lucide-react"
 
 export const ProfileSection = () => {
   const { toast } = useToast()
@@ -74,6 +79,14 @@ export const ProfileSection = () => {
     })
   }
 
+  const handleZonesChange = (zones: string[]) => {
+    console.log("Updating zones:", zones)
+    setFormData(prev => ({
+      ...prev,
+      service_area: zones
+    }))
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
@@ -128,16 +141,55 @@ export const ProfileSection = () => {
 
   return (
     <div className="space-y-6">
-      <ProfileHeader 
-        company={formData.company}
-        description={formData.description}
-      />
-      <ProfileForm
-        formData={formData}
-        handleChange={handleChange}
-        handleSubmit={handleSubmit}
-        isLoading={isLoading}
-      />
+      {/* En-tête du profil avec avatar */}
+      <Card className="p-6 bg-secondary/80 backdrop-blur-sm border-primary/20">
+        <div className="flex items-center gap-6">
+          <div className="relative">
+            <Avatar className="h-24 w-24">
+              <AvatarImage src="/placeholder.svg" />
+              <AvatarFallback>
+                {formData.firstName && formData.lastName 
+                  ? `${formData.firstName[0]}${formData.lastName[0]}`
+                  : "IN"}
+              </AvatarFallback>
+            </Avatar>
+            <Button
+              size="icon"
+              variant="outline"
+              className="absolute bottom-0 right-0 bg-secondary hover:bg-secondary-dark"
+              onClick={() => {
+                toast({
+                  title: "Fonctionnalité à venir",
+                  description: "Le changement d'avatar sera bientôt disponible",
+                })
+              }}
+            >
+              <Camera className="h-4 w-4" />
+            </Button>
+          </div>
+          <div>
+            <h2 className="text-2xl font-bold text-white">{formData.company || "Votre entreprise"}</h2>
+            <p className="text-white/60">{formData.description || "Ajoutez une description de votre entreprise"}</p>
+          </div>
+        </div>
+      </Card>
+
+      <form onSubmit={handleSubmit} className="space-y-6">
+        <ProfileForm formData={formData} handleChange={handleChange} />
+        
+        <InterventionZonesSection 
+          selectedZones={formData.service_area}
+          onZonesChange={handleZonesChange}
+        />
+
+        <Button 
+          type="submit" 
+          className="w-full md:w-auto"
+          disabled={isLoading}
+        >
+          {isLoading ? "Enregistrement..." : "Enregistrer les modifications"}
+        </Button>
+      </form>
     </div>
   )
 }
