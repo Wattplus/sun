@@ -1,4 +1,5 @@
-import AdminDashboard from "@/components/admin/AdminDashboard"
+import { Outlet } from "react-router-dom"
+import { AdminNavigation } from "@/components/admin/AdminNavigation"
 import { Helmet } from "react-helmet"
 
 export default function Admin() {
@@ -7,7 +8,14 @@ export default function Admin() {
       <Helmet>
         <title>Administration - Solar Pro</title>
       </Helmet>
-      <AdminDashboard />
+      <div className="flex min-h-screen">
+        <aside className="w-64 bg-gray-900 p-6">
+          <AdminNavigation />
+        </aside>
+        <main className="flex-1 bg-background">
+          <Outlet />
+        </main>
+      </div>
     </>
   )
 }
