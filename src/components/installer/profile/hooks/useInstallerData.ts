@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react"
 import { supabase } from "@/integrations/supabase/client"
 import { useToast } from "@/hooks/use-toast"
-import type { InstallerFormData, VisibilityOptions } from "../types/installer"
+import type { InstallerData, InstallerFormData } from "../types/installer"
 
 const defaultFormData: InstallerFormData = {
   firstName: "",
@@ -42,12 +42,16 @@ const defaultFormData: InstallerFormData = {
 export const useInstallerData = () => {
   const { toast } = useToast()
   const [formData, setFormData] = useState<InstallerFormData>(defaultFormData)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const loadInstallerData = async () => {
       try {
         const { data: { user } } = await supabase.auth.getUser()
-        if (!user) return
+        if (!user) {
+          setLoading(false)
+          return
+        }
 
         const { data: installer, error } = await supabase
           .from('installers')
@@ -80,7 +84,7 @@ export const useInstallerData = () => {
             address: installer.address || "",
             postal_code: installer.postal_code || "",
             city: installer.city || "",
-            visibility_settings: (installer.visibility_settings as VisibilityOptions) || defaultFormData.visibility_settings,
+            visibility_settings: installer.visibility_settings as InstallerFormData['visibility_settings'] || defaultFormData.visibility_settings,
           })
         }
       } catch (error) {
@@ -90,6 +94,8 @@ export const useInstallerData = () => {
           description: "Impossible de charger les données de l'installateur",
           variant: "destructive"
         })
+      } finally {
+        setLoading(false)
       }
     }
 
@@ -99,5 +105,6 @@ export const useInstallerData = () => {
   return {
     formData,
     setFormData,
+    loading
   }
 }

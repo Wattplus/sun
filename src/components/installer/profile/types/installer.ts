@@ -1,11 +1,8 @@
-import type { Json } from "@/integrations/supabase/types"
-
-export interface VisibilityOptions {
+export interface VisibilitySettings {
   showPhoneNumber: boolean
   highlightProfile: boolean
   acceptDirectMessages: boolean
   showCertifications: boolean
-  [key: string]: boolean
 }
 
 export interface InstallerFormData {
@@ -35,8 +32,8 @@ export interface InstallerFormData {
   maintenanceServices: boolean
   address: string
   postal_code: string
-  city?: string
-  visibility_settings: VisibilityOptions
+  city: string
+  visibility_settings: VisibilitySettings
 }
 
 export interface InstallerData {
@@ -58,10 +55,18 @@ export interface InstallerData {
   panel_brands?: string[]
   inverter_brands?: string[]
   warranty_years?: number
-  certifications?: Json
-  installation_types?: Json
+  certifications?: {
+    qualiPV: boolean
+    rge: boolean
+    qualibat: boolean
+  }
+  installation_types?: {
+    residential: boolean
+    commercial: boolean
+    industrial: boolean
+  }
   maintenance_services?: boolean
-  visibility_settings?: Json
+  visibility_settings?: VisibilitySettings
   subscription_plan?: string
   profile_views?: number
   conversion_rate?: number

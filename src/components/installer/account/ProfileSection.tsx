@@ -8,13 +8,17 @@ import { useInstallerData } from "../profile/hooks/useInstallerData"
 import { useInstallerForm } from "../profile/hooks/useInstallerForm"
 
 export const ProfileSection = () => {
-  const { formData, setFormData } = useInstallerData()
+  const { formData, setFormData, loading } = useInstallerData()
   const {
     handleChange,
     handleCheckboxChange,
     handleZonesChange,
     handleSubmit
   } = useInstallerForm(formData, setFormData)
+
+  if (loading) {
+    return <div>Chargement...</div>
+  }
 
   return (
     <div className="space-y-6">
