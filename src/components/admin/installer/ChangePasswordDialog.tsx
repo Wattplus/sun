@@ -44,25 +44,17 @@ export function ChangePasswordDialog({ open, onOpenChange }: ChangePasswordDialo
         throw new Error("Non autorisé")
       }
 
-      const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/update-installer-password`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${session.access_token}`,
-        },
-        body: JSON.stringify({ email, password })
+      const { data, error } = await supabase.functions.invoke('update-installer-password', {
+        body: { email, password }
       })
 
-      if (!response.ok) {
-        const error = await response.json()
-        throw new Error(error.error || "Erreur lors de la mise à jour du mot de passe")
-      }
+      if (error) throw error
 
       toast.success("Mot de passe mis à jour avec succès")
       onOpenChange(false)
       setEmail("")
       setPassword("")
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error updating password:", error)
       toast.error(error.message || "Erreur lors de la mise à jour du mot de passe")
     } finally {
