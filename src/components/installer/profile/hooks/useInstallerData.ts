@@ -42,6 +42,7 @@ const defaultFormData: InstallerFormData = {
 export const useInstallerData = () => {
   const [formData, setFormData] = useState<InstallerFormData>(defaultFormData)
   const [loading, setLoading] = useState(true)
+  const [noProfile, setNoProfile] = useState(false)
   const { toast } = useToast()
 
   useEffect(() => {
@@ -58,10 +59,17 @@ export const useInstallerData = () => {
           .eq('user_id', session.session.user.id)
           .single()
 
-        if (error) throw error
+        if (error) {
+          if (error.code === 'PGRST116') {
+            setNoProfile(true)
+          } else {
+            throw error
+          }
+        }
 
         if (data) {
           setFormData(convertDbToFormFormat(data as DatabaseInstallerData))
+          setNoProfile(false)
         }
       } catch (error) {
         console.error('Error fetching installer:', error)
@@ -78,5 +86,5 @@ export const useInstallerData = () => {
     loadInstallerData()
   }, [toast])
 
-  return { formData, setFormData, loading }
+  return { formData, setFormData, loading, noProfile }
 }
