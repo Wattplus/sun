@@ -19,6 +19,8 @@ export const useLeadOperations = () => {
         return;
       }
 
+      console.log("[useLeadOperations] User ID:", session.session.user.id);
+
       // Récupérer d'abord l'ID de l'installateur
       const { data: installerData, error: installerError } = await supabase
         .from('installers')
