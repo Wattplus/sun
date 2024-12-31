@@ -4,7 +4,7 @@ import { Label } from "@/components/ui/label"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Card } from "@/components/ui/card"
-import { Building2, Calendar } from "lucide-react"
+import { Calendar } from "lucide-react"
 
 // Liste des départements français
 const FRENCH_DEPARTMENTS = [
@@ -44,6 +44,7 @@ export const InterventionZonesSection = ({ selectedZones, onZonesChange }: Inter
   );
 
   useEffect(() => {
+    // Update parent component when selection changes
     if (isNationwide) {
       onZonesChange(["Toute France"]);
     } else {
@@ -51,18 +52,32 @@ export const InterventionZonesSection = ({ selectedZones, onZonesChange }: Inter
     }
   }, [isNationwide, selectedDepartments, onZonesChange]);
 
+  // Update local state when props change
+  useEffect(() => {
+    const nationwide = selectedZones.includes("Toute France");
+    setIsNationwide(nationwide);
+    setSelectedDepartments(nationwide ? [] : selectedZones);
+  }, [selectedZones]);
+
   const handleNationwideChange = (checked: boolean) => {
     setIsNationwide(checked);
     if (checked) {
       setSelectedDepartments([]);
+      onZonesChange(["Toute France"]);
+    } else {
+      onZonesChange([]);
     }
   };
 
   const handleDepartmentChange = (department: string, checked: boolean) => {
     if (checked) {
-      setSelectedDepartments(prev => [...prev, department]);
+      const newDepartments = [...selectedDepartments, department];
+      setSelectedDepartments(newDepartments);
+      onZonesChange(newDepartments);
     } else {
-      setSelectedDepartments(prev => prev.filter(d => d !== department));
+      const newDepartments = selectedDepartments.filter(d => d !== department);
+      setSelectedDepartments(newDepartments);
+      onZonesChange(newDepartments);
     }
   };
 
