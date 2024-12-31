@@ -53,9 +53,12 @@ export const useInstallerForm = (
 
       const installerData = {
         user_id: user.id,
+        company_name: formData.company,
         contact_name: `${formData.firstName} ${formData.lastName}`,
         phone: formData.phone,
-        company_name: formData.company,
+        address: formData.address,
+        postal_code: formData.postal_code,
+        city: formData.city,
         website: formData.website,
         description: formData.description,
         experience_years: parseInt(formData.experience) || null,
@@ -66,9 +69,6 @@ export const useInstallerForm = (
         certifications: formData.certifications as Json,
         installation_types: formData.installationTypes as Json,
         maintenance_services: formData.maintenanceServices,
-        address: formData.address,
-        postal_code: formData.postal_code,
-        city: formData.city,
         visibility_settings: formData.visibility_settings as Json
       }
 
