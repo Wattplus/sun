@@ -20,14 +20,14 @@ const mockTransactions = [
     date: "2024-03-25",
     description: "Recharge du compte",
     amount: 500,
-    type: "credit"
+    type: "credit" as const
   },
   {
     id: "2",
     date: "2024-03-24",
     description: "Achat de lead",
     amount: 25,
-    type: "debit"
+    type: "debit" as const
   }
 ];
 
