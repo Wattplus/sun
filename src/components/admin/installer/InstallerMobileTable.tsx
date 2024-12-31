@@ -44,8 +44,8 @@ export const InstallerMobileTable = ({ installers, onEditInstaller }: InstallerM
                   <h3 className="font-semibold text-base">{installer.company_name}</h3>
                   <p className="text-sm text-muted-foreground">{installer.contact_name}</p>
                 </div>
-                <Badge className={getStatusBadgeColor(installer.status)}>
-                  {getStatusLabel(installer.status)}
+                <Badge className={getStatusBadgeColor(installer.subscription_status)}>
+                  {getStatusLabel(installer.subscription_status)}
                 </Badge>
               </div>
 
