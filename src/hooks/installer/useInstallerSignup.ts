@@ -81,8 +81,12 @@ export const useInstallerSignup = () => {
         })
 
       if (userError) {
-        console.error("User creation error:", userError)
-        throw new Error("Erreur lors de la création de l'utilisateur")
+        if (userError.code === '23505') { // Duplicate key error
+          console.log("User record already exists, continuing...")
+        } else {
+          console.error("User creation error:", userError)
+          throw new Error("Erreur lors de la création de l'utilisateur")
+        }
       }
 
       // 3. Wait for profile to be created by the trigger
