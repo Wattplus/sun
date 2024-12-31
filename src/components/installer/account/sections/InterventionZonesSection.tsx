@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react"
 import { Switch } from "@/components/ui/switch"
-import { Label } from "@/components/ui/label"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Card } from "@/components/ui/card"
 import { Calendar } from "lucide-react"
+import { Button } from "@/components/ui/button"
 
 // Liste des départements français
 const FRENCH_DEPARTMENTS = [
@@ -44,7 +44,6 @@ export const InterventionZonesSection = ({ selectedZones, onZonesChange }: Inter
   );
 
   useEffect(() => {
-    // Update parent component when selection changes
     if (isNationwide) {
       onZonesChange(["Toute France"]);
     } else {
@@ -52,24 +51,20 @@ export const InterventionZonesSection = ({ selectedZones, onZonesChange }: Inter
     }
   }, [isNationwide, selectedDepartments, onZonesChange]);
 
-  // Update local state when props change
   useEffect(() => {
     const nationwide = selectedZones.includes("Toute France");
     setIsNationwide(nationwide);
     setSelectedDepartments(nationwide ? [] : selectedZones);
   }, [selectedZones]);
 
-  const handleNationwideChange = (checked: boolean) => {
-    setIsNationwide(checked);
-    if (checked) {
-      setSelectedDepartments([]);
-      onZonesChange(["Toute France"]);
-    } else {
-      onZonesChange([]);
-    }
+  const handleNationwideClick = () => {
+    setIsNationwide(true);
+    setSelectedDepartments([]);
+    onZonesChange(["Toute France"]);
   };
 
   const handleDepartmentChange = (department: string, checked: boolean) => {
+    setIsNationwide(false);
     if (checked) {
       const newDepartments = [...selectedDepartments, department];
       setSelectedDepartments(newDepartments);
@@ -83,20 +78,20 @@ export const InterventionZonesSection = ({ selectedZones, onZonesChange }: Inter
 
   return (
     <Card className="p-6 space-y-4 bg-background/50 backdrop-blur-sm border-primary/20">
-      <div className="flex items-center gap-3 mb-4">
-        <div className="p-2 rounded-lg bg-primary/10">
-          <Calendar className="h-5 w-5 text-primary" />
+      <div className="flex items-center justify-between gap-3 mb-4">
+        <div className="flex items-center gap-3">
+          <div className="p-2 rounded-lg bg-primary/10">
+            <Calendar className="h-5 w-5 text-primary" />
+          </div>
+          <h3 className="text-lg font-semibold">Zones d'intervention</h3>
         </div>
-        <h3 className="text-lg font-semibold">Zones d'intervention</h3>
-      </div>
-
-      <div className="flex items-center space-x-2 mb-4 p-4 rounded-lg bg-secondary/20">
-        <Switch
-          id="nationwide"
-          checked={isNationwide}
-          onCheckedChange={handleNationwideChange}
-        />
-        <Label htmlFor="nationwide" className="font-medium">Toute France</Label>
+        <Button 
+          variant={isNationwide ? "default" : "outline"}
+          onClick={handleNationwideClick}
+          className="whitespace-nowrap"
+        >
+          Toute France
+        </Button>
       </div>
 
       {!isNationwide && (
@@ -109,12 +104,12 @@ export const InterventionZonesSection = ({ selectedZones, onZonesChange }: Inter
                   checked={selectedDepartments.includes(department)}
                   onCheckedChange={(checked) => handleDepartmentChange(department, checked as boolean)}
                 />
-                <Label 
+                <label 
                   htmlFor={department} 
                   className="text-sm cursor-pointer hover:text-primary transition-colors"
                 >
                   {department}
-                </Label>
+                </label>
               </div>
             ))}
           </div>
