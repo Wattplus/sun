@@ -50,51 +50,43 @@ export interface DatabaseInstallerData {
 }
 
 export interface InstallerFormData {
-  firstName: string;
-  lastName: string;
-  email: string;
+  company_name: string;
+  contact_name: string;
   phone: string;
-  company: string;
-  siret: string;
-  website: string;
-  description: string;
-  experience: string;
-  panelBrands: string;
-  inverterBrands: string;
-  guaranteeYears: string;
-  service_area: string[];
-  certifications: Certifications;
-  installationTypes: InstallationTypes;
-  maintenanceServices: boolean;
   address: string;
   postal_code: string;
   city: string;
+  service_area: string[];
+  website: string;
+  description: string;
+  experience_years: number;
+  panel_brands: string[];
+  inverter_brands: string[];
+  warranty_years: number;
+  certifications: Certifications;
+  installation_types: InstallationTypes;
+  maintenance_services: boolean;
   visibility_settings: VisibilitySettings;
 }
 
-export const convertDbToFormFormat = (data: DatabaseInstallerData, email: string): InstallerFormData => {
-  const [firstName = "", lastName = ""] = data.contact_name?.split(" ") || [];
-  
+export const convertDbToFormFormat = (data: DatabaseInstallerData): InstallerFormData => {
   return {
-    firstName,
-    lastName,
-    email,
+    company_name: data.company_name || "",
+    contact_name: data.contact_name || "",
     phone: data.phone || "",
-    company: data.company_name || "",
-    siret: data.user_id || "",
-    website: data.website || "",
-    description: data.description || "",
-    experience: data.experience_years?.toString() || "",
-    panelBrands: data.panel_brands?.join(", ") || "",
-    inverterBrands: data.inverter_brands?.join(", ") || "",
-    guaranteeYears: data.warranty_years?.toString() || "",
-    service_area: data.service_area || [],
-    certifications: data.certifications,
-    installationTypes: data.installation_types,
-    maintenanceServices: data.maintenance_services,
     address: data.address || "",
     postal_code: data.postal_code || "",
     city: data.city || "",
+    service_area: data.service_area || [],
+    website: data.website || "",
+    description: data.description || "",
+    experience_years: data.experience_years || 0,
+    panel_brands: data.panel_brands || [],
+    inverter_brands: data.inverter_brands || [],
+    warranty_years: data.warranty_years || 0,
+    certifications: data.certifications,
+    installation_types: data.installation_types,
+    maintenance_services: data.maintenance_services,
     visibility_settings: data.visibility_settings
   };
 };
@@ -102,22 +94,6 @@ export const convertDbToFormFormat = (data: DatabaseInstallerData, email: string
 export const convertFormToDbFormat = (formData: InstallerFormData, userId: string): Partial<DatabaseInstallerData> => {
   return {
     user_id: userId,
-    company_name: formData.company,
-    contact_name: `${formData.firstName} ${formData.lastName}`.trim(),
-    phone: formData.phone,
-    address: formData.address,
-    postal_code: formData.postal_code,
-    city: formData.city,
-    service_area: formData.service_area,
-    website: formData.website,
-    description: formData.description,
-    experience_years: parseInt(formData.experience) || null,
-    panel_brands: formData.panelBrands.split(",").map(s => s.trim()).filter(Boolean),
-    inverter_brands: formData.inverterBrands.split(",").map(s => s.trim()).filter(Boolean),
-    warranty_years: parseInt(formData.guaranteeYears) || null,
-    certifications: formData.certifications,
-    installation_types: formData.installationTypes,
-    maintenance_services: formData.maintenanceServices,
-    visibility_settings: formData.visibility_settings
+    ...formData
   };
 };
