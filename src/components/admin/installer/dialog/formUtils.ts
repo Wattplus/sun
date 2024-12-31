@@ -1,6 +1,6 @@
 import { supabase } from "@/integrations/supabase/client"
 import { toast } from "sonner"
-import { Installer } from "@/types/crm"
+import { Installer, InstallerStatus } from "@/types/crm"
 import { defaultCertifications } from "./defaultValues"
 
 export const fetchInstallerData = async (installerId: string) => {
@@ -41,7 +41,7 @@ export const processInstallerData = (data: any, installer: Installer) => {
       ...installer,
       zones: data.service_area || [],
       certifications,
-      status: "active"
+      status: (data.status || "active") as InstallerStatus
     }
   }
 }

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { Installer } from "@/types/crm"
+import { Installer, InstallerStatus } from "@/types/crm"
 import { defaultFormData } from "./defaultValues"
 import { fetchInstallerData, processInstallerData } from "./formUtils"
 import type { UseInstallerFormReturn } from "./types"
@@ -63,7 +63,7 @@ export const useInstallerForm = (installer: Installer | null): UseInstallerFormR
   }
 
   const handleStatusChange = (value: string) => {
-    setFormData({ ...formData, status: value as Installer["status"] })
+    setFormData({ ...formData, status: value as InstallerStatus })
   }
 
   return {
