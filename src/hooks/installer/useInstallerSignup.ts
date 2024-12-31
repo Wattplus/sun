@@ -42,11 +42,10 @@ export const useInstallerSignup = () => {
         }
       })
 
-      // Check specifically for user_already_exists error
       if (authError) {
         if (authError.message.includes("User already registered")) {
           setUserExists(true)
-          return // Exit early without throwing error
+          return
         }
         throw authError
       }
@@ -68,7 +67,17 @@ export const useInstallerSignup = () => {
         attempts++
       }
 
-      // 3. Create installer entry
+      // 3. Create user in public.users table
+      const { error: userError } = await supabase
+        .from('users')
+        .insert({
+          id: authData.user.id,
+          email: formData.email,
+        })
+
+      if (userError) throw userError
+
+      // 4. Create installer entry
       const { error: installerError } = await supabase
         .from("installers")
         .insert({
@@ -111,7 +120,6 @@ export const useInstallerSignup = () => {
       setShowSuccessDialog(true)
     } catch (error: any) {
       console.error("Signup error:", error)
-      // Only show toast if it's not a user_already_exists error
       if (!userExists) {
         toast.error(error.message || "Erreur lors de la création du compte")
       }
