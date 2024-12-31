@@ -14,7 +14,7 @@ interface CertificationsSectionProps {
 
 export const CertificationsSection = ({ certifications, handleCheckboxChange }: CertificationsSectionProps) => {
   return (
-    <Card className="p-6 space-y-6 bg-[#0B1623] border-primary/20">
+    <Card className="p-6 space-y-6 glass-card bg-background-dark">
       <div className="flex items-center gap-3">
         <div className="p-2 rounded-lg bg-primary/10">
           <Award className="h-5 w-5 text-primary" />
