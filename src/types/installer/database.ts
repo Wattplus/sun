@@ -25,5 +25,7 @@ export interface DatabaseInstallerData {
   credits?: number;
   verified?: boolean;
   created_at?: string;
-  status?: string;
+  conversion_rate?: number;
+  satisfied_clients?: number;
+  profile_views?: number;
 }
