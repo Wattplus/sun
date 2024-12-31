@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react"
 import { supabase } from "@/integrations/supabase/client"
 import { useToast } from "@/hooks/use-toast"
-import { InstallerFormData, InstallerData } from "../types/installer.types"
+import { InstallerFormData, InstallerData, Certifications, InstallationTypes, VisibilitySettings } from "@/types/installer"
 
 const defaultFormData: InstallerFormData = {
   firstName: "",
@@ -61,7 +61,6 @@ export const useInstallerData = () => {
 
         if (error) {
           if (error.code === "PGRST116") {
-            // No profile found
             toast({
               title: "Profil non trouvé",
               description: "Veuillez créer votre profil installateur",
@@ -88,13 +87,13 @@ export const useInstallerData = () => {
             inverterBrands: Array.isArray(installer.inverter_brands) ? installer.inverter_brands.join(", ") : "",
             guaranteeYears: installer.warranty_years?.toString() || "",
             service_area: installer.service_area || [],
-            certifications: installer.certifications as InstallerData["certifications"],
-            installationTypes: installer.installation_types as InstallerData["installation_types"],
+            certifications: (installer.certifications as unknown as Certifications) || defaultFormData.certifications,
+            installationTypes: (installer.installation_types as unknown as InstallationTypes) || defaultFormData.installationTypes,
             maintenanceServices: installer.maintenance_services || false,
             address: installer.address || "",
             postal_code: installer.postal_code || "",
             city: installer.city || "",
-            visibility_settings: installer.visibility_settings as InstallerData["visibility_settings"],
+            visibility_settings: (installer.visibility_settings as unknown as VisibilitySettings) || defaultFormData.visibility_settings,
           })
         }
       } catch (error) {

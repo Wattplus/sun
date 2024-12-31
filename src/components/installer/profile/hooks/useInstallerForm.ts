@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { supabase } from "@/integrations/supabase/client"
 import { useToast } from "@/hooks/use-toast"
-import { InstallerFormData } from "../types/installer.types"
+import { InstallerFormData } from "@/types/installer"
 import type { Json } from "@/integrations/supabase/types"
 
 export const useInstallerForm = (
