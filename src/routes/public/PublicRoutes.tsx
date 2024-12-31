@@ -1,4 +1,4 @@
-import { Route } from "react-router-dom"
+import { Routes, Route } from "react-router-dom"
 import Index from "@/pages/Index"
 import Login from "@/pages/Login"
 import { AboutUs } from "@/pages/AboutUs"
@@ -14,7 +14,7 @@ import { TermsOfService } from "@/pages/TermsOfService"
 
 export const PublicRoutes = () => {
   return (
-    <>
+    <Routes>
       <Route path="/" element={<Index />} />
       <Route path="/login" element={<Login />} />
       <Route path="/about" element={<AboutUs />} />
@@ -27,6 +27,6 @@ export const PublicRoutes = () => {
       <Route path="/privacy" element={<PrivacyPolicy />} />
       <Route path="/solar-installation" element={<SolarInstallation />} />
       <Route path="/terms" element={<TermsOfService />} />
-    </>
+    </Routes>
   )
 }

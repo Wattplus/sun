@@ -1,4 +1,4 @@
-import { Route } from "react-router-dom"
+import { Routes, Route } from "react-router-dom"
 import { ProtectedRoute } from "@/routes/ProtectedRoute"
 import { DashboardContent } from "@/components/installer/dashboard/DashboardContent"
 import { ProfilePage } from "@/components/installer/profile/ProfilePage"
@@ -10,7 +10,7 @@ import { HelpPage } from "@/components/installer/help/HelpPage"
 
 export const InstallerRoutes = () => {
   return (
-    <>
+    <Routes>
       <Route path="/installer" element={
         <ProtectedRoute>
           <DashboardContent />
@@ -46,6 +46,6 @@ export const InstallerRoutes = () => {
           <HelpPage />
         </ProtectedRoute>
       } />
-    </>
+    </Routes>
   )
 }

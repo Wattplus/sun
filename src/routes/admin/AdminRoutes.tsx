@@ -1,4 +1,4 @@
-import { Route } from "react-router-dom"
+import { Routes, Route } from "react-router-dom"
 import { ProtectedRoute } from "@/routes/ProtectedRoute"
 import AdminDashboard from "@/components/admin/AdminDashboard"
 import LeadManagement from "@/components/admin/LeadManagement"
@@ -16,7 +16,7 @@ import AdminProfilePage from "@/components/admin/profile/ProfilePage"
 
 export const AdminRoutes = () => {
   return (
-    <>
+    <Routes>
       <Route path="/admin" element={
         <ProtectedRoute>
           <AdminDashboard />
@@ -82,6 +82,6 @@ export const AdminRoutes = () => {
           <AdminProfilePage />
         </ProtectedRoute>
       } />
-    </>
+    </Routes>
   )
 }
