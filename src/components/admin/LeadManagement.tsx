@@ -1,11 +1,9 @@
 import { useState, useEffect } from "react";
-import { Lead } from "@/types/crm";
 import { LeadTable } from "./leads/LeadTable";
 import { LeadMobileTable } from "./leads/LeadMobileTable";
 import { LeadHeader } from "./leads/LeadHeader";
 import { LeadStats } from "./leads/LeadStats";
 import { AdminBreadcrumb } from "./AdminBreadcrumb";
-import { LeadDialogs } from "./leads/LeadDialogs";
 import { useLeadOperations } from "@/hooks/useLeadOperations";
 import { getStatusColor, getStatusText } from "@/utils/leadStatus";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -13,22 +11,17 @@ import { Card } from "@/components/ui/card";
 import { supabase } from "@/lib/supabase-client";
 import { useToast } from "@/components/ui/use-toast";
 import { useNavigate } from "react-router-dom";
+import { useLeadDialogManager } from "./leads/LeadDialogManager";
 
 export const LeadManagement = () => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
-  const [editDialogOpen, setEditDialogOpen] = useState(false);
-  const [assignDialogOpen, setAssignDialogOpen] = useState(false);
-  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [selectedInstallerId, setSelectedInstallerId] = useState<string>("");
-  const [leadToAssign, setLeadToAssign] = useState<Lead | null>(null);
-  const [leadToDelete, setLeadToDelete] = useState<Lead | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   
-  const { leads, fetchLeads, deleteLead, updateLead, assignLead } = useLeadOperations();
+  const { leads, fetchLeads } = useLeadOperations();
   const isMobile = useIsMobile();
   const { toast } = useToast();
   const navigate = useNavigate();
+  const { handleDeleteClick, handleEditClick, handleAssignClick, renderDialogs } = useLeadDialogManager();
 
   useEffect(() => {
     const checkAuthAndFetchLeads = async () => {
@@ -75,7 +68,6 @@ export const LeadManagement = () => {
 
     checkAuthAndFetchLeads();
 
-    // Set up auth state change listener
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       console.log("LeadManagement: Auth state changed:", event, session?.user?.id);
       if (event === 'SIGNED_OUT') {
@@ -89,59 +81,6 @@ export const LeadManagement = () => {
       subscription.unsubscribe();
     };
   }, []);
-
-  useEffect(() => {
-    console.log("LeadManagement: Mise à jour des leads:", leads);
-  }, [leads]);
-
-  const handleDeleteClick = (lead: Lead) => {
-    console.log("LeadManagement: Demande de suppression pour le lead:", lead);
-    setLeadToDelete(lead);
-    setDeleteDialogOpen(true);
-  };
-
-  const handleConfirmDelete = async () => {
-    if (!leadToDelete) return;
-    console.log("LeadManagement: Confirmation de suppression pour le lead:", leadToDelete);
-    const success = await deleteLead(leadToDelete.id);
-    if (success) {
-      setDeleteDialogOpen(false);
-      setLeadToDelete(null);
-    }
-  };
-
-  const handleEditClick = (lead: Lead) => {
-    console.log("LeadManagement: Demande de modification pour le lead:", lead);
-    setSelectedLead(lead);
-    setEditDialogOpen(true);
-  };
-
-  const handleAssignClick = (lead: Lead) => {
-    console.log("LeadManagement: Demande d'assignation pour le lead:", lead);
-    setLeadToAssign(lead);
-    setAssignDialogOpen(true);
-  };
-
-  const handleEditClose = () => {
-    setSelectedLead(null);
-    setEditDialogOpen(false);
-  };
-
-  const handleSaveLead = async (updatedLead: Lead) => {
-    console.log("LeadManagement: Sauvegarde du lead:", updatedLead);
-    const success = await updateLead(updatedLead);
-    if (success) {
-      handleEditClose();
-    }
-  };
-
-  const handleAssignSubmit = async (leadId: string, installerId: string) => {
-    console.log("LeadManagement: Attribution du lead:", { leadId, installerId });
-    const success = await assignLead(leadId, installerId);
-    if (success) {
-      setAssignDialogOpen(false);
-    }
-  };
 
   if (isLoading) {
     return (
@@ -184,8 +123,7 @@ export const LeadManagement = () => {
                 }}
                 onNewLeadClick={() => {
                   console.log("New lead creation requested");
-                  setSelectedLead(null);
-                  setEditDialogOpen(true);
+                  handleEditClick({} as any);
                 }}
               />
 
@@ -213,21 +151,7 @@ export const LeadManagement = () => {
             </div>
           </Card>
 
-          <LeadDialogs
-            selectedLead={selectedLead}
-            editDialogOpen={editDialogOpen}
-            assignDialogOpen={assignDialogOpen}
-            deleteDialogOpen={deleteDialogOpen}
-            selectedInstallerId={selectedInstallerId}
-            leadToAssign={leadToAssign}
-            onEditClose={handleEditClose}
-            onSaveLead={handleSaveLead}
-            setAssignDialogOpen={setAssignDialogOpen}
-            setDeleteDialogOpen={setDeleteDialogOpen}
-            setSelectedInstallerId={setSelectedInstallerId}
-            handleAssignSubmit={() => leadToAssign && selectedInstallerId ? handleAssignSubmit(leadToAssign.id, selectedInstallerId) : undefined}
-            handleConfirmDelete={handleConfirmDelete}
-          />
+          {renderDialogs()}
         </div>
       </div>
     </div>
