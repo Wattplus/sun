@@ -27,14 +27,20 @@ export const useInstallerSignup = () => {
 
     try {
       // Vérifier si le SIRET existe déjà
-      const { data: existingInstaller } = await supabase
+      const { data: existingInstaller, error: siretCheckError } = await supabase
         .from('installers')
         .select('id')
         .eq('siret', formData.siret)
-        .single()
+        .maybeSingle()
+
+      if (siretCheckError) {
+        console.error("SIRET check error:", siretCheckError)
+        throw new Error("Erreur lors de la vérification du SIRET")
+      }
 
       if (existingInstaller) {
         toast.error("Ce numéro SIRET est déjà utilisé par un autre installateur")
+        setLoading(false)
         return
       }
 
@@ -58,6 +64,7 @@ export const useInstallerSignup = () => {
       if (authError) {
         if (authError.message.includes("User already registered")) {
           setUserExists(true)
+          setLoading(false)
           return
         }
         throw authError
@@ -95,7 +102,20 @@ export const useInstallerSignup = () => {
 
       if (profileError) throw profileError
 
-      // 4. Create installer entry with verified = true
+      // 4. Create user record first
+      const { error: userError } = await supabase
+        .from('users')
+        .insert({
+          id: authData.user.id,
+          email: formData.email
+        })
+
+      if (userError) {
+        console.error("User creation error:", userError)
+        throw new Error("Erreur lors de la création de l'utilisateur")
+      }
+
+      // 5. Create installer entry with verified = true
       const { error: installerError } = await supabase
         .from("installers")
         .insert({
