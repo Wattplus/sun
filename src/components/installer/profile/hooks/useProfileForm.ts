@@ -79,7 +79,7 @@ export const useProfileForm = () => {
           })
 
           if (installer.visibility_settings) {
-            setVisibilityOptions(installer.visibility_settings as VisibilityOptions)
+            setVisibilityOptions(installer.visibility_settings as VisibilityOptions || defaultVisibilityOptions)
           }
         }
       } catch (error) {
@@ -108,7 +108,7 @@ export const useProfileForm = () => {
       setFormData(prev => ({
         ...prev,
         [category]: {
-          ...prev[category as keyof ProfileFormData],
+          ...prev[category as keyof typeof prev],
           [item]: checked
         }
       }))
