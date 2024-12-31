@@ -1,16 +1,13 @@
-import { useState } from "react"
-import { supabase } from "@/integrations/supabase/client"
-import { useToast } from "@/hooks/use-toast"
-import type { InstallerFormData } from "@/types/installer"
+import { supabase } from "@/lib/supabase-client"
+import { toast } from "sonner"
+import { InstallerFormData } from "@/types/installer"
 
 export const useInstallerForm = (
-  formData: InstallerFormData,
+  formData: InstallerFormData | null,
   setFormData: (data: InstallerFormData) => void
 ) => {
-  const [loading, setLoading] = useState(false)
-  const { toast } = useToast()
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!formData) return
     setFormData({
       ...formData,
       [e.target.id]: e.target.value,
@@ -18,6 +15,7 @@ export const useInstallerForm = (
   }
 
   const handleCheckboxChange = (field: string, checked: boolean) => {
+    if (!formData) return
     if (field.includes(".")) {
       const [category, item] = field.split(".")
       const currentValue = formData[category as keyof InstallerFormData]
@@ -39,6 +37,7 @@ export const useInstallerForm = (
   }
 
   const handleZonesChange = (zones: string[]) => {
+    if (!formData) return
     setFormData({
       ...formData,
       service_area: zones
@@ -47,56 +46,57 @@ export const useInstallerForm = (
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setLoading(true)
+    if (!formData) return
 
     try {
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) throw new Error("User not found")
 
-      const installerData = {
-        company_name: formData.company_name,
-        contact_name: `${formData.firstName} ${formData.lastName}`.trim(),
-        email: formData.email,
-        phone: formData.phone,
-        siret: formData.siret,
-        address: formData.address,
-        postal_code: formData.postal_code,
-        city: formData.city,
-        website: formData.website,
-        description: formData.description,
-        service_area: formData.service_area,
-        experience_years: Number(formData.experience) || formData.experience_years,
-        panel_brands: formData.panelBrands.split(",").map(s => s.trim()),
-        inverter_brands: formData.inverterBrands.split(",").map(s => s.trim()),
-        warranty_years: Number(formData.guaranteeYears) || formData.warranty_years,
-        certifications: formData.certifications,
-        installation_types: formData.installation_types,
-        maintenance_services: formData.maintenance_services,
-        visibility_settings: formData.visibility_settings
-      }
-
-      const { error } = await supabase
-        .from("installers")
+      // Update profiles table
+      const { error: profileError } = await supabase
+        .from('profiles')
         .upsert({
-          ...installerData,
-          user_id: user.id
+          id: user.id,
+          first_name: formData.firstName,
+          last_name: formData.lastName,
+          email: formData.email,
+          phone: formData.phone
         })
 
-      if (error) throw error
+      if (profileError) throw profileError
 
-      toast({
-        title: "Succès",
-        description: "Votre profil a été mis à jour avec succès",
-      })
+      // Update installers table
+      const { error: installerError } = await supabase
+        .from('installers')
+        .upsert({
+          user_id: user.id,
+          company_name: formData.company_name,
+          contact_name: `${formData.firstName} ${formData.lastName}`,
+          email: formData.email,
+          phone: formData.phone,
+          siret: formData.siret,
+          address: formData.address,
+          postal_code: formData.postal_code,
+          city: formData.city,
+          website: formData.website,
+          description: formData.description,
+          experience_years: formData.experience_years,
+          panel_brands: formData.panel_brands,
+          inverter_brands: formData.inverter_brands,
+          warranty_years: formData.warranty_years,
+          service_area: formData.service_area,
+          certifications: formData.certifications,
+          installation_types: formData.installation_types,
+          maintenance_services: formData.maintenance_services,
+          visibility_settings: formData.visibility_settings
+        })
+
+      if (installerError) throw installerError
+
+      toast.success("Votre profil a été mis à jour avec succès")
     } catch (error) {
-      console.error("Error updating installer:", error)
-      toast({
-        title: "Erreur",
-        description: "Une erreur est survenue lors de la mise à jour du profil",
-        variant: "destructive"
-      })
-    } finally {
-      setLoading(false)
+      console.error("Error updating profile:", error)
+      toast.error("Une erreur est survenue lors de la mise à jour du profil")
     }
   }
 
@@ -104,7 +104,6 @@ export const useInstallerForm = (
     handleChange,
     handleCheckboxChange,
     handleZonesChange,
-    handleSubmit,
-    loading
+    handleSubmit
   }
 }
