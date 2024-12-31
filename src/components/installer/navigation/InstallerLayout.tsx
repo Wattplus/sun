@@ -10,7 +10,8 @@ import {
   Settings, 
   Bell,
   Menu,
-  User
+  User,
+  CreditCard
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
@@ -36,13 +37,13 @@ const navigation = [
     href: "/espace-installateur/messages", 
     icon: MessageSquare 
   },
-  { 
-    name: "Rapports", 
-    href: "/espace-installateur/rapports", 
-    icon: FileText 
+  {
+    name: "Mon compte",
+    href: "/espace-installateur/compte",
+    icon: CreditCard
   },
   {
-    name: "Profil",
+    name: "Mon profil",
     href: "/espace-installateur/profil",
     icon: User
   },
