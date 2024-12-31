@@ -72,7 +72,20 @@ export const useInstallerSignup = () => {
 
       if (!authData.user) throw new Error("Erreur lors de la création du compte")
 
-      // 2. Wait for profile to be created by the trigger
+      // 2. Create user record
+      const { error: userError } = await supabase
+        .from('users')
+        .insert({
+          id: authData.user.id,
+          email: formData.email
+        })
+
+      if (userError) {
+        console.error("User creation error:", userError)
+        throw new Error("Erreur lors de la création de l'utilisateur")
+      }
+
+      // 3. Wait for profile to be created by the trigger
       let attempts = 0
       let profileFound = false
       while (attempts < 10 && !profileFound) {
@@ -94,7 +107,7 @@ export const useInstallerSignup = () => {
         throw new Error("Erreur lors de la création du profil")
       }
 
-      // 3. Update profile role to installer
+      // 4. Update profile role to installer
       const { error: profileError } = await supabase
         .from('profiles')
         .update({ role: 'installer' })
@@ -102,7 +115,7 @@ export const useInstallerSignup = () => {
 
       if (profileError) throw profileError
 
-      // 4. Create installer entry with verified = true
+      // 5. Create installer entry with verified = true
       const { error: installerError } = await supabase
         .from("installers")
         .insert({
