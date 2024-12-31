@@ -17,6 +17,7 @@ export interface Certifications {
   qualiPV: boolean;
   rge: boolean;
   qualibat: boolean;
+  [key: string]: boolean;
 }
 
 export interface InstallationTypes {
@@ -27,7 +28,7 @@ export interface InstallationTypes {
 
 export interface DatabaseInstallerData {
   id?: string;
-  user_id?: string;
+  user_id: string;
   company_name: string;
   contact_name: string;
   email: string;
@@ -42,11 +43,11 @@ export interface DatabaseInstallerData {
   panel_brands?: string[];
   inverter_brands?: string[];
   warranty_years?: number;
+  service_area: string[];
   certifications: Certifications;
   installation_types: InstallationTypes;
   maintenance_services: boolean;
   visibility_settings: VisibilitySettings;
-  service_area: string[];
   credits?: number;
   verified?: boolean;
   created_at?: string;
@@ -70,11 +71,11 @@ export interface InstallerFormData {
   panel_brands: string[];
   inverter_brands: string[];
   warranty_years: number;
+  service_area: string[];
   certifications: Certifications;
   installation_types: InstallationTypes;
   maintenance_services: boolean;
   visibility_settings: VisibilitySettings;
-  service_area: string[];
 }
 
 export const defaultFormData: InstallerFormData = {
@@ -92,6 +93,7 @@ export const defaultFormData: InstallerFormData = {
   panel_brands: [],
   inverter_brands: [],
   warranty_years: 0,
+  service_area: [],
   certifications: {
     qualiPV: false,
     rge: false,
@@ -108,8 +110,7 @@ export const defaultFormData: InstallerFormData = {
     highlightProfile: false,
     showCertifications: true,
     acceptDirectMessages: true
-  },
-  service_area: []
+  }
 };
 
 export function transformDatabaseToForm(data: DatabaseInstallerData): InstallerFormData {
@@ -128,11 +129,11 @@ export function transformDatabaseToForm(data: DatabaseInstallerData): InstallerF
     panel_brands: data.panel_brands || [],
     inverter_brands: data.inverter_brands || [],
     warranty_years: data.warranty_years || 0,
+    service_area: data.service_area,
     certifications: data.certifications,
     installation_types: data.installation_types,
     maintenance_services: data.maintenance_services,
-    visibility_settings: data.visibility_settings,
-    service_area: data.service_area
+    visibility_settings: data.visibility_settings
   };
 }
 
@@ -152,10 +153,10 @@ export function transformFormToDatabase(formData: InstallerFormData): Omit<Datab
     panel_brands: formData.panel_brands,
     inverter_brands: formData.inverter_brands,
     warranty_years: formData.warranty_years,
+    service_area: formData.service_area,
     certifications: formData.certifications,
     installation_types: formData.installation_types,
     maintenance_services: formData.maintenance_services,
-    visibility_settings: formData.visibility_settings,
-    service_area: formData.service_area
+    visibility_settings: formData.visibility_settings
   };
 }
