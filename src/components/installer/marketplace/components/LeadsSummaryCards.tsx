@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Lead } from "@/types/crm";
 import { cn } from "@/lib/utils";
 import { Wallet, Tag, ArrowRight } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 interface LeadsSummaryCardsProps {
   availableLeads: Lead[];
@@ -17,7 +18,12 @@ export const LeadsSummaryCards = ({
   balance,
   onPrepaidAccount,
 }: LeadsSummaryCardsProps) => {
+  const navigate = useNavigate();
   const isLowBalance = balance < 200;
+
+  const handleRecharge = () => {
+    navigate('/espace-installateur/recharge');
+  };
 
   return (
     <div className="grid gap-4 md:grid-cols-2">
@@ -46,7 +52,7 @@ export const LeadsSummaryCards = ({
             )}
 
             <Button
-              onClick={onPrepaidAccount}
+              onClick={handleRecharge}
               className="w-full bg-primary/10 hover:bg-primary/20 text-primary border-primary/20"
             >
               Recharger mon compte
@@ -62,32 +68,18 @@ export const LeadsSummaryCards = ({
           </div>
           <div className="space-y-4 flex-1">
             <div>
-              <p className="text-sm text-muted-foreground mb-3">Tarifs des leads</p>
-              <div className="space-y-3">
-                <div className="flex justify-between items-center p-3 rounded-lg bg-primary/5">
-                  <span className="text-sm font-medium">Particulier</span>
-                  <span className="text-lg font-semibold text-primary">26€</span>
-                </div>
-                <div className="flex justify-between items-center p-3 rounded-lg bg-primary/5">
-                  <span className="text-sm font-medium">Professionnel</span>
-                  <span className="text-lg font-semibold text-primary">49€</span>
-                </div>
-              </div>
-            </div>
-
-            <div className="flex items-center justify-between pt-2">
-              <p className="text-sm font-medium text-primary">
-                {availableLeads.length} leads disponibles
+              <p className="text-sm text-muted-foreground mb-1">Leads disponibles</p>
+              <p className="text-3xl font-semibold text-primary">
+                {availableLeads.length}
               </p>
-              <Button 
-                variant="link" 
-                onClick={onPrepaidAccount}
-                className="text-primary hover:text-primary/80 p-0 h-auto font-medium flex items-center gap-1"
-              >
-                Voir les détails
-                <ArrowRight className="w-4 h-4" />
-              </Button>
             </div>
+            <Button
+              onClick={onPrepaidAccount}
+              className="w-full bg-primary/10 hover:bg-primary/20 text-primary border-primary/20"
+            >
+              Voir les détails
+              <ArrowRight className="w-4 h-4 ml-2" />
+            </Button>
           </div>
         </div>
       </Card>
