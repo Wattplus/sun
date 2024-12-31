@@ -11,6 +11,7 @@ import ClientPortal from "@/pages/ClientPortal";
 import { CheckoutPage } from "@/pages/installer/payment/CheckoutPage";
 import { PrepaidAccountPage } from "@/pages/installer/account/PrepaidAccountPage";
 import { NewProfilePage } from "@/pages/installer/profile/NewProfilePage";
+import { InstallerSignup } from "@/pages/installer/auth/InstallerSignup";
 
 // Admin Components
 import AdminDashboard from "@/components/admin/AdminDashboard";
@@ -40,6 +41,9 @@ export function AppRoutes() {
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       console.log("AppRoutes: Auth state changed:", event, session?.user?.id);
+      if (event === 'SIGNED_IN' && session) {
+        navigate('/espace-installateur');
+      }
     });
 
     return () => {
@@ -53,6 +57,7 @@ export function AppRoutes() {
       <Route path="/login" element={<Login />} />
       <Route path="/thank-you" element={<ThankYou />} />
       <Route path="/client" element={<ClientPortal />} />
+      <Route path="/devenir-installateur" element={<InstallerSignup />} />
       
       {/* Installer Routes */}
       <Route path="/espace-installateur" element={<InstallerLayout />}>
