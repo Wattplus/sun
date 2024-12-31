@@ -6,9 +6,8 @@ import { LeadStats } from "./sections/LeadStats";
 import { LeadFilters } from "./sections/LeadFilters";
 import { useToast } from "@/components/ui/use-toast";
 import { Card } from "@/components/ui/card";
-import { Loader2 } from "lucide-react";
+import { Loader2, AlertCircle, ArrowRight } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { AlertCircle, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 
@@ -76,30 +75,6 @@ export const PurchasedLeadsPage = () => {
     }
   };
 
-  const getStatusColor = (status: string) => {
-    const colors = {
-      new: "bg-blue-500",
-      contacted: "bg-yellow-500",
-      qualified: "bg-green-500",
-      assigned: "bg-purple-500",
-      converted: "bg-emerald-500",
-      lost: "bg-red-500"
-    };
-    return colors[status as keyof typeof colors] || "bg-gray-500";
-  };
-
-  const getStatusText = (status: string) => {
-    const texts = {
-      new: "Nouveau",
-      contacted: "Contacté",
-      qualified: "Qualifié",
-      assigned: "Assigné",
-      converted: "Converti",
-      lost: "Perdu"
-    };
-    return texts[status as keyof typeof texts] || status;
-  };
-
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
@@ -111,16 +86,16 @@ export const PurchasedLeadsPage = () => {
   if (error) {
     return (
       <div className="p-6">
-        <Alert variant="destructive">
+        <Alert variant="destructive" className="bg-destructive/5 border-none">
           <AlertCircle className="h-4 w-4" />
           <AlertTitle>Erreur</AlertTitle>
-          <AlertDescription className="mt-2">
+          <AlertDescription className="mt-2 space-y-4">
             {error}
             {error === "Vous n'avez pas encore créé votre profil installateur" && (
               <Button 
-                onClick={() => navigate("/espace-installateur/compte")}
+                onClick={() => navigate("/espace-installateur/mon-compte")}
                 className="mt-4 w-full sm:w-auto"
-                variant="outline"
+                variant="default"
               >
                 Créer mon profil <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
@@ -161,4 +136,28 @@ export const PurchasedLeadsPage = () => {
       </div>
     </div>
   );
+};
+
+const getStatusColor = (status: string) => {
+  const colors = {
+    new: "bg-blue-500",
+    contacted: "bg-yellow-500",
+    qualified: "bg-green-500",
+    assigned: "bg-purple-500",
+    converted: "bg-emerald-500",
+    lost: "bg-red-500"
+  };
+  return colors[status as keyof typeof colors] || "bg-gray-500";
+};
+
+const getStatusText = (status: string) => {
+  const texts = {
+    new: "Nouveau",
+    contacted: "Contacté",
+    qualified: "Qualifié",
+    assigned: "Assigné",
+    converted: "Converti",
+    lost: "Perdu"
+  };
+  return texts[status as keyof typeof texts] || status;
 };
