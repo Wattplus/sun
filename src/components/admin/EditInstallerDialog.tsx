@@ -58,12 +58,39 @@ export function EditInstallerDialog({
   const [siretError, setSiretError] = useState("")
 
   useEffect(() => {
-    if (installer) {
-      const nationwide = installer.zones.includes("Toute France")
-      setIsNationwide(nationwide)
-      setFormData(installer)
+    const fetchInstallerData = async () => {
+      if (installer?.id) {
+        try {
+          const { data, error } = await supabase
+            .from('installers')
+            .select('*')
+            .eq('id', installer.id)
+            .single()
+
+          if (error) throw error
+
+          if (data) {
+            const nationwide = data.service_area?.includes("Toute France")
+            setIsNationwide(nationwide)
+            setFormData({
+              ...installer,
+              zones: data.service_area || [],
+              certifications: data.certifications || {
+                qualiPV: false,
+                rge: false,
+                qualibat: false
+              }
+            })
+          }
+        } catch (error) {
+          console.error('Error fetching installer data:', error)
+          toast.error("Erreur lors du chargement des données")
+        }
+      }
       setSiretError("")
     }
+
+    fetchInstallerData()
   }, [installer])
 
   const handleSubmit = async (e: React.FormEvent) => {
