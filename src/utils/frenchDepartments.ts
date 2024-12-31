@@ -1,4 +1,4 @@
-export interface Department {
+interface Department {
   code: string;
   name: string;
 }
@@ -10,7 +10,7 @@ export const frenchDepartments: Department[] = [
   { code: "04", name: "Alpes de Haute-Provence" },
   { code: "05", name: "Hautes-Alpes" },
   { code: "06", name: "Alpes-Maritimes" },
-  { code: "07", name: "Ardèche" },
+  { code: "07", name: "Ardêche" },
   { code: "08", name: "Ardennes" },
   { code: "09", name: "Ariège" },
   { code: "10", name: "Aube" },
@@ -111,6 +111,6 @@ export const getDepartmentByName = (name: string): Department | undefined => {
 };
 
 export const formatDepartment = (code: string): string => {
-  const dept = getDepartmentByCode(code);
-  return dept ? `${dept.code} - ${dept.name}` : code;
+  const department = getDepartmentByCode(code);
+  return department ? `${department.code} - ${department.name}` : code;
 };

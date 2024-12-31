@@ -1,9 +1,9 @@
+import { useState } from "react"
 import { Card } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
 import { MapPin } from "lucide-react"
 import { motion } from "framer-motion"
 import { Switch } from "@/components/ui/switch"
-import { Combobox } from "@/components/ui/combobox"
 import { frenchDepartments } from "@/utils/frenchDepartments"
 
 interface InterventionZonesSectionProps {
