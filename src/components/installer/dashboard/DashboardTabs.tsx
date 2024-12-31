@@ -4,8 +4,9 @@ import { StatsCards } from "./StatsCards";
 import { motion } from "framer-motion";
 import { LeadsOverview } from "./leads/LeadsOverview";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useLeadOperations } from "@/hooks/useLeadOperations";
 import { Lead } from "@/types/crm";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Info } from "lucide-react";
 
 export function DashboardTabs({ leads }: { leads: Lead[] }) {
   // Filter leads based on their status
@@ -47,15 +48,27 @@ export function DashboardTabs({ leads }: { leads: Lead[] }) {
             <TabsTrigger value="available">Leads disponibles</TabsTrigger>
             <TabsTrigger value="purchased">Leads achetés</TabsTrigger>
           </TabsList>
-          <TabsContent value="overview" className="space-y-6">
-            <LeadsOverview />
-          </TabsContent>
-          <TabsContent value="available">
-            <LeadsOverview />
-          </TabsContent>
-          <TabsContent value="purchased">
-            <LeadsOverview />
-          </TabsContent>
+          
+          {leads.length === 0 ? (
+            <Alert className="mt-4">
+              <Info className="h-4 w-4" />
+              <AlertDescription>
+                Aucun lead n'est disponible pour le moment. Revenez plus tard ou consultez la marketplace pour acheter de nouveaux leads.
+              </AlertDescription>
+            </Alert>
+          ) : (
+            <>
+              <TabsContent value="overview" className="space-y-6">
+                <LeadsOverview />
+              </TabsContent>
+              <TabsContent value="available">
+                <LeadsOverview />
+              </TabsContent>
+              <TabsContent value="purchased">
+                <LeadsOverview />
+              </TabsContent>
+            </>
+          )}
         </Tabs>
       </motion.div>
     </div>
