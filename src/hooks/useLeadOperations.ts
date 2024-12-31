@@ -4,7 +4,7 @@ import { Lead } from "@/types/crm";
 import { toast } from "sonner";
 
 export const useLeadOperations = () => {
-  const [leads, setLeads] = useState<Lead[] | null>(null);
+  const [leads, setLeads] = useState<Lead[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -56,7 +56,7 @@ export const useLeadOperations = () => {
       }
 
       console.log("[useLeadOperations] Fetched leads:", leadsData?.length);
-      setLeads(leadsData);
+      setLeads(leadsData || []);
     } catch (error) {
       console.error("[useLeadOperations] Unexpected error:", error);
       setError("Une erreur inattendue s'est produite");
@@ -65,10 +65,70 @@ export const useLeadOperations = () => {
     }
   }, []);
 
+  const updateLead = async (updatedLead: Lead) => {
+    try {
+      const { error } = await supabase
+        .from('leads')
+        .update(updatedLead)
+        .eq('id', updatedLead.id);
+
+      if (error) throw error;
+
+      toast.success("Lead mis à jour avec succès");
+      await fetchLeads();
+      return true;
+    } catch (error) {
+      console.error('Error updating lead:', error);
+      toast.error("Erreur lors de la mise à jour du lead");
+      return false;
+    }
+  };
+
+  const deleteLead = async (leadId: string) => {
+    try {
+      const { error } = await supabase
+        .from('leads')
+        .delete()
+        .eq('id', leadId);
+
+      if (error) throw error;
+
+      toast.success("Lead supprimé avec succès");
+      await fetchLeads();
+      return true;
+    } catch (error) {
+      console.error('Error deleting lead:', error);
+      toast.error("Erreur lors de la suppression du lead");
+      return false;
+    }
+  };
+
+  const assignLead = async (leadId: string, installerId: string) => {
+    try {
+      const { error } = await supabase
+        .from('leads')
+        .update({ assigned_installer: installerId })
+        .eq('id', leadId);
+
+      if (error) throw error;
+
+      toast.success("Lead assigné avec succès");
+      await fetchLeads();
+      return true;
+    } catch (error) {
+      console.error('Error assigning lead:', error);
+      toast.error("Erreur lors de l'assignation du lead");
+      return false;
+    }
+  };
+
   return {
     leads,
     isLoading,
     error,
     fetchLeads,
+    updateLead,
+    deleteLead,
+    assignLead
   };
 };
