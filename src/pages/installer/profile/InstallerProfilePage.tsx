@@ -7,9 +7,10 @@ import { ProfileStats } from "@/components/installer/profile/ProfileStats";
 import { ProfileVisibilityOptions } from "@/components/installer/profile/ProfileVisibilityOptions";
 import { Button } from "@/components/ui/button";
 import { Save } from "lucide-react";
+import type { ProfileFormData } from "@/components/installer/profile/types/profile";
 
 export const InstallerProfilePage = () => {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<ProfileFormData>({
     firstName: "Jean",
     lastName: "Dupont",
     email: "jean.dupont@example.com",
@@ -17,11 +18,12 @@ export const InstallerProfilePage = () => {
     company: "Solar Pro",
     siret: "123 456 789 00012",
     website: "www.solarpro.fr",
+    description: "Installateur photovoltaïque certifié",
     experience: "10",
     panelBrands: "SunPower, LG, Panasonic",
     inverterBrands: "SMA, Fronius, Enphase",
     guaranteeYears: "20",
-    interventionZones: "75, 92, 93, 94",
+    service_area: ["75", "92", "93", "94"],
     certifications: {
       qualiPV: true,
       rge: true,

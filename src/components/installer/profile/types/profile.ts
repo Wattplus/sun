@@ -1,0 +1,51 @@
+import type { Json } from "@/integrations/supabase/types";
+
+export interface Certifications {
+  qualiPV: boolean;
+  rge: boolean;
+  qualibat: boolean;
+  [key: string]: boolean;
+}
+
+export interface InstallationTypes {
+  residential: boolean;
+  commercial: boolean;
+  industrial: boolean;
+  [key: string]: boolean;
+}
+
+export interface VisibilityOptions {
+  showPhoneNumber: boolean;
+  highlightProfile: boolean;
+  acceptDirectMessages: boolean;
+  showCertifications: boolean;
+  [key: string]: boolean;
+}
+
+export interface ProfileStats {
+  profileViews: number;
+  messagesReceived: number;
+  averageRating: number;
+  satisfiedClients: number;
+  certificationsCount: number;
+  conversionRate: number;
+}
+
+export interface ProfileFormData {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  company: string;
+  siret: string;
+  website: string;
+  description: string;
+  experience: string;
+  panelBrands: string;
+  inverterBrands: string;
+  guaranteeYears: string;
+  service_area: string[];
+  certifications: Certifications;
+  installationTypes: InstallationTypes;
+  maintenanceServices: boolean;
+}

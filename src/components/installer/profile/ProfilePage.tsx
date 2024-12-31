@@ -5,39 +5,14 @@ import { ProfileStats } from "./ProfileStats";
 import { InstallerBreadcrumb } from "@/components/installer/navigation/InstallerBreadcrumb";
 import { motion } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
-
-interface FormData {
-  firstName: string;
-  lastName: string;
-  email: string;
-  phone: string;
-  company: string;
-  siret: string;
-  website: string;
-  experience: string;
-  panelBrands: string;
-  inverterBrands: string;
-  guaranteeYears: string;
-  interventionZones: string;
-  certifications: {
-    qualiPV: boolean;
-    rge: boolean;
-    qualibat: boolean;
-  };
-  installationTypes: {
-    residential: boolean;
-    commercial: boolean;
-    industrial: boolean;
-  };
-  maintenanceServices: boolean;
-}
+import type { ProfileFormData } from "./types/profile";
 
 export const ProfilePage = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
-  const [formData, setFormData] = useState<FormData>({
+  const [formData, setFormData] = useState<ProfileFormData>({
     firstName: "Olivier",
     lastName: "Malai",
     email: "",
@@ -45,11 +20,12 @@ export const ProfilePage = () => {
     company: "PPF Énergie",
     siret: "",
     website: "",
+    description: "",
     experience: "",
     panelBrands: "",
     inverterBrands: "",
     guaranteeYears: "",
-    interventionZones: "44980",
+    service_area: ["44980"],
     certifications: {
       qualiPV: false,
       rge: false,
@@ -93,7 +69,7 @@ export const ProfilePage = () => {
         return {
           ...prev,
           [group]: {
-            ...(prev[group as keyof FormData] as Record<string, boolean>),
+            ...(prev[group as keyof typeof prev] as Record<string, boolean>),
             [key]: checked
           }
         };
@@ -126,7 +102,7 @@ export const ProfilePage = () => {
         address: "99 Rue du Moulin des Landes",
         postal_code: "44980",
         city: "Sainte-Luce-sur-Loire",
-        service_area: [formData.interventionZones],
+        service_area: formData.service_area,
         website: formData.website,
         experience_years: parseInt(formData.experience) || 0,
         panel_brands: formData.panelBrands.split(',').map(b => b.trim()),
