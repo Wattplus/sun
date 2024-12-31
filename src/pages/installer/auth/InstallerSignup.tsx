@@ -1,11 +1,28 @@
 import { BenefitsSection } from "@/components/installer/auth/BenefitsSection";
 import { SignupForm } from "@/components/installer/auth/SignupForm";
+import { InstallerBreadcrumb } from "@/components/installer/auth/InstallerBreadcrumb";
+import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
+import { LogIn } from "lucide-react";
 
 export function InstallerSignup() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background/95 to-background/50 py-12 px-4">
-      <div className="max-w-6xl mx-auto space-y-12">
+    <div className="min-h-screen bg-gradient-to-b from-background/95 to-background/50 py-8 px-4">
+      <div className="max-w-6xl mx-auto space-y-8">
+        <div className="flex justify-between items-center">
+          <InstallerBreadcrumb />
+          <Link to="/login">
+            <Button 
+              variant="outline" 
+              className="bg-primary/10 hover:bg-primary/20 border-primary/20 text-primary hover:text-primary-light transition-all duration-300 flex items-center gap-2"
+            >
+              <LogIn className="w-4 h-4" />
+              Se connecter à mon espace
+            </Button>
+          </Link>
+        </div>
+
         <div className="text-center space-y-4">
           <motion.h1 
             initial={{ opacity: 0, y: 20 }}
