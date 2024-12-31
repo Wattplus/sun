@@ -66,15 +66,15 @@ export const useInstallerForm = (
         inverter_brands: formData.inverterBrands.split(",").map(brand => brand.trim()),
         warranty_years: parseInt(formData.guaranteeYears) || null,
         service_area: formData.service_area,
-        certifications: formData.certifications as Json,
-        installation_types: formData.installationTypes as Json,
+        certifications: formData.certifications as unknown as Json,
+        installation_types: formData.installationTypes as unknown as Json,
         maintenance_services: formData.maintenanceServices,
-        visibility_settings: formData.visibility_settings as Json
+        visibility_settings: formData.visibility_settings as unknown as Json
       }
 
       const { error } = await supabase
         .from("installers")
-        .upsert([installerData])
+        .upsert(installerData)
 
       if (error) throw error
 
