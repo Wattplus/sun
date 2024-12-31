@@ -63,6 +63,20 @@ export const ProfileSection = () => {
         throw new Error("Vous devez être connecté pour créer votre profil");
       }
 
+      // First, ensure the user exists in the users table
+      const { error: userError } = await supabase.from('users').insert([
+        {
+          id: session.user.id,
+          email: session.user.email
+        }
+      ]);
+
+      // If the user already exists, we'll get a unique constraint error, which is fine
+      if (userError && !userError.message.includes('duplicate key')) {
+        throw userError;
+      }
+
+      // Then create the installer profile
       const { error } = await supabase.from('installers').insert([
         {
           user_id: session.user.id,
