@@ -2,6 +2,7 @@ import { useState, useEffect } from "react"
 import { supabase } from "@/integrations/supabase/client"
 import { useToast } from "@/hooks/use-toast"
 import type { InstallerFormData, InstallerData, VisibilitySettings } from "../types/installer"
+import type { Json } from "@/integrations/supabase/types"
 
 const defaultVisibilitySettings: VisibilitySettings = {
   showPhoneNumber: true,
@@ -68,6 +69,8 @@ export const useInstallerData = () => {
           setInstaller(installerData)
           const [firstName = "", lastName = ""] = (installerData.contact_name || "").split(" ")
           
+          const visibilitySettings = installerData.visibility_settings as VisibilitySettings || defaultVisibilitySettings
+          
           setFormData({
             firstName,
             lastName,
@@ -88,7 +91,7 @@ export const useInstallerData = () => {
             address: installerData.address || "",
             postal_code: installerData.postal_code || "",
             city: installerData.city || "",
-            visibility_settings: (installerData.visibility_settings as VisibilitySettings) || defaultVisibilitySettings,
+            visibility_settings: visibilitySettings
           })
         }
       } catch (error) {
