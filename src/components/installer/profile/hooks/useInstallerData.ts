@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react"
 import { supabase } from "@/integrations/supabase/client"
 import { useToast } from "@/hooks/use-toast"
-import { InstallerFormData } from "@/types/installer"
+import type { InstallerFormData } from "@/types/installer"
 
 const defaultFormData: InstallerFormData = {
   firstName: "",
@@ -66,10 +66,7 @@ export const useInstallerData = () => {
 
         if (!installer) {
           setNoProfile(true)
-          toast({
-            title: "Profil non trouvé",
-            description: "Veuillez créer votre profil installateur",
-          })
+          setLoading(false)
           return
         }
 

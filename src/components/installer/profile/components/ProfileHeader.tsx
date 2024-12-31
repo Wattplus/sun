@@ -1,5 +1,5 @@
 import { Card } from "@/components/ui/card"
-import type { InstallerFormData } from "../types/installer"
+import type { InstallerFormData } from "@/types/installer"
 
 export interface ProfileHeaderProps {
   formData: InstallerFormData
