@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { supabase } from "@/integrations/supabase/client"
 import { useToast } from "@/hooks/use-toast"
-import type { InstallerFormData } from "@/types/installer"
+import type { InstallerFormData, DatabaseInstallerData } from "@/types/installer"
 import { convertFormToDbFormat } from "@/types/installer"
 
 export const useInstallerForm = (
@@ -21,11 +21,12 @@ export const useInstallerForm = (
   const handleCheckboxChange = (field: string, checked: boolean) => {
     if (field.includes(".")) {
       const [category, item] = field.split(".")
-      if (category === "certifications" || category === "installationTypes" || category === "visibility_settings") {
+      const currentValue = formData[category as keyof InstallerFormData]
+      if (typeof currentValue === 'object' && !Array.isArray(currentValue)) {
         setFormData({
           ...formData,
           [category]: {
-            ...(formData[category as keyof InstallerFormData] as Record<string, boolean>),
+            ...currentValue,
             [item]: checked
           }
         })

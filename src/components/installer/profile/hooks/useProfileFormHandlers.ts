@@ -21,13 +21,16 @@ export const useProfileFormHandlers = (
   const handleCheckboxChange = (field: string, checked: boolean) => {
     if (field.includes(".")) {
       const [category, item] = field.split(".")
-      setFormData({
-        ...formData,
-        [category]: {
-          ...(formData[category as keyof InstallerFormData] as Record<string, boolean>),
-          [item]: checked
-        }
-      })
+      const currentValue = formData[category as keyof InstallerFormData]
+      if (typeof currentValue === 'object' && !Array.isArray(currentValue)) {
+        setFormData({
+          ...formData,
+          [category]: {
+            ...currentValue,
+            [item]: checked
+          }
+        })
+      }
     } else {
       setFormData({
         ...formData,
@@ -60,14 +63,7 @@ export const useProfileFormHandlers = (
 
       const { error } = await supabase
         .from("installers")
-        .upsert({
-          ...installerData,
-          address: installerData.address || "",
-          postal_code: installerData.postal_code || "",
-          company_name: installerData.company_name || "",
-          contact_name: installerData.contact_name || "",
-          phone: installerData.phone || "",
-        })
+        .upsert(installerData)
 
       if (error) throw error
 
