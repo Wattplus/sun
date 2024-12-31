@@ -1,15 +1,15 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { supabase } from "@/lib/supabase-client";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { toast } from "sonner";
-import { FormField } from "@/components/form/FormField";
-import { motion } from "framer-motion";
+import { useState } from "react"
+import { useNavigate } from "react-router-dom"
+import { supabase } from "@/lib/supabase-client"
+import { Button } from "@/components/ui/button"
+import { Card } from "@/components/ui/card"
+import { toast } from "sonner"
+import { motion } from "framer-motion"
+import { InstallerFormFields } from "./form/InstallerFormFields"
 
 export const SignupForm = () => {
-  const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate()
+  const [loading, setLoading] = useState(false)
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -19,31 +19,34 @@ export const SignupForm = () => {
     companyName: "",
     phone: "",
     siret: "",
-  });
+    address: "",
+    postalCode: "",
+    city: "",
+  })
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
       ...formData,
       [e.target.id]: e.target.value,
-    });
-  };
+    })
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
+    e.preventDefault()
+    setLoading(true)
 
     try {
       if (formData.password !== formData.confirmPassword) {
-        throw new Error("Les mots de passe ne correspondent pas");
+        throw new Error("Les mots de passe ne correspondent pas")
       }
 
       const { data: authData, error: authError } = await supabase.auth.signUp({
         email: formData.email,
         password: formData.password,
-      });
+      })
 
-      if (authError) throw authError;
-      if (!authData.user) throw new Error("Erreur lors de la création du compte");
+      if (authError) throw authError
+      if (!authData.user) throw new Error("Erreur lors de la création du compte")
 
       const { error: installerError } = await supabase
         .from("installers")
@@ -54,6 +57,9 @@ export const SignupForm = () => {
             contact_name: `${formData.firstName} ${formData.lastName}`,
             phone: formData.phone,
             siret: formData.siret,
+            address: formData.address,
+            postal_code: formData.postalCode,
+            city: formData.city,
             verified: false,
             credits: 0,
             service_area: [],
@@ -75,19 +81,19 @@ export const SignupForm = () => {
               showCertifications: true,
             },
           },
-        ]);
+        ])
 
-      if (installerError) throw installerError;
+      if (installerError) throw installerError
 
-      toast.success("Compte créé avec succès !");
-      navigate("/espace-installateur");
+      toast.success("Compte créé avec succès !")
+      navigate("/espace-installateur")
     } catch (error: any) {
-      console.error("Signup error:", error);
-      toast.error(error.message || "Erreur lors de la création du compte");
+      console.error("Signup error:", error)
+      toast.error(error.message || "Erreur lors de la création du compte")
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   return (
     <motion.div
@@ -97,82 +103,7 @@ export const SignupForm = () => {
     >
       <Card className="p-8 bg-card/50 backdrop-blur-sm border-primary/20">
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
-            <FormField
-              label="Prénom"
-              id="firstName"
-              value={formData.firstName}
-              onChange={handleChange}
-              required
-              lightMode
-            />
-            <FormField
-              label="Nom"
-              id="lastName"
-              value={formData.lastName}
-              onChange={handleChange}
-              required
-              lightMode
-            />
-          </div>
-
-          <FormField
-            label="Email professionnel"
-            id="email"
-            type="email"
-            value={formData.email}
-            onChange={handleChange}
-            required
-            lightMode
-          />
-
-          <FormField
-            label="Mot de passe"
-            id="password"
-            type="password"
-            value={formData.password}
-            onChange={handleChange}
-            required
-            lightMode
-          />
-
-          <FormField
-            label="Confirmer le mot de passe"
-            id="confirmPassword"
-            type="password"
-            value={formData.confirmPassword}
-            onChange={handleChange}
-            required
-            lightMode
-          />
-
-          <FormField
-            label="Nom de l'entreprise"
-            id="companyName"
-            value={formData.companyName}
-            onChange={handleChange}
-            required
-            lightMode
-          />
-
-          <FormField
-            label="Téléphone"
-            id="phone"
-            value={formData.phone}
-            onChange={handleChange}
-            required
-            lightMode
-          />
-
-          <FormField
-            label="SIRET"
-            id="siret"
-            value={formData.siret}
-            onChange={handleChange}
-            required
-            lightMode
-            placeholder="123 456 789 00012"
-          />
+          <InstallerFormFields formData={formData} handleChange={handleChange} />
 
           <Button
             type="submit"
@@ -197,5 +128,5 @@ export const SignupForm = () => {
         </div>
       </Card>
     </motion.div>
-  );
-};
+  )
+}
