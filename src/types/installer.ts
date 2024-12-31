@@ -19,36 +19,6 @@ export interface InstallationTypes {
   industrial: boolean
 }
 
-export interface DatabaseInstallerData {
-  id: string
-  user_id: string
-  company_name: string
-  contact_name: string
-  phone: string
-  address: string
-  postal_code: string
-  city?: string | null
-  service_area: string[]
-  credits: number
-  verified: boolean
-  siret?: string | null
-  website?: string | null
-  description?: string | null
-  experience_years?: number | null
-  panel_brands?: string[] | null
-  inverter_brands?: string[] | null
-  warranty_years?: number | null
-  certifications: Json
-  installation_types: Json
-  maintenance_services?: boolean
-  visibility_settings: Json
-  created_at?: string
-  subscription_plan?: string
-  profile_views?: number
-  conversion_rate?: number
-  satisfied_clients?: number
-}
-
 export interface InstallerFormData {
   firstName: string
   lastName: string
@@ -72,32 +42,58 @@ export interface InstallerFormData {
   visibility_settings: VisibilitySettings
 }
 
-// Helper function to convert form data to database format
-export const convertFormToDbFormat = (formData: InstallerFormData, userId: string): Partial<DatabaseInstallerData> => {
-  return {
-    user_id: userId,
-    company_name: formData.company,
-    contact_name: `${formData.firstName} ${formData.lastName}`,
-    phone: formData.phone,
-    address: formData.address,
-    postal_code: formData.postal_code,
-    city: formData.city,
-    website: formData.website,
-    description: formData.description,
-    experience_years: parseInt(formData.experience) || null,
-    panel_brands: formData.panelBrands.split(",").map(brand => brand.trim()),
-    inverter_brands: formData.inverterBrands.split(",").map(brand => brand.trim()),
-    warranty_years: parseInt(formData.guaranteeYears) || null,
-    service_area: formData.service_area,
-    certifications: formData.certifications as Json,
-    installation_types: formData.installationTypes as Json,
-    maintenance_services: formData.maintenanceServices,
-    visibility_settings: formData.visibility_settings as Json,
-    siret: formData.siret
-  }
+export interface DatabaseInstallerData {
+  id: string
+  user_id: string
+  company_name: string
+  contact_name: string
+  phone: string
+  address: string
+  postal_code: string
+  city?: string
+  service_area: string[]
+  credits: number
+  verified: boolean
+  siret?: string
+  website?: string
+  description?: string
+  experience_years?: number
+  panel_brands?: string[]
+  inverter_brands?: string[]
+  warranty_years?: number
+  certifications: Json
+  installation_types: Json
+  maintenance_services?: boolean
+  visibility_settings: Json
+  created_at?: string
+  subscription_plan?: string
+  profile_views?: number
+  conversion_rate?: number
+  satisfied_clients?: number
 }
 
-// Helper function to convert database data to form format
+export const convertFormToDbFormat = (formData: InstallerFormData, userId: string): Partial<DatabaseInstallerData> => ({
+  user_id: userId,
+  company_name: formData.company,
+  contact_name: `${formData.firstName} ${formData.lastName}`,
+  phone: formData.phone,
+  address: formData.address,
+  postal_code: formData.postal_code,
+  city: formData.city,
+  website: formData.website,
+  description: formData.description,
+  experience_years: parseInt(formData.experience) || null,
+  panel_brands: formData.panelBrands.split(",").map(brand => brand.trim()),
+  inverter_brands: formData.inverterBrands.split(",").map(brand => brand.trim()),
+  warranty_years: parseInt(formData.guaranteeYears) || null,
+  service_area: formData.service_area,
+  certifications: formData.certifications as unknown as Json,
+  installation_types: formData.installationTypes as unknown as Json,
+  maintenance_services: formData.maintenanceServices,
+  visibility_settings: formData.visibility_settings as unknown as Json,
+  siret: formData.siret
+})
+
 export const convertDbToFormFormat = (dbData: DatabaseInstallerData, email: string): InstallerFormData => {
   const [firstName, lastName] = (dbData.contact_name || "").split(" ")
   

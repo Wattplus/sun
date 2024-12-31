@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react"
 import { supabase } from "@/integrations/supabase/client"
 import { useToast } from "@/hooks/use-toast"
-import type { InstallerFormData, DatabaseInstallerData, convertDbToFormFormat } from "@/types/installer"
+import type { InstallerFormData } from "@/types/installer"
+import { convertDbToFormFormat } from "@/types/installer"
 
 const defaultFormData: InstallerFormData = {
   firstName: "",
@@ -70,7 +71,7 @@ export const useInstallerData = () => {
           return
         }
 
-        setFormData(convertDbToFormFormat(installer as DatabaseInstallerData, user.email || ""))
+        setFormData(convertDbToFormFormat(installer, user.email || ""))
       } catch (error) {
         console.error("Error loading installer data:", error)
         toast({
