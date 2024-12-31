@@ -64,9 +64,7 @@ export const PrepaidBalance = ({ balance = 0 }: PrepaidBalanceProps) => {
                 whileHover={{ scale: 1.05 }}
                 transition={{ type: "spring", stiffness: 300 }}
               >
-                <span className="text-6xl font-bold text-white">
-                  {balance.toLocaleString('fr-FR')}
-                </span>
+                <span className="text-6xl font-bold text-white">0</span>
                 <span className="text-3xl text-white/80">€</span>
               </motion.div>
             </div>
