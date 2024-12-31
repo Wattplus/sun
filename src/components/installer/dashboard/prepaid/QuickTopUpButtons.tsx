@@ -28,7 +28,7 @@ export const QuickTopUpButtons = ({ onTopUp, isLoading }: QuickTopUpButtonsProps
             <div className="absolute inset-0 bg-gradient-to-r from-primary/0 via-primary/10 to-primary/0 group-hover:via-primary/20 transition-all duration-500" />
             <div className="relative flex items-center justify-center gap-2">
               <Plus className="h-4 w-4 text-primary" />
-              <span>{amount}€</span>
+              <span>{amount.toLocaleString('fr-FR')}€</span>
             </div>
           </Button>
         </motion.div>

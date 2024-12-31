@@ -25,7 +25,7 @@ export const PrepaidBalance = ({ balance = 0 }: PrepaidBalanceProps) => {
       navigate("/espace-installateur/paiement/recharge", { state: { amount } });
       toast({
         title: "Rechargement",
-        description: `Redirection vers la page de paiement pour ${amount}€...`,
+        description: `Redirection vers la page de paiement pour ${amount.toLocaleString('fr-FR')}€...`,
       });
     } catch (error) {
       toast({
@@ -59,7 +59,7 @@ export const PrepaidBalance = ({ balance = 0 }: PrepaidBalanceProps) => {
                 whileHover={{ scale: 1.05 }}
                 transition={{ type: "spring", stiffness: 300 }}
               >
-                {balance}€
+                {balance.toLocaleString('fr-FR')}€
               </motion.p>
             </div>
             <Button
