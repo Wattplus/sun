@@ -45,6 +45,26 @@ export function AppRoutes() {
       try {
         const { data: { session } } = await supabase.auth.getSession();
         if (session?.user) {
+          // Vérifier d'abord si l'utilisateur est un admin
+          const { data: profile, error: profileError } = await supabase
+            .from('profiles')
+            .select('role')
+            .eq('id', session.user.id)
+            .single();
+
+          if (profileError) {
+            console.error("Error fetching profile:", profileError);
+            toast.error("Erreur lors de la vérification du profil");
+            return;
+          }
+
+          // Si l'utilisateur est un admin, rediriger vers le tableau de bord admin
+          if (profile?.role === 'admin' || profile?.role === 'super_admin') {
+            navigate('/admin');
+            return;
+          }
+
+          // Sinon, vérifier si c'est un installateur
           const { data: installer, error } = await supabase
             .from('installers')
             .select('*')
@@ -77,6 +97,26 @@ export function AppRoutes() {
       
       try {
         if (event === 'SIGNED_IN' && session) {
+          // Vérifier d'abord si l'utilisateur est un admin
+          const { data: profile, error: profileError } = await supabase
+            .from('profiles')
+            .select('role')
+            .eq('id', session.user.id)
+            .single();
+
+          if (profileError) {
+            console.error("Error fetching profile:", profileError);
+            toast.error("Erreur lors de la vérification du profil");
+            return;
+          }
+
+          // Si l'utilisateur est un admin, rediriger vers le tableau de bord admin
+          if (profile?.role === 'admin' || profile?.role === 'super_admin') {
+            navigate('/admin');
+            return;
+          }
+
+          // Sinon, vérifier si c'est un installateur
           const { data: installer, error } = await supabase
             .from('installers')
             .select('*')
