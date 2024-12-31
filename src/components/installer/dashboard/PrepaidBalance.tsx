@@ -49,27 +49,28 @@ export const PrepaidBalance = ({ balance = 0 }: PrepaidBalanceProps) => {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
       className="w-full"
+      id="recharge-section"
     >
-      <Card className="overflow-hidden bg-gradient-to-br from-background to-background-light border-primary/20">
-        <div className="p-6 space-y-8">
+      <Card className="overflow-hidden bg-gradient-to-br from-background/80 to-background-light border-primary/20">
+        <div className="p-8 space-y-8">
           {/* Balance Display */}
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-            <div className="space-y-2">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6">
+            <div className="space-y-4">
               <h3 className="text-lg font-medium text-white/90 flex items-center gap-2">
                 <Euro className="h-5 w-5 text-primary" />
                 Solde disponible
               </h3>
               <motion.div 
-                className="flex items-baseline gap-1"
+                className="flex items-baseline gap-2"
                 whileHover={{ scale: 1.05 }}
                 transition={{ type: "spring", stiffness: 300 }}
               >
-                <span className="text-4xl font-bold text-white">
+                <span className="text-5xl font-bold bg-gradient-to-r from-white to-white/80 bg-clip-text text-transparent">
                   {balance.toLocaleString('fr-FR')}
                 </span>
-                <span className="text-2xl font-semibold text-white/80">€</span>
+                <span className="text-3xl font-semibold text-white/80">€</span>
               </motion.div>
-              <div className="flex items-center gap-2 mt-2">
+              <div className="flex items-center gap-2">
                 <TrendingUp className="h-4 w-4 text-emerald-400" />
                 <span className="text-sm text-emerald-400">+15% ce mois</span>
               </div>
@@ -86,8 +87,8 @@ export const PrepaidBalance = ({ balance = 0 }: PrepaidBalanceProps) => {
           </div>
 
           {/* Quick Top-up Options */}
-          <div className="space-y-4">
-            <h4 className="text-sm font-medium text-white/60">Options de rechargement</h4>
+          <div className="space-y-6">
+            <h4 className="text-lg font-medium text-white/90">Options de rechargement</h4>
             <QuickTopUpButtons onTopUp={handleRecharge} isLoading={isLoading} />
           </div>
         </div>

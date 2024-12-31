@@ -11,7 +11,7 @@ export const QuickTopUpButtons = ({ onTopUp, isLoading }: QuickTopUpButtonsProps
   const amounts = [50, 100, 200, 500, 1000, 1500];
   
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
       {amounts.map((amount, index) => (
         <motion.div
           key={amount}
@@ -23,20 +23,22 @@ export const QuickTopUpButtons = ({ onTopUp, isLoading }: QuickTopUpButtonsProps
             variant="outline"
             onClick={() => onTopUp(amount)}
             disabled={isLoading}
-            className={`w-full bg-white/5 hover:bg-white/10 border-primary/20 text-white group relative overflow-hidden ${
+            className={`w-full h-24 bg-white/5 hover:bg-white/10 border-primary/20 text-white group relative overflow-hidden ${
               amount === 500 ? 'ring-2 ring-primary ring-offset-2 ring-offset-background' : ''
             }`}
           >
             <div className="absolute inset-0 bg-gradient-to-r from-primary/0 via-primary/10 to-primary/0 group-hover:via-primary/20 transition-all duration-500" />
-            <div className="relative flex items-center justify-center gap-2">
-              <Plus className="h-4 w-4 text-primary" />
-              <span>{amount.toLocaleString('fr-FR')}€</span>
+            <div className="relative flex flex-col items-center justify-center gap-2">
+              <div className="flex items-center">
+                <span className="text-2xl font-bold">{amount.toLocaleString('fr-FR')}</span>
+                <span className="text-xl">€</span>
+              </div>
+              {amount === 500 && (
+                <span className="absolute -top-1 -right-1 bg-primary text-xs px-2 py-0.5 rounded-bl-lg font-medium">
+                  Populaire
+                </span>
+              )}
             </div>
-            {amount === 500 && (
-              <span className="absolute -top-1 -right-1 bg-primary text-xs px-1.5 py-0.5 rounded-bl-lg font-medium">
-                Populaire
-              </span>
-            )}
           </Button>
         </motion.div>
       ))}
