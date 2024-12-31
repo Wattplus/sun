@@ -25,15 +25,19 @@ export const LeadCard = ({
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
 
-  const calculateBasePrice = (createdAt: string) => {
+  const calculateBasePrice = (createdAt: string, clientType: string) => {
+    // Les leads professionnels sont toujours à 49€
+    if (clientType === 'professional') return 49;
+    
+    // Pour les particuliers, le prix varie selon l'ancienneté
     const daysOld = differenceInDays(new Date(), new Date(createdAt));
     if (daysOld >= 45) return 15;
     if (daysOld >= 30) return 19;
     if (daysOld >= 15) return 21;
-    return lead.clienttype === 'professional' ? 49 : 26;
+    return 26;
   };
 
-  const basePrice = calculateBasePrice(lead.created_at);
+  const basePrice = calculateBasePrice(lead.created_at, lead.clienttype);
 
   const handlePurchase = async (type: 'mutualise' | 'exclusif', paymentMethod: 'prepaid' | 'direct') => {
     try {
