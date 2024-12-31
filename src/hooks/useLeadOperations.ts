@@ -67,6 +67,54 @@ export const useLeadOperations = () => {
     }
   };
 
+  const updateLead = async (lead: Lead): Promise<boolean> => {
+    try {
+      const { error } = await supabase
+        .from("leads")
+        .update(lead)
+        .eq("id", lead.id);
+
+      if (error) {
+        toast({
+          title: "Erreur",
+          description: "Impossible de mettre à jour le lead",
+          variant: "destructive",
+        });
+        return false;
+      }
+
+      await fetchLeads();
+      return true;
+    } catch (error) {
+      console.error("Erreur lors de la mise à jour du lead:", error);
+      return false;
+    }
+  };
+
+  const assignLead = async (leadId: string, installerId: string): Promise<boolean> => {
+    try {
+      const { error } = await supabase
+        .from("leads")
+        .update({ assigned_installer: installerId })
+        .eq("id", leadId);
+
+      if (error) {
+        toast({
+          title: "Erreur",
+          description: "Impossible d'assigner le lead",
+          variant: "destructive",
+        });
+        return false;
+      }
+
+      await fetchLeads();
+      return true;
+    } catch (error) {
+      console.error("Erreur lors de l'assignation du lead:", error);
+      return false;
+    }
+  };
+
   // Set up real-time subscription
   useEffect(() => {
     console.log("[useLeadOperations] Setting up realtime subscription");
@@ -100,5 +148,7 @@ export const useLeadOperations = () => {
     leads,
     fetchLeads,
     deleteLead,
+    updateLead,
+    assignLead,
   };
 };
