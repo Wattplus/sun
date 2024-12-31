@@ -1,14 +1,14 @@
 import { DatabaseInstallerData } from './database';
 import { InstallerFormData } from './form';
 
-export function convertDbToFormFormat(data: DatabaseInstallerData, email?: string): InstallerFormData {
+export function convertDbToFormFormat(data: DatabaseInstallerData): InstallerFormData {
   const [firstName = "", lastName = ""] = data.contact_name.split(" ");
   
   return {
     firstName,
     lastName,
     company: data.company_name,
-    email: email || data.email,
+    email: data.email,
     phone: data.phone,
     siret: data.siret,
     address: data.address,
