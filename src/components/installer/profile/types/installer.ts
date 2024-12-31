@@ -5,7 +5,6 @@ export interface VisibilitySettings {
   highlightProfile: boolean
   acceptDirectMessages: boolean
   showCertifications: boolean
-  [key: string]: boolean // Allow additional boolean flags
 }
 
 export interface InstallerFormData {
