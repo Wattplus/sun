@@ -1,3 +1,5 @@
+import type { Json } from "@/integrations/supabase/types"
+
 export interface Certifications {
   qualiPV: boolean;
   rge: boolean;
@@ -15,6 +17,15 @@ export interface VisibilityOptions {
   highlightProfile: boolean;
   acceptDirectMessages: boolean;
   showCertifications: boolean;
+}
+
+export interface ProfileStats {
+  profileViews: number;
+  messagesReceived: number;
+  averageRating: number;
+  satisfiedClients: number;
+  certificationsCount: number;
+  conversionRate: number;
 }
 
 export interface ProfileFormData {

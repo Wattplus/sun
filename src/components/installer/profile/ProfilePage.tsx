@@ -7,37 +7,12 @@ import { motion } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/components/ui/use-toast";
 import { useNavigate } from "react-router-dom";
-
-interface FormData {
-  firstName: string;
-  lastName: string;
-  email: string;
-  phone: string;
-  company: string;
-  siret: string;
-  website: string;
-  experience: string;
-  panelBrands: string;
-  inverterBrands: string;
-  guaranteeYears: string;
-  interventionZones: string;
-  certifications: {
-    qualiPV: boolean;
-    rge: boolean;
-    qualibat: boolean;
-  };
-  installationTypes: {
-    residential: boolean;
-    commercial: boolean;
-    industrial: boolean;
-  };
-  maintenanceServices: boolean;
-}
+import type { ProfileFormData } from "./types/profile";
 
 export const ProfilePage = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
-  const [formData, setFormData] = useState<FormData>({
+  const [formData, setFormData] = useState<ProfileFormData>({
     firstName: "Olivier",
     lastName: "Malai",
     email: "",
@@ -45,11 +20,12 @@ export const ProfilePage = () => {
     company: "PPF Énergie",
     siret: "",
     website: "",
+    description: "",
     experience: "",
     panelBrands: "",
     inverterBrands: "",
     guaranteeYears: "",
-    interventionZones: "44980",
+    service_area: ["44980"],
     certifications: {
       qualiPV: false,
       rge: false,
