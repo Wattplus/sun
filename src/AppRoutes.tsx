@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
+import { Routes, Route } from "react-router-dom"
 import { useAuthRedirect } from "@/routes/useAuthRedirect"
 import { ProtectedRoute } from "@/routes/ProtectedRoute"
 import Index from "@/pages/Index"
@@ -15,43 +15,41 @@ export const AppRoutes = () => {
   useAuthRedirect()
 
   return (
-    <Router>
-      <Routes>
-        {/* Public Routes */}
-        <Route path="/" element={<Index />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/thank-you" element={<ThankYou />} />
-        <Route path="/devenir-installateur" element={<InstallerSignup />} />
-        
-        {/* Installer Routes */}
-        <Route path="/espace-installateur/*" element={
-          <ProtectedRoute>
-            <InstallerProfile />
-          </ProtectedRoute>
-        } />
-        <Route path="/installer/checkout" element={
-          <ProtectedRoute>
-            <CheckoutPage />
-          </ProtectedRoute>
-        } />
-        <Route path="/installer/prepaid" element={
-          <ProtectedRoute>
-            <PrepaidAccountPage />
-          </ProtectedRoute>
-        } />
-        <Route path="/installer/profile" element={
-          <ProtectedRoute>
-            <NewProfilePage />
-          </ProtectedRoute>
-        } />
+    <Routes>
+      {/* Public Routes */}
+      <Route path="/" element={<Index />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/thank-you" element={<ThankYou />} />
+      <Route path="/devenir-installateur" element={<InstallerSignup />} />
+      
+      {/* Installer Routes */}
+      <Route path="/espace-installateur/*" element={
+        <ProtectedRoute>
+          <InstallerProfile />
+        </ProtectedRoute>
+      } />
+      <Route path="/installer/checkout" element={
+        <ProtectedRoute>
+          <CheckoutPage />
+        </ProtectedRoute>
+      } />
+      <Route path="/installer/prepaid" element={
+        <ProtectedRoute>
+          <PrepaidAccountPage />
+        </ProtectedRoute>
+      } />
+      <Route path="/installer/profile" element={
+        <ProtectedRoute>
+          <NewProfilePage />
+        </ProtectedRoute>
+      } />
 
-        {/* Admin Routes */}
-        <Route path="/admin/*" element={
-          <ProtectedRoute requiredRole={['admin', 'super_admin']}>
-            <Admin />
-          </ProtectedRoute>
-        } />
-      </Routes>
-    </Router>
+      {/* Admin Routes */}
+      <Route path="/admin/*" element={
+        <ProtectedRoute requiredRole={['admin', 'super_admin']}>
+          <Admin />
+        </ProtectedRoute>
+      } />
+    </Routes>
   )
 }
