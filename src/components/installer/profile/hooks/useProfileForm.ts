@@ -114,7 +114,7 @@ export const useProfileForm = () => {
       setFormData(prev => ({
         ...prev,
         [category]: {
-          ...((prev[category as keyof ProfileFormData]) as Record<string, boolean>),
+          ...(prev[category as keyof typeof prev] as Record<string, boolean>),
           [item]: checked
         }
       }))
