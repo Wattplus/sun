@@ -32,7 +32,7 @@ export function EditInstallerDialog({
   onSave,
 }: EditInstallerDialogProps) {
   const [formData, setFormData] = useState<Installer>(installer || {
-    id: "",
+    id: crypto.randomUUID(), // Generate a UUID for new installers
     companyName: "",
     contactName: "",
     email: "",
