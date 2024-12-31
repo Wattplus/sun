@@ -46,29 +46,24 @@ export const useInstallerSignup = () => {
       if (authError) {
         if (authError.message.includes("User already registered")) {
           setUserExists(true)
-          return // Exit early without throwing error to prevent toast
+          return // Exit early without throwing error
         }
         throw authError
       }
 
       if (!authData.user) throw new Error("Erreur lors de la création du compte")
 
-      // 2. Verify user exists in profiles table before proceeding
-      const verifyUser = async (): Promise<boolean> => {
-        const { data, error } = await supabase
+      // 2. Wait for profile to be created by the trigger
+      // Try for up to 5 seconds (10 attempts, 500ms apart)
+      let attempts = 0
+      while (attempts < 10) {
+        const { data: profile } = await supabase
           .from('profiles')
           .select('id')
           .eq('id', authData.user.id)
           .maybeSingle()
         
-        return !!data
-      }
-
-      // Try for up to 10 seconds (20 attempts, 500ms apart)
-      let attempts = 0
-      while (attempts < 20) {
-        const exists = await verifyUser()
-        if (exists) break
+        if (profile) break
         await new Promise(resolve => setTimeout(resolve, 500))
         attempts++
       }
