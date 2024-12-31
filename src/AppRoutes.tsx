@@ -17,13 +17,14 @@ import SettingsPage from "@/components/admin/settings/SettingsPage"
 import ProfilePage from "@/components/admin/profile/ProfilePage"
 import StatisticsPage from "@/components/admin/statistics/StatisticsPage"
 import { InstallerSignup } from "@/pages/installer/auth/InstallerSignup"
+import { InstallerLogin } from "@/pages/installer/auth/InstallerLogin"
 
 export const AppRoutes = () => {
   return (
     <Routes>
       <Route path="/" element={<Index />} />
       <Route path="/login" element={<Login />} />
-      <Route path="/connexion-installateur" element={<Login />} />
+      <Route path="/connexion-installateur" element={<InstallerLogin />} />
       <Route path="/devenir-installateur" element={<InstallerSignup />} />
       <Route
         path="/admin/*"
