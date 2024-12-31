@@ -1,85 +1,110 @@
-import { Button } from "@/components/ui/button"
-import { ProfileHeader } from "./components/ProfileHeader"
-import { ProfileStats } from "./components/ProfileStats"
-import { BasicInfoSection } from "./sections/BasicInfoSection"
-import { SolarSpecificSection } from "./sections/SolarSpecificSection"
-import { InterventionZonesSection } from "../account/sections/InterventionZonesSection"
+import { BasicInfoSection } from "@/components/installer/profile/sections/BasicInfoSection"
+import { SolarSpecificSection } from "@/components/installer/profile/sections/SolarSpecificSection"
+import { ProfileStats } from "@/components/installer/profile/ProfileStats"
+import { InstallerBreadcrumb } from "@/components/installer/navigation/InstallerBreadcrumb"
 import { motion } from "framer-motion"
-import { useInstallerData } from "./hooks/useInstallerData"
-import { useInstallerForm } from "./hooks/useInstallerForm"
-import { Card } from "@/components/ui/card"
-import { Save } from "lucide-react"
-import { useToast } from "@/hooks/use-toast"
+import { useState } from "react"
+
+interface FormData {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  company: string;
+  siret: string;
+  website: string;
+  experience: string;
+  panelBrands: string;
+  inverterBrands: string;
+  guaranteeYears: string;
+  interventionZones: string;
+  certifications: {
+    qualiPV: boolean;
+    rge: boolean;
+    qualibat: boolean;
+  };
+  installationTypes: {
+    residential: boolean;
+    commercial: boolean;
+    industrial: boolean;
+  };
+  maintenanceServices: boolean;
+}
 
 export const ProfilePage = () => {
-  const { formData, setFormData } = useInstallerData()
-  const { handleChange, handleCheckboxChange, handleZonesChange, handleSubmit } = useInstallerForm(formData, setFormData)
-  const { toast } = useToast()
+  const [formData, setFormData] = useState<FormData>({
+    firstName: "",
+    lastName: "",
+    email: "",
+    phone: "",
+    company: "",
+    siret: "",
+    website: "",
+    experience: "",
+    panelBrands: "",
+    inverterBrands: "",
+    guaranteeYears: "",
+    interventionZones: "",
+    certifications: {
+      qualiPV: false,
+      rge: false,
+      qualibat: false,
+    },
+    installationTypes: {
+      residential: false,
+      commercial: false,
+      industrial: false,
+    },
+    maintenanceServices: false,
+  });
 
-  const onSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    try {
-      await handleSubmit(e)
-      toast({
-        title: "Profil mis à jour",
-        description: "Vos modifications ont été enregistrées avec succès.",
-      })
-    } catch (error) {
-      toast({
-        title: "Erreur",
-        description: "Une erreur est survenue lors de la mise à jour du profil.",
-        variant: "destructive"
-      })
-    }
-  }
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { id, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [id]: value
+    }));
+  };
+
+  const handleCheckboxChange = (field: string, checked: boolean) => {
+    const [group, key] = field.includes('.') ? field.split('.') : [field, null];
+    
+    setFormData(prev => {
+      if (key) {
+        return {
+          ...prev,
+          [group]: {
+            ...(prev[group as keyof FormData] as Record<string, boolean>),
+            [key]: checked
+          }
+        };
+      }
+      return {
+        ...prev,
+        [group]: checked
+      };
+    });
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background/80 to-background p-6 space-y-8">
+      <InstallerBreadcrumb />
+      
       <div className="max-w-[1600px] mx-auto space-y-8">
-        <Card className="p-6">
-          <h1 className="text-3xl font-bold text-white mb-2">Mon Profil Professionnel</h1>
-          <p className="text-muted-foreground">
-            Gérez vos informations professionnelles et vos préférences de visibilité
-          </p>
-        </Card>
+        <h1 className="text-3xl font-bold text-white">Mon Profil Professionnel</h1>
 
-        <ProfileHeader formData={formData} />
-        
-        <ProfileStats />
-
-        <form onSubmit={onSubmit} className="space-y-6">
-          <BasicInfoSection 
-            formData={formData} 
-            handleChange={handleChange} 
-          />
-          
+        <div className="space-y-6">
+          <ProfileStats />
+          <BasicInfoSection formData={formData} handleChange={handleChange} />
           <SolarSpecificSection 
             formData={formData} 
-            handleChange={handleChange}
+            handleChange={handleChange} 
             handleCheckboxChange={handleCheckboxChange}
           />
-
-          <InterventionZonesSection
-            selectedZones={formData.service_area}
-            onZonesChange={handleZonesChange}
-          />
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.4 }}
-            className="flex justify-end"
-          >
-            <Button 
-              type="submit"
-              className="w-full md:w-auto bg-primary hover:bg-primary/90 text-white"
-            >
-              <Save className="w-4 h-4 mr-2" />
-              Enregistrer les modifications
-            </Button>
-          </motion.div>
-        </form>
+        </div>
       </div>
     </div>
   )
 }
+
+export default ProfilePage

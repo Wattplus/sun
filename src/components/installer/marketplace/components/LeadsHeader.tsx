@@ -1,6 +1,5 @@
 import { Button } from "@/components/ui/button";
 import { Filter, CreditCard, Download } from "lucide-react";
-import { motion } from "framer-motion";
 
 interface LeadsHeaderProps {
   onToggleFilters: () => void;
@@ -10,14 +9,9 @@ interface LeadsHeaderProps {
 
 export const LeadsHeader = ({ onToggleFilters, onPrepaidAccount, onExport }: LeadsHeaderProps) => {
   return (
-    <motion.div 
-      initial={{ y: -20, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.3 }}
-      className="flex flex-col md:flex-row md:items-center justify-between gap-4"
-    >
+    <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
       <div>
-        <h1 className="text-2xl font-bold text-foreground">Nouveaux Leads</h1>
+        <h1 className="text-2xl font-bold text-primary">Nouveaux Leads</h1>
         <p className="text-muted-foreground mt-1">
           Découvrez les dernières opportunités commerciales
         </p>
@@ -28,7 +22,7 @@ export const LeadsHeader = ({ onToggleFilters, onPrepaidAccount, onExport }: Lea
           variant="outline"
           size="sm"
           onClick={onToggleFilters}
-          className="text-muted-foreground hover:text-primary border-primary/10 hover:bg-primary/5"
+          className="text-muted-foreground hover:text-primary"
         >
           <Filter className="h-4 w-4 mr-2" />
           Filtres
@@ -38,7 +32,7 @@ export const LeadsHeader = ({ onToggleFilters, onPrepaidAccount, onExport }: Lea
           variant="outline"
           size="sm"
           onClick={onExport}
-          className="text-muted-foreground hover:text-primary border-primary/10 hover:bg-primary/5"
+          className="text-muted-foreground hover:text-primary"
         >
           <Download className="h-4 w-4 mr-2" />
           Exporter
@@ -54,6 +48,6 @@ export const LeadsHeader = ({ onToggleFilters, onPrepaidAccount, onExport }: Lea
           Recharger mon compte
         </Button>
       </div>
-    </motion.div>
+    </div>
   );
 };

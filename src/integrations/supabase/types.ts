@@ -104,41 +104,6 @@ export type Database = {
           },
         ]
       }
-      installer_portfolios: {
-        Row: {
-          created_at: string
-          description: string | null
-          id: string
-          image_url: string | null
-          installer_id: string
-          title: string
-        }
-        Insert: {
-          created_at?: string
-          description?: string | null
-          id?: string
-          image_url?: string | null
-          installer_id: string
-          title: string
-        }
-        Update: {
-          created_at?: string
-          description?: string | null
-          id?: string
-          image_url?: string | null
-          installer_id?: string
-          title?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "installer_portfolios_installer_id_fkey"
-            columns: ["installer_id"]
-            isOneToOne: false
-            referencedRelation: "installers"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       installers: {
         Row: {
           address: string
@@ -230,50 +195,6 @@ export type Database = {
             columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      interventions: {
-        Row: {
-          client_id: string | null
-          created_at: string
-          description: string | null
-          end_date: string | null
-          id: string
-          installer_id: string
-          start_date: string
-          status: string
-          title: string
-        }
-        Insert: {
-          client_id?: string | null
-          created_at?: string
-          description?: string | null
-          end_date?: string | null
-          id?: string
-          installer_id: string
-          start_date: string
-          status?: string
-          title: string
-        }
-        Update: {
-          client_id?: string | null
-          created_at?: string
-          description?: string | null
-          end_date?: string | null
-          id?: string
-          installer_id?: string
-          start_date?: string
-          status?: string
-          title?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "interventions_installer_id_fkey"
-            columns: ["installer_id"]
-            isOneToOne: false
-            referencedRelation: "installers"
             referencedColumns: ["id"]
           },
         ]

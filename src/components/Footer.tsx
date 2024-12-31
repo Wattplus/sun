@@ -75,7 +75,7 @@ export const Footer = () => {
           <div className="space-y-4">
             <h3 className="text-lg font-semibold text-white">Espace pro</h3>
             <div className="space-y-4">
-              <Link to="/espace-installateur/inscription" className="block">
+              <Link to="/espace-installateur" className="block">
                 <div className="space-y-1">
                   <p className="text-sm font-semibold text-blue-400">Espace installateur</p>
                   <p className="text-xs text-gray-400">Accédez à notre réseau de leads qualifiés</p>
