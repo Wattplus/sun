@@ -1,6 +1,6 @@
 import { useEffect } from "react"
 import { useNavigate } from "react-router-dom"
-import { supabase } from "@/integrations/supabase/client"
+import { supabase } from "@/lib/supabase-client"
 import { toast } from "sonner"
 
 export const useAuthRedirect = () => {
@@ -27,7 +27,7 @@ export const useAuthRedirect = () => {
         }
 
         if (profile.role === 'admin' || profile.role === 'super_admin') {
-          navigate('/admin')
+          navigate('/admin/leads')
           return
         }
 
@@ -67,7 +67,7 @@ export const useAuthRedirect = () => {
           }
 
           if (profile.role === 'admin' || profile.role === 'super_admin') {
-            navigate('/admin')
+            navigate('/admin/leads')
             return
           }
 
@@ -87,7 +87,7 @@ export const useAuthRedirect = () => {
           toast.error("Erreur lors du changement d'authentification")
         }
       } else if (event === 'SIGNED_OUT') {
-        navigate('/')
+        navigate('/login')
       }
     })
 

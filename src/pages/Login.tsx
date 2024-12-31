@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/lib/supabase-client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import { Card } from "@/components/ui/card";
 
 export default function Login() {
@@ -43,19 +43,32 @@ export default function Login() {
 
       if (profileError) throw profileError;
 
-      // Redirect based on role
+      // Check if user is an installer
+      const { data: installer } = await supabase
+        .from('installers')
+        .select('*')
+        .eq('user_id', user.id)
+        .single();
+
+      // Redirect based on role and installer status
       if (profile?.role === 'admin' || profile?.role === 'super_admin') {
         toast({
           title: "Connexion réussie",
           description: "Bienvenue dans l'interface d'administration",
         });
-        navigate("/admin/leads"); // Redirect to leads management
+        navigate("/admin/leads");
+      } else if (installer) {
+        toast({
+          title: "Connexion réussie",
+          description: "Bienvenue dans votre espace installateur",
+        });
+        navigate("/espace-installateur");
       } else {
         toast({
-          title: "Accès refusé",
-          description: "Vous n'avez pas les permissions nécessaires",
-          variant: "destructive",
+          title: "Connexion réussie",
+          description: "Bienvenue",
         });
+        navigate("/");
       }
     } catch (error) {
       console.error("Error during login:", error);
@@ -73,9 +86,9 @@ export default function Login() {
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background/95 to-background/50 p-4">
       <Card className="w-full max-w-md p-6 space-y-6 bg-background/50 backdrop-blur-sm border border-primary/20">
         <div className="space-y-2 text-center">
-          <h1 className="text-2xl font-bold tracking-tight">Administration</h1>
+          <h1 className="text-2xl font-bold tracking-tight">Connexion</h1>
           <p className="text-muted-foreground">
-            Connectez-vous pour accéder à l'interface d'administration
+            Connectez-vous pour accéder à votre espace
           </p>
         </div>
 
