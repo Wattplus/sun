@@ -24,7 +24,7 @@ export const ProfileSection = () => {
 
   if (!formData) {
     return (
-      <Card className="p-6 space-y-4">
+      <Card className="p-6 space-y-4 bg-[#0B1623] border-primary/20">
         <div className="flex items-center gap-2 text-yellow-500">
           <AlertCircle className="h-5 w-5" />
           <h2 className="text-lg font-semibold">Profil non configuré</h2>
@@ -40,8 +40,7 @@ export const ProfileSection = () => {
             phone: "",
             company: "",
             siret: "",
-            website: "",
-            description: ""
+            website: ""
           }} handleChange={handleChange} />
           <Button 
             type="submit" 
