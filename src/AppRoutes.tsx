@@ -25,6 +25,16 @@ import { PrivacyPolicy } from "@/pages/PrivacyPolicy"
 import { TermsOfService } from "@/pages/TermsOfService"
 import { LeadManagement } from "@/components/admin/LeadManagement"
 import InstallerManagement from "@/components/admin/InstallerManagement"
+import { MessagesPage } from "@/components/installer/messages/MessagesPage"
+import { ConversationPage } from "@/components/installer/messages/ConversationPage"
+import { MarketplacePage } from "@/components/installer/marketplace/MarketplacePage"
+import { NewLeadsPage } from "@/components/installer/marketplace/NewLeadsPage"
+import { PurchasedLeadsPage } from "@/components/installer/leads/PurchasedLeadsPage"
+import { LeadDetailsPage } from "@/components/installer/leads/LeadDetailsPage"
+import { AccountPage } from "@/components/installer/account/AccountPage"
+import { SettingsPage } from "@/components/installer/settings/SettingsPage"
+import { HelpPage } from "@/components/installer/help/HelpPage"
+import { ClientsPage } from "@/components/installer/clients/ClientsPage"
 
 export const AppRoutes = () => {
   useAuthRedirect()
@@ -57,11 +67,73 @@ export const AppRoutes = () => {
           <InstallerDashboard />
         </ProtectedRoute>
       } />
-      <Route path="/espace-installateur/*" element={
+      
+      {/* Installer Marketplace Routes */}
+      <Route path="/espace-installateur/marketplace" element={
         <ProtectedRoute>
-          <InstallerProfile />
+          <MarketplacePage />
         </ProtectedRoute>
       } />
+      <Route path="/espace-installateur/leads/nouveaux" element={
+        <ProtectedRoute>
+          <NewLeadsPage />
+        </ProtectedRoute>
+      } />
+      <Route path="/espace-installateur/leads/achetes" element={
+        <ProtectedRoute>
+          <PurchasedLeadsPage />
+        </ProtectedRoute>
+      } />
+      <Route path="/espace-installateur/leads/:leadId" element={
+        <ProtectedRoute>
+          <LeadDetailsPage />
+        </ProtectedRoute>
+      } />
+
+      {/* Installer Account Routes */}
+      <Route path="/espace-installateur/compte" element={
+        <ProtectedRoute>
+          <AccountPage />
+        </ProtectedRoute>
+      } />
+      <Route path="/espace-installateur/parametres" element={
+        <ProtectedRoute>
+          <SettingsPage />
+        </ProtectedRoute>
+      } />
+      <Route path="/espace-installateur/profil" element={
+        <ProtectedRoute>
+          <NewProfilePage />
+        </ProtectedRoute>
+      } />
+
+      {/* Installer Messages Routes */}
+      <Route path="/espace-installateur/messages" element={
+        <ProtectedRoute>
+          <MessagesPage />
+        </ProtectedRoute>
+      } />
+      <Route path="/espace-installateur/messages/:conversationId" element={
+        <ProtectedRoute>
+          <ConversationPage />
+        </ProtectedRoute>
+      } />
+
+      {/* Installer Clients Routes */}
+      <Route path="/espace-installateur/clients" element={
+        <ProtectedRoute>
+          <ClientsPage />
+        </ProtectedRoute>
+      } />
+
+      {/* Installer Help Routes */}
+      <Route path="/espace-installateur/aide" element={
+        <ProtectedRoute>
+          <HelpPage />
+        </ProtectedRoute>
+      } />
+
+      {/* Installer Payment Routes */}
       <Route path="/installer/checkout" element={
         <ProtectedRoute>
           <CheckoutPage />
@@ -70,11 +142,6 @@ export const AppRoutes = () => {
       <Route path="/installer/prepaid" element={
         <ProtectedRoute>
           <PrepaidAccountPage />
-        </ProtectedRoute>
-      } />
-      <Route path="/installer/profile" element={
-        <ProtectedRoute>
-          <NewProfilePage />
         </ProtectedRoute>
       } />
 
