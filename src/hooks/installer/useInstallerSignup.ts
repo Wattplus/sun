@@ -26,6 +26,18 @@ export const useInstallerSignup = () => {
     setUserExists(false)
 
     try {
+      // Vérifier si le SIRET existe déjà
+      const { data: existingInstaller } = await supabase
+        .from('installers')
+        .select('id')
+        .eq('siret', formData.siret)
+        .single()
+
+      if (existingInstaller) {
+        toast.error("Ce numéro SIRET est déjà utilisé par un autre installateur")
+        return
+      }
+
       if (formData.password !== formData.confirmPassword) {
         throw new Error("Les mots de passe ne correspondent pas")
       }
@@ -38,7 +50,7 @@ export const useInstallerSignup = () => {
           data: {
             first_name: formData.firstName,
             last_name: formData.lastName,
-            role: 'installer' // Set role as installer
+            role: 'installer'
           }
         }
       })
@@ -95,7 +107,7 @@ export const useInstallerSignup = () => {
           address: formData.address,
           postal_code: formData.postalCode,
           city: formData.city,
-          verified: true, // Set verified to true by default
+          verified: true,
           credits: 0,
           service_area: [],
           certifications: {
@@ -115,7 +127,7 @@ export const useInstallerSignup = () => {
             acceptDirectMessages: true,
             showCertifications: true,
           },
-          status: 'active' // Set status to active by default
+          status: 'active'
         })
 
       if (installerError) {
