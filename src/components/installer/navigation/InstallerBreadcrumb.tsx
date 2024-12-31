@@ -8,18 +8,29 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { useLocation, Link } from "react-router-dom";
-import { ChevronRight, Home } from "lucide-react";
+import { ChevronRight, Home, Building2, UserPlus, ShoppingCart } from "lucide-react";
 
 const breadcrumbTitles: Record<string, string> = {
-  "espace-installateur": "Tableau de bord",
-  "projets": "Projets",
+  "espace-installateur": "Espace Installateur",
+  "leads": "Leads",
+  "nouveaux": "Nouveaux leads",
+  "achetes": "Leads achetés",
   "messages": "Messages",
   "profil": "Profil",
   "abonnement": "Abonnement",
-  "leads": "Leads",
   "documents": "Documents",
   "parametres": "Paramètres",
-  "notifications": "Notifications"
+  "notifications": "Notifications",
+  "compte": "Mon compte",
+  "paiement": "Paiement",
+  "recharge": "Recharge",
+  "nouvelle-carte": "Nouvelle carte"
+};
+
+const breadcrumbIcons: Record<string, React.ComponentType> = {
+  "espace-installateur": Building2,
+  "leads": UserPlus,
+  "achetes": ShoppingCart,
 };
 
 export const InstallerBreadcrumb = () => {
@@ -42,6 +53,7 @@ export const InstallerBreadcrumb = () => {
         {pathSegments.map((segment, index) => {
           const path = `/${pathSegments.slice(0, index + 1).join("/")}`;
           const isLast = index === pathSegments.length - 1;
+          const Icon = breadcrumbIcons[segment];
           
           return (
             <React.Fragment key={path}>
@@ -50,14 +62,16 @@ export const InstallerBreadcrumb = () => {
               </BreadcrumbSeparator>
               <BreadcrumbItem>
                 {isLast ? (
-                  <BreadcrumbPage className="font-medium">
+                  <BreadcrumbPage className="font-medium flex items-center gap-2">
+                    {Icon && <Icon className="h-4 w-4" />}
                     {breadcrumbTitles[segment] || segment}
                   </BreadcrumbPage>
                 ) : (
                   <Link 
                     to={path} 
-                    className="text-muted-foreground hover:text-primary transition-colors"
+                    className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors"
                   >
+                    {Icon && <Icon className="h-4 w-4" />}
                     {breadcrumbTitles[segment] || segment}
                   </Link>
                 )}
