@@ -1,93 +1,116 @@
-import { useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
-import { Auth } from "@supabase/auth-ui-react";
-import { ThemeSupa } from "@supabase/auth-ui-shared";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { supabase } from "@/lib/supabase-client";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { useToast } from "@/components/ui/use-toast";
 import { Card } from "@/components/ui/card";
-import { toast } from "sonner";
 
-export const Login = () => {
+export default function Login() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const location = useLocation();
+  const { toast } = useToast();
 
-  useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
-      if (event === "SIGNED_IN" && session) {
-        try {
-          const { data: profile } = await supabase
-            .from('profiles')
-            .select('role')
-            .eq('id', session.user.id)
-            .single();
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
 
-          if (profile?.role === 'admin' || profile?.role === 'super_admin') {
-            toast.success("Connexion réussie en tant qu'administrateur");
-            navigate("/admin");
-          } else {
-            toast.success("Connexion réussie");
-            navigate("/espace-installateur");
-          }
-        } catch (error) {
-          console.error("Error checking user role:", error);
-          toast.error("Erreur lors de la vérification du rôle");
-        }
+    try {
+      const { data: { user }, error: signInError } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      if (signInError) throw signInError;
+
+      if (!user) {
+        toast({
+          title: "Erreur",
+          description: "Utilisateur non trouvé",
+          variant: "destructive",
+        });
+        return;
       }
-    });
 
-    return () => {
-      subscription.unsubscribe();
-    };
-  }, [navigate]);
+      // Fetch user profile to check role
+      const { data: profile, error: profileError } = await supabase
+        .from('profiles')
+        .select('role')
+        .eq('id', user.id)
+        .single();
+
+      if (profileError) throw profileError;
+
+      // Redirect based on role
+      if (profile?.role === 'admin' || profile?.role === 'super_admin') {
+        toast({
+          title: "Connexion réussie",
+          description: "Bienvenue dans l'interface d'administration",
+        });
+        navigate("/admin/leads"); // Redirect to leads management
+      } else {
+        toast({
+          title: "Accès refusé",
+          description: "Vous n'avez pas les permissions nécessaires",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      console.error("Error during login:", error);
+      toast({
+        title: "Erreur de connexion",
+        description: "Vérifiez vos identifiants et réessayez",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background/95 to-background/50 flex items-center justify-center p-4">
-      <Card className="w-full max-w-md p-8 space-y-6 bg-card/50 backdrop-blur-sm">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background/95 to-background/50 p-4">
+      <Card className="w-full max-w-md p-6 space-y-6 bg-background/50 backdrop-blur-sm border border-primary/20">
         <div className="space-y-2 text-center">
-          <h1 className="text-3xl font-bold">Connexion</h1>
+          <h1 className="text-2xl font-bold tracking-tight">Administration</h1>
           <p className="text-muted-foreground">
-            Connectez-vous à votre compte pour accéder à votre espace
+            Connectez-vous pour accéder à l'interface d'administration
           </p>
         </div>
-        
-        <Auth
-          supabaseClient={supabase}
-          appearance={{
-            theme: ThemeSupa,
-            variables: {
-              default: {
-                colors: {
-                  brand: 'rgb(var(--primary))',
-                  brandAccent: 'rgb(var(--primary))',
-                }
-              }
-            }
-          }}
-          localization={{
-            variables: {
-              sign_in: {
-                email_label: 'Email',
-                password_label: 'Mot de passe',
-                button_label: 'Se connecter',
-                loading_button_label: 'Connexion en cours...',
-                social_provider_text: 'Se connecter avec {{provider}}',
-                link_text: 'Vous avez déjà un compte ? Connectez-vous',
-              },
-              sign_up: {
-                email_label: 'Email',
-                password_label: 'Mot de passe',
-                button_label: "S'inscrire",
-                loading_button_label: 'Inscription en cours...',
-                social_provider_text: "S'inscrire avec {{provider}}",
-                link_text: "Vous n'avez pas de compte ? Inscrivez-vous",
-              },
-            },
-          }}
-          theme="light"
-          providers={[]}
-        />
+
+        <form onSubmit={handleLogin} className="space-y-4">
+          <div className="space-y-2">
+            <Input
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              className="bg-background/50"
+            />
+          </div>
+          
+          <div className="space-y-2">
+            <Input
+              type="password"
+              placeholder="Mot de passe"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              className="bg-background/50"
+            />
+          </div>
+
+          <Button 
+            type="submit" 
+            className="w-full"
+            disabled={loading}
+          >
+            {loading ? "Connexion..." : "Se connecter"}
+          </Button>
+        </form>
       </Card>
     </div>
   );
-};
-
-export default Login;
+}
