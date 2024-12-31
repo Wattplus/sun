@@ -1,186 +1,57 @@
-import { Routes, Route, useNavigate } from "react-router-dom";
-import { useEffect } from "react";
-import { supabase } from "@/lib/supabase-client";
-import { toast } from "sonner";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
+import { useAuthRedirect } from "@/routes/useAuthRedirect"
+import { ProtectedRoute } from "@/routes/ProtectedRoute"
+import Index from "@/pages/Index"
+import Login from "@/pages/Login"
+import Admin from "@/pages/Admin"
+import { ThankYou } from "@/pages/ThankYou"
+import { CheckoutPage } from "@/pages/installer/payment/CheckoutPage"
+import { PrepaidAccountPage } from "@/pages/installer/account/PrepaidAccountPage"
+import { NewProfilePage } from "@/pages/installer/profile/NewProfilePage"
+import { InstallerSignup } from "@/pages/installer/auth/InstallerSignup"
+import { InstallerProfile } from "@/pages/InstallerProfile"
 
-// Pages
-import Index from "@/pages/Index";
-import Login from "@/pages/Login";
-import Admin from "@/pages/Admin";
-import { ThankYou } from "@/pages/ThankYou";
-import { CheckoutPage } from "@/pages/installer/payment/CheckoutPage";
-import { PrepaidAccountPage } from "@/pages/installer/account/PrepaidAccountPage";
-import { NewProfilePage } from "@/pages/installer/profile/NewProfilePage";
-import { InstallerSignup } from "@/pages/installer/auth/InstallerSignup";
-
-// Admin Components
-import AdminDashboard from "@/components/admin/AdminDashboard";
-import LeadManagement from "@/components/admin/LeadManagement";
-import InstallerManagement from "@/components/admin/InstallerManagement";
-import UserManagement from "@/components/admin/users/UserManagement";
-import StatisticsPage from "@/components/admin/statistics/StatisticsPage";
-import NotificationsPage from "@/components/admin/notifications/NotificationsPage";
-import SettingsPage from "@/components/admin/settings/SettingsPage";
-import PricingSettings from "@/components/admin/pricing/PricingSettings";
-import TransactionMonitoring from "@/components/admin/transactions/TransactionMonitoring";
-import ComplaintManagement from "@/components/admin/complaints/ComplaintManagement";
-import DataExport from "@/components/admin/export/DataExport";
-
-// Installer Components
-import { InstallerLayout } from "@/components/installer/navigation/InstallerLayout";
-import { InstallerDashboard } from "@/components/installer/InstallerDashboard";
-import { NewLeadsPage } from "@/components/installer/marketplace/NewLeadsPage";
-import { PurchasedLeadsPage } from "@/components/installer/leads/PurchasedLeadsPage";
-import { MessagesPage } from "@/components/installer/messages/MessagesPage";
-import { SettingsPage as InstallerSettings } from "@/components/installer/settings/SettingsPage";
-import { AccountPage } from "@/components/installer/account/AccountPage";
-
-export function AppRoutes() {
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    const checkInitialAuth = async () => {
-      try {
-        const { data: { session } } = await supabase.auth.getSession();
-        if (session?.user) {
-          // Vérifier d'abord si l'utilisateur est un admin
-          const { data: profile, error: profileError } = await supabase
-            .from('profiles')
-            .select('role')
-            .eq('id', session.user.id)
-            .single();
-
-          if (profileError) {
-            console.error("Error fetching profile:", profileError);
-            toast.error("Erreur lors de la vérification du profil");
-            return;
-          }
-
-          // Si l'utilisateur est un admin, rediriger vers le tableau de bord admin
-          if (profile?.role === 'admin' || profile?.role === 'super_admin') {
-            navigate('/admin');
-            return;
-          }
-
-          // Sinon, vérifier si c'est un installateur
-          const { data: installer, error } = await supabase
-            .from('installers')
-            .select('*')
-            .eq('user_id', session.user.id)
-            .maybeSingle();
-
-          if (error) {
-            console.error("Error fetching installer:", error);
-            toast.error("Erreur lors de la vérification du profil");
-            return;
-          }
-
-          if (installer) {
-            navigate('/espace-installateur');
-          } else {
-            navigate('/');
-          }
-        }
-      } catch (error) {
-        console.error("Error in checkInitialAuth:", error);
-        toast.error("Erreur lors de la vérification de l'authentification");
-      }
-    };
-
-    checkInitialAuth();
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
-      console.log("AppRoutes: Auth state changed:", event, session?.user?.id);
-      
-      try {
-        if (event === 'SIGNED_IN' && session) {
-          // Vérifier d'abord si l'utilisateur est un admin
-          const { data: profile, error: profileError } = await supabase
-            .from('profiles')
-            .select('role')
-            .eq('id', session.user.id)
-            .single();
-
-          if (profileError) {
-            console.error("Error fetching profile:", profileError);
-            toast.error("Erreur lors de la vérification du profil");
-            return;
-          }
-
-          // Si l'utilisateur est un admin, rediriger vers le tableau de bord admin
-          if (profile?.role === 'admin' || profile?.role === 'super_admin') {
-            navigate('/admin');
-            return;
-          }
-
-          // Sinon, vérifier si c'est un installateur
-          const { data: installer, error } = await supabase
-            .from('installers')
-            .select('*')
-            .eq('user_id', session.user.id)
-            .maybeSingle();
-
-          if (error) {
-            console.error("Error fetching installer:", error);
-            toast.error("Erreur lors de la vérification du profil");
-            return;
-          }
-
-          if (installer) {
-            navigate('/espace-installateur');
-          } else {
-            navigate('/');
-          }
-        } else if (event === 'SIGNED_OUT') {
-          navigate('/');
-        }
-      } catch (error) {
-        console.error("Error in auth state change handler:", error);
-        toast.error("Erreur lors du changement d'état d'authentification");
-      }
-    });
-
-    return () => {
-      subscription.unsubscribe();
-    };
-  }, [navigate]);
+export const AppRoutes = () => {
+  useAuthRedirect()
 
   return (
-    <Routes>
-      <Route path="/" element={<Index />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/thank-you" element={<ThankYou />} />
-      <Route path="/devenir-installateur" element={<InstallerSignup />} />
-      
-      {/* Installer Routes */}
-      <Route path="/espace-installateur" element={<InstallerLayout />}>
-        <Route index element={<InstallerDashboard />} />
-        <Route path="leads/nouveaux" element={<NewLeadsPage />} />
-        <Route path="leads/achetes" element={<PurchasedLeadsPage />} />
-        <Route path="messages" element={<MessagesPage />} />
-        <Route path="parametres" element={<InstallerSettings />} />
-        <Route path="notifications" element={<NotificationsPage />} />
-        <Route path="mon-compte/prepaid" element={<PrepaidAccountPage />} />
-        <Route path="checkout" element={<CheckoutPage />} />
-        <Route path="profil" element={<AccountPage />} />
-      </Route>
-      
-      {/* Admin Routes */}
-      <Route path="/admin" element={<Admin />}>
-        <Route index element={<AdminDashboard />} />
-        <Route path="statistics" element={<StatisticsPage />} />
-        <Route path="leads" element={<LeadManagement />} />
-        <Route path="installers" element={<InstallerManagement />} />
-        <Route path="users" element={<UserManagement />} />
-        <Route path="notifications" element={<NotificationsPage />} />
-        <Route path="settings" element={<SettingsPage />} />
-        <Route path="pricing" element={<PricingSettings />} />
-        <Route path="transactions" element={<TransactionMonitoring />} />
-        <Route path="complaints" element={<ComplaintManagement />} />
-        <Route path="export" element={<DataExport />} />
-      </Route>
+    <Router>
+      <Routes>
+        {/* Public Routes */}
+        <Route path="/" element={<Index />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/thank-you" element={<ThankYou />} />
+        <Route path="/devenir-installateur" element={<InstallerSignup />} />
+        
+        {/* Installer Routes */}
+        <Route path="/espace-installateur/*" element={
+          <ProtectedRoute>
+            <InstallerProfile />
+          </ProtectedRoute>
+        } />
+        <Route path="/installer/checkout" element={
+          <ProtectedRoute>
+            <CheckoutPage />
+          </ProtectedRoute>
+        } />
+        <Route path="/installer/prepaid" element={
+          <ProtectedRoute>
+            <PrepaidAccountPage />
+          </ProtectedRoute>
+        } />
+        <Route path="/installer/profile" element={
+          <ProtectedRoute>
+            <NewProfilePage />
+          </ProtectedRoute>
+        } />
 
-      <Route path="*" element={<Index />} />
-    </Routes>
-  );
+        {/* Admin Routes */}
+        <Route path="/admin/*" element={
+          <ProtectedRoute requiredRole={['admin', 'super_admin']}>
+            <Admin />
+          </ProtectedRoute>
+        } />
+      </Routes>
+    </Router>
+  )
 }
