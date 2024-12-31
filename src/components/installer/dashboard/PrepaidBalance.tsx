@@ -70,20 +70,11 @@ export const PrepaidBalance = ({ balance = 0 }: PrepaidBalanceProps) => {
                 <span className="text-3xl text-white/80">€</span>
               </motion.div>
             </div>
-            <Button
-              variant="outline"
-              size="sm"
-              className="text-primary border-primary/20 hover:bg-primary/10"
-              onClick={() => window.location.reload()}
-            >
-              <RefreshCw className="h-4 w-4 mr-2" />
-              Actualiser
-            </Button>
           </div>
 
           {/* Quick Top-up Options */}
           <div className="space-y-6">
-            <h4 className="text-lg text-white/90">Options de rechargement</h4>
+            <h4 className="text-lg font-medium text-white/90">Options de rechargement</h4>
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
               {[50, 100, 200, 500, 1000, 1500].map((amount, index) => (
                 <motion.button
