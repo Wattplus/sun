@@ -98,9 +98,9 @@ export const PrepaidBalance = ({ balance = 0 }: PrepaidBalanceProps) => {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.3, delay: index * 0.1 }}
                 >
-                  <div className="flex flex-col items-center justify-center text-white">
+                  <div className="flex items-center justify-center text-white">
                     <span className="text-2xl font-bold">{amount}</span>
-                    <span className="text-lg">€</span>
+                    <span className="text-2xl ml-1">€</span>
                   </div>
                   {amount === 500 && (
                     <span className="absolute -top-2 left-1/2 -translate-x-1/2 bg-primary px-2 py-0.5 rounded text-xs font-medium text-white">
