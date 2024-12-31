@@ -60,12 +60,9 @@ export const useInstallerForm = (formData: InstallerFormData, setFormData: (data
         installation_types: formData.installationTypes,
         maintenance_services: formData.maintenanceServices,
         website: formData.website,
-        visibility_settings: formData.visibility_settings || {
-          showPhoneNumber: true,
-          highlightProfile: false,
-          acceptDirectMessages: true,
-          showCertifications: true,
-        }
+        siret: formData.siret,
+        city: formData.city,
+        visibility_settings: formData.visibility_settings
       }
 
       const { error: updateError } = await supabase
