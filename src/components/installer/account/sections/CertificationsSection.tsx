@@ -28,6 +28,7 @@ export const CertificationsSection = ({ certifications, handleCheckboxChange }: 
             id="qualiPV"
             checked={certifications.qualiPV}
             onCheckedChange={(checked) => handleCheckboxChange('certifications.qualiPV', checked as boolean)}
+            className="border-primary data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground"
           />
           <Label htmlFor="qualiPV" className="text-white">QualiPV</Label>
         </div>
@@ -36,6 +37,7 @@ export const CertificationsSection = ({ certifications, handleCheckboxChange }: 
             id="rge"
             checked={certifications.rge}
             onCheckedChange={(checked) => handleCheckboxChange('certifications.rge', checked as boolean)}
+            className="border-primary data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground"
           />
           <Label htmlFor="rge" className="text-white">RGE</Label>
         </div>
@@ -44,6 +46,7 @@ export const CertificationsSection = ({ certifications, handleCheckboxChange }: 
             id="qualibat"
             checked={certifications.qualibat}
             onCheckedChange={(checked) => handleCheckboxChange('certifications.qualibat', checked as boolean)}
+            className="border-primary data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground"
           />
           <Label htmlFor="qualibat" className="text-white">Qualibat</Label>
         </div>
