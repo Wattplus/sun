@@ -51,17 +51,26 @@ export const useInstallerForm = (installer: Installer | null) => {
             const nationwide = data.service_area?.includes("Toute France")
             setIsNationwide(nationwide)
             
-            // Cast certifications to the correct type
-            const certifications = data.certifications as DatabaseCertifications
+            // Safely cast certifications with type checking
+            let certifications: DatabaseCertifications = {
+              qualiPV: false,
+              rge: false,
+              qualibat: false
+            }
+            
+            if (data.certifications && typeof data.certifications === 'object' && !Array.isArray(data.certifications)) {
+              const cert = data.certifications as Record<string, unknown>
+              certifications = {
+                qualiPV: Boolean(cert.qualiPV),
+                rge: Boolean(cert.rge),
+                qualibat: Boolean(cert.qualibat)
+              }
+            }
             
             setFormData({
               ...installer,
               zones: data.service_area || [],
-              certifications: {
-                qualiPV: certifications?.qualiPV || false,
-                rge: certifications?.rge || false,
-                qualibat: certifications?.qualibat || false
-              }
+              certifications
             })
           }
         } catch (error) {
