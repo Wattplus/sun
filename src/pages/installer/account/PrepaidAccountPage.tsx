@@ -1,17 +1,16 @@
 import { useState } from "react";
 import { InstallerBreadcrumb } from "@/components/installer/navigation/InstallerBreadcrumb";
-import { PrepaidBalanceDisplay } from "@/components/installer/dashboard/prepaid/PrepaidBalanceDisplay";
 import { useInstallerBalance } from "@/hooks/installer/useInstallerBalance";
 import { supabase } from "@/lib/supabase-client";
 import { useToast } from "@/hooks/use-toast";
-import { CreditCard, History, RefreshCw, Plus } from "lucide-react";
+import { Euro, RefreshCw, TrendingUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { SavedCards } from "@/components/installer/dashboard/prepaid/SavedCards";
-import { TransactionHistory } from "@/components/installer/dashboard/prepaid/TransactionHistory";
 import { Card } from "@/components/ui/card";
 import { motion } from "framer-motion";
 import { FAQSection } from "@/components/installer/dashboard/prepaid/FAQSection";
 import { mockCards, mockTransactions, faqItems } from "@/components/installer/dashboard/prepaid/mockData";
+import { SavedCards } from "@/components/installer/dashboard/prepaid/SavedCards";
+import { TransactionHistory } from "@/components/installer/dashboard/prepaid/TransactionHistory";
 
 export const PrepaidAccountPage = () => {
   const { balance, isLoading: isBalanceLoading } = useInstallerBalance();
@@ -46,19 +45,9 @@ export const PrepaidAccountPage = () => {
     }
   };
 
-  const handleDeleteCard = (cardId: string) => {
-    console.log("Delete card:", cardId);
-    toast({
-      title: "Carte supprimée",
-      description: "La carte a été supprimée avec succès.",
-    });
-  };
-
   const handleRefresh = () => {
     window.location.reload();
   };
-
-  const rechargeAmounts = [50, 100, 200, 500, 1000, 1500];
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background via-background-light to-background p-4 md:p-6">
@@ -78,24 +67,42 @@ export const PrepaidAccountPage = () => {
 
         <div className="grid gap-8">
           {/* Section Solde et Recharge Rapide */}
-          <div className="grid md:grid-cols-2 gap-6">
-            <div className="md:col-span-2">
-              <Card className="p-6 glass-card">
-                <div className="flex justify-between items-center mb-6">
-                  <div>
-                    <h2 className="text-2xl font-bold text-white">Solde disponible</h2>
-                    <p className="text-3xl font-bold mt-2">{balance?.toLocaleString('fr-FR')} €</p>
+          <Card className="overflow-hidden bg-gradient-to-br from-background/80 to-background-light border-primary/20">
+            <div className="p-8 space-y-8">
+              {/* Balance Display */}
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6">
+                <div className="space-y-4">
+                  <h3 className="text-lg font-medium text-white/90 flex items-center gap-2">
+                    <Euro className="h-5 w-5 text-primary" />
+                    Solde disponible
+                  </h3>
+                  <motion.div 
+                    className="flex items-baseline gap-2"
+                    whileHover={{ scale: 1.05 }}
+                    transition={{ type: "spring", stiffness: 300 }}
+                  >
+                    <span className="text-5xl font-bold bg-gradient-to-r from-white to-white/80 bg-clip-text text-transparent">
+                      {balance?.toLocaleString('fr-FR')}
+                    </span>
+                    <span className="text-3xl font-semibold text-white/80">€</span>
+                  </motion.div>
+                  <div className="flex items-center gap-2">
+                    <TrendingUp className="h-4 w-4 text-emerald-400" />
+                    <span className="text-sm text-emerald-400">+15% ce mois</span>
                   </div>
                 </div>
-                
-                {/* Quick Recharge Options */}
-                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 mb-6">
-                  {rechargeAmounts.map((amount) => (
+              </div>
+
+              {/* Quick Top-up Options */}
+              <div className="space-y-6">
+                <h4 className="text-lg font-medium text-white/90">Options de rechargement</h4>
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+                  {[50, 100, 200, 500, 1000, 1500].map((amount, index) => (
                     <motion.div
                       key={amount}
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.3 }}
+                      transition={{ duration: 0.3, delay: index * 0.1 }}
                     >
                       <Button
                         variant="outline"
@@ -121,11 +128,9 @@ export const PrepaidAccountPage = () => {
                     </motion.div>
                   ))}
                 </div>
-
-                <PrepaidBalanceDisplay balance={balance || 0} />
-              </Card>
+              </div>
             </div>
-          </div>
+          </Card>
 
           {/* Section Cartes et Historique */}
           <div className="grid md:grid-cols-2 gap-6">
@@ -135,15 +140,7 @@ export const PrepaidAccountPage = () => {
               transition={{ delay: 0.3 }}
             >
               <Card className="p-6 glass-card h-full">
-                <h2 className="text-xl font-semibold mb-6 text-white flex items-center gap-2">
-                  <CreditCard className="h-5 w-5 text-primary" />
-                  Moyens de paiement
-                </h2>
-                <SavedCards
-                  cards={mockCards}
-                  onDeleteCard={handleDeleteCard}
-                  onAddCard={() => {}}
-                />
+                <SavedCards cards={mockCards} onDeleteCard={() => {}} onAddCard={() => {}} />
               </Card>
             </motion.div>
 
@@ -153,10 +150,6 @@ export const PrepaidAccountPage = () => {
               transition={{ delay: 0.4 }}
             >
               <Card className="p-6 glass-card h-full">
-                <h2 className="text-xl font-semibold mb-6 text-white flex items-center gap-2">
-                  <History className="h-5 w-5 text-primary" />
-                  Historique des transactions
-                </h2>
                 <TransactionHistory transactions={mockTransactions} />
               </Card>
             </motion.div>
