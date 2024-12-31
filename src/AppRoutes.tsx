@@ -10,6 +10,18 @@ import { PrepaidAccountPage } from "@/pages/installer/account/PrepaidAccountPage
 import { NewProfilePage } from "@/pages/installer/profile/NewProfilePage"
 import { InstallerSignup } from "@/pages/installer/auth/InstallerSignup"
 import { InstallerProfile } from "@/pages/InstallerProfile"
+import { AboutUs } from "@/pages/AboutUs"
+import { OurMission } from "@/pages/OurMission"
+import { Blog } from "@/pages/Blog"
+import { SolarInstallation } from "@/pages/SolarInstallation"
+import { Maintenance } from "@/pages/Maintenance"
+import { Financing } from "@/pages/Financing"
+import { Pricing } from "@/pages/Pricing"
+import { Contact } from "@/pages/Contact"
+import { FAQ } from "@/pages/FAQ"
+import { LegalNotice } from "@/pages/LegalNotice"
+import { PrivacyPolicy } from "@/pages/PrivacyPolicy"
+import { TermsOfService } from "@/pages/TermsOfService"
 
 export const AppRoutes = () => {
   useAuthRedirect()
@@ -21,6 +33,20 @@ export const AppRoutes = () => {
       <Route path="/login" element={<Login />} />
       <Route path="/thank-you" element={<ThankYou />} />
       <Route path="/devenir-installateur" element={<InstallerSignup />} />
+      
+      {/* Footer Routes */}
+      <Route path="/qui-sommes-nous" element={<AboutUs />} />
+      <Route path="/notre-mission" element={<OurMission />} />
+      <Route path="/blog" element={<Blog />} />
+      <Route path="/installation-solaire" element={<SolarInstallation />} />
+      <Route path="/maintenance" element={<Maintenance />} />
+      <Route path="/financement" element={<Financing />} />
+      <Route path="/tarifs" element={<Pricing />} />
+      <Route path="/contact" element={<Contact />} />
+      <Route path="/faq" element={<FAQ />} />
+      <Route path="/mentions-legales" element={<LegalNotice />} />
+      <Route path="/confidentialite" element={<PrivacyPolicy />} />
+      <Route path="/cgv" element={<TermsOfService />} />
       
       {/* Installer Routes */}
       <Route path="/espace-installateur/*" element={
