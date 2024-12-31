@@ -23,6 +23,7 @@ export const InstallerProfile = () => {
         <meta property="og:type" content="website" />
       </Helmet>
       <InstallerLayout />
+      <Outlet />
     </>
   );
 };
