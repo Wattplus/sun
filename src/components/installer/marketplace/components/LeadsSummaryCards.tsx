@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Lead } from "@/types/crm";
 import { cn } from "@/lib/utils";
 import { Wallet, Tag, ArrowRight } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 interface LeadsSummaryCardsProps {
   availableLeads: Lead[];
@@ -17,7 +18,12 @@ export const LeadsSummaryCards = ({
   balance,
   onPrepaidAccount,
 }: LeadsSummaryCardsProps) => {
+  const navigate = useNavigate();
   const isLowBalance = balance < 200;
+
+  const handleRechargeClick = () => {
+    navigate("/espace-installateur/compte/prepaid");
+  };
 
   return (
     <div className="grid gap-4 md:grid-cols-2">
@@ -46,7 +52,7 @@ export const LeadsSummaryCards = ({
             )}
 
             <Button
-              onClick={onPrepaidAccount}
+              onClick={handleRechargeClick}
               className="w-full bg-primary/10 hover:bg-primary/20 text-primary border-primary/20"
             >
               Recharger mon compte
