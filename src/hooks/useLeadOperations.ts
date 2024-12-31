@@ -24,7 +24,7 @@ export const useLeadOperations = () => {
         .from('installers')
         .select('id')
         .eq('user_id', session.session.user.id)
-        .single();
+        .maybeSingle();
 
       if (installerError) {
         console.error("[useLeadOperations] Error fetching installer:", installerError);
@@ -32,9 +32,9 @@ export const useLeadOperations = () => {
         return;
       }
 
-      if (!installerData?.id) {
-        console.error("[useLeadOperations] No installer ID found");
-        toast.error("Profil installateur non trouvé");
+      if (!installerData) {
+        console.error("[useLeadOperations] No installer profile found");
+        toast.error("Profil installateur non trouvé. Veuillez compléter votre profil.");
         return;
       }
 
