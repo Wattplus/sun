@@ -9,6 +9,8 @@ import { MarketplaceHeader } from "./sections/MarketplaceHeader";
 import { MarketplaceStats } from "./sections/MarketplaceStats";
 import { MarketplaceSelection } from "./sections/MarketplaceSelection";
 import { MarketplaceGrid } from "./sections/MarketplaceGrid";
+import { BalanceSection } from "@/components/installer/marketplace/sections/BalanceSection";
+import { BottomCTA } from "@/components/installer/marketplace/sections/BottomCTA";
 
 export const LeadMarketplace = () => {
   const { toast } = useToast();
@@ -54,51 +56,58 @@ export const LeadMarketplace = () => {
 
   const totalPrice = selectedLeads.reduce((sum, lead) => sum + (lead.price || 0), 0);
 
+  const handlePrepaidAccount = () => {
+    window.location.href = '/espace-installateur/compte/prepaye';
+  };
+
   return (
     <div className="space-y-6 container mx-auto px-4 py-8">
       <AdminBreadcrumb />
       
-      <div className="bg-gradient-to-r from-background/90 to-background rounded-xl border border-primary/20">
-        <MarketplaceHeader availableLeads={availableLeads} />
+      <div className="space-y-6">
+        <BalanceSection 
+          balance={150} 
+          onPrepaidAccount={handlePrepaidAccount}
+        />
 
-        <div className="px-8 mb-8">
-          <LeadAgeTabs activeTab={activeTab} onTabChange={setActiveTab} />
-        </div>
+        <Card className="p-6 bg-background/50 backdrop-blur-sm border-primary/10">
+          <div className="space-y-6">
+            <MarketplaceHeader availableLeads={availableLeads.length} />
 
-        <div className="px-8 mb-6">
-          <Card className="p-6 bg-card/50 backdrop-blur-sm border-primary/20">
-            <LeadsFilters
-              availableDepartments={availableDepartments}
-              selectedDepartments={selectedDepartments}
-              projectTypeFilter={projectTypeFilter}
-              priceFilter={priceFilter}
-              onDepartmentSelect={handleDepartmentSelect}
-              onDepartmentRemove={handleDepartmentRemove}
-              onProjectTypeChange={setProjectTypeFilter}
-              onPriceFilterChange={setPriceFilter}
-            />
-          </Card>
-        </div>
+            <LeadAgeTabs activeTab={activeTab} onTabChange={setActiveTab} />
 
-        <div className="px-8 mb-6">
-          <MarketplaceSelection 
-            selectedLeads={selectedLeads}
-            onBulkPurchase={handleBulkPurchase}
-            totalPrice={totalPrice}
-          />
-        </div>
+            <div className="space-y-4">
+              <Card className="p-4 bg-card/50 backdrop-blur-sm border-primary/20">
+                <LeadsFilters
+                  availableDepartments={availableDepartments}
+                  selectedDepartments={selectedDepartments}
+                  projectTypeFilter={projectTypeFilter}
+                  priceFilter={priceFilter}
+                  onDepartmentSelect={handleDepartmentSelect}
+                  onDepartmentRemove={handleDepartmentRemove}
+                  onProjectTypeChange={setProjectTypeFilter}
+                  onPriceFilterChange={setPriceFilter}
+                />
+              </Card>
 
-        <div className="px-8 mb-8">
-          <MarketplaceStats availableLeads={availableLeads} />
-        </div>
+              <MarketplaceSelection 
+                selectedLeads={selectedLeads}
+                onBulkPurchase={handleBulkPurchase}
+                totalPrice={totalPrice}
+              />
 
-        <div className="px-8 pb-8">
-          <MarketplaceGrid 
-            availableLeads={availableLeads}
-            purchasedLeads={purchasedLeads}
-            onPurchase={handlePurchase}
-          />
-        </div>
+              <MarketplaceStats availableLeads={availableLeads} />
+
+              <MarketplaceGrid 
+                availableLeads={availableLeads}
+                purchasedLeads={purchasedLeads}
+                onPurchase={handlePurchase}
+              />
+            </div>
+          </div>
+        </Card>
+
+        <BottomCTA onPrepaidAccount={handlePrepaidAccount} />
       </div>
     </div>
   );
