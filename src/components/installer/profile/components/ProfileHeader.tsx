@@ -11,18 +11,18 @@ export const ProfileHeader = ({ formData }: ProfileHeaderProps) => {
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
           <h2 className="text-2xl font-bold text-white">
-            {formData.company || "Nom de l'entreprise"}
+            {formData?.company || "Nom de l'entreprise"}
           </h2>
           <p className="text-muted-foreground mt-1">
-            {formData.description || "Description de l'entreprise"}
+            {formData?.description || "Description de l'entreprise"}
           </p>
         </div>
         <div className="flex flex-col items-end">
           <p className="text-sm text-muted-foreground">
-            Contact: {formData.firstName} {formData.lastName}
+            Contact: {formData?.firstName || ''} {formData?.lastName || ''}
           </p>
           <p className="text-sm text-muted-foreground">
-            {formData.email}
+            {formData?.email || ''}
           </p>
         </div>
       </div>

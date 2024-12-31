@@ -9,6 +9,7 @@ import { InterventionZonesSection } from "../account/sections/InterventionZonesS
 import { supabase } from "@/integrations/supabase/client"
 import { useToast } from "@/hooks/use-toast"
 import { motion } from "framer-motion"
+import type { Json } from "@/integrations/supabase/types"
 
 export const ProfilePage = () => {
   const { toast } = useToast()
@@ -31,6 +32,9 @@ export const ProfilePage = () => {
       industrial: false,
     },
     maintenanceServices: false,
+    firstName: "",
+    lastName: "",
+    email: "",
   })
 
   useEffect(() => {
@@ -43,11 +47,13 @@ export const ProfilePage = () => {
           .from('installers')
           .select()
           .eq('user_id', user.id)
-          .single()
+          .maybeSingle()
 
         if (error) throw error
 
         if (installer) {
+          const [firstName = "", lastName = ""] = (installer.contact_name || "").split(" ")
+          
           setFormData({
             company: installer.company_name || "",
             description: installer.description || "",
@@ -56,17 +62,20 @@ export const ProfilePage = () => {
             inverterBrands: Array.isArray(installer.inverter_brands) ? installer.inverter_brands.join(', ') : "",
             guaranteeYears: installer.warranty_years?.toString() || "",
             service_area: installer.service_area || [],
-            certifications: installer.certifications || {
+            certifications: (installer.certifications as any) || {
               qualiPV: false,
               rge: false,
               qualibat: false,
             },
-            installationTypes: installer.installation_types || {
+            installationTypes: (installer.installation_types as any) || {
               residential: false,
               commercial: false,
               industrial: false,
             },
             maintenanceServices: installer.maintenance_services || false,
+            firstName,
+            lastName,
+            email: user.email || "",
           })
         }
       } catch (error) {
@@ -133,6 +142,7 @@ export const ProfilePage = () => {
           certifications: formData.certifications,
           installation_types: formData.installationTypes,
           maintenance_services: formData.maintenanceServices,
+          contact_name: `${formData.firstName} ${formData.lastName}`,
         })
         .eq('user_id', user.id)
 
@@ -157,7 +167,7 @@ export const ProfilePage = () => {
       <div className="max-w-[1600px] mx-auto space-y-8">
         <h1 className="text-3xl font-bold text-white">Mon Profil Professionnel</h1>
 
-        <ProfileHeader company={formData.company} description={formData.description} />
+        <ProfileHeader formData={formData} />
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <PhotovoltaicInfoSection formData={formData} handleChange={handleChange} />
