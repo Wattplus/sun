@@ -53,8 +53,25 @@ export const useInstallerSignup = () => {
 
       if (!authData.user) throw new Error("Erreur lors de la création du compte")
 
-      // 2. Wait for the database trigger to create the user profile
-      await new Promise(resolve => setTimeout(resolve, 5000))
+      // 2. Verify user exists in users table before proceeding
+      const verifyUser = async (): Promise<boolean> => {
+        const { data, error } = await supabase
+          .from('users')
+          .select('id')
+          .eq('id', authData.user.id)
+          .single()
+        
+        return !!data
+      }
+
+      // Try for up to 10 seconds (20 attempts, 500ms apart)
+      let attempts = 0
+      while (attempts < 20) {
+        const exists = await verifyUser()
+        if (exists) break
+        await new Promise(resolve => setTimeout(resolve, 500))
+        attempts++
+      }
 
       // 3. Create installer entry
       const { error: installerError } = await supabase
