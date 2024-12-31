@@ -2,10 +2,10 @@ import { useState, useEffect } from "react"
 import { supabase } from "@/integrations/supabase/client"
 import { useToast } from "@/hooks/use-toast"
 import type { InstallerFormData, DatabaseInstallerData } from "@/types/installer"
-import { convertDbToFormFormat } from "@/types/installer"
+import { convertDbToFormFormat, defaultFormData } from "@/types/installer"
 
 export const useInstallerData = () => {
-  const [installer, setInstaller] = useState<DatabaseInstallerData | null>(null)
+  const [formData, setFormData] = useState<InstallerFormData>(defaultFormData)
   const [loading, setLoading] = useState(true)
   const { toast } = useToast()
 
@@ -21,12 +21,12 @@ export const useInstallerData = () => {
           .from('installers')
           .select('*')
           .eq('user_id', session.session.user.id)
-          .single()
+          .maybeSingle()
 
         if (error) throw error
 
         if (data) {
-          setInstaller(data as DatabaseInstallerData)
+          setFormData(convertDbToFormFormat(data as DatabaseInstallerData))
         }
       } catch (error) {
         console.error('Error fetching installer:', error)
@@ -43,5 +43,5 @@ export const useInstallerData = () => {
     fetchInstallerData()
   }, [toast])
 
-  return { installer, loading }
+  return { formData, setFormData, loading }
 }

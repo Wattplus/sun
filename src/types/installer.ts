@@ -55,37 +55,6 @@ export interface DatabaseInstallerData extends InstallerFormData {
   subscription_plan: string
 }
 
-export const convertDbToFormFormat = (data: DatabaseInstallerData): InstallerFormData => {
-  return {
-    company_name: data.company_name,
-    contact_name: data.contact_name,
-    email: data.email,
-    phone: data.phone,
-    siret: data.siret,
-    address: data.address,
-    postal_code: data.postal_code,
-    city: data.city,
-    website: data.website || "",
-    description: data.description || "",
-    service_area: data.service_area,
-    experience_years: data.experience_years || 0,
-    panel_brands: data.panel_brands || [],
-    inverter_brands: data.inverter_brands || [],
-    warranty_years: data.warranty_years || 0,
-    certifications: data.certifications as Certifications,
-    installation_types: data.installation_types as InstallationTypes,
-    maintenance_services: data.maintenance_services,
-    visibility_settings: data.visibility_settings as VisibilitySettings
-  }
-}
-
-export const convertFormToDbFormat = (formData: InstallerFormData, userId: string): Partial<DatabaseInstallerData> => {
-  return {
-    user_id: userId,
-    ...formData
-  }
-}
-
 export const defaultFormData: InstallerFormData = {
   company_name: "",
   contact_name: "",
@@ -118,5 +87,36 @@ export const defaultFormData: InstallerFormData = {
     highlightProfile: false,
     acceptDirectMessages: true,
     showCertifications: true
+  }
+}
+
+export const convertDbToFormFormat = (data: DatabaseInstallerData): InstallerFormData => {
+  return {
+    company_name: data.company_name,
+    contact_name: data.contact_name,
+    email: data.email,
+    phone: data.phone,
+    siret: data.siret,
+    address: data.address,
+    postal_code: data.postal_code,
+    city: data.city,
+    website: data.website || "",
+    description: data.description || "",
+    service_area: data.service_area,
+    experience_years: data.experience_years || 0,
+    panel_brands: data.panel_brands || [],
+    inverter_brands: data.inverter_brands || [],
+    warranty_years: data.warranty_years || 0,
+    certifications: data.certifications as Certifications,
+    installation_types: data.installation_types as InstallationTypes,
+    maintenance_services: data.maintenance_services,
+    visibility_settings: data.visibility_settings as VisibilitySettings
+  }
+}
+
+export const convertFormToDbFormat = (formData: InstallerFormData, userId: string): Partial<DatabaseInstallerData> => {
+  return {
+    user_id: userId,
+    ...formData
   }
 }
