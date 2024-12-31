@@ -42,7 +42,7 @@ export const LeadCard = ({
     
     if (daysOld >= 45) return 'price_1QbzyKFOePj4Hv47zISfJkUz'; // 15€
     if (daysOld >= 30) return 'price_1QbzxlFOePj4Hv47XHGG9Vwt'; // 19€
-    if (daysOld >= 15) return 'price_1QbzxlFOePj4Hv47XHGG9Vwt'; // 21€
+    if (daysOld >= 15) return 'price_1QbzwKFOePj4Hv47XHGG9Vwt'; // 21€
     return 'price_1QaAlfFOePj4Hv475LWE2bGQ'; // 26€
   };
 
