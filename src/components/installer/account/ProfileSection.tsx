@@ -27,6 +27,7 @@ export const ProfileSection = () => {
     inverterBrands: "SMA, Fronius, Enphase",
     guaranteeYears: "20",
     service_area: ["75 - Paris", "92 - Hauts-de-Seine"],
+    interventionZones: "75, 92, 93, 94",
     certifications: {
       qualiPV: true,
       rge: true,
