@@ -47,7 +47,7 @@ export const AppRoutes = () => {
       <Route path="/espace-installateur/inscription" element={<InstallerSignup />} />
       <Route path="/espace-installateur" element={<InstallerLayout />}>
         <Route index element={<InstallerDashboard />} />
-        <Route path="leads/nouveaux" element={<LeadsList />} />
+        <Route path="leads/nouveaux" element={<LeadsList leads={[]} />} />
         <Route path="leads/achetes" element={<PurchasedLeads />} />
         <Route path="messages" element={<MessagesList />} />
         <Route path="notifications" element={<NotificationsList />} />
