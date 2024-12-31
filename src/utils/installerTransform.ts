@@ -11,7 +11,7 @@ export const transformDatabaseToInstaller = (data: DatabaseInstallerData): Insta
     phone: data.phone,
     address: data.address,
     zones: data.service_area,
-    status: data.subscription_status || "pending",
+    status: data.status || "pending",
     siret: data.siret || "",
     siren: data.siret?.slice(0, 9) || "",
     certifications: {
@@ -55,7 +55,7 @@ export const transformInstallerToDatabase = (data: Installer): Omit<DatabaseInst
       showCertifications: true,
       acceptDirectMessages: true
     },
-    subscription_status: data.status,
+    status: data.status,
     siret: data.siret,
     city: null,
     website: null,
@@ -67,11 +67,7 @@ export const transformInstallerToDatabase = (data: Installer): Omit<DatabaseInst
     subscription_plan: null,
     profile_views: null,
     conversion_rate: data.conversionRate,
-    satisfied_clients: null,
-    rating: 0,
-    total_reviews: 0,
-    last_active: null,
-    subscription_end_date: null
+    satisfied_clients: null
   };
 };
 
@@ -134,23 +130,19 @@ export const transformFormToDatabase = (formData: any, userId: string): Omit<Dat
     verified: false,
     website: formData.website,
     description: formData.description,
-    experience_years: parseInt(formData.experience_years) || 0,
+    experience_years: formData.experience_years,
     panel_brands: formData.panel_brands,
     inverter_brands: formData.inverter_brands,
-    warranty_years: parseInt(formData.warranty_years) || 0,
+    warranty_years: formData.warranty_years,
     certifications: formData.certifications,
     installation_types: formData.installation_types,
     maintenance_services: formData.maintenance_services,
     visibility_settings: formData.visibility_settings,
-    subscription_status: 'pending',
+    status: 'pending',
     siret: formData.siret,
     subscription_plan: 'free',
     profile_views: 0,
     conversion_rate: 0,
-    satisfied_clients: 0,
-    rating: 0,
-    total_reviews: 0,
-    last_active: new Date().toISOString(),
-    subscription_end_date: null
+    satisfied_clients: 0
   };
 };

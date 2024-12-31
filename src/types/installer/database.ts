@@ -29,4 +29,5 @@ export interface DatabaseInstallerData {
   conversion_rate?: number | null;
   satisfied_clients?: number | null;
   created_at?: string | null;
+  status: string;
 }
