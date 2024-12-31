@@ -37,7 +37,18 @@ export const LeadCard = ({
     return 26;
   };
 
+  const getPriceId = (daysOld: number, clientType: string) => {
+    if (clientType === 'professional') return 'price_1Qa0nUFOePj4Hv47Ih00CR8k'; // 49€
+    
+    if (daysOld >= 45) return 'price_1QbzyKFOePj4Hv47zISfJkUz'; // 15€
+    if (daysOld >= 30) return 'price_1QbzxlFOePj4Hv47XHGG9Vwt'; // 19€
+    if (daysOld >= 15) return 'price_1QbzxlFOePj4Hv47XHGG9Vwt'; // 21€
+    return 'price_1QaAlfFOePj4Hv475LWE2bGQ'; // 26€
+  };
+
   const basePrice = calculateBasePrice(lead.created_at, lead.clienttype);
+  const daysOld = differenceInDays(new Date(), new Date(lead.created_at));
+  const priceId = getPriceId(daysOld, lead.clienttype);
 
   const handlePurchase = async (type: 'mutualise' | 'exclusif', paymentMethod: 'prepaid' | 'direct') => {
     try {
@@ -63,7 +74,7 @@ export const LeadCard = ({
             id: lead.id,
             type: type,
             clientType: lead.clienttype,
-            price: finalPrice
+            priceId: priceId
           }]
         }
       });
