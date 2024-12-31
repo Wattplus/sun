@@ -1,3 +1,5 @@
+import { Json } from '@supabase/supabase-js'
+
 export interface Certifications {
   qualiPV: boolean;
   rge: boolean;
@@ -18,19 +20,32 @@ export interface VisibilitySettings {
 }
 
 export interface InstallerFormData {
+  // Personal Info
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  
+  // Company Info
   company_name: string;
   contact_name: string;
-  phone: string;
+  siret: string;
   address: string;
   postal_code: string;
   city: string;
-  service_area: string[];
   website: string;
   description: string;
+  
+  // Service Areas
+  service_area: string[];
+  
+  // Experience & Equipment
   experience_years: number;
   panel_brands: string[];
   inverter_brands: string[];
   warranty_years: number;
+  
+  // Certifications & Services
   certifications: Certifications;
   installation_types: InstallationTypes;
   maintenance_services: boolean;
@@ -51,15 +66,19 @@ export interface DatabaseInstallerData extends InstallerFormData {
 
 export const convertDbToFormFormat = (data: DatabaseInstallerData): InstallerFormData => {
   return {
+    firstName: data.firstName || "",
+    lastName: data.lastName || "",
+    email: data.email || "",
+    phone: data.phone || "",
     company_name: data.company_name || "",
     contact_name: data.contact_name || "",
-    phone: data.phone || "",
+    siret: data.siret || "",
     address: data.address || "",
     postal_code: data.postal_code || "",
     city: data.city || "",
-    service_area: data.service_area || [],
     website: data.website || "",
     description: data.description || "",
+    service_area: data.service_area || [],
     experience_years: data.experience_years || 0,
     panel_brands: data.panel_brands || [],
     inverter_brands: data.inverter_brands || [],
@@ -87,6 +106,10 @@ export const convertDbToFormFormat = (data: DatabaseInstallerData): InstallerFor
 export const convertFormToDbFormat = (formData: InstallerFormData, userId: string): Partial<DatabaseInstallerData> => {
   return {
     user_id: userId,
-    ...formData
+    ...formData,
+    // Convert complex objects to JSON for Supabase
+    certifications: formData.certifications as unknown as Json,
+    installation_types: formData.installation_types as unknown as Json,
+    visibility_settings: formData.visibility_settings as unknown as Json
   };
 };

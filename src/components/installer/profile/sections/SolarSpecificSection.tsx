@@ -20,31 +20,31 @@ export const SolarSpecificSection = ({
       
       <div className="space-y-4">
         <div>
-          <Label htmlFor="panelBrands">Marques de panneaux installés</Label>
+          <Label htmlFor="panel_brands">Marques de panneaux installés</Label>
           <Input
-            id="panelBrands"
-            value={formData.panelBrands}
+            id="panel_brands"
+            value={formData.panel_brands.join(", ")}
             onChange={handleChange}
             placeholder="SunPower, LG, Panasonic..."
           />
         </div>
 
         <div>
-          <Label htmlFor="inverterBrands">Marques d'onduleurs installés</Label>
+          <Label htmlFor="inverter_brands">Marques d'onduleurs installés</Label>
           <Input
-            id="inverterBrands"
-            value={formData.inverterBrands}
+            id="inverter_brands"
+            value={formData.inverter_brands.join(", ")}
             onChange={handleChange}
             placeholder="SMA, Enphase, Huawei..."
           />
         </div>
 
         <div>
-          <Label htmlFor="guaranteeYears">Années de garantie proposées</Label>
+          <Label htmlFor="warranty_years">Années de garantie proposées</Label>
           <Input
-            id="guaranteeYears"
+            id="warranty_years"
             type="number"
-            value={formData.guaranteeYears}
+            value={formData.warranty_years}
             onChange={handleChange}
             placeholder="10"
           />
@@ -56,24 +56,24 @@ export const SolarSpecificSection = ({
             <div className="flex items-center space-x-2">
               <Checkbox
                 id="residential"
-                checked={formData.installationTypes.residential}
-                onCheckedChange={(checked) => handleCheckboxChange("installationTypes.residential", checked as boolean)}
+                checked={formData.installation_types.residential}
+                onCheckedChange={(checked) => handleCheckboxChange("installation_types.residential", checked as boolean)}
               />
               <Label htmlFor="residential">Résidentiel</Label>
             </div>
             <div className="flex items-center space-x-2">
               <Checkbox
                 id="commercial"
-                checked={formData.installationTypes.commercial}
-                onCheckedChange={(checked) => handleCheckboxChange("installationTypes.commercial", checked as boolean)}
+                checked={formData.installation_types.commercial}
+                onCheckedChange={(checked) => handleCheckboxChange("installation_types.commercial", checked as boolean)}
               />
               <Label htmlFor="commercial">Commercial</Label>
             </div>
             <div className="flex items-center space-x-2">
               <Checkbox
                 id="industrial"
-                checked={formData.installationTypes.industrial}
-                onCheckedChange={(checked) => handleCheckboxChange("installationTypes.industrial", checked as boolean)}
+                checked={formData.installation_types.industrial}
+                onCheckedChange={(checked) => handleCheckboxChange("installation_types.industrial", checked as boolean)}
               />
               <Label htmlFor="industrial">Industriel</Label>
             </div>
@@ -82,11 +82,11 @@ export const SolarSpecificSection = ({
 
         <div className="flex items-center space-x-2">
           <Checkbox
-            id="maintenanceServices"
-            checked={formData.maintenanceServices}
-            onCheckedChange={(checked) => handleCheckboxChange("maintenanceServices", checked as boolean)}
+            id="maintenance_services"
+            checked={formData.maintenance_services}
+            onCheckedChange={(checked) => handleCheckboxChange("maintenance_services", checked as boolean)}
           />
-          <Label htmlFor="maintenanceServices">Services de maintenance proposés</Label>
+          <Label htmlFor="maintenance_services">Services de maintenance proposés</Label>
         </div>
       </div>
     </div>
