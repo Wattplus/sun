@@ -21,33 +21,33 @@ export const useProfileFormHandlers = (
   const handleCheckboxChange = (field: string, checked: boolean) => {
     if (field.includes(".")) {
       const [category, item] = field.split(".")
-      setFormData(prev => ({
-        ...prev,
+      setFormData({
+        ...formData,
         [category]: {
-          ...(prev[category as keyof typeof prev] as Record<string, boolean>),
+          ...(formData[category as keyof InstallerFormData] as Record<string, boolean>),
           [item]: checked
         }
-      }))
+      })
     } else {
-      setFormData(prev => ({
-        ...prev,
+      setFormData({
+        ...formData,
         [field]: checked
-      }))
+      })
     }
   }
 
   const handleToggleChange = (field: keyof VisibilitySettings) => {
-    setVisibilitySettings(prev => ({
-      ...prev,
-      [field]: !prev[field],
-    }))
+    setVisibilitySettings({
+      ...visibilitySettings,
+      [field]: !visibilitySettings[field],
+    })
   }
 
   const handleZonesChange = (zones: string[]) => {
-    setFormData(prev => ({
-      ...prev,
+    setFormData({
+      ...formData,
       service_area: zones
-    }))
+    })
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -60,7 +60,14 @@ export const useProfileFormHandlers = (
 
       const { error } = await supabase
         .from("installers")
-        .upsert(installerData)
+        .upsert({
+          ...installerData,
+          address: installerData.address || "",
+          postal_code: installerData.postal_code || "",
+          company_name: installerData.company_name || "",
+          contact_name: installerData.contact_name || "",
+          phone: installerData.phone || "",
+        })
 
       if (error) throw error
 

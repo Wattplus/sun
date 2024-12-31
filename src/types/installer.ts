@@ -43,7 +43,7 @@ export interface InstallerFormData {
 }
 
 export interface DatabaseInstallerData {
-  id: string
+  id?: string
   user_id: string
   company_name: string
   contact_name: string
@@ -52,8 +52,8 @@ export interface DatabaseInstallerData {
   postal_code: string
   city?: string
   service_area: string[]
-  credits: number
-  verified: boolean
+  credits?: number
+  verified?: boolean
   siret?: string
   website?: string
   description?: string
@@ -61,10 +61,10 @@ export interface DatabaseInstallerData {
   panel_brands?: string[]
   inverter_brands?: string[]
   warranty_years?: number
-  certifications: Json
-  installation_types: Json
+  certifications: Record<string, boolean>
+  installation_types: Record<string, boolean>
   maintenance_services?: boolean
-  visibility_settings: Json
+  visibility_settings: Record<string, boolean>
   created_at?: string
   subscription_plan?: string
   profile_views?: number
@@ -72,7 +72,7 @@ export interface DatabaseInstallerData {
   satisfied_clients?: number
 }
 
-export const convertFormToDbFormat = (formData: InstallerFormData, userId: string): Partial<DatabaseInstallerData> => ({
+export const convertFormToDbFormat = (formData: InstallerFormData, userId: string): DatabaseInstallerData => ({
   user_id: userId,
   company_name: formData.company,
   contact_name: `${formData.firstName} ${formData.lastName}`,
@@ -87,10 +87,10 @@ export const convertFormToDbFormat = (formData: InstallerFormData, userId: strin
   inverter_brands: formData.inverterBrands.split(",").map(brand => brand.trim()),
   warranty_years: parseInt(formData.guaranteeYears) || null,
   service_area: formData.service_area,
-  certifications: formData.certifications as unknown as Json,
-  installation_types: formData.installationTypes as unknown as Json,
+  certifications: formData.certifications as Record<string, boolean>,
+  installation_types: formData.installationTypes as Record<string, boolean>,
   maintenance_services: formData.maintenanceServices,
-  visibility_settings: formData.visibility_settings as unknown as Json,
+  visibility_settings: formData.visibility_settings as Record<string, boolean>,
   siret: formData.siret
 })
 
@@ -111,12 +111,12 @@ export const convertDbToFormFormat = (dbData: DatabaseInstallerData, email: stri
     inverterBrands: Array.isArray(dbData.inverter_brands) ? dbData.inverter_brands.join(", ") : "",
     guaranteeYears: dbData.warranty_years?.toString() || "",
     service_area: dbData.service_area || [],
-    certifications: dbData.certifications as unknown as Certifications,
-    installationTypes: dbData.installation_types as unknown as InstallationTypes,
+    certifications: dbData.certifications as Certifications,
+    installationTypes: dbData.installation_types as InstallationTypes,
     maintenanceServices: dbData.maintenance_services || false,
     address: dbData.address || "",
     postal_code: dbData.postal_code || "",
     city: dbData.city || "",
-    visibility_settings: dbData.visibility_settings as unknown as VisibilitySettings
+    visibility_settings: dbData.visibility_settings as VisibilitySettings
   }
 }

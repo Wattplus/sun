@@ -1,150 +1,92 @@
-import { useState, ChangeEvent, FormEvent } from 'react';
-import { supabase } from '@/lib/supabase-client';
-import { useToast } from '@/components/ui/use-toast';
-import type { InstallerFormData, DatabaseInstallerData } from '@/types/installer';
+import { useState } from "react"
+import { supabase } from "@/integrations/supabase/client"
+import { useToast } from "@/hooks/use-toast"
+import type { InstallerFormData } from "@/types/installer"
+import { convertFormToDbFormat } from "@/types/installer"
 
-export const useInstallerForm = (initialData?: Partial<InstallerFormData>) => {
-  const [loading, setLoading] = useState(false);
-  const [formData, setFormData] = useState<InstallerFormData>({
-    firstName: "",
-    lastName: "",
-    email: "",
-    phone: "",
-    company: "",
-    siret: "",
-    website: "",
-    description: "",
-    experience: "",
-    panelBrands: "",
-    inverterBrands: "",
-    guaranteeYears: "",
-    service_area: [],
-    certifications: {
-      qualiPV: false,
-      rge: false,
-      qualibat: false
-    },
-    installationTypes: {
-      residential: false,
-      commercial: false,
-      industrial: false
-    },
-    maintenanceServices: false,
-    address: "",
-    postal_code: "",
-    city: "",
-    visibility_settings: {
-      showPhoneNumber: true,
-      highlightProfile: false,
-      acceptDirectMessages: true,
-      showCertifications: true
-    },
-    ...initialData
-  });
-  const { toast } = useToast();
+export const useInstallerForm = (
+  formData: InstallerFormData,
+  setFormData: (data: InstallerFormData) => void
+) => {
+  const [loading, setLoading] = useState(false)
+  const { toast } = useToast()
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-  };
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({
+      ...formData,
+      [e.target.id]: e.target.value,
+    })
+  }
 
-  const handleCheckboxChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const { name, checked } = e.target;
-    const [category, field] = name.split('.');
-
-    if (category === 'certifications') {
-      setFormData(prev => ({
-        ...prev,
-        certifications: {
-          ...prev.certifications,
-          [field]: checked
+  const handleCheckboxChange = (field: string, checked: boolean) => {
+    if (field.includes(".")) {
+      const [category, item] = field.split(".")
+      setFormData({
+        ...formData,
+        [category]: {
+          ...(formData[category as keyof typeof formData] as Record<string, boolean>),
+          [item]: checked
         }
-      }));
-    } else if (category === 'installationTypes') {
-      setFormData(prev => ({
-        ...prev,
-        installationTypes: {
-          ...prev.installationTypes,
-          [field]: checked
-        }
-      }));
-    } else if (category === 'visibility_settings') {
-      setFormData(prev => ({
-        ...prev,
-        visibility_settings: {
-          ...prev.visibility_settings,
-          [field]: checked
-        }
-      }));
+      })
     } else {
-      setFormData(prev => ({ ...prev, [name]: checked }));
+      setFormData({
+        ...formData,
+        [field]: checked
+      })
     }
-  };
+  }
 
   const handleZonesChange = (zones: string[]) => {
-    setFormData(prev => ({ ...prev, service_area: zones }));
-  };
+    setFormData({
+      ...formData,
+      service_area: zones
+    })
+  }
 
-  const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setLoading(true)
 
     try {
-      const { data: session } = await supabase.auth.getSession();
-      if (!session?.session?.user) {
-        throw new Error('No authenticated user');
-      }
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) throw new Error("User not found")
 
-      const installerData: Partial<DatabaseInstallerData> = {
-        user_id: session.session.user.id,
-        contact_name: `${formData.firstName} ${formData.lastName}`,
-        phone: formData.phone,
-        company_name: formData.company,
-        website: formData.website,
-        description: formData.description,
-        experience_years: parseInt(formData.experience) || null,
-        panel_brands: formData.panelBrands.split(',').map(brand => brand.trim()),
-        inverter_brands: formData.inverterBrands.split(',').map(brand => brand.trim()),
-        warranty_years: parseInt(formData.guaranteeYears) || null,
-        service_area: formData.service_area,
-        certifications: formData.certifications,
-        installation_types: formData.installationTypes,
-        maintenance_services: formData.maintenanceServices,
-        visibility_settings: formData.visibility_settings,
-        address: formData.address,
-        postal_code: formData.postal_code,
-        city: formData.city,
-        siret: formData.siret
-      };
+      const installerData = convertFormToDbFormat(formData, user.id)
 
       const { error } = await supabase
-        .from('installers')
-        .upsert(installerData);
+        .from("installers")
+        .upsert({
+          ...installerData,
+          address: installerData.address || "",
+          postal_code: installerData.postal_code || "",
+          company_name: installerData.company_name || "",
+          contact_name: installerData.contact_name || "",
+          phone: installerData.phone || "",
+        })
 
-      if (error) throw error;
+      if (error) throw error
 
       toast({
-        title: 'Succès',
-        description: 'Vos informations ont été mises à jour',
-      });
+        title: "Succès",
+        description: "Votre profil a été mis à jour avec succès",
+      })
     } catch (error) {
-      console.error('Error updating installer:', error);
+      console.error("Error updating installer:", error)
       toast({
-        title: 'Erreur',
-        description: 'Une erreur est survenue lors de la mise à jour',
-        variant: 'destructive',
-      });
+        title: "Erreur",
+        description: "Une erreur est survenue lors de la mise à jour du profil",
+        variant: "destructive"
+      })
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   return {
-    formData,
-    loading,
     handleChange,
     handleCheckboxChange,
     handleZonesChange,
     handleSubmit,
-  };
-};
+    loading
+  }
+}
