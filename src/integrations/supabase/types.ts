@@ -150,18 +150,26 @@ export type Database = {
           created_at: string | null
           credits: number
           description: string | null
+          email: string | null
           experience_years: number | null
           id: string
           installation_types: Json | null
           inverter_brands: string[] | null
+          last_active: string | null
           maintenance_services: boolean | null
           panel_brands: string[] | null
           phone: string
           postal_code: string
           profile_views: number | null
+          rating: number | null
           satisfied_clients: number | null
           service_area: string[]
+          siret: string | null
+          status: string | null
+          subscription_end_date: string | null
           subscription_plan: string | null
+          subscription_status: string | null
+          total_reviews: number | null
           user_id: string
           verified: boolean
           visibility_settings: Json | null
@@ -178,18 +186,26 @@ export type Database = {
           created_at?: string | null
           credits?: number
           description?: string | null
+          email?: string | null
           experience_years?: number | null
           id?: string
           installation_types?: Json | null
           inverter_brands?: string[] | null
+          last_active?: string | null
           maintenance_services?: boolean | null
           panel_brands?: string[] | null
           phone: string
           postal_code: string
           profile_views?: number | null
+          rating?: number | null
           satisfied_clients?: number | null
           service_area: string[]
+          siret?: string | null
+          status?: string | null
+          subscription_end_date?: string | null
           subscription_plan?: string | null
+          subscription_status?: string | null
+          total_reviews?: number | null
           user_id: string
           verified?: boolean
           visibility_settings?: Json | null
@@ -206,18 +222,26 @@ export type Database = {
           created_at?: string | null
           credits?: number
           description?: string | null
+          email?: string | null
           experience_years?: number | null
           id?: string
           installation_types?: Json | null
           inverter_brands?: string[] | null
+          last_active?: string | null
           maintenance_services?: boolean | null
           panel_brands?: string[] | null
           phone?: string
           postal_code?: string
           profile_views?: number | null
+          rating?: number | null
           satisfied_clients?: number | null
           service_area?: string[]
+          siret?: string | null
+          status?: string | null
+          subscription_end_date?: string | null
           subscription_plan?: string | null
+          subscription_status?: string | null
+          total_reviews?: number | null
           user_id?: string
           verified?: boolean
           visibility_settings?: Json | null

@@ -1,6 +1,6 @@
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Search, Download, Plus } from "lucide-react";
+import { FileDown, Plus, Search } from "lucide-react";
 
 interface LeadHeaderProps {
   searchTerm: string;
@@ -16,28 +16,31 @@ export const LeadHeader = ({
   onNewLeadClick,
 }: LeadHeaderProps) => {
   return (
-    <div className="flex flex-col sm:flex-row gap-4 items-center justify-between">
-      <div className="relative w-full sm:w-96">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+    <div className="flex flex-col sm:flex-row gap-4">
+      <div className="relative flex-1">
+        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
         <Input
           placeholder="Rechercher un lead..."
           value={searchTerm}
           onChange={(e) => onSearchChange(e.target.value)}
-          className="pl-10 bg-background/50 border-primary/10"
+          className="pl-10 bg-background/60"
         />
       </div>
-      <div className="flex gap-3 w-full sm:w-auto">
+      <div className="flex gap-2">
         <Button
           variant="outline"
-          className="flex-1 sm:flex-none border-primary/10 hover:bg-primary/5"
+          size="sm"
           onClick={onExportClick}
+          className="flex-1 sm:flex-none whitespace-nowrap"
         >
-          <Download className="h-4 w-4 mr-2" />
+          <FileDown className="h-4 w-4 mr-2" />
           Exporter
         </Button>
         <Button
-          className="flex-1 sm:flex-none"
+          variant="default"
+          size="sm"
           onClick={onNewLeadClick}
+          className="flex-1 sm:flex-none whitespace-nowrap"
         >
           <Plus className="h-4 w-4 mr-2" />
           Nouveau lead

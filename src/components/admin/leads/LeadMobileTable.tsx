@@ -1,8 +1,8 @@
-import { Lead, LeadStatus } from "@/types/crm";
-import { Button } from "@/components/ui/button";
+import { Lead } from "@/types/crm";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Edit, Trash2, UserPlus, Phone, Mail, Euro, MapPin } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Edit, Trash2, UserPlus, Phone, Mail, MapPin } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { LeadPurchaseInfo } from "./LeadPurchaseInfo";
 
@@ -11,8 +11,8 @@ interface LeadMobileTableProps {
   onEditClick: (lead: Lead) => void;
   onAssignClick: (lead: Lead) => void;
   onDeleteClick: (lead: Lead) => void;
-  getStatusColor: (status: LeadStatus) => string;
-  getStatusText: (status: LeadStatus) => string;
+  getStatusColor: (status: string) => string;
+  getStatusText: (status: string) => string;
 }
 
 export const LeadMobileTable = ({
@@ -25,7 +25,7 @@ export const LeadMobileTable = ({
 }: LeadMobileTableProps) => {
   return (
     <ScrollArea className="h-[calc(100vh-300px)]">
-      <div className="space-y-3 pb-4">
+      <div className="space-y-4 pb-4">
         {leads.map((lead) => (
           <Card key={lead.id} className="p-4 bg-background/50 backdrop-blur-md border-primary/10">
             <div className="space-y-4">
@@ -49,7 +49,6 @@ export const LeadMobileTable = ({
                 </div>
                 <div className="flex flex-col items-end gap-2">
                   <div className="flex items-center gap-1.5 bg-primary/10 px-2 py-1 rounded-full">
-                    <Euro className="h-3.5 w-3.5 text-primary" />
                     <span className="text-sm font-medium text-primary">{lead.monthlybill}€/mois</span>
                   </div>
                   <LeadPurchaseInfo lead={lead} />
