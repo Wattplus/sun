@@ -1,73 +1,71 @@
-import type { Json } from "@/integrations/supabase/types"
-
 export interface VisibilitySettings {
-  showPhoneNumber: boolean
-  highlightProfile: boolean
-  acceptDirectMessages: boolean
-  showCertifications: boolean
+  showPhoneNumber: boolean;
+  highlightProfile: boolean;
+  acceptDirectMessages: boolean;
+  showCertifications: boolean;
 }
 
 export interface Certifications {
-  qualiPV: boolean
-  rge: boolean
-  qualibat: boolean
+  qualiPV: boolean;
+  rge: boolean;
+  qualibat: boolean;
 }
 
 export interface InstallationTypes {
-  residential: boolean
-  commercial: boolean
-  industrial: boolean
+  residential: boolean;
+  commercial: boolean;
+  industrial: boolean;
 }
 
 export interface InstallerFormData {
-  firstName: string
-  lastName: string
-  email: string
-  phone: string
-  company: string
-  siret: string
-  website: string
-  description: string
-  experience: string
-  panelBrands: string
-  inverterBrands: string
-  guaranteeYears: string
-  service_area: string[]
-  certifications: Certifications
-  installationTypes: InstallationTypes
-  maintenanceServices: boolean
-  address: string
-  postal_code: string
-  city: string
-  visibility_settings: VisibilitySettings
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  company: string;
+  siret: string;
+  website: string;
+  description: string;
+  experience: string;
+  panelBrands: string;
+  inverterBrands: string;
+  guaranteeYears: string;
+  service_area: string[];
+  certifications: Certifications;
+  installationTypes: InstallationTypes;
+  maintenanceServices: boolean;
+  address: string;
+  postal_code: string;
+  city: string;
+  visibility_settings: VisibilitySettings;
 }
 
 export interface DatabaseInstallerData {
-  id?: string
-  user_id: string
-  company_name: string
-  contact_name: string
-  phone: string
-  address: string
-  postal_code: string
-  city?: string
-  service_area: string[]
-  credits: number
-  verified: boolean
-  website?: string
-  description?: string
-  experience_years?: number
-  panel_brands?: string[]
-  inverter_brands?: string[]
-  warranty_years?: number
-  certifications: Record<string, boolean>
-  installation_types: Record<string, boolean>
-  maintenance_services: boolean
-  visibility_settings: Record<string, boolean>
-  subscription_plan?: string
-  profile_views?: number
-  conversion_rate?: number
-  satisfied_clients?: number
+  id?: string;
+  user_id: string;
+  company_name: string;
+  contact_name: string;
+  phone: string;
+  address: string;
+  postal_code: string;
+  city?: string;
+  service_area: string[];
+  credits: number;
+  verified: boolean;
+  website?: string;
+  description?: string;
+  experience_years?: number;
+  panel_brands?: string[];
+  inverter_brands?: string[];
+  warranty_years?: number;
+  certifications: Certifications;
+  installation_types: InstallationTypes;
+  maintenance_services: boolean;
+  visibility_settings: VisibilitySettings;
+  subscription_plan?: string;
+  profile_views?: number;
+  conversion_rate?: number;
+  satisfied_clients?: number;
 }
 
 export const convertFormToDbFormat = (formData: InstallerFormData, userId: string): DatabaseInstallerData => ({
@@ -85,16 +83,16 @@ export const convertFormToDbFormat = (formData: InstallerFormData, userId: strin
   inverter_brands: formData.inverterBrands.split(",").map(brand => brand.trim()),
   warranty_years: parseInt(formData.guaranteeYears) || 0,
   service_area: formData.service_area,
-  certifications: formData.certifications as Record<string, boolean>,
-  installation_types: formData.installationTypes as Record<string, boolean>,
+  certifications: formData.certifications,
+  installation_types: formData.installationTypes,
   maintenance_services: formData.maintenanceServices,
-  visibility_settings: formData.visibility_settings as Record<string, boolean>,
+  visibility_settings: formData.visibility_settings,
   credits: 0,
   verified: false
-})
+});
 
 export const convertDbToFormFormat = (dbData: DatabaseInstallerData, email: string): InstallerFormData => {
-  const [firstName = "", lastName = ""] = (dbData.contact_name || "").split(" ")
+  const [firstName = "", lastName = ""] = (dbData.contact_name || "").split(" ");
   
   return {
     firstName,
@@ -117,5 +115,5 @@ export const convertDbToFormFormat = (dbData: DatabaseInstallerData, email: stri
     postal_code: dbData.postal_code || "",
     city: dbData.city || "",
     visibility_settings: dbData.visibility_settings as VisibilitySettings
-  }
-}
+  };
+};

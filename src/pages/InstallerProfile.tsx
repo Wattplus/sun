@@ -1,11 +1,10 @@
-import { BrowserRouter as Router } from "react-router-dom";
 import { Outlet } from "react-router-dom";
 import { InstallerLayout } from "@/components/installer/navigation/InstallerLayout";
 import { Helmet } from "react-helmet";
 
 export const InstallerProfile = () => {
   return (
-    <Router>
+    <>
       <Helmet>
         <title>Espace Installateur - Gestion des Projets Solaires</title>
         <meta 
@@ -24,6 +23,6 @@ export const InstallerProfile = () => {
         <meta property="og:type" content="website" />
       </Helmet>
       <InstallerLayout />
-    </Router>
+    </>
   );
 };
