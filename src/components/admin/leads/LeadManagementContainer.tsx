@@ -1,18 +1,11 @@
 import { useState, useEffect } from "react";
 import { Lead } from "@/types/crm";
-import { LeadTable } from "./LeadTable";
-import { LeadMobileTable } from "./LeadMobileTable";
-import { LeadHeader } from "./LeadHeader";
-import { LeadStats } from "./LeadStats";
-import { AdminBreadcrumb } from "../AdminBreadcrumb";
-import { LeadDialogs } from "./LeadDialogs";
 import { useLeadOperations } from "@/hooks/useLeadOperations";
-import { getStatusColor, getStatusText } from "@/utils/leadStatus";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { Card } from "@/components/ui/card";
 import { supabase } from "@/lib/supabase-client";
 import { useToast } from "@/components/ui/use-toast";
 import { LeadManagementContent } from "./LeadManagementContent";
+import { Loader2 } from "lucide-react";
 
 export const LeadManagementContainer = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -31,37 +24,74 @@ export const LeadManagementContainer = () => {
 
   useEffect(() => {
     const checkAuthAndFetchLeads = async () => {
-      console.log("LeadManagement: Vérification de l'authentification...");
-      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+      try {
+        console.log("LeadManagement: Vérification de l'authentification...");
+        const { data: { session }, error: sessionError } = await supabase.auth.getSession();
 
-      if (sessionError) {
-        console.error("LeadManagement: Erreur de session:", sessionError);
+        if (sessionError) {
+          console.error("LeadManagement: Erreur de session:", sessionError);
+          toast({
+            title: "Erreur d'authentification",
+            description: "Impossible de vérifier votre session",
+            variant: "destructive",
+          });
+          return;
+        }
+
+        if (!session) {
+          console.error("LeadManagement: Pas de session active");
+          toast({
+            title: "Non authentifié",
+            description: "Vous devez être connecté pour accéder à cette page",
+            variant: "destructive",
+          });
+          return;
+        }
+
+        // Vérifier le rôle de l'utilisateur
+        const { data: profile, error: profileError } = await supabase
+          .from('profiles')
+          .select('role')
+          .eq('id', session.user.id)
+          .single();
+
+        if (profileError || !profile) {
+          console.error("LeadManagement: Erreur de profil:", profileError);
+          toast({
+            title: "Erreur",
+            description: "Impossible de vérifier vos permissions",
+            variant: "destructive",
+          });
+          return;
+        }
+
+        if (!['admin', 'super_admin'].includes(profile.role)) {
+          console.error("LeadManagement: Accès non autorisé");
+          toast({
+            title: "Accès refusé",
+            description: "Vous n'avez pas les permissions nécessaires",
+            variant: "destructive",
+          });
+          return;
+        }
+
+        console.log("LeadManagement: Session active, utilisateur:", session.user.id);
+        console.log("LeadManagement: Récupération des leads...");
+        await fetchLeads();
+      } catch (error) {
+        console.error("LeadManagement: Erreur inattendue:", error);
         toast({
-          title: "Erreur d'authentification",
-          description: "Impossible de vérifier votre session",
+          title: "Erreur",
+          description: "Une erreur inattendue s'est produite",
           variant: "destructive",
         });
-        return;
+      } finally {
+        setIsLoading(false);
       }
-
-      if (!session) {
-        console.error("LeadManagement: Pas de session active");
-        toast({
-          title: "Non authentifié",
-          description: "Vous devez être connecté pour accéder à cette page",
-          variant: "destructive",
-        });
-        return;
-      }
-
-      console.log("LeadManagement: Session active, utilisateur:", session.user.id);
-      console.log("LeadManagement: Récupération des leads...");
-      await fetchLeads();
-      setIsLoading(false);
     };
 
     checkAuthAndFetchLeads();
-  }, []);
+  }, [fetchLeads, toast]);
 
   const handleDeleteClick = (lead: Lead) => {
     console.log("LeadManagement: Demande de suppression pour le lead:", lead);
@@ -114,9 +144,10 @@ export const LeadManagementContainer = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-background/95 to-background/50 py-8">
-        <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
-          <p className="text-center text-muted-foreground">Chargement des leads...</p>
+      <div className="min-h-screen bg-gradient-to-b from-background/95 to-background/50 flex items-center justify-center">
+        <div className="text-center space-y-4">
+          <Loader2 className="h-8 w-8 animate-spin mx-auto text-primary" />
+          <p className="text-lg text-muted-foreground">Chargement des leads...</p>
         </div>
       </div>
     );
