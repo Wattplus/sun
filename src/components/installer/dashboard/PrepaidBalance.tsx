@@ -3,7 +3,6 @@ import { Button } from "@/components/ui/button";
 import { Euro, RefreshCw, TrendingUp } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { motion } from "framer-motion";
-import { QuickTopUpButtons } from "./prepaid/QuickTopUpButtons";
 import { useState } from "react";
 import { supabase } from "@/lib/supabase-client";
 
@@ -51,28 +50,30 @@ export const PrepaidBalance = ({ balance = 0 }: PrepaidBalanceProps) => {
       className="w-full"
       id="recharge-section"
     >
-      <Card className="overflow-hidden bg-gradient-to-br from-background/80 to-background-light border-primary/20">
+      <Card className="bg-[#0B1221]/90 border-primary/10 overflow-hidden">
         <div className="p-8 space-y-8">
           {/* Balance Display */}
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6">
+          <div className="flex justify-between items-start">
             <div className="space-y-4">
-              <h3 className="text-lg font-medium text-white/90 flex items-center gap-2">
+              <div className="flex items-center gap-2 text-white/90">
                 <Euro className="h-5 w-5 text-primary" />
-                Solde disponible
-              </h3>
-              <motion.div 
-                className="flex items-baseline gap-2"
-                whileHover={{ scale: 1.05 }}
-                transition={{ type: "spring", stiffness: 300 }}
-              >
-                <span className="text-5xl font-bold bg-gradient-to-r from-white to-white/80 bg-clip-text text-transparent">
-                  {balance.toLocaleString('fr-FR')}
-                </span>
-                <span className="text-3xl font-semibold text-white/80">€</span>
-              </motion.div>
-              <div className="flex items-center gap-2">
-                <TrendingUp className="h-4 w-4 text-emerald-400" />
-                <span className="text-sm text-emerald-400">+15% ce mois</span>
+                <span className="text-lg">Solde disponible</span>
+              </div>
+              <div className="space-y-2">
+                <motion.div 
+                  className="flex items-baseline gap-2"
+                  whileHover={{ scale: 1.05 }}
+                  transition={{ type: "spring", stiffness: 300 }}
+                >
+                  <span className="text-6xl font-bold text-white">
+                    {balance.toLocaleString('fr-FR')}
+                  </span>
+                  <span className="text-3xl text-white/80">€</span>
+                </motion.div>
+                <div className="flex items-center gap-2 text-emerald-400">
+                  <TrendingUp className="h-4 w-4" />
+                  <span className="text-sm">+15% ce mois</span>
+                </div>
               </div>
             </div>
             <Button
@@ -88,8 +89,33 @@ export const PrepaidBalance = ({ balance = 0 }: PrepaidBalanceProps) => {
 
           {/* Quick Top-up Options */}
           <div className="space-y-6">
-            <h4 className="text-lg font-medium text-white/90">Options de rechargement</h4>
-            <QuickTopUpButtons onTopUp={handleRecharge} isLoading={isLoading} />
+            <h4 className="text-lg text-white/90">Options de rechargement</h4>
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+              {[50, 100, 200, 500, 1000, 1500].map((amount, index) => (
+                <motion.button
+                  key={amount}
+                  onClick={() => handleRecharge(amount)}
+                  disabled={isLoading}
+                  className={`relative p-6 rounded-xl bg-[#0B1221]/80 border border-primary/10 hover:border-primary/30 
+                    transition-all duration-300 hover:scale-105 ${
+                    amount === 500 ? 'ring-2 ring-primary/30' : ''
+                  }`}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3, delay: index * 0.1 }}
+                >
+                  <div className="flex flex-col items-center justify-center text-white">
+                    <span className="text-2xl font-bold">{amount}</span>
+                    <span className="text-lg">€</span>
+                  </div>
+                  {amount === 500 && (
+                    <span className="absolute -top-2 left-1/2 -translate-x-1/2 bg-primary px-2 py-0.5 rounded text-xs font-medium text-white">
+                      Populaire
+                    </span>
+                  )}
+                </motion.button>
+              ))}
+            </div>
           </div>
         </div>
       </Card>
