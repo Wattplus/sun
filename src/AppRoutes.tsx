@@ -1,6 +1,5 @@
 import { Routes, Route } from "react-router-dom";
 import { NewLeadsPage } from "@/components/installer/marketplace/NewLeadsPage";
-import { AccountPage } from "@/components/installer/account/AccountPage";
 import { CheckoutPage } from "@/pages/installer/payment/CheckoutPage";
 import { NewCardPage } from "@/pages/installer/payment/NewCardPage";
 import { TopUpPage } from "@/pages/installer/payment/TopUpPage";
@@ -16,19 +15,15 @@ export const AppRoutes = () => {
         element={<NewLeadsPage />} 
       />
       <Route 
-        path="/espace-installateur/compte" 
-        element={<AccountPage />} 
-      />
-      <Route 
-        path="/espace-installateur/paiement" 
+        path="/espace-installateur/paiement/checkout" 
         element={<CheckoutPage />} 
       />
       <Route 
-        path="/espace-installateur/nouvelle-carte" 
+        path="/espace-installateur/paiement/nouvelle-carte" 
         element={<NewCardPage />} 
       />
       <Route 
-        path="/espace-installateur/recharge" 
+        path="/espace-installateur/paiement/recharge" 
         element={<TopUpPage />} 
       />
       <Route 
