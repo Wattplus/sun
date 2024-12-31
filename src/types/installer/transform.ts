@@ -21,6 +21,7 @@ export const convertFormToDbFormat = (formData: InstallerFormData, userId: strin
     certifications: formData.certifications,
     installation_types: formData.installation_types,
     maintenance_services: formData.maintenance_services,
-    visibility_settings: formData.visibility_settings
+    visibility_settings: formData.visibility_settings,
+    status: 'pending'
   }
 }

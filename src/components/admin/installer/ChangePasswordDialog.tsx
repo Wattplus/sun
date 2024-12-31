@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
+import { useState } from "react"
+import { Button } from "@/components/ui/button"
 import {
   Dialog,
   DialogContent,
@@ -7,54 +7,55 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { supabase } from "@/integrations/supabase/client";
-import { toast } from "sonner";
+} from "@/components/ui/dialog"
+import { Input } from "@/components/ui/input"
+import { supabase } from "@/integrations/supabase/client"
+import { toast } from "sonner"
 
 interface ChangePasswordDialogProps {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
+  open: boolean
+  onOpenChange: (open: boolean) => void
 }
 
 export function ChangePasswordDialog({ open, onOpenChange }: ChangePasswordDialogProps) {
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+  const [loading, setLoading] = useState(false)
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+    e.preventDefault()
     
-    if (password !== confirmPassword) {
-      toast.error("Les mots de passe ne correspondent pas");
-      return;
+    if (!email || !password) {
+      toast.error("Veuillez remplir tous les champs")
+      return
     }
 
     if (password.length < 6) {
-      toast.error("Le mot de passe doit contenir au moins 6 caractères");
-      return;
+      toast.error("Le mot de passe doit contenir au moins 6 caractères")
+      return
     }
 
-    setLoading(true);
+    setLoading(true)
     
     try {
-      const { error } = await supabase.auth.updateUser({
-        password: password
-      });
+      const { error } = await supabase.auth.admin.updateUserById(
+        email,
+        { password: password }
+      )
 
-      if (error) throw error;
+      if (error) throw error
 
-      toast.success("Mot de passe mis à jour avec succès");
-      onOpenChange(false);
-      setPassword("");
-      setConfirmPassword("");
+      toast.success("Mot de passe mis à jour avec succès")
+      onOpenChange(false)
+      setEmail("")
+      setPassword("")
     } catch (error) {
-      console.error("Error updating password:", error);
-      toast.error("Erreur lors de la mise à jour du mot de passe");
+      console.error("Error updating password:", error)
+      toast.error("Erreur lors de la mise à jour du mot de passe")
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -63,10 +64,23 @@ export function ChangePasswordDialog({ open, onOpenChange }: ChangePasswordDialo
           <DialogHeader>
             <DialogTitle>Changer le mot de passe</DialogTitle>
             <DialogDescription>
-              Entrez votre nouveau mot de passe ci-dessous.
+              Entrez l'email de l'installateur et son nouveau mot de passe.
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
+            <div>
+              <label htmlFor="email" className="text-sm font-medium">
+                Email de l'installateur
+              </label>
+              <Input
+                id="email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="bg-background border-input"
+                placeholder="installateur@example.com"
+              />
+            </div>
             <div>
               <label htmlFor="password" className="text-sm font-medium">
                 Nouveau mot de passe
@@ -80,19 +94,6 @@ export function ChangePasswordDialog({ open, onOpenChange }: ChangePasswordDialo
                 placeholder="••••••••"
               />
             </div>
-            <div>
-              <label htmlFor="confirmPassword" className="text-sm font-medium">
-                Confirmer le mot de passe
-              </label>
-              <Input
-                id="confirmPassword"
-                type="password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                className="bg-background border-input"
-                placeholder="••••••••"
-              />
-            </div>
           </div>
           <DialogFooter>
             <Button type="submit" disabled={loading}>
@@ -102,5 +103,5 @@ export function ChangePasswordDialog({ open, onOpenChange }: ChangePasswordDialo
         </form>
       </DialogContent>
     </Dialog>
-  );
+  )
 }

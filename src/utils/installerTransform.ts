@@ -26,7 +26,7 @@ export const transformDatabaseToInstaller = (data: DatabaseInstallerData): Insta
   };
 };
 
-export const transformInstallerToDatabase = (data: Installer): Omit<DatabaseInstallerData, 'id' | 'created_at' | 'user_id'> => {
+export const transformInstallerToDatabase = (data: Installer): Omit<DatabaseInstallerData, 'id' | 'user_id' | 'created_at'> => {
   return {
     company_name: data.companyName,
     contact_name: data.contactName,
@@ -67,7 +67,6 @@ export const transformInstallerToDatabase = (data: Installer): Omit<DatabaseInst
     profile_views: null,
     conversion_rate: data.conversionRate,
     satisfied_clients: null,
-    subscription_status: "active",
     rating: 0,
     total_reviews: 0,
     last_active: new Date().toISOString(),

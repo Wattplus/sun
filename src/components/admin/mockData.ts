@@ -40,7 +40,6 @@ export const mockInstallers: DatabaseInstallerData[] = [
     },
     status: "active",
     created_at: new Date().toISOString(),
-    subscription_status: "active",
     rating: 4.5,
     total_reviews: 12,
     conversion_rate: 75,
