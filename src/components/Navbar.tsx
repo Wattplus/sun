@@ -1,5 +1,5 @@
 import { Button } from "./ui/button";
-import { Phone, Menu, X, Sun, User, UserCheck } from "lucide-react";
+import { Phone, Menu, X, Sun, UserCheck } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
@@ -30,13 +30,6 @@ export const Navbar = () => {
             </div>
 
             <div className="flex items-center space-x-8">
-              <Link 
-                to="/client" 
-                className="flex items-center text-sm font-medium text-blue-100 hover:text-primary transition-colors"
-              >
-                <User className="w-4 h-4 mr-2" />
-                Mon compte
-              </Link>
               <Link 
                 to="/espace-installateur" 
                 className="flex items-center text-sm font-medium text-blue-100 hover:text-primary transition-colors"
@@ -92,14 +85,6 @@ export const Navbar = () => {
               >
                 Témoignages
               </a>
-              <Link 
-                to="/client" 
-                className="flex items-center text-sm font-medium text-blue-100 hover:text-primary transition-colors" 
-                onClick={() => setIsMenuOpen(false)}
-              >
-                <User className="w-4 h-4 mr-2" />
-                Mon compte
-              </Link>
               <Link 
                 to="/espace-installateur" 
                 className="flex items-center text-sm font-medium text-blue-100 hover:text-primary transition-colors" 
