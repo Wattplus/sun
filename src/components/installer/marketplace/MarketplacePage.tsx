@@ -1,5 +1,4 @@
 import { Card } from "@/components/ui/card";
-import { LeadsList } from "../dashboard/LeadsList";
 import { mockAvailableLeads } from "../dashboard/mockAvailableLeads";
 import { Lead } from "@/types/crm";
 import { useState } from "react";
@@ -43,26 +42,20 @@ export const MarketplacePage = () => {
         <div className="space-y-6">
           <MarketplaceHeader availableLeads={mockAvailableLeads.length} />
           
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div className="lg:col-span-2">
-              <Card className="bg-background/50 backdrop-blur-sm border-primary/10">
-                <MarketplaceLeadsTable 
-                  leads={mockAvailableLeads}
-                  onLeadSelect={handleLeadSelect}
-                  selectedLeads={selectedLeads}
-                  balance={balance}
-                />
-              </Card>
-            </div>
-            
-            <div className="space-y-6">
-              <MarketplaceBalance 
-                balance={balance}
-                onPurchase={handlePurchaseLeads}
-                selectedLeads={selectedLeads}
-              />
-            </div>
-          </div>
+          <MarketplaceBalance 
+            balance={balance}
+            onPurchase={handlePurchaseLeads}
+            selectedLeads={selectedLeads}
+          />
+
+          <Card className="bg-background/50 backdrop-blur-sm border-primary/10">
+            <MarketplaceLeadsTable 
+              leads={mockAvailableLeads}
+              onLeadSelect={handleLeadSelect}
+              selectedLeads={selectedLeads}
+              balance={balance}
+            />
+          </Card>
         </div>
       </div>
     </div>
