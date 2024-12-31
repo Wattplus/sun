@@ -39,27 +39,44 @@ export function AppRoutes() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+    // Vérifier l'état de l'authentification au chargement
+    const checkInitialAuth = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session?.user) {
+        const { data: installer } = await supabase
+          .from('installers')
+          .select('*')
+          .eq('user_id', session.user.id)
+          .single();
+
+        if (installer) {
+          navigate('/espace-installateur');
+        } else {
+          navigate('/client');
+        }
+      }
+    };
+
+    checkInitialAuth();
+
+    // Écouter les changements d'authentification
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
       console.log("AppRoutes: Auth state changed:", event, session?.user?.id);
       
       if (event === 'SIGNED_IN' && session) {
-        // Vérifier si l'utilisateur est un installateur
-        const checkInstallerStatus = async () => {
-          const { data: installer } = await supabase
-            .from('installers')
-            .select('*')
-            .eq('user_id', session.user.id)
-            .single();
+        const { data: installer } = await supabase
+          .from('installers')
+          .select('*')
+          .eq('user_id', session.user.id)
+          .single();
 
-          if (installer) {
-            navigate('/espace-installateur');
-          } else {
-            // Si l'utilisateur n'est pas un installateur, rediriger vers la page client
-            navigate('/client');
-          }
-        };
-
-        checkInstallerStatus();
+        if (installer) {
+          navigate('/espace-installateur');
+        } else {
+          navigate('/client');
+        }
+      } else if (event === 'SIGNED_OUT') {
+        navigate('/');
       }
     });
 
