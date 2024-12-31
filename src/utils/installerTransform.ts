@@ -68,7 +68,6 @@ export const transformInstallerToDatabase = (data: Installer): Omit<DatabaseInst
     profile_views: null,
     conversion_rate: data.conversionRate,
     satisfied_clients: null,
-    rating: null,
     total_reviews: null,
     last_active: null,
     subscription_status: null,
@@ -118,31 +117,5 @@ export const transformDatabaseToForm = (data: DatabaseInstallerData): InstallerF
     panelBrands: (data.panel_brands || []).join(", "),
     inverterBrands: (data.inverter_brands || []).join(", "),
     guaranteeYears: data.warranty_years?.toString() || ""
-  };
-};
-
-export const transformFormToDatabase = (formData: InstallerFormData, userId: string): Omit<DatabaseInstallerData, 'id' | 'created_at' | 'credits' | 'verified'> => {
-  return {
-    user_id: userId,
-    company_name: formData.company_name,
-    contact_name: formData.contact_name,
-    email: formData.email,
-    phone: formData.phone,
-    siret: formData.siret,
-    address: formData.address,
-    postal_code: formData.postal_code,
-    city: formData.city,
-    service_area: formData.service_area,
-    website: formData.website,
-    description: formData.description,
-    experience_years: formData.experience_years,
-    panel_brands: formData.panel_brands,
-    inverter_brands: formData.inverter_brands,
-    warranty_years: formData.warranty_years,
-    certifications: formData.certifications,
-    installation_types: formData.installation_types,
-    maintenance_services: formData.maintenance_services,
-    visibility_settings: formData.visibility_settings,
-    status: 'pending'
   };
 };
