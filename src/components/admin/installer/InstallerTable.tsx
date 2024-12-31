@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Installer } from "@/types/crm";
-import { Edit, Eye, Star, Award, BadgeCheck, Trash2 } from "lucide-react";
+import { Edit, Eye, Star, Award, BadgeCheck } from "lucide-react";
 import { getRatingBadge } from "./InstallerBadges";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -55,12 +55,17 @@ export const InstallerTable = ({
     return <div className="flex gap-0.5">{stars}</div>;
   };
 
-  const getStatusBadge = (status: string) => {
-    return (
-      <Badge className="bg-emerald-500">
-        {status === "active" ? "Actif" : status === "inactive" ? "Inactif" : "En attente"}
-      </Badge>
-    );
+  const getStatusLabel = (status: string) => {
+    switch(status) {
+      case "active":
+        return "Actif";
+      case "inactive":
+        return "Inactif";
+      case "pending":
+        return "En attente";
+      default:
+        return "Actif";
+    }
   };
 
   const handleStatusChange = async (installerId: string, newStatus: string) => {
@@ -152,7 +157,9 @@ export const InstallerTable = ({
                 >
                   <SelectTrigger className="w-[130px]">
                     <SelectValue>
-                      {getStatusBadge(installer.status || "active")}
+                      <Badge className="bg-emerald-500">
+                        {getStatusLabel(installer.status || "active")}
+                      </Badge>
                     </SelectValue>
                   </SelectTrigger>
                   <SelectContent>
