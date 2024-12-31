@@ -1,12 +1,9 @@
 import { useState, useEffect } from "react";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { useToast } from "@/components/ui/use-toast";
-import { Save } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/lib/supabase-client";
 import { useNavigate } from "react-router-dom";
+import { ProfileHeader } from "./sections/ProfileHeader";
+import { ProfileForm } from "./sections/ProfileForm";
 
 export const ProfileSection = () => {
   const { toast } = useToast();
@@ -20,6 +17,7 @@ export const ProfileSection = () => {
     company: "PPF Énergie",
     siret: "",
     website: "",
+    description: "Installateur photovoltaïque professionnel",
   });
 
   useEffect(() => {
@@ -40,6 +38,28 @@ export const ProfileSection = () => {
         return;
       }
       setFormData(prev => ({ ...prev, email: session.user.email || "" }));
+
+      // Fetch existing profile data
+      const { data: installer, error: fetchError } = await supabase
+        .from('installers')
+        .select('*')
+        .eq('user_id', session.user.id)
+        .single();
+
+      if (fetchError) {
+        console.error("Error fetching installer profile:", fetchError);
+      } else if (installer) {
+        setFormData(prev => ({
+          ...prev,
+          firstName: installer.contact_name.split(' ')[0] || prev.firstName,
+          lastName: installer.contact_name.split(' ')[1] || prev.lastName,
+          phone: installer.phone || prev.phone,
+          company: installer.company_name || prev.company,
+          siret: installer.siret || prev.siret,
+          website: installer.website || prev.website,
+          description: installer.description || prev.description,
+        }));
+      }
     };
 
     getSession();
@@ -76,37 +96,41 @@ export const ProfileSection = () => {
         throw userError;
       }
 
-      // Then create the installer profile
-      const { error } = await supabase.from('installers').insert([
-        {
-          user_id: session.user.id,
-          company_name: formData.company,
-          contact_name: `${formData.firstName} ${formData.lastName}`,
-          phone: formData.phone,
-          address: "99 Rue du Moulin des Landes",
-          postal_code: "44980",
-          city: "Sainte-Luce-sur-Loire",
-          service_area: ["44980"],
-          website: formData.website,
-          siret: formData.siret,
-        }
-      ]);
+      // Then create or update the installer profile
+      const { error } = await supabase
+        .from('installers')
+        .upsert([
+          {
+            user_id: session.user.id,
+            company_name: formData.company,
+            contact_name: `${formData.firstName} ${formData.lastName}`,
+            phone: formData.phone,
+            address: "99 Rue du Moulin des Landes",
+            postal_code: "44980",
+            city: "Sainte-Luce-sur-Loire",
+            service_area: ["44980"],
+            website: formData.website,
+            siret: formData.siret,
+            description: formData.description,
+          }
+        ], {
+          onConflict: 'user_id'
+        });
 
       if (error) {
         throw error;
       }
 
       toast({
-        title: "Profil créé",
-        description: "Votre profil a été créé avec succès",
+        title: "Profil mis à jour",
+        description: "Vos modifications ont été enregistrées avec succès",
       });
       
-      navigate("/espace-installateur/leads/nouveaux");
     } catch (error) {
-      console.error("Error creating profile:", error);
+      console.error("Error updating profile:", error);
       toast({
         title: "Erreur",
-        description: error instanceof Error ? error.message : "Une erreur est survenue lors de la création de votre profil",
+        description: error instanceof Error ? error.message : "Une erreur est survenue lors de la mise à jour de votre profil",
         variant: "destructive",
       });
     } finally {
@@ -115,91 +139,17 @@ export const ProfileSection = () => {
   };
 
   return (
-    <Card className="p-6">
-      <form onSubmit={handleSubmit} className="space-y-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="space-y-2">
-            <Label htmlFor="firstName">Prénom</Label>
-            <Input
-              id="firstName"
-              value={formData.firstName}
-              onChange={handleChange}
-              placeholder="John"
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="lastName">Nom</Label>
-            <Input
-              id="lastName"
-              value={formData.lastName}
-              onChange={handleChange}
-              placeholder="Doe"
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
-            <Input
-              id="email"
-              type="email"
-              value={formData.email}
-              onChange={handleChange}
-              placeholder="john.doe@example.com"
-              disabled
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="phone">Téléphone</Label>
-            <Input
-              id="phone"
-              value={formData.phone}
-              onChange={handleChange}
-              placeholder="+33 6 12 34 56 78"
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="company">Entreprise</Label>
-            <Input
-              id="company"
-              value={formData.company}
-              onChange={handleChange}
-              placeholder="Nom de votre entreprise"
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="siret">SIRET</Label>
-            <Input
-              id="siret"
-              value={formData.siret}
-              onChange={handleChange}
-              placeholder="123 456 789 00012"
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="website">Site web</Label>
-            <Input
-              id="website"
-              value={formData.website}
-              onChange={handleChange}
-              placeholder="www.monentreprise.fr"
-            />
-          </div>
-        </div>
-
-        <Button 
-          type="submit" 
-          className="w-full md:w-auto flex items-center gap-2"
-          disabled={isLoading}
-        >
-          <Save className="w-4 h-4" />
-          {isLoading ? "Création en cours..." : "Enregistrer les modifications"}
-        </Button>
-      </form>
-    </Card>
+    <div className="space-y-6">
+      <ProfileHeader 
+        company={formData.company}
+        description={formData.description}
+      />
+      <ProfileForm
+        formData={formData}
+        handleChange={handleChange}
+        handleSubmit={handleSubmit}
+        isLoading={isLoading}
+      />
+    </div>
   );
 };
