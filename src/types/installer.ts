@@ -50,10 +50,10 @@ export interface DatabaseInstallerData {
   phone: string
   address: string
   postal_code: string
+  city?: string
   service_area: string[]
   credits: number
   verified: boolean
-  city?: string
   website?: string
   description?: string
   experience_years?: number
@@ -85,19 +85,23 @@ export const convertFormToDbFormat = (formData: InstallerFormData, userId: strin
   inverter_brands: formData.inverterBrands.split(",").map(brand => brand.trim()),
   warranty_years: parseInt(formData.guaranteeYears) || 0,
   service_area: formData.service_area,
-  certifications: Object.entries(formData.certifications).reduce((acc, [key, value]) => ({
-    ...acc,
-    [key]: value
-  }), {} as Record<string, boolean>),
-  installation_types: Object.entries(formData.installationTypes).reduce((acc, [key, value]) => ({
-    ...acc,
-    [key]: value
-  }), {} as Record<string, boolean>),
+  certifications: {
+    qualiPV: formData.certifications.qualiPV,
+    rge: formData.certifications.rge,
+    qualibat: formData.certifications.qualibat
+  },
+  installation_types: {
+    residential: formData.installationTypes.residential,
+    commercial: formData.installationTypes.commercial,
+    industrial: formData.installationTypes.industrial
+  },
   maintenance_services: formData.maintenanceServices,
-  visibility_settings: Object.entries(formData.visibility_settings).reduce((acc, [key, value]) => ({
-    ...acc,
-    [key]: value
-  }), {} as Record<string, boolean>),
+  visibility_settings: {
+    showPhoneNumber: formData.visibility_settings.showPhoneNumber,
+    highlightProfile: formData.visibility_settings.highlightProfile,
+    acceptDirectMessages: formData.visibility_settings.acceptDirectMessages,
+    showCertifications: formData.visibility_settings.showCertifications
+  },
   credits: 0,
   verified: false
 })

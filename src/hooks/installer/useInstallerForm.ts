@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { supabase } from "@/integrations/supabase/client"
 import { useToast } from "@/hooks/use-toast"
-import type { InstallerFormData, DatabaseInstallerData } from "@/types/installer"
+import type { InstallerFormData } from "@/types/installer"
 import { convertFormToDbFormat } from "@/types/installer"
 
 export const useInstallerForm = (
@@ -59,14 +59,7 @@ export const useInstallerForm = (
 
       const { error } = await supabase
         .from("installers")
-        .upsert({
-          ...installerData,
-          address: installerData.address || "",
-          postal_code: installerData.postal_code || "",
-          company_name: installerData.company_name || "",
-          contact_name: installerData.contact_name || "",
-          phone: installerData.phone || "",
-        })
+        .upsert(installerData)
 
       if (error) throw error
 
