@@ -1,7 +1,5 @@
 import { Button } from "@/components/ui/button"
 import { ProfileStats } from "@/components/installer/profile/ProfileStats"
-import { ProfileVisibilityOptions } from "@/components/installer/profile/ProfileVisibilityOptions"
-import { PremiumFeatures } from "@/components/installer/profile/PremiumFeatures"
 import { BasicInfoSection } from "@/components/installer/profile/sections/BasicInfoSection"
 import { SolarSpecificSection } from "@/components/installer/profile/sections/SolarSpecificSection"
 import { InterventionZonesSection } from "./sections/InterventionZonesSection"
@@ -44,27 +42,6 @@ export const ProfileSection = () => {
           Enregistrer les modifications
         </Button>
       </form>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <PremiumFeatures />
-        <ProfileVisibilityOptions 
-          options={formData.visibility_settings || {
-            showPhoneNumber: true,
-            highlightProfile: false,
-            acceptDirectMessages: true,
-            showCertifications: true,
-          }}
-          onToggle={(field) => {
-            setFormData({
-              ...formData,
-              visibility_settings: {
-                ...formData.visibility_settings,
-                [field]: !formData.visibility_settings?.[field]
-              }
-            })
-          }}
-        />
-      </div>
     </div>
   )
 }
