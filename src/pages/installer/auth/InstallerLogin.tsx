@@ -34,6 +34,7 @@ export const InstallerLogin = () => {
 
       if (installer) {
         toast.success("Connexion réussie")
+        // Redirect to installer dashboard
         navigate("/espace-installateur")
       } else {
         toast.error("Accès non autorisé")
