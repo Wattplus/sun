@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react"
 import { supabase } from "@/integrations/supabase/client"
 
-interface ProfileFormData {
+export interface ProfileFormData {
   firstName: string
   lastName: string
   email: string
@@ -28,7 +28,7 @@ interface ProfileFormData {
   maintenanceServices: boolean
 }
 
-interface VisibilityOptions {
+export interface VisibilityOptions {
   showPhoneNumber: boolean
   highlightProfile: boolean
   acceptDirectMessages: boolean
@@ -85,13 +85,15 @@ export const useProfileForm = () => {
         if (error) throw error
 
         if (installer) {
+          const [firstName, lastName] = (installer.contact_name || "").split(" ")
+          
           setFormData({
-            firstName: installer.contact_name?.split(' ')[0] || "",
-            lastName: installer.contact_name?.split(' ')[1] || "",
+            firstName: firstName || "",
+            lastName: lastName || "",
             email: user.email || "",
             phone: installer.phone || "",
             company: installer.company_name || "",
-            siret: "",  // Add SIRET if available in your database
+            siret: "",
             website: installer.website || "",
             description: installer.description || "",
             experience: installer.experience_years?.toString() || "",
@@ -99,12 +101,12 @@ export const useProfileForm = () => {
             inverterBrands: Array.isArray(installer.inverter_brands) ? installer.inverter_brands.join(', ') : "",
             guaranteeYears: installer.warranty_years?.toString() || "",
             service_area: installer.service_area || [],
-            certifications: installer.certifications || {
+            certifications: installer.certifications as ProfileFormData['certifications'] || {
               qualiPV: false,
               rge: false,
               qualibat: false
             },
-            installationTypes: installer.installation_types || {
+            installationTypes: installer.installation_types as ProfileFormData['installationTypes'] || {
               residential: false,
               commercial: false,
               industrial: false
@@ -113,7 +115,7 @@ export const useProfileForm = () => {
           })
 
           if (installer.visibility_settings) {
-            setVisibilityOptions(installer.visibility_settings)
+            setVisibilityOptions(installer.visibility_settings as VisibilityOptions)
           }
         }
       } catch (error) {
@@ -163,12 +165,53 @@ export const useProfileForm = () => {
     })
   }
 
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    try {
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) throw new Error("User not found")
+
+      const { data: installer, error: installerError } = await supabase
+        .from('installers')
+        .select()
+        .eq('user_id', user.id)
+        .single()
+
+      if (installerError) throw installerError
+
+      const { error: updateError } = await supabase
+        .from('installers')
+        .update({
+          service_area: formData.service_area,
+          company_name: formData.company,
+          contact_name: `${formData.firstName} ${formData.lastName}`,
+          phone: formData.phone,
+          website: formData.website,
+          description: formData.description,
+          experience_years: parseInt(formData.experience),
+          panel_brands: formData.panelBrands.split(',').map(brand => brand.trim()),
+          inverter_brands: formData.inverterBrands.split(',').map(brand => brand.trim()),
+          warranty_years: parseInt(formData.guaranteeYears),
+          certifications: formData.certifications,
+          installation_types: formData.installationTypes,
+          maintenance_services: formData.maintenanceServices,
+          visibility_settings: visibilityOptions
+        })
+        .eq('id', installer.id)
+
+      if (updateError) throw updateError
+    } catch (error) {
+      console.error('Error updating profile:', error)
+    }
+  }
+
   return {
     formData,
     visibilityOptions,
     handleChange,
     handleCheckboxChange,
     handleToggleChange,
-    handleZonesChange
+    handleZonesChange,
+    handleSubmit
   }
 }

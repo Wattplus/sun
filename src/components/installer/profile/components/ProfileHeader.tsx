@@ -25,7 +25,7 @@ export const ProfileHeader = ({ formData }: ProfileHeaderProps) => {
         <div className="relative">
           <Avatar className="h-24 w-24">
             <AvatarImage src="/placeholder.svg" />
-            <AvatarFallback>JD</AvatarFallback>
+            <AvatarFallback>{formData.company.substring(0, 2).toUpperCase()}</AvatarFallback>
           </Avatar>
           <Button
             size="icon"

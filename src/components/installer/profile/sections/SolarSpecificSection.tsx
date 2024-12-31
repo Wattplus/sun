@@ -4,26 +4,10 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Label } from "@/components/ui/label"
 import { motion } from "framer-motion"
 import { Sun } from "lucide-react"
+import type { ProfileFormData } from "../hooks/useProfileForm"
 
 interface SolarSpecificProps {
-  formData: {
-    experience: string;
-    panelBrands: string;
-    inverterBrands: string;
-    guaranteeYears: string;
-    interventionZones: string;
-    certifications: {
-      qualiPV: boolean;
-      rge: boolean;
-      qualibat: boolean;
-    };
-    installationTypes: {
-      residential: boolean;
-      commercial: boolean;
-      industrial: boolean;
-    };
-    maintenanceServices: boolean;
-  };
+  formData: ProfileFormData;
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleCheckboxChange: (field: string, checked: boolean) => void;
 }
@@ -75,14 +59,6 @@ export const SolarSpecificSection = ({ formData, handleChange, handleCheckboxCha
               value={formData.guaranteeYears}
               onChange={handleChange}
               placeholder="20"
-              lightMode
-            />
-            <FormField
-              label="Zones d'intervention"
-              id="interventionZones"
-              value={formData.interventionZones}
-              onChange={handleChange}
-              placeholder="75, 92, 93, 94..."
               lightMode
             />
           </div>
