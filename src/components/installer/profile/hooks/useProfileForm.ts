@@ -113,7 +113,7 @@ export const useProfileForm = () => {
       setFormData(prev => ({
         ...prev,
         [category]: {
-          ...(prev[category as keyof typeof prev] as Record<string, boolean>),
+          ...((prev[category as keyof ProfileFormData]) as Record<string, boolean>),
           [item]: checked
         }
       }))
@@ -158,10 +158,10 @@ export const useProfileForm = () => {
           inverter_brands: formData.inverterBrands.split(',').map(brand => brand.trim()),
           warranty_years: parseInt(formData.guaranteeYears),
           service_area: formData.service_area,
-          certifications: formData.certifications,
-          installation_types: formData.installationTypes,
+          certifications: formData.certifications as unknown as Record<string, boolean>,
+          installation_types: formData.installationTypes as unknown as Record<string, boolean>,
           maintenance_services: formData.maintenanceServices,
-          visibility_settings: visibilityOptions
+          visibility_settings: visibilityOptions as unknown as Record<string, boolean>
         })
         .eq('user_id', user.id)
 
