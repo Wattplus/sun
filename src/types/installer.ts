@@ -1,4 +1,10 @@
-export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[];
+export type Json =
+  | string
+  | number
+  | boolean
+  | null
+  | { [key: string]: Json | undefined }
+  | Json[];
 
 export interface VisibilitySettings {
   showPhoneNumber: boolean;
@@ -30,13 +36,13 @@ export interface DatabaseInstallerData {
   siret: string;
   address: string;
   postal_code: string;
-  city: string | null;
-  website: string | null;
-  description: string | null;
-  experience_years: number | null;
-  panel_brands: string[] | null;
-  inverter_brands: string[] | null;
-  warranty_years: number | null;
+  city: string;
+  website?: string;
+  description?: string;
+  experience_years?: number;
+  panel_brands?: string[];
+  inverter_brands?: string[];
+  warranty_years?: number;
   certifications: Certifications;
   installation_types: InstallationTypes;
   maintenance_services: boolean;
@@ -48,7 +54,6 @@ export interface DatabaseInstallerData {
   conversion_rate?: number;
   profile_views?: number;
   satisfied_clients?: number;
-  subscription_plan?: string;
 }
 
 export interface InstallerFormData {
@@ -107,3 +112,51 @@ export const defaultFormData: InstallerFormData = {
   },
   service_area: []
 };
+
+export function transformDatabaseToForm(data: DatabaseInstallerData): InstallerFormData {
+  return {
+    company_name: data.company_name,
+    contact_name: data.contact_name,
+    email: data.email,
+    phone: data.phone,
+    siret: data.siret,
+    address: data.address,
+    postal_code: data.postal_code,
+    city: data.city,
+    website: data.website || "",
+    description: data.description || "",
+    experience_years: data.experience_years || 0,
+    panel_brands: data.panel_brands || [],
+    inverter_brands: data.inverter_brands || [],
+    warranty_years: data.warranty_years || 0,
+    certifications: data.certifications,
+    installation_types: data.installation_types,
+    maintenance_services: data.maintenance_services,
+    visibility_settings: data.visibility_settings,
+    service_area: data.service_area
+  };
+}
+
+export function transformFormToDatabase(formData: InstallerFormData): Omit<DatabaseInstallerData, "id" | "user_id"> {
+  return {
+    company_name: formData.company_name,
+    contact_name: formData.contact_name,
+    email: formData.email,
+    phone: formData.phone,
+    siret: formData.siret,
+    address: formData.address,
+    postal_code: formData.postal_code,
+    city: formData.city,
+    website: formData.website,
+    description: formData.description,
+    experience_years: formData.experience_years,
+    panel_brands: formData.panel_brands,
+    inverter_brands: formData.inverter_brands,
+    warranty_years: formData.warranty_years,
+    certifications: formData.certifications,
+    installation_types: formData.installation_types,
+    maintenance_services: formData.maintenance_services,
+    visibility_settings: formData.visibility_settings,
+    service_area: formData.service_area
+  };
+}

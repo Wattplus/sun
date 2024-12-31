@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
-import { mockInstallers } from "./InstallerManagement";
+import { mockInstallers } from "./mockData";
 import { DatabaseInstallerData } from "@/types/installer";
 
 export const InstallerManagement = () => {
