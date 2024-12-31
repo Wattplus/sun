@@ -3,10 +3,13 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Label } from "@/components/ui/label"
 import { Award } from "lucide-react"
 import { motion } from "framer-motion"
-import { ProfileFormData } from "../hooks/useProfileForm"
 
 interface CertificationsSectionProps {
-  certifications: ProfileFormData['certifications'];
+  certifications: {
+    qualiPV: boolean;
+    rge: boolean;
+    qualibat: boolean;
+  };
   handleCheckboxChange: (field: string, checked: boolean) => void;
 }
 

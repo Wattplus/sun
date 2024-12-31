@@ -5,6 +5,7 @@ export interface VisibilityOptions {
   highlightProfile: boolean
   acceptDirectMessages: boolean
   showCertifications: boolean
+  [key: string]: boolean
 }
 
 export interface InstallerFormData {
@@ -45,6 +46,10 @@ export interface InstallerData {
   phone: string
   address: string
   postal_code: string
+  service_area: string[]
+  credits: number
+  verified: boolean
+  created_at?: string
   city?: string
   website?: string
   description?: string
@@ -52,9 +57,12 @@ export interface InstallerData {
   panel_brands?: string[]
   inverter_brands?: string[]
   warranty_years?: number
-  service_area: string[]
-  certifications: Json
-  installation_types: Json
-  maintenance_services: boolean
-  visibility_settings: Json
+  certifications?: Json
+  installation_types?: Json
+  maintenance_services?: boolean
+  visibility_settings?: Json
+  subscription_plan?: string
+  profile_views?: number
+  conversion_rate?: number
+  satisfied_clients?: number
 }

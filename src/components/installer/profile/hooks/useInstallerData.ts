@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react"
 import { supabase } from "@/integrations/supabase/client"
 import { useToast } from "@/hooks/use-toast"
-import type { InstallerFormData, InstallerData } from "../types/installer"
+import type { InstallerFormData, VisibilityOptions } from "../types/installer"
 
 const defaultFormData: InstallerFormData = {
   firstName: "",
@@ -30,6 +30,12 @@ const defaultFormData: InstallerFormData = {
   maintenanceServices: false,
   address: "",
   postal_code: "",
+  visibility_settings: {
+    showPhoneNumber: true,
+    highlightProfile: false,
+    acceptDirectMessages: true,
+    showCertifications: true,
+  }
 }
 
 export const useInstallerData = () => {
@@ -73,7 +79,7 @@ export const useInstallerData = () => {
             address: installer.address || "",
             postal_code: installer.postal_code || "",
             city: installer.city,
-            visibility_settings: installer.visibility_settings as InstallerFormData['visibility_settings'],
+            visibility_settings: installer.visibility_settings as VisibilityOptions || defaultFormData.visibility_settings,
           })
         }
       } catch (error) {
