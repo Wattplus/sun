@@ -39,7 +39,7 @@
 }
 
 .glass-panel {
-  @apply bg-[#0B1221]/50 backdrop-blur-md border border-[#1EAEDB]/10 rounded-2xl shadow-xl;
+  @apply bg-[#0B1221]/50 backdrop-blur-md border border-[#1EAEDB]/10 rounded-2xl shadow-xl transition-all duration-300 hover:border-[#1EAEDB]/20;
 }
 
 .glass-button {
@@ -76,7 +76,7 @@
 }
 
 .gradient-text {
-  @apply bg-clip-text text-transparent bg-gradient-to-r from-white via-blue-200 to-white;
+  @apply bg-clip-text text-transparent bg-gradient-to-r from-white via-blue-200 to-white animate-gradient;
 }
 
 .section-spacing {
