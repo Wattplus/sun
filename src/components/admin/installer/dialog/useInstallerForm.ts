@@ -11,11 +11,7 @@ interface DatabaseCertifications {
 }
 
 interface InstallerData {
-  certifications: {
-    qualiPV: boolean;
-    rge: boolean;
-    qualibat: boolean;
-  };
+  certifications: DatabaseCertifications;
   service_area?: string[];
   [key: string]: any;
 }
@@ -70,9 +66,10 @@ export const useInstallerForm = (installer: Installer | null) => {
             
             let certifications = defaultCertifications
             
-            if (data.certifications && typeof data.certifications === 'object') {
-              const certData = data.certifications as Record<string, unknown>
-              if (!Array.isArray(certData)) {
+            if (data.certifications) {
+              // First cast to unknown, then to the expected type
+              const certData = data.certifications as unknown as Record<string, boolean>
+              if (typeof certData === 'object' && !Array.isArray(certData)) {
                 certifications = {
                   qualiPV: Boolean(certData.qualiPV),
                   rge: Boolean(certData.rge),
