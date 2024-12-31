@@ -66,10 +66,10 @@ export const useInstallerData = () => {
         if (error) throw error
 
         if (installerData) {
-          setInstaller(installerData)
+          setInstaller(installerData as InstallerData)
           const [firstName = "", lastName = ""] = (installerData.contact_name || "").split(" ")
           
-          const visibilitySettings = installerData.visibility_settings as VisibilitySettings || defaultVisibilitySettings
+          const visibilitySettings = (installerData.visibility_settings as unknown as VisibilitySettings) || defaultVisibilitySettings
           
           setFormData({
             firstName,
@@ -85,8 +85,8 @@ export const useInstallerData = () => {
             inverterBrands: Array.isArray(installerData.inverter_brands) ? installerData.inverter_brands.join(', ') : "",
             guaranteeYears: installerData.warranty_years?.toString() || "",
             service_area: installerData.service_area || [],
-            certifications: (installerData.certifications as InstallerFormData['certifications']) || defaultFormData.certifications,
-            installationTypes: (installerData.installation_types as InstallerFormData['installationTypes']) || defaultFormData.installationTypes,
+            certifications: installerData.certifications as InstallerFormData['certifications'] || defaultFormData.certifications,
+            installationTypes: installerData.installation_types as InstallerFormData['installationTypes'] || defaultFormData.installationTypes,
             maintenanceServices: installerData.maintenance_services || false,
             address: installerData.address || "",
             postal_code: installerData.postal_code || "",

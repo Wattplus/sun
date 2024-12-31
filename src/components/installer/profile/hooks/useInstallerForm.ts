@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { supabase } from "@/integrations/supabase/client"
 import { useToast } from "@/hooks/use-toast"
-import type { InstallerFormData } from "../types/installer"
+import type { InstallerFormData, VisibilitySettings } from "../types/installer"
 import type { Json } from "@/integrations/supabase/types"
 
 export const useInstallerForm = (formData: InstallerFormData, setFormData: (data: InstallerFormData) => void) => {
@@ -12,31 +12,6 @@ export const useInstallerForm = (formData: InstallerFormData, setFormData: (data
     setFormData({
       ...formData,
       [e.target.id]: e.target.value,
-    })
-  }
-
-  const handleCheckboxChange = (field: string, checked: boolean) => {
-    if (field.includes('.')) {
-      const [category, item] = field.split('.')
-      setFormData({
-        ...formData,
-        [category]: {
-          ...(formData[category as keyof typeof formData] as Record<string, boolean>),
-          [item]: checked
-        }
-      })
-    } else {
-      setFormData({
-        ...formData,
-        [field]: checked
-      })
-    }
-  }
-
-  const handleZonesChange = (zones: string[]) => {
-    setFormData({
-      ...formData,
-      service_area: zones
     })
   }
 
@@ -94,8 +69,6 @@ export const useInstallerForm = (formData: InstallerFormData, setFormData: (data
 
   return {
     handleChange,
-    handleCheckboxChange,
-    handleZonesChange,
     handleSubmit,
     loading
   }
