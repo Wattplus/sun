@@ -7,7 +7,7 @@ import AdminDashboard from "@/components/admin/AdminDashboard";
 import { InstallerManagement } from "@/components/admin/InstallerManagement";
 import { LeadManagement } from "@/components/admin/LeadManagement";
 import { InstallerSpace } from "@/pages/installer/InstallerSpace";
-import { InstallerLogin } from "@/pages/installer/auth/InstallerLogin";
+import InstallerLogin from "@/pages/installer/auth/InstallerLogin";
 import { InstallerSignup } from "@/pages/installer/auth/InstallerSignup";
 import { LandingPage } from "@/pages/LandingPage";
 
@@ -37,7 +37,7 @@ export const AppRoutes = () => {
 
       {/* Protected installer routes */}
       <Route
-        path="/installer"
+        path="/espace-installateur/*"
         element={
           <ProtectedRoute>
             <InstallerSpace />
