@@ -11,6 +11,7 @@ interface FormFieldProps {
   placeholder?: string;
   lightMode?: boolean;
   required?: boolean;
+  disabled?: boolean;
 }
 
 export const FormField = ({
@@ -23,6 +24,7 @@ export const FormField = ({
   placeholder,
   lightMode,
   required,
+  disabled,
 }: FormFieldProps) => {
   return (
     <div className="space-y-2">
@@ -42,6 +44,7 @@ export const FormField = ({
         }`}
         placeholder={placeholder}
         required={required}
+        disabled={disabled}
       />
       {error && <p className="text-red-300 text-sm">{error}</p>}
     </div>
