@@ -54,6 +54,7 @@ export const MarketplaceLeadsTable = ({
               <TableHead>Prénom</TableHead>
               <TableHead>Nom</TableHead>
               <TableHead>Code postal</TableHead>
+              <TableHead>Facture mensuelle</TableHead>
               <TableHead>Prix</TableHead>
               <TableHead className="text-right"></TableHead>
             </TableRow>
@@ -78,6 +79,7 @@ export const MarketplaceLeadsTable = ({
                 <TableCell>{lead.firstname}</TableCell>
                 <TableCell>{lead.lastname}</TableCell>
                 <TableCell>{lead.postalcode}</TableCell>
+                <TableCell>{lead.monthlybill}€</TableCell>
                 <TableCell>{lead.price}€</TableCell>
                 <TableCell className="text-right">
                   <Button variant="ghost" size="icon">
