@@ -78,8 +78,8 @@ export const useProfileForm = () => {
             inverterBrands: Array.isArray(installer.inverter_brands) ? installer.inverter_brands.join(', ') : "",
             guaranteeYears: installer.warranty_years?.toString() || "",
             service_area: installer.service_area || [],
-            certifications: installer.certifications as Certifications || defaultFormData.certifications,
-            installationTypes: installer.installation_types as InstallationTypes || defaultFormData.installationTypes,
+            certifications: (installer.certifications as Certifications) || defaultFormData.certifications,
+            installationTypes: (installer.installation_types as InstallationTypes) || defaultFormData.installationTypes,
             maintenanceServices: installer.maintenance_services || false,
           })
 
@@ -158,10 +158,10 @@ export const useProfileForm = () => {
           inverter_brands: formData.inverterBrands.split(',').map(brand => brand.trim()),
           warranty_years: parseInt(formData.guaranteeYears),
           service_area: formData.service_area,
-          certifications: formData.certifications as unknown as Record<string, boolean>,
-          installation_types: formData.installationTypes as unknown as Record<string, boolean>,
+          certifications: formData.certifications,
+          installation_types: formData.installationTypes,
           maintenance_services: formData.maintenanceServices,
-          visibility_settings: visibilityOptions as unknown as Record<string, boolean>
+          visibility_settings: visibilityOptions
         })
         .eq('user_id', user.id)
 
