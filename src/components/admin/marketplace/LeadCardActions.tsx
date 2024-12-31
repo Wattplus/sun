@@ -25,6 +25,7 @@ export const LeadCardActions = ({
       <div className="space-y-2">
         <div className="flex items-center justify-between">
           <span className="text-sm font-medium text-[#1EAEDB]">Acheter ce lead</span>
+          <span className="text-sm font-medium">{mutualPrice}€</span>
         </div>
         <div className="grid grid-cols-2 gap-2">
           <Button

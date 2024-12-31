@@ -66,13 +66,13 @@ export const LeadMarketplace = () => {
       
       <div className="space-y-6">
         <BalanceSection 
-          balance={150} 
+          balance={0} 
           onPrepaidAccount={handlePrepaidAccount}
         />
 
         <Card className="p-6 bg-background/50 backdrop-blur-sm border-primary/10">
           <div className="space-y-6">
-            <MarketplaceHeader availableLeads={availableLeads.length} />
+            <MarketplaceHeader availableLeads={availableLeads} />
 
             <LeadAgeTabs activeTab={activeTab} onTabChange={setActiveTab} />
 
@@ -95,8 +95,6 @@ export const LeadMarketplace = () => {
                 onBulkPurchase={handleBulkPurchase}
                 totalPrice={totalPrice}
               />
-
-              <MarketplaceStats availableLeads={availableLeads} />
 
               <MarketplaceGrid 
                 availableLeads={availableLeads}

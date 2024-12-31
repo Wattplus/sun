@@ -71,12 +71,24 @@ export const MarketplaceBalance = ({
                 <span className="text-primary">{totalPrice}€</span>
               </div>
             </div>
-            <Button 
-              onClick={onPurchase}
-              className="w-full bg-primary hover:bg-primary/90"
-            >
-              Procéder au paiement
-            </Button>
+            <div className="grid grid-cols-2 gap-2">
+              <Button 
+                variant="outline"
+                className="w-full bg-primary/10 hover:bg-primary/20 border-primary/20"
+                onClick={onPurchase}
+              >
+                <Wallet className="h-4 w-4 mr-2" />
+                Compte prépayé
+              </Button>
+              <Button 
+                variant="outline"
+                className="w-full bg-primary/10 hover:bg-primary/20 border-primary/20"
+                onClick={onPurchase}
+              >
+                <CreditCard className="h-4 w-4 mr-2" />
+                Carte bancaire
+              </Button>
+            </div>
           </div>
         </Card>
       )}
