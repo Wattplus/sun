@@ -2,23 +2,58 @@ import { Lead } from "@/types/crm";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Lock } from "lucide-react";
+import { Lock, Home, Building2, Factory, Wallet } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Card } from "@/components/ui/card";
+import { useNavigate } from "react-router-dom";
 
 interface MarketplaceLeadsTableProps {
   leads: Lead[];
   selectedLeads: Lead[];
   onLeadSelect: (lead: Lead) => void;
+  balance?: number;
 }
 
 export const MarketplaceLeadsTable = ({ 
   leads, 
   selectedLeads, 
-  onLeadSelect 
+  onLeadSelect,
+  balance = 0
 }: MarketplaceLeadsTableProps) => {
+  const navigate = useNavigate();
+
+  const getProjectIcon = (clientType: string) => {
+    switch (clientType) {
+      case 'residential':
+        return <Home className="h-4 w-4" />;
+      case 'professional':
+        return <Building2 className="h-4 w-4" />;
+      case 'industrial':
+        return <Factory className="h-4 w-4" />;
+      default:
+        return <Home className="h-4 w-4" />;
+    }
+  };
+
   return (
     <div className="p-6">
       <div className="space-y-4">
+        <Card className="p-4 bg-background/50 backdrop-blur-sm border-primary/10 mb-6">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Wallet className="h-5 w-5 text-primary" />
+              <span className="text-lg font-medium">Solde disponible: {balance}€</span>
+            </div>
+            <Button 
+              onClick={() => navigate('/espace-installateur/mon-compte/prepaid')}
+              variant="outline"
+              className="bg-primary/10 hover:bg-primary/20 border-primary/20"
+            >
+              Recharger mon compte
+            </Button>
+          </div>
+        </Card>
+
         <div className="flex items-center justify-between">
           <h2 className="text-lg font-medium">Tous les leads disponibles</h2>
         </div>
@@ -52,8 +87,12 @@ export const MarketplaceLeadsTable = ({
                     />
                   </TableCell>
                   <TableCell>
-                    <Badge variant="outline" className={lead.clienttype === 'professional' ? 'bg-amber-500/10 text-amber-600' : 'bg-emerald-500/10 text-emerald-600'}>
-                      {lead.clienttype === 'professional' ? 'Professionnel' : 'Résidentiel'}
+                    <Badge variant="outline" className="flex items-center gap-2 bg-primary/10 text-primary">
+                      {getProjectIcon(lead.clienttype)}
+                      <span>
+                        {lead.clienttype === 'professional' ? 'Professionnel' : 
+                         lead.clienttype === 'industrial' ? 'Industriel' : 'Résidentiel'}
+                      </span>
                     </Badge>
                   </TableCell>
                   <TableCell>{lead.firstname}</TableCell>
