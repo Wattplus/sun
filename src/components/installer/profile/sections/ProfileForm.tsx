@@ -5,17 +5,14 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useProfileData } from "../hooks/useProfileData";
 import { PersonalInfoFields } from "../components/PersonalInfoFields";
+import { InstallerFormData } from "@/types/installer";
 
-export const ProfileForm = () => {
-  const { formData, setFormData, loading } = useProfileData();
+interface ProfileFormProps {
+  formData: InstallerFormData;
+  handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+}
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData(prev => ({
-      ...prev,
-      [e.target.id]: e.target.value
-    }));
-  };
-
+export const ProfileForm = ({ formData, handleChange }: ProfileFormProps) => {
   const handleSave = async () => {
     if (!formData.firstName || !formData.lastName || !formData.email) {
       toast.error("Veuillez remplir tous les champs obligatoires");
@@ -59,10 +56,6 @@ export const ProfileForm = () => {
       toast.error("Impossible de sauvegarder les modifications");
     }
   };
-
-  if (loading) {
-    return <div>Chargement...</div>;
-  }
 
   return (
     <Card className="p-6 bg-background/50 backdrop-blur-sm border-primary/20">
