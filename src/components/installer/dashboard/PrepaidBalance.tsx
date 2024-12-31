@@ -1,6 +1,6 @@
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Euro, RefreshCw, TrendingUp } from "lucide-react";
+import { Euro, RefreshCw } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { motion } from "framer-motion";
 import { useState } from "react";
@@ -59,22 +59,16 @@ export const PrepaidBalance = ({ balance = 0 }: PrepaidBalanceProps) => {
                 <Euro className="h-5 w-5 text-primary" />
                 <span className="text-lg">Solde disponible</span>
               </div>
-              <div className="space-y-2">
-                <motion.div 
-                  className="flex items-baseline gap-2"
-                  whileHover={{ scale: 1.05 }}
-                  transition={{ type: "spring", stiffness: 300 }}
-                >
-                  <span className="text-6xl font-bold text-white">
-                    {balance.toLocaleString('fr-FR')}
-                  </span>
-                  <span className="text-3xl text-white/80">€</span>
-                </motion.div>
-                <div className="flex items-center gap-2 text-emerald-400">
-                  <TrendingUp className="h-4 w-4" />
-                  <span className="text-sm">+15% ce mois</span>
-                </div>
-              </div>
+              <motion.div 
+                className="flex items-baseline gap-2"
+                whileHover={{ scale: 1.05 }}
+                transition={{ type: "spring", stiffness: 300 }}
+              >
+                <span className="text-6xl font-bold text-white">
+                  {balance.toLocaleString('fr-FR')}
+                </span>
+                <span className="text-3xl text-white/80">€</span>
+              </motion.div>
             </div>
             <Button
               variant="outline"
