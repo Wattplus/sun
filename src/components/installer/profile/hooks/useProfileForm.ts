@@ -1,7 +1,12 @@
 import { useState, useEffect } from "react"
 import { supabase } from "@/integrations/supabase/client"
-import { ProfileFormData, VisibilityOptions, Certifications, InstallationTypes } from "../types/profile"
 import { useToast } from "@/hooks/use-toast"
+import { 
+  ProfileFormData, 
+  Certifications, 
+  InstallationTypes, 
+  VisibilityOptions 
+} from "../types/profile"
 
 const defaultFormData: ProfileFormData = {
   firstName: "",
@@ -108,7 +113,7 @@ export const useProfileForm = () => {
       setFormData(prev => ({
         ...prev,
         [category]: {
-          ...prev[category as keyof typeof prev],
+          ...(prev[category as keyof typeof prev] as Record<string, boolean>),
           [item]: checked
         }
       }))
