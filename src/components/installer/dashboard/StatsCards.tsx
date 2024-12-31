@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { TrendingUp, Users, Euro, FileText } from "lucide-react";
 import { useLeadOperations } from "@/hooks/useLeadOperations";
 import { useEffect, useState } from "react";
+import { supabase } from "@/lib/supabase-client";
 
 export const StatsCards = () => {
   const { leads } = useLeadOperations();
@@ -50,8 +51,8 @@ export const StatsCards = () => {
       console.log("[StatsCards] Available leads:", availableLeads.length);
       console.log("[StatsCards] Purchased leads:", purchasedLeads.length);
 
-      // Calculer l'investissement total (25€ par lead acheté)
-      const totalInvestment = purchasedLeads.length * 25;
+      // Calculer l'investissement total (prix par lead acheté)
+      const totalInvestment = purchasedLeads.reduce((total, lead) => total + (lead.price || 25), 0);
       
       // Calculer le ROI estimé (exemple: 300% de retour sur investissement)
       const estimatedROI = totalInvestment > 0 ? 300 : 0;
@@ -82,6 +83,33 @@ export const StatsCards = () => {
       });
     }
   }, [leads]);
+
+  // Mettre en place l'écoute des changements en temps réel
+  useEffect(() => {
+    console.log("[StatsCards] Setting up realtime subscription");
+    
+    const channel = supabase
+      .channel('public:leads')
+      .on(
+        'postgres_changes',
+        {
+          event: '*', // Écouter tous les événements (INSERT, UPDATE, DELETE)
+          schema: 'public',
+          table: 'leads'
+        },
+        (payload) => {
+          console.log('[StatsCards] Real-time update received:', payload);
+          // La mise à jour des leads via useLeadOperations déclenchera automatiquement
+          // la mise à jour des statistiques grâce au premier useEffect
+        }
+      )
+      .subscribe();
+
+    return () => {
+      console.log("[StatsCards] Cleaning up realtime subscription");
+      supabase.removeChannel(channel);
+    };
+  }, []);
 
   return (
     <>

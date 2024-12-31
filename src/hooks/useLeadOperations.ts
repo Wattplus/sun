@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { Lead } from "@/types/crm";
 import { useToast } from "@/components/ui/use-toast";
 import { supabase } from "@/lib/supabase-client";
@@ -51,6 +51,35 @@ export const useLeadOperations = () => {
       });
     }
   }, [toast]);
+
+  // Configurer l'écoute des changements en temps réel
+  useEffect(() => {
+    console.log("[useLeadOperations] Setting up realtime subscription");
+    
+    const channel = supabase
+      .channel('public:leads')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'leads'
+        },
+        (payload) => {
+          console.log('[useLeadOperations] Real-time update received:', payload);
+          fetchLeads(); // Recharger les leads quand il y a des changements
+        }
+      )
+      .subscribe();
+
+    // Charger les leads initialement
+    fetchLeads();
+
+    return () => {
+      console.log("[useLeadOperations] Cleaning up realtime subscription");
+      supabase.removeChannel(channel);
+    };
+  }, [fetchLeads]);
 
   const deleteLead = async (leadId: string): Promise<boolean> => {
     try {
