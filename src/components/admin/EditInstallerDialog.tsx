@@ -7,19 +7,14 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
-import { Installer, InstallerStatus } from "@/types/crm"
+import { Installer } from "@/types/crm"
 import { useState, useEffect } from "react"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
-import { Switch } from "@/components/ui/switch"
-import { Label } from "@/components/ui/label"
+import { BasicInfoSection } from "./installer/dialog/BasicInfoSection"
+import { CompanyInfoSection } from "./installer/dialog/CompanyInfoSection"
+import { ZonesSection } from "./installer/dialog/ZonesSection"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Checkbox } from "@/components/ui/checkbox"
+import { Label } from "@/components/ui/label"
 
 interface EditInstallerDialogProps {
   installer: Installer | null
@@ -53,14 +48,17 @@ export function EditInstallerDialog({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    if (installer && formData) {
+    if (formData) {
       let zones = isNationwide ? ["Toute France"] : formData.zones || []
       if (!isNationwide && formData.zones) {
         zones = formData.zones.filter(zone => zone !== "Toute France")
       }
-      onSave({ ...installer, ...formData, zones })
-      onOpenChange(false)
+      onSave({ ...installer, ...formData, zones } as Installer)
     }
+  }
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, [e.target.id]: e.target.value })
   }
 
   const handleZonesChange = (value: string) => {
@@ -91,7 +89,7 @@ export function EditInstallerDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[500px] bg-background/95 backdrop-blur-md border-primary/20">
+      <DialogContent className="max-w-[600px] max-h-[80vh] overflow-y-auto bg-background/95 backdrop-blur-md border-primary/20">
         <form onSubmit={handleSubmit}>
           <DialogHeader>
             <DialogTitle>Modifier l'installateur</DialogTitle>
@@ -99,120 +97,20 @@ export function EditInstallerDialog({
               Modifiez les informations de l'installateur ici. Cliquez sur sauvegarder une fois terminé.
             </DialogDescription>
           </DialogHeader>
-          <div className="grid gap-4 py-4">
-            <div>
-              <label htmlFor="companyName" className="text-sm font-medium">
-                Nom de l'entreprise
-              </label>
-              <Input
-                id="companyName"
-                value={formData.companyName || ""}
-                onChange={(e) => setFormData({ ...formData, companyName: e.target.value })}
-                className="bg-background border-input"
-              />
-            </div>
-            <div>
-              <label htmlFor="contactName" className="text-sm font-medium">
-                Nom du contact
-              </label>
-              <Input
-                id="contactName"
-                value={formData.contactName || ""}
-                onChange={(e) => setFormData({ ...formData, contactName: e.target.value })}
-                className="bg-background border-input"
-              />
-            </div>
-            <div>
-              <label htmlFor="email" className="text-sm font-medium">
-                Email
-              </label>
-              <Input
-                id="email"
-                type="email"
-                value={formData.email || ""}
-                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                className="bg-background border-input"
-              />
-            </div>
-            <div>
-              <label htmlFor="phone" className="text-sm font-medium">
-                Téléphone
-              </label>
-              <Input
-                id="phone"
-                value={formData.phone || ""}
-                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                className="bg-background border-input"
-              />
-            </div>
-            <div>
-              <label htmlFor="address" className="text-sm font-medium">
-                Adresse
-              </label>
-              <Input
-                id="address"
-                value={formData.address || ""}
-                onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-                className="bg-background border-input"
-              />
-            </div>
-
-            <div>
-              <label htmlFor="siret" className="text-sm font-medium">
-                SIRET
-              </label>
-              <Input
-                id="siret"
-                value={formData.siret || ""}
-                onChange={(e) => setFormData({ ...formData, siret: e.target.value })}
-                className="bg-background border-input"
-                placeholder="123 456 789 00012"
-              />
-            </div>
-
-            <div>
-              <label htmlFor="siren" className="text-sm font-medium">
-                SIREN
-              </label>
-              <Input
-                id="siren"
-                value={formData.siren || ""}
-                onChange={(e) => setFormData({ ...formData, siren: e.target.value })}
-                className="bg-background border-input"
-                placeholder="123 456 789"
-              />
-            </div>
+          
+          <div className="grid gap-6 py-4">
+            <BasicInfoSection formData={formData} onChange={handleChange} />
+            <CompanyInfoSection formData={formData} onChange={handleChange} />
+            
+            <ZonesSection
+              isNationwide={isNationwide}
+              zones={formData.zones || []}
+              onNationwideChange={handleNationwideChange}
+              onZonesChange={handleZonesChange}
+            />
 
             <div className="space-y-4">
-              <div className="flex items-center space-x-2">
-                <Switch
-                  id="nationwide"
-                  checked={isNationwide}
-                  onCheckedChange={handleNationwideChange}
-                />
-                <Label htmlFor="nationwide">Toute France</Label>
-              </div>
-              {!isNationwide && (
-                <div>
-                  <label htmlFor="zones" className="text-sm font-medium">
-                    Zones d'intervention (séparées par des virgules)
-                  </label>
-                  <Input
-                    id="zones"
-                    value={formData.zones?.join(", ") || ""}
-                    onChange={(e) => handleZonesChange(e.target.value)}
-                    className="bg-background border-input"
-                    placeholder="75, 92, 93..."
-                    disabled={isNationwide}
-                  />
-                </div>
-              )}
-            </div>
-
-            <div className="space-y-4">
-              <label className="text-sm font-medium">
-                Certifications
-              </label>
+              <Label>Certifications</Label>
               <div className="space-y-2">
                 <div className="flex items-center space-x-2">
                   <Checkbox
@@ -220,9 +118,7 @@ export function EditInstallerDialog({
                     checked={formData.certifications?.qualiPV}
                     onCheckedChange={(checked) => handleCertificationChange('qualiPV', checked as boolean)}
                   />
-                  <label htmlFor="qualiPV" className="text-sm">
-                    QualiPV
-                  </label>
+                  <Label htmlFor="qualiPV">QualiPV</Label>
                 </div>
                 <div className="flex items-center space-x-2">
                   <Checkbox
@@ -230,9 +126,7 @@ export function EditInstallerDialog({
                     checked={formData.certifications?.rge}
                     onCheckedChange={(checked) => handleCertificationChange('rge', checked as boolean)}
                   />
-                  <label htmlFor="rge" className="text-sm">
-                    RGE
-                  </label>
+                  <Label htmlFor="rge">RGE</Label>
                 </div>
                 <div className="flex items-center space-x-2">
                   <Checkbox
@@ -240,22 +134,16 @@ export function EditInstallerDialog({
                     checked={formData.certifications?.qualibat}
                     onCheckedChange={(checked) => handleCertificationChange('qualibat', checked as boolean)}
                   />
-                  <label htmlFor="qualibat" className="text-sm">
-                    Qualibat
-                  </label>
+                  <Label htmlFor="qualibat">Qualibat</Label>
                 </div>
               </div>
             </div>
 
             <div>
-              <label htmlFor="status" className="text-sm font-medium">
-                Statut
-              </label>
+              <Label htmlFor="status">Statut</Label>
               <Select
                 value={formData.status}
-                onValueChange={(value: InstallerStatus) =>
-                  setFormData({ ...formData, status: value })
-                }
+                onValueChange={(value) => setFormData({ ...formData, status: value })}
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Sélectionnez un statut" />
@@ -268,8 +156,9 @@ export function EditInstallerDialog({
               </Select>
             </div>
           </div>
+
           <DialogFooter>
-            <Button type="submit">
+            <Button type="submit" className="w-full sm:w-auto">
               Sauvegarder
             </Button>
           </DialogFooter>
