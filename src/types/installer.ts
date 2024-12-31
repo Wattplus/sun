@@ -5,21 +5,44 @@ export interface VisibilitySettings {
   highlightProfile: boolean
   acceptDirectMessages: boolean
   showCertifications: boolean
-  [key: string]: boolean
 }
 
 export interface Certifications {
   qualiPV: boolean
   rge: boolean
   qualibat: boolean
-  [key: string]: boolean
 }
 
 export interface InstallationTypes {
   residential: boolean
   commercial: boolean
   industrial: boolean
-  [key: string]: boolean
+}
+
+export interface DatabaseInstallerData {
+  id: string
+  user_id: string
+  company_name: string
+  contact_name: string
+  phone: string
+  address: string
+  postal_code: string
+  city?: string | null
+  service_area: string[]
+  credits: number
+  verified: boolean
+  siret?: string | null
+  website?: string | null
+  description?: string | null
+  experience_years?: number | null
+  panel_brands?: string[] | null
+  inverter_brands?: string[] | null
+  warranty_years?: number | null
+  certifications: Json
+  installation_types: Json
+  maintenance_services?: boolean
+  visibility_settings: Json
+  created_at?: string
 }
 
 export interface InstallerFormData {
@@ -43,33 +66,4 @@ export interface InstallerFormData {
   postal_code: string
   city: string
   visibility_settings: VisibilitySettings
-}
-
-export interface InstallerData {
-  id: string
-  user_id: string
-  company_name: string
-  contact_name: string
-  phone: string
-  address: string
-  postal_code: string
-  city?: string
-  service_area: string[]
-  credits: number
-  verified: boolean
-  siret?: string
-  website?: string
-  description?: string
-  experience_years?: number
-  panel_brands?: string[]
-  inverter_brands?: string[]
-  warranty_years?: number
-  certifications: Certifications
-  installation_types: InstallationTypes
-  maintenance_services: boolean
-  visibility_settings: VisibilitySettings
-  created_at?: string
-  profile_views?: number
-  conversion_rate?: number
-  satisfied_clients?: number
 }

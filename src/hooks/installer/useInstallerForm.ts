@@ -1,29 +1,38 @@
 import { useState, ChangeEvent, FormEvent } from 'react';
 import { supabase } from '@/lib/supabase-client';
 import { useToast } from '@/components/ui/use-toast';
-import { InstallerFormData, VisibilitySettings, Certifications, InstallationTypes } from '@/types/installer';
+import type { InstallerFormData, DatabaseInstallerData } from '@/types/installer';
 
 export const useInstallerForm = (initialData?: Partial<InstallerFormData>) => {
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState<InstallerFormData>({
-    user_id: '',
-    company_name: '',
-    contact_name: '',
-    phone: '',
-    address: '',
-    postal_code: '',
-    city: '',
+    firstName: "",
+    lastName: "",
+    email: "",
+    phone: "",
+    company: "",
+    siret: "",
+    website: "",
+    description: "",
+    experience: "",
+    panelBrands: "",
+    inverterBrands: "",
+    guaranteeYears: "",
     service_area: [],
     certifications: {
       qualiPV: false,
       rge: false,
       qualibat: false
     },
-    installation_types: {
+    installationTypes: {
       residential: false,
       commercial: false,
       industrial: false
     },
+    maintenanceServices: false,
+    address: "",
+    postal_code: "",
+    city: "",
     visibility_settings: {
       showPhoneNumber: true,
       highlightProfile: false,
@@ -51,11 +60,11 @@ export const useInstallerForm = (initialData?: Partial<InstallerFormData>) => {
           [field]: checked
         }
       }));
-    } else if (category === 'installation_types') {
+    } else if (category === 'installationTypes') {
       setFormData(prev => ({
         ...prev,
-        installation_types: {
-          ...prev.installation_types,
+        installationTypes: {
+          ...prev.installationTypes,
           [field]: checked
         }
       }));
@@ -86,15 +95,31 @@ export const useInstallerForm = (initialData?: Partial<InstallerFormData>) => {
         throw new Error('No authenticated user');
       }
 
+      const installerData: Partial<DatabaseInstallerData> = {
+        user_id: session.session.user.id,
+        contact_name: `${formData.firstName} ${formData.lastName}`,
+        phone: formData.phone,
+        company_name: formData.company,
+        website: formData.website,
+        description: formData.description,
+        experience_years: parseInt(formData.experience) || null,
+        panel_brands: formData.panelBrands.split(',').map(brand => brand.trim()),
+        inverter_brands: formData.inverterBrands.split(',').map(brand => brand.trim()),
+        warranty_years: parseInt(formData.guaranteeYears) || null,
+        service_area: formData.service_area,
+        certifications: formData.certifications,
+        installation_types: formData.installationTypes,
+        maintenance_services: formData.maintenanceServices,
+        visibility_settings: formData.visibility_settings,
+        address: formData.address,
+        postal_code: formData.postal_code,
+        city: formData.city,
+        siret: formData.siret
+      };
+
       const { error } = await supabase
         .from('installers')
-        .upsert({
-          ...formData,
-          user_id: session.session.user.id,
-          certifications: formData.certifications as unknown as Certifications,
-          installation_types: formData.installation_types as unknown as InstallationTypes,
-          visibility_settings: formData.visibility_settings as unknown as VisibilitySettings,
-        });
+        .upsert(installerData);
 
       if (error) throw error;
 

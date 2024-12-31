@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react"
 import { supabase } from "@/integrations/supabase/client"
 import { useToast } from "@/hooks/use-toast"
-import type { InstallerFormData } from "@/types/installer"
+import type { InstallerFormData, DatabaseInstallerData } from "@/types/installer"
 
 const defaultFormData: InstallerFormData = {
   firstName: "",
