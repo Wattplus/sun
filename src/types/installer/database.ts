@@ -11,12 +11,12 @@ export interface DatabaseInstallerData {
   address: string;
   postal_code: string;
   city: string;
-  website?: string;
-  description?: string;
-  experience_years?: number;
-  panel_brands?: string[];
-  inverter_brands?: string[];
-  warranty_years?: number;
+  website?: string | null;
+  description?: string | null;
+  experience_years?: number | null;
+  panel_brands?: string[] | null;
+  inverter_brands?: string[] | null;
+  warranty_years?: number | null;
   service_area: string[];
   certifications: Certifications;
   installation_types: InstallationTypes;
