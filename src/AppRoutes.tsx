@@ -3,7 +3,7 @@ import { useAuthRedirect } from "@/routes/useAuthRedirect"
 import { ProtectedRoute } from "@/routes/ProtectedRoute"
 import Index from "@/pages/Index"
 import Login from "@/pages/Login"
-import Admin from "@/pages/Admin"
+import AdminDashboard from "@/components/admin/AdminDashboard"
 import { ThankYou } from "@/pages/ThankYou"
 import { CheckoutPage } from "@/pages/installer/payment/CheckoutPage"
 import { PrepaidAccountPage } from "@/pages/installer/account/PrepaidAccountPage"
@@ -22,6 +22,8 @@ import { FAQ } from "@/pages/FAQ"
 import { LegalNotice } from "@/pages/LegalNotice"
 import { PrivacyPolicy } from "@/pages/PrivacyPolicy"
 import { TermsOfService } from "@/pages/TermsOfService"
+import { LeadManagement } from "@/components/admin/LeadManagement"
+import { InstallerManagement } from "@/components/admin/InstallerManagement"
 
 export const AppRoutes = () => {
   useAuthRedirect()
@@ -71,9 +73,19 @@ export const AppRoutes = () => {
       } />
 
       {/* Admin Routes */}
-      <Route path="/admin/*" element={
+      <Route path="/admin" element={
         <ProtectedRoute requiredRole={['admin', 'super_admin']}>
-          <Admin />
+          <AdminDashboard />
+        </ProtectedRoute>
+      } />
+      <Route path="/admin/leads" element={
+        <ProtectedRoute requiredRole={['admin', 'super_admin']}>
+          <LeadManagement />
+        </ProtectedRoute>
+      } />
+      <Route path="/admin/installers" element={
+        <ProtectedRoute requiredRole={['admin', 'super_admin']}>
+          <InstallerManagement />
         </ProtectedRoute>
       } />
     </Routes>
