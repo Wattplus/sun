@@ -52,7 +52,7 @@ export const useInstallerSignup = () => {
 
       if (!authData.user) throw new Error("Erreur lors de la création du compte")
 
-      // 2. Attendre que l'utilisateur soit créé dans la table users
+      // 2. Attendre que l'utilisateur soit créé dans la table users et profiles
       await new Promise(resolve => setTimeout(resolve, 5000))
 
       // 3. Créer l'entrée dans la table installers
@@ -90,6 +90,8 @@ export const useInstallerSignup = () => {
             },
           },
         ])
+        .select()
+        .single()
 
       if (installerError) {
         console.error("Installer creation error:", installerError)
