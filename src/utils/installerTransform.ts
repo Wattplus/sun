@@ -1,60 +1,39 @@
 import type { DatabaseInstallerData } from '@/types/installer/database';
 import type { InstallerFormData } from '@/types/installer/form';
-import type { Json, InstallationTypes, Certifications, VisibilitySettings } from '@/types/installer/base';
+import type { DatabaseJson, InstallationTypes, Certifications, VisibilitySettings } from '@/types/installer/base';
 
-function normalizeInstallationTypes(data: Json): InstallationTypes {
-  const defaultTypes = {
-    residential: false,
-    commercial: false,
-    industrial: false
-  };
+export function transformDatabaseToForm(data: DatabaseInstallerData): InstallerFormData {
+  const [firstName = "", lastName = ""] = (data.contact_name || "").split(" ");
   
-  if (typeof data === 'object' && data !== null && !Array.isArray(data)) {
-    return { ...defaultTypes, ...data };
-  }
-  
-  return defaultTypes;
-}
-
-function normalizeCertifications(data: Json): Certifications {
-  const defaultCerts = {
+  const certifications: Certifications = {
     qualiPV: false,
     rge: false,
-    qualibat: false
+    qualibat: false,
+    ...(data.certifications as Record<string, boolean>)
   };
-  
-  if (typeof data === 'object' && data !== null && !Array.isArray(data)) {
-    return { ...defaultCerts, ...data };
-  }
-  
-  return defaultCerts;
-}
 
-function normalizeVisibilitySettings(data: Json): VisibilitySettings {
-  const defaultSettings = {
+  const installationTypes: InstallationTypes = {
+    residential: false,
+    commercial: false,
+    industrial: false,
+    ...(data.installation_types as Record<string, boolean>)
+  };
+
+  const visibilitySettings: VisibilitySettings = {
     showPhoneNumber: true,
     highlightProfile: false,
     showCertifications: true,
-    acceptDirectMessages: true
+    acceptDirectMessages: true,
+    ...(data.visibility_settings as Record<string, boolean>)
   };
-  
-  if (typeof data === 'object' && data !== null && !Array.isArray(data)) {
-    return { ...defaultSettings, ...data };
-  }
-  
-  return defaultSettings;
-}
 
-export function transformDatabaseToForm(data: DatabaseInstallerData): InstallerFormData {
-  const [firstName = "", lastName = ""] = data.contact_name.split(" ");
-  
   return {
     firstName,
     lastName,
     company: data.company_name,
-    email: data.email,
+    email: data.email || "",
     phone: data.phone,
-    siret: data.siret,
+    siret: data.siret || "",
     company_name: data.company_name,
     contact_name: data.contact_name,
     address: data.address,
@@ -67,10 +46,10 @@ export function transformDatabaseToForm(data: DatabaseInstallerData): InstallerF
     inverter_brands: data.inverter_brands || [],
     warranty_years: data.warranty_years || 0,
     service_area: data.service_area,
-    certifications: normalizeCertifications(data.certifications),
-    installation_types: normalizeInstallationTypes(data.installation_types),
-    maintenance_services: data.maintenance_services,
-    visibility_settings: normalizeVisibilitySettings(data.visibility_settings),
+    certifications,
+    installation_types: installationTypes,
+    maintenance_services: data.maintenance_services || false,
+    visibility_settings: visibilitySettings,
     experience: String(data.experience_years || ""),
     panelBrands: (data.panel_brands || []).join(", "),
     inverterBrands: (data.inverter_brands || []).join(", "),
@@ -95,10 +74,10 @@ export function transformFormToDatabase(formData: InstallerFormData, userId: str
     panel_brands: formData.panel_brands,
     inverter_brands: formData.inverter_brands,
     warranty_years: formData.warranty_years,
-    certifications: formData.certifications as unknown as Json,
-    installation_types: formData.installation_types as unknown as Json,
+    certifications: formData.certifications as unknown as DatabaseJson,
+    installation_types: formData.installation_types as unknown as DatabaseJson,
     maintenance_services: formData.maintenance_services,
-    visibility_settings: formData.visibility_settings as unknown as Json,
+    visibility_settings: formData.visibility_settings as unknown as DatabaseJson,
     service_area: formData.service_area,
     credits: 0,
     verified: false
