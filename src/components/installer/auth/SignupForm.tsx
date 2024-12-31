@@ -48,9 +48,16 @@ export const SignupForm = () => {
         throw new Error("Les mots de passe ne correspondent pas")
       }
 
+      // 1. Créer l'utilisateur dans auth
       const { data: authData, error: authError } = await supabase.auth.signUp({
         email: formData.email,
         password: formData.password,
+        options: {
+          data: {
+            first_name: formData.firstName,
+            last_name: formData.lastName,
+          }
+        }
       })
 
       if (authError) {
@@ -60,9 +67,13 @@ export const SignupForm = () => {
         }
         throw authError
       }
-      
+
       if (!authData.user) throw new Error("Erreur lors de la création du compte")
 
+      // 2. Attendre un court instant pour s'assurer que l'utilisateur est créé
+      await new Promise(resolve => setTimeout(resolve, 1000))
+
+      // 3. Insérer les données de l'installateur
       const { error: installerError } = await supabase
         .from("installers")
         .insert([
@@ -98,7 +109,10 @@ export const SignupForm = () => {
           },
         ])
 
-      if (installerError) throw installerError
+      if (installerError) {
+        console.error("Installer creation error:", installerError)
+        throw new Error("Erreur lors de la création du profil installateur")
+      }
 
       toast.success("Compte créé avec succès !")
       setShowSuccessDialog(true)
