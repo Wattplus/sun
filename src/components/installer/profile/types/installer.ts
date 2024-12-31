@@ -49,7 +49,7 @@ export interface InstallerData {
   service_area: string[]
   credits: number
   verified: boolean
-  created_at?: string
+  created_at: string
   city?: string
   website?: string
   description?: string
