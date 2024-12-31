@@ -7,7 +7,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
-import { Installer } from "@/types/crm"
+import { Installer, InstallerStatus } from "@/types/crm"
 import { useState, useEffect } from "react"
 import { BasicInfoSection } from "./installer/dialog/BasicInfoSection"
 import { CompanyInfoSection } from "./installer/dialog/CompanyInfoSection"
@@ -29,12 +29,27 @@ export function EditInstallerDialog({
   onOpenChange,
   onSave,
 }: EditInstallerDialogProps) {
-  const [formData, setFormData] = useState<Partial<Installer>>(installer || {
+  const [formData, setFormData] = useState<Installer>(installer || {
+    id: "",
+    companyName: "",
+    contactName: "",
+    email: "",
+    phone: "",
+    address: "",
+    zones: [],
+    status: "pending" as InstallerStatus,
+    commission: 0,
+    leadsAssigned: 0,
+    conversionRate: 0,
+    paymentType: "prepaid",
     certifications: {
       qualiPV: false,
       rge: false,
       qualibat: false
-    }
+    },
+    yearFounded: new Date().getFullYear().toString(),
+    siret: "",
+    siren: ""
   })
   const [isNationwide, setIsNationwide] = useState(false)
 
@@ -48,13 +63,7 @@ export function EditInstallerDialog({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    if (formData) {
-      let zones = isNationwide ? ["Toute France"] : formData.zones || []
-      if (!isNationwide && formData.zones) {
-        zones = formData.zones.filter(zone => zone !== "Toute France")
-      }
-      onSave({ ...installer, ...formData, zones } as Installer)
-    }
+    onSave(formData)
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -87,6 +96,10 @@ export function EditInstallerDialog({
     })
   }
 
+  const handleStatusChange = (value: string) => {
+    setFormData({ ...formData, status: value as InstallerStatus })
+  }
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-[600px] max-h-[80vh] overflow-y-auto bg-background/95 backdrop-blur-md border-primary/20">
@@ -104,7 +117,7 @@ export function EditInstallerDialog({
             
             <ZonesSection
               isNationwide={isNationwide}
-              zones={formData.zones || []}
+              zones={formData.zones}
               onNationwideChange={handleNationwideChange}
               onZonesChange={handleZonesChange}
             />
@@ -143,7 +156,7 @@ export function EditInstallerDialog({
               <Label htmlFor="status">Statut</Label>
               <Select
                 value={formData.status}
-                onValueChange={(value) => setFormData({ ...formData, status: value })}
+                onValueChange={handleStatusChange}
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Sélectionnez un statut" />

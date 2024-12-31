@@ -1,14 +1,9 @@
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { Installer } from "@/types/crm"
 
 interface BasicInfoSectionProps {
-  formData: {
-    companyName: string
-    contactName: string
-    email: string
-    phone: string
-    address: string
-  }
+  formData: Installer
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
 }
 
@@ -19,7 +14,7 @@ export function BasicInfoSection({ formData, onChange }: BasicInfoSectionProps) 
         <Label htmlFor="companyName">Nom de l'entreprise</Label>
         <Input
           id="companyName"
-          value={formData.companyName || ""}
+          value={formData.companyName}
           onChange={onChange}
           className="bg-background border-input"
         />
@@ -28,7 +23,7 @@ export function BasicInfoSection({ formData, onChange }: BasicInfoSectionProps) 
         <Label htmlFor="contactName">Nom du contact</Label>
         <Input
           id="contactName"
-          value={formData.contactName || ""}
+          value={formData.contactName}
           onChange={onChange}
           className="bg-background border-input"
         />
@@ -38,7 +33,7 @@ export function BasicInfoSection({ formData, onChange }: BasicInfoSectionProps) 
         <Input
           id="email"
           type="email"
-          value={formData.email || ""}
+          value={formData.email}
           onChange={onChange}
           className="bg-background border-input"
         />
@@ -47,7 +42,7 @@ export function BasicInfoSection({ formData, onChange }: BasicInfoSectionProps) 
         <Label htmlFor="phone">Téléphone</Label>
         <Input
           id="phone"
-          value={formData.phone || ""}
+          value={formData.phone}
           onChange={onChange}
           className="bg-background border-input"
         />
@@ -56,7 +51,7 @@ export function BasicInfoSection({ formData, onChange }: BasicInfoSectionProps) 
         <Label htmlFor="address">Adresse</Label>
         <Input
           id="address"
-          value={formData.address || ""}
+          value={formData.address}
           onChange={onChange}
           className="bg-background border-input"
         />

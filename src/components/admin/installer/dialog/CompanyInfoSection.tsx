@@ -1,11 +1,9 @@
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { Installer } from "@/types/crm"
 
 interface CompanyInfoSectionProps {
-  formData: {
-    siret: string
-    siren: string
-  }
+  formData: Installer
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
 }
 
@@ -16,7 +14,7 @@ export function CompanyInfoSection({ formData, onChange }: CompanyInfoSectionPro
         <Label htmlFor="siret">SIRET</Label>
         <Input
           id="siret"
-          value={formData.siret || ""}
+          value={formData.siret}
           onChange={onChange}
           className="bg-background border-input"
           placeholder="123 456 789 00012"
@@ -26,7 +24,7 @@ export function CompanyInfoSection({ formData, onChange }: CompanyInfoSectionPro
         <Label htmlFor="siren">SIREN</Label>
         <Input
           id="siren"
-          value={formData.siren || ""}
+          value={formData.siren}
           onChange={onChange}
           className="bg-background border-input"
           placeholder="123 456 789"
