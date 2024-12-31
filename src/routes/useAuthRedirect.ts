@@ -26,11 +26,13 @@ export const useAuthRedirect = () => {
           return
         }
 
+        // Redirection basée sur le rôle
         if (profile.role === 'admin' || profile.role === 'super_admin') {
           navigate('/admin/leads')
           return
         }
 
+        // Vérifier si l'utilisateur est un installateur
         const { data: installer } = await supabase
           .from('installers')
           .select()
@@ -66,11 +68,13 @@ export const useAuthRedirect = () => {
             return
           }
 
+          // Redirection basée sur le rôle après connexion
           if (profile.role === 'admin' || profile.role === 'super_admin') {
             navigate('/admin/leads')
             return
           }
 
+          // Vérifier si l'utilisateur est un installateur
           const { data: installer } = await supabase
             .from('installers')
             .select()
