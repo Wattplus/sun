@@ -2,7 +2,10 @@ import { supabase } from "@/integrations/supabase/client"
 import { useToast } from "@/hooks/use-toast"
 import type { InstallerFormData } from "../types/installer"
 
-export const useInstallerForm = (formData: InstallerFormData, setFormData: (data: InstallerFormData) => void) => {
+export const useInstallerForm = (
+  formData: InstallerFormData, 
+  setFormData: (data: InstallerFormData) => void
+) => {
   const { toast } = useToast()
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -50,6 +53,7 @@ export const useInstallerForm = (formData: InstallerFormData, setFormData: (data
         phone: formData.phone,
         address: formData.address,
         postal_code: formData.postal_code,
+        city: formData.city,
         description: formData.description,
         experience_years: parseInt(formData.experience) || null,
         panel_brands: formData.panelBrands.split(',').map(brand => brand.trim()),
@@ -61,7 +65,6 @@ export const useInstallerForm = (formData: InstallerFormData, setFormData: (data
         maintenance_services: formData.maintenanceServices,
         website: formData.website,
         siret: formData.siret,
-        city: formData.city,
         visibility_settings: formData.visibility_settings
       }
 

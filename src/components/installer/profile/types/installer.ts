@@ -38,7 +38,7 @@ export interface InstallerFormData {
   visibility_settings: VisibilityOptions
 }
 
-export interface InstallerData {
+export interface DatabaseInstallerData {
   id: string
   user_id: string
   company_name: string
@@ -61,9 +61,5 @@ export interface InstallerData {
   installation_types?: Json
   maintenance_services?: boolean
   visibility_settings?: Json
-  subscription_plan?: string
-  profile_views?: number
-  conversion_rate?: number
-  satisfied_clients?: number
   siret?: string
 }
