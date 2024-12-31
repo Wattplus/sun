@@ -3,8 +3,8 @@ export * from './database';
 export * from './form';
 export * from './transform';
 
-import { InstallerFormData } from './form';
 import { VisibilitySettings, InstallationTypes, Certifications } from './base';
+import { InstallerFormData } from './form';
 
 export const defaultFormData: InstallerFormData = {
   firstName: "",
