@@ -31,9 +31,9 @@ export const useInstallerForm = (installer: Installer | null) => {
     conversionRate: 0,
     paymentType: "prepaid",
     certifications: {
-      qualiPV: false,
-      rge: false,
-      qualibat: false
+      qualiPV: true, // Pré-coché par défaut
+      rge: true,     // Pré-coché par défaut
+      qualibat: true // Pré-coché par défaut
     },
     yearFounded: new Date().getFullYear().toString(),
     siret: "",
@@ -59,9 +59,9 @@ export const useInstallerForm = (installer: Installer | null) => {
             setIsNationwide(nationwide)
             
             const defaultCertifications: DatabaseCertifications = {
-              qualiPV: false,
-              rge: false,
-              qualibat: false
+              qualiPV: true,  // Pré-coché même si pas de données
+              rge: true,      // Pré-coché même si pas de données
+              qualibat: true  // Pré-coché même si pas de données
             }
             
             let certifications = defaultCertifications
@@ -81,7 +81,8 @@ export const useInstallerForm = (installer: Installer | null) => {
             setFormData({
               ...installer,
               zones: data.service_area || [],
-              certifications
+              certifications,
+              status: "active" // Force le statut à "active"
             })
           }
         } catch (error) {
