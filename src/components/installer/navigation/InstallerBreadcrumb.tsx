@@ -8,29 +8,18 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { useLocation, Link } from "react-router-dom";
-import { ChevronRight, Home, Building2, UserPlus, ShoppingCart } from "lucide-react";
+import { ChevronRight, Home } from "lucide-react";
 
 const breadcrumbTitles: Record<string, string> = {
-  "espace-installateur": "Espace Installateur",
-  "leads": "Leads",
-  "nouveaux": "Nouveaux leads",
-  "achetes": "Leads achetés",
+  "espace-installateur": "Tableau de bord",
+  "projets": "Projets",
   "messages": "Messages",
   "profil": "Profil",
   "abonnement": "Abonnement",
+  "leads": "Leads",
   "documents": "Documents",
   "parametres": "Paramètres",
-  "notifications": "Notifications",
-  "compte": "Mon compte",
-  "paiement": "Paiement",
-  "recharge": "Recharge",
-  "nouvelle-carte": "Nouvelle carte"
-};
-
-const breadcrumbIcons: Record<string, React.ComponentType> = {
-  "espace-installateur": Building2,
-  "leads": UserPlus,
-  "achetes": ShoppingCart,
+  "notifications": "Notifications"
 };
 
 export const InstallerBreadcrumb = () => {
@@ -45,9 +34,7 @@ export const InstallerBreadcrumb = () => {
             to="/" 
             className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors"
           >
-            <span className="flex items-center w-4 h-4">
-              <Home />
-            </span>
+            <Home className="h-4 w-4" />
             <span className="hidden sm:inline">Accueil</span>
           </Link>
         </BreadcrumbItem>
@@ -55,35 +42,22 @@ export const InstallerBreadcrumb = () => {
         {pathSegments.map((segment, index) => {
           const path = `/${pathSegments.slice(0, index + 1).join("/")}`;
           const isLast = index === pathSegments.length - 1;
-          const Icon = breadcrumbIcons[segment];
           
           return (
             <React.Fragment key={path}>
               <BreadcrumbSeparator>
-                <span className="flex items-center w-4 h-4">
-                  <ChevronRight />
-                </span>
+                <ChevronRight className="h-4 w-4" />
               </BreadcrumbSeparator>
               <BreadcrumbItem>
                 {isLast ? (
-                  <BreadcrumbPage className="font-medium flex items-center gap-2">
-                    {Icon && (
-                      <span className="flex items-center w-4 h-4">
-                        <Icon />
-                      </span>
-                    )}
+                  <BreadcrumbPage className="font-medium">
                     {breadcrumbTitles[segment] || segment}
                   </BreadcrumbPage>
                 ) : (
                   <Link 
                     to={path} 
-                    className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors"
+                    className="text-muted-foreground hover:text-primary transition-colors"
                   >
-                    {Icon && (
-                      <span className="flex items-center w-4 h-4">
-                        <Icon />
-                      </span>
-                    )}
                     {breadcrumbTitles[segment] || segment}
                   </Link>
                 )}

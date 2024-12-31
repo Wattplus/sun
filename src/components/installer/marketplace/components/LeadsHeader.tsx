@@ -1,41 +1,51 @@
 import { Button } from "@/components/ui/button";
-import { Filter, Download, Wallet } from "lucide-react";
+import { Filter, CreditCard, Download } from "lucide-react";
 
 interface LeadsHeaderProps {
   onToggleFilters: () => void;
   onPrepaidAccount: () => void;
+  onExport: () => void;
 }
 
-export const LeadsHeader = ({
-  onToggleFilters,
-  onPrepaidAccount,
-}: LeadsHeaderProps) => {
+export const LeadsHeader = ({ onToggleFilters, onPrepaidAccount, onExport }: LeadsHeaderProps) => {
   return (
-    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+    <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
       <div>
-        <h1 className="text-2xl font-bold text-white">Leads disponibles</h1>
-        <p className="text-muted-foreground">
-          Découvrez les nouveaux leads disponibles à l'achat
+        <h1 className="text-2xl font-bold text-primary">Nouveaux Leads</h1>
+        <p className="text-muted-foreground mt-1">
+          Découvrez les dernières opportunités commerciales
         </p>
       </div>
-      <div className="flex flex-wrap items-center gap-2">
+
+      <div className="flex items-center gap-3">
         <Button
           variant="outline"
           size="sm"
           onClick={onToggleFilters}
-          className="bg-primary/10 hover:bg-primary/20 text-primary border-primary/20"
+          className="text-muted-foreground hover:text-primary"
         >
-          <Filter className="w-4 h-4 mr-2" />
+          <Filter className="h-4 w-4 mr-2" />
           Filtres
         </Button>
+
         <Button
           variant="outline"
           size="sm"
-          onClick={onPrepaidAccount}
-          className="bg-primary/10 hover:bg-primary/20 text-primary border-primary/20"
+          onClick={onExport}
+          className="text-muted-foreground hover:text-primary"
         >
-          <Wallet className="w-4 h-4 mr-2" />
-          Compte prépayé
+          <Download className="h-4 w-4 mr-2" />
+          Exporter
+        </Button>
+
+        <Button
+          variant="default"
+          size="sm"
+          onClick={onPrepaidAccount}
+          className="bg-primary hover:bg-primary/90"
+        >
+          <CreditCard className="h-4 w-4 mr-2" />
+          Recharger mon compte
         </Button>
       </div>
     </div>

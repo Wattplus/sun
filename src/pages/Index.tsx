@@ -1,16 +1,17 @@
 import { HeroSection } from "@/components/HeroSection";
 import { Benefits } from "@/components/Benefits";
 import { Process } from "@/components/Process";
-import { ProjectGallery } from "@/components/ProjectGallery";
-import { ElectricityPriceSection } from "@/components/ElectricityPriceSection";
-import { SavingsCalculator } from "@/components/SavingsCalculator";
-import { EnvironmentalImpact } from "@/components/EnvironmentalImpact";
 import { Testimonials } from "@/components/Testimonials";
+import { LeadForm } from "@/components/LeadForm";
+import { FAQ } from "@/components/FAQ";
+import { ElectricityPriceSection } from "@/components/ElectricityPriceSection";
+import { EnvironmentalImpact } from "@/components/EnvironmentalImpact";
+import { ProjectGallery } from "@/components/ProjectGallery";
 import { Certifications } from "@/components/Certifications";
 import { PrimeRates } from "@/components/PrimeRates";
 import { TechnicalSpecs } from "@/components/TechnicalSpecs";
-import { LeadForm } from "@/components/LeadForm";
-import { FAQ } from "@/components/FAQ";
+import { Navbar } from "@/components/Navbar";
+import { Footer } from "@/components/Footer";
 import { Helmet } from "react-helmet";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
@@ -51,17 +52,35 @@ export const Index = () => {
       </Helmet>
 
       <div className="min-h-screen bg-gradient-to-b from-background/80 to-background">
+        <header>
+          <Navbar />
+        </header>
+        
         <main>
           <article>
             <HeroSection />
+            
+            <div className="container mx-auto px-4 py-12">
+              <div className="glass-panel p-8 rounded-2xl border border-primary/20 backdrop-blur-md">
+                <div className="mb-6 space-y-3">
+                  <h2 className="text-2xl font-bold bg-gradient-to-r from-white to-white/80 bg-clip-text text-transparent">
+                    Demandez votre étude gratuite
+                  </h2>
+                  <p className="text-white/80">
+                    Découvrez votre potentiel d'économies en 2 minutes. Notre équipe d'experts analysera votre situation et vous proposera la meilleure solution pour votre installation photovoltaïque.
+                  </p>
+                </div>
+                <LeadForm />
+              </div>
+            </div>
+
             <Benefits />
             <Process />
-            <ProjectGallery />
             <ElectricityPriceSection />
-            <SavingsCalculator />
+            <ProjectGallery />
             <EnvironmentalImpact />
-            <PrimeRates />
             <TechnicalSpecs />
+            <PrimeRates />
             <Testimonials />
             <Certifications />
             <FAQ />
@@ -80,7 +99,11 @@ export const Index = () => {
             </div>
           </article>
         </main>
+
+        <Footer />
       </div>
     </>
   );
 };
+
+export default Index;
