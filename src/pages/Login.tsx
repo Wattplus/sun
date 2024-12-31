@@ -14,6 +14,8 @@ export default function Login() {
   const [password, setPassword] = useState("")
   const [loading, setLoading] = useState(false)
 
+  const isInstallerLogin = location.pathname === '/connexion-installateur'
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
@@ -33,13 +35,30 @@ export default function Login() {
         .eq('id', session?.user.id)
         .single()
 
-      if (profile?.role === 'admin' || profile?.role === 'super_admin') {
-        toast.success("Connexion admin réussie")
-        navigate("/admin/leads")
+      if (isInstallerLogin) {
+        // Check if user is an installer
+        const { data: installer } = await supabase
+          .from('installers')
+          .select('id')
+          .eq('user_id', session?.user.id)
+          .single()
+
+        if (installer) {
+          toast.success("Connexion réussie")
+          navigate("/espace-installateur")
+        } else {
+          toast.error("Accès non autorisé")
+          await supabase.auth.signOut()
+        }
       } else {
-        toast.error("Accès non autorisé")
-        // Sign out if not admin
-        await supabase.auth.signOut()
+        // Admin login logic
+        if (profile?.role === 'admin' || profile?.role === 'super_admin') {
+          toast.success("Connexion admin réussie")
+          navigate("/admin/leads")
+        } else {
+          toast.error("Accès non autorisé")
+          await supabase.auth.signOut()
+        }
       }
     } catch (error: any) {
       console.error("Error logging in:", error)
@@ -52,21 +71,26 @@ export default function Login() {
   return (
     <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-b from-background-dark to-primary-dark">
       <Helmet>
-        <title>Connexion Admin - Solar Pro</title>
+        <title>{isInstallerLogin ? "Connexion Installateur" : "Connexion Admin"} - Solar Pro</title>
       </Helmet>
 
       <Card className="w-full max-w-md p-8 space-y-6 bg-background/50 backdrop-blur-sm border-primary/20">
         <div className="space-y-2 text-center">
-          <h1 className="text-2xl font-bold text-white">Connexion Admin</h1>
+          <h1 className="text-2xl font-bold text-white">
+            {isInstallerLogin ? "Espace Installateur" : "Connexion Admin"}
+          </h1>
           <p className="text-primary-light/80">
-            Accédez à votre espace administrateur
+            {isInstallerLogin 
+              ? "Accédez à votre espace installateur"
+              : "Accédez à votre espace administrateur"
+            }
           </p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
             <label htmlFor="email" className="text-sm font-medium text-white">
-              Email administrateur
+              Email
             </label>
             <Input
               id="email"
@@ -74,7 +98,7 @@ export default function Login() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              placeholder="admin@example.com"
+              placeholder="email@example.com"
               className="bg-background/50 border-primary/20 text-white placeholder:text-primary-light/50"
             />
           </div>
