@@ -53,10 +53,10 @@ export interface DatabaseInstallerData {
   created_at: string;
   website?: string;
   description?: string;
-  experience_years?: number | null;
+  experience_years?: number;
   panel_brands?: string[];
   inverter_brands?: string[];
-  warranty_years?: number | null;
+  warranty_years?: number;
   certifications?: Json;
   installation_types?: Json;
   maintenance_services?: boolean;

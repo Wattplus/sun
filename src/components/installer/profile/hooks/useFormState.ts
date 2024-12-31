@@ -1,5 +1,5 @@
 import { useState } from "react"
-import type { InstallerFormData, VisibilityOptions } from "../types/installer"
+import type { InstallerFormData, VisibilitySettings } from "../types/installer"
 
 const defaultFormData: InstallerFormData = {
   firstName: "",
@@ -39,7 +39,7 @@ const defaultFormData: InstallerFormData = {
 
 export const useFormState = () => {
   const [formData, setFormData] = useState<InstallerFormData>(defaultFormData)
-  const [visibilityOptions, setVisibilityOptions] = useState<VisibilityOptions>({
+  const [visibilitySettings, setVisibilitySettings] = useState<VisibilitySettings>({
     showPhoneNumber: true,
     highlightProfile: false,
     acceptDirectMessages: true,
@@ -49,7 +49,7 @@ export const useFormState = () => {
   return {
     formData,
     setFormData,
-    visibilityOptions,
-    setVisibilityOptions,
+    visibilitySettings,
+    setVisibilitySettings,
   }
 }

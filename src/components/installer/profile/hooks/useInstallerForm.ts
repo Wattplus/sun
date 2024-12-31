@@ -1,6 +1,6 @@
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import type { InstallerFormData } from "../types/installer";
+import type { InstallerFormData, DatabaseInstallerData } from "../types/installer";
 import type { Json } from "@/integrations/supabase/types";
 
 export const useInstallerForm = (
@@ -47,7 +47,7 @@ export const useInstallerForm = (
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error("User not found");
 
-      const installerData = {
+      const installerData: Partial<DatabaseInstallerData> = {
         user_id: user.id,
         company_name: formData.company,
         contact_name: `${formData.firstName} ${formData.lastName}`,

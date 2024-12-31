@@ -1,12 +1,12 @@
-import { type InstallerFormData, type VisibilityOptions } from "../types/installer";
+import { type InstallerFormData, type VisibilitySettings } from "../types/installer";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 
 export const useFormHandlers = (
   formData: InstallerFormData,
   setFormData: (data: InstallerFormData) => void,
-  visibilityOptions: VisibilityOptions,
-  setVisibilityOptions: (options: VisibilityOptions) => void
+  visibilitySettings: VisibilitySettings,
+  setVisibilitySettings: (settings: VisibilitySettings) => void
 ) => {
   const { toast } = useToast();
 
@@ -23,7 +23,7 @@ export const useFormHandlers = (
       setFormData({
         ...formData,
         [category]: {
-          ...(formData[category as keyof InstallerFormData] as Record<string, boolean>),
+          ...(formData[category as keyof typeof formData] as Record<string, boolean>),
           [item]: checked
         }
       });
@@ -33,13 +33,6 @@ export const useFormHandlers = (
         [field]: checked
       });
     }
-  };
-
-  const handleToggleChange = (field: keyof VisibilityOptions) => {
-    setVisibilityOptions({
-      ...visibilityOptions,
-      [field]: !visibilityOptions[field],
-    });
   };
 
   const handleZonesChange = (zones: string[]) => {
@@ -52,7 +45,6 @@ export const useFormHandlers = (
   return {
     handleChange,
     handleCheckboxChange,
-    handleToggleChange,
     handleZonesChange,
   };
 };
