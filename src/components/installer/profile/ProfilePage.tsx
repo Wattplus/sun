@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
-import { Card } from "@/components/ui/card"
 import { ProfileHeader } from "./components/ProfileHeader"
 import { PhotovoltaicInfoSection } from "./sections/PhotovoltaicInfoSection"
 import { CertificationsSection } from "./sections/CertificationsSection"
@@ -9,18 +8,18 @@ import { InterventionZonesSection } from "../account/sections/InterventionZonesS
 import { supabase } from "@/integrations/supabase/client"
 import { useToast } from "@/hooks/use-toast"
 import { motion } from "framer-motion"
-import type { Json } from "@/integrations/supabase/types"
+import type { ProfileFormData, InstallerData } from "./types/profile"
 
 export const ProfilePage = () => {
   const { toast } = useToast()
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<ProfileFormData>({
     company: "",
     description: "",
     experience: "",
     panelBrands: "",
     inverterBrands: "",
     guaranteeYears: "",
-    service_area: [] as string[],
+    service_area: [],
     certifications: {
       qualiPV: false,
       rge: false,
@@ -35,6 +34,11 @@ export const ProfilePage = () => {
     firstName: "",
     lastName: "",
     email: "",
+    phone: "",
+    siret: "",
+    website: "",
+    address: "",
+    postal_code: "",
   })
 
   useEffect(() => {
@@ -76,6 +80,11 @@ export const ProfilePage = () => {
             firstName,
             lastName,
             email: user.email || "",
+            phone: installer.phone || "",
+            siret: installer.siret || "",
+            website: installer.website || "",
+            address: installer.address || "",
+            postal_code: installer.postal_code || "",
           })
         }
       } catch (error) {
@@ -129,21 +138,28 @@ export const ProfilePage = () => {
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) throw new Error("User not found")
 
+      const installerData = {
+        user_id: user.id,
+        company_name: formData.company,
+        contact_name: `${formData.firstName} ${formData.lastName}`,
+        phone: formData.phone,
+        address: formData.address,
+        postal_code: formData.postal_code,
+        description: formData.description,
+        experience_years: parseInt(formData.experience),
+        panel_brands: formData.panelBrands.split(',').map(brand => brand.trim()),
+        inverter_brands: formData.inverterBrands.split(',').map(brand => brand.trim()),
+        warranty_years: parseInt(formData.guaranteeYears),
+        service_area: formData.service_area,
+        certifications: formData.certifications,
+        installation_types: formData.installationTypes,
+        maintenance_services: formData.maintenanceServices,
+        website: formData.website,
+      }
+
       const { error: updateError } = await supabase
         .from('installers')
-        .update({
-          company_name: formData.company,
-          description: formData.description,
-          experience_years: parseInt(formData.experience),
-          panel_brands: formData.panelBrands.split(',').map(brand => brand.trim()),
-          inverter_brands: formData.inverterBrands.split(',').map(brand => brand.trim()),
-          warranty_years: parseInt(formData.guaranteeYears),
-          service_area: formData.service_area,
-          certifications: formData.certifications,
-          installation_types: formData.installationTypes,
-          maintenance_services: formData.maintenanceServices,
-          contact_name: `${formData.firstName} ${formData.lastName}`,
-        })
+        .update(installerData)
         .eq('user_id', user.id)
 
       if (updateError) throw updateError

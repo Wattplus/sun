@@ -1,8 +1,8 @@
 import { Card } from "@/components/ui/card"
-import { ProfileFormData } from "../hooks/useProfileForm"
+import type { ProfileFormData } from "../types/profile"
 
 export interface ProfileHeaderProps {
-  formData: ProfileFormData;
+  formData: ProfileFormData
 }
 
 export const ProfileHeader = ({ formData }: ProfileHeaderProps) => {
