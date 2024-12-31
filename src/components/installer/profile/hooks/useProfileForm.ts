@@ -77,8 +77,8 @@ export const useProfileForm = () => {
             inverterBrands: Array.isArray(installer.inverter_brands) ? installer.inverter_brands.join(', ') : "",
             guaranteeYears: installer.warranty_years?.toString() || "",
             service_area: installer.service_area || [],
-            certifications: (installer.certifications as unknown as Certifications) || defaultFormData.certifications,
-            installationTypes: (installer.installation_types as unknown as InstallationTypes) || defaultFormData.installationTypes,
+            certifications: installer.certifications as unknown as Certifications || defaultFormData.certifications,
+            installationTypes: installer.installation_types as unknown as InstallationTypes || defaultFormData.installationTypes,
             maintenanceServices: installer.maintenance_services || false,
           })
 
@@ -190,3 +190,5 @@ export const useProfileForm = () => {
     handleSubmit
   }
 }
+
+export type { ProfileFormData }

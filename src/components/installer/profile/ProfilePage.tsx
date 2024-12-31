@@ -69,7 +69,7 @@ export const ProfilePage = () => {
         return {
           ...prev,
           [group]: {
-            ...(prev[group as keyof FormData] as Record<string, boolean>),
+            ...(prev[group as keyof typeof prev] as Record<string, boolean>),
             [key]: checked
           }
         };
@@ -95,14 +95,13 @@ export const ProfilePage = () => {
       }
 
       const { error } = await supabase.from('installers').insert({
-        user_id: user.id,
         company_name: formData.company,
         contact_name: `${formData.firstName} ${formData.lastName}`,
         phone: formData.phone,
         address: "99 Rue du Moulin des Landes",
         postal_code: "44980",
         city: "Sainte-Luce-sur-Loire",
-        service_area: [formData.interventionZones],
+        service_area: formData.service_area,
         website: formData.website,
         experience_years: parseInt(formData.experience) || 0,
         panel_brands: formData.panelBrands.split(',').map(b => b.trim()),
