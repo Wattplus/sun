@@ -58,6 +58,8 @@ export const PrepaidAccountPage = () => {
     window.location.reload();
   };
 
+  const rechargeAmounts = [50, 100, 200, 500, 1000, 1500];
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-background via-background-light to-background p-4 md:p-6">
       <div className="max-w-7xl mx-auto space-y-8">
@@ -75,7 +77,7 @@ export const PrepaidAccountPage = () => {
         </div>
 
         <div className="grid gap-8">
-          {/* Section Solde */}
+          {/* Section Solde et Recharge Rapide */}
           <div className="grid md:grid-cols-2 gap-6">
             <div className="md:col-span-2">
               <Card className="p-6 glass-card">
@@ -84,15 +86,42 @@ export const PrepaidAccountPage = () => {
                     <h2 className="text-2xl font-bold text-white">Solde disponible</h2>
                     <p className="text-3xl font-bold mt-2">{balance?.toLocaleString('fr-FR')} €</p>
                   </div>
-                  <Button
-                    onClick={() => handleRecharge(500)}
-                    className="bg-primary hover:bg-primary/90"
-                    disabled={isRecharging}
-                  >
-                    <Plus className="h-4 w-4 mr-2" />
-                    Recharger
-                  </Button>
                 </div>
+                
+                {/* Quick Recharge Options */}
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 mb-6">
+                  {rechargeAmounts.map((amount) => (
+                    <motion.div
+                      key={amount}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      <Button
+                        variant="outline"
+                        onClick={() => handleRecharge(amount)}
+                        disabled={isRecharging}
+                        className={`w-full h-24 bg-white/5 hover:bg-white/10 border-primary/20 text-white group relative overflow-hidden ${
+                          amount === 500 ? 'ring-2 ring-primary ring-offset-2 ring-offset-background' : ''
+                        }`}
+                      >
+                        <div className="absolute inset-0 bg-gradient-to-r from-primary/0 via-primary/10 to-primary/0 group-hover:via-primary/20 transition-all duration-500" />
+                        <div className="relative flex flex-col items-center justify-center gap-2">
+                          <div className="flex items-center">
+                            <span className="text-2xl font-bold">{amount.toLocaleString('fr-FR')}</span>
+                            <span className="text-xl">€</span>
+                          </div>
+                          {amount === 500 && (
+                            <span className="absolute -top-1 -right-1 bg-primary text-xs px-2 py-0.5 rounded-bl-lg font-medium">
+                              Populaire
+                            </span>
+                          )}
+                        </div>
+                      </Button>
+                    </motion.div>
+                  ))}
+                </div>
+
                 <PrepaidBalanceDisplay balance={balance || 0} />
               </Card>
             </div>
