@@ -1,8 +1,8 @@
 import { Card } from "@/components/ui/card"
-import type { ProfileFormData } from "../types/profile"
+import type { InstallerFormData } from "../types/installer"
 
 export interface ProfileHeaderProps {
-  formData: ProfileFormData
+  formData: InstallerFormData
 }
 
 export const ProfileHeader = ({ formData }: ProfileHeaderProps) => {
