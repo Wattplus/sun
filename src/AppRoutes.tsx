@@ -23,7 +23,7 @@ import { LegalNotice } from "@/pages/LegalNotice"
 import { PrivacyPolicy } from "@/pages/PrivacyPolicy"
 import { TermsOfService } from "@/pages/TermsOfService"
 import { LeadManagement } from "@/components/admin/LeadManagement"
-import { InstallerManagement } from "@/components/admin/InstallerManagement"
+import InstallerManagement from "@/components/admin/InstallerManagement"
 
 export const AppRoutes = () => {
   useAuthRedirect()

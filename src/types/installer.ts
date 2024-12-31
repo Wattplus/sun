@@ -27,7 +27,7 @@ export interface InstallerFormData {
   lastName: string
   email: string
   phone: string
-  company: string // Alias for company_name for component compatibility
+  company: string
   company_name: string
   contact_name: string
   siret: string
@@ -41,34 +41,53 @@ export interface InstallerFormData {
   service_area: string[]
 
   // Technical Information
-  experience: string // For component compatibility
+  experience: string
   experience_years: number
-  panelBrands: string // For component compatibility
+  panelBrands: string
   panel_brands: string[]
-  inverterBrands: string // For component compatibility
+  inverterBrands: string
   inverter_brands: string[]
-  guaranteeYears: string // For component compatibility
+  guaranteeYears: string
   warranty_years: number
 
   // Certifications and Installation Types
   certifications: Certifications
   installation_types: InstallationTypes
-  installationTypes: InstallationTypes // Alias for component compatibility
+  installationTypes: InstallationTypes
   maintenance_services: boolean
-  maintenanceServices: boolean // Alias for component compatibility
+  maintenanceServices: boolean
   visibility_settings: VisibilitySettings
 }
 
-export interface DatabaseInstallerData extends Omit<InstallerFormData, 'firstName' | 'lastName' | 'company' | 'experience' | 'panelBrands' | 'inverterBrands' | 'guaranteeYears' | 'installationTypes' | 'maintenanceServices'> {
+export interface DatabaseInstallerData {
   id: string
   user_id: string
+  company_name: string
+  contact_name: string
+  email: string
+  phone: string
+  siret: string
+  address: string
+  postal_code: string
+  city: string
+  service_area: string[]
   credits: number
   verified: boolean
   created_at: string
-  conversion_rate: number
-  profile_views: number
-  satisfied_clients: number
+  website: string
+  description: string
+  experience_years: number
+  panel_brands: string[]
+  inverter_brands: string[]
+  warranty_years: number
+  certifications: Certifications
+  installation_types: InstallationTypes
+  maintenance_services: boolean
+  visibility_settings: VisibilitySettings
   subscription_plan: string
+  profile_views: number
+  conversion_rate: number
+  satisfied_clients: number
 }
 
 export const defaultFormData: InstallerFormData = {
@@ -145,12 +164,12 @@ export const convertDbToFormFormat = (data: DatabaseInstallerData): InstallerFor
     inverter_brands: data.inverter_brands || [],
     guaranteeYears: String(data.warranty_years || 0),
     warranty_years: data.warranty_years || 0,
-    certifications: data.certifications as Certifications,
-    installation_types: data.installation_types as InstallationTypes,
-    installationTypes: data.installation_types as InstallationTypes,
+    certifications: data.certifications,
+    installation_types: data.installation_types,
+    installationTypes: data.installation_types,
     maintenance_services: data.maintenance_services,
     maintenanceServices: data.maintenance_services,
-    visibility_settings: data.visibility_settings as VisibilitySettings
+    visibility_settings: data.visibility_settings
   }
 }
 
