@@ -50,6 +50,7 @@ export const InstallerManagement = () => {
     } else {
       setInstallers([...installers, { ...dbInstaller, id: crypto.randomUUID() } as DatabaseInstallerData]);
     }
+    setDialogOpen(false);
   };
 
   const filteredInstallers = installers.filter(installer =>
@@ -76,7 +77,12 @@ export const InstallerManagement = () => {
           <Card className="overflow-hidden border-primary/10 bg-card/50 backdrop-blur-sm">
             <InstallerTable 
               installers={filteredInstallers.map(transformDatabaseToInstaller)}
-              onEditInstaller={(installer) => handleEditInstaller(installers.find(i => i.id === installer.id)!)}
+              onEditInstaller={(installer) => {
+                const dbInstaller = installers.find(i => i.id === installer.id);
+                if (dbInstaller) {
+                  handleEditInstaller(dbInstaller);
+                }
+              }}
             />
           </Card>
         )}

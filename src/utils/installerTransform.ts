@@ -17,7 +17,12 @@ export const transformDatabaseToInstaller = (data: DatabaseInstallerData): Insta
       qualiPV: data.certifications?.qualiPV || false,
       rge: data.certifications?.rge || false,
       qualibat: data.certifications?.qualibat || false
-    }
+    },
+    commission: 0,
+    leadsAssigned: 0,
+    conversionRate: 0,
+    paymentType: "prepaid",
+    yearFounded: new Date().getFullYear()
   };
 };
 
@@ -29,10 +34,12 @@ export const transformInstallerToDatabase = (data: Installer): Omit<DatabaseInst
     phone: data.phone,
     address: data.address,
     service_area: data.zones,
-    status: data.status,
-    siret: data.siret,
     postal_code: data.address.split(' ').pop() || '',
-    certifications: data.certifications,
+    certifications: {
+      qualiPV: data.certifications.qualiPV,
+      rge: data.certifications.rge,
+      qualibat: data.certifications.qualibat
+    },
     credits: 0,
     verified: false,
     installation_types: {
@@ -46,6 +53,7 @@ export const transformInstallerToDatabase = (data: Installer): Omit<DatabaseInst
       highlightProfile: false,
       showCertifications: true,
       acceptDirectMessages: true
-    }
+    },
+    status: data.status
   };
 };

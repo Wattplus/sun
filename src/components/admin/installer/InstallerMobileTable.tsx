@@ -11,6 +11,28 @@ interface InstallerMobileTableProps {
 }
 
 export const InstallerMobileTable = ({ installers, onEditInstaller }: InstallerMobileTableProps) => {
+  const getStatusBadgeColor = (status: string | null) => {
+    switch (status) {
+      case "active":
+        return "bg-emerald-500";
+      case "inactive":
+        return "bg-gray-500";
+      default:
+        return "bg-blue-500";
+    }
+  };
+
+  const getStatusLabel = (status: string | null) => {
+    switch (status) {
+      case "active":
+        return "Actif";
+      case "inactive":
+        return "Inactif";
+      default:
+        return "En attente";
+    }
+  };
+
   return (
     <ScrollArea className="h-[calc(100vh-200px)]">
       <div className="space-y-4 p-4">
@@ -22,14 +44,8 @@ export const InstallerMobileTable = ({ installers, onEditInstaller }: InstallerM
                   <h3 className="font-semibold text-base">{installer.company_name}</h3>
                   <p className="text-sm text-muted-foreground">{installer.contact_name}</p>
                 </div>
-                <Badge className={
-                  (installer.status || 'pending') === "active" 
-                    ? "bg-emerald-500" 
-                    : (installer.status || 'pending') === "inactive" 
-                    ? "bg-gray-500" 
-                    : "bg-blue-500"
-                }>
-                  {(installer.status || 'pending') === "active" ? "Actif" : (installer.status || 'pending') === "inactive" ? "Inactif" : "En attente"}
+                <Badge className={getStatusBadgeColor(installer.status || 'pending')}>
+                  {getStatusLabel(installer.status)}
                 </Badge>
               </div>
 
