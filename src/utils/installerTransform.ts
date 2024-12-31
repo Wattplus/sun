@@ -9,7 +9,7 @@ function normalizeInstallationTypes(data: Json): InstallationTypes {
     industrial: false
   };
   
-  if (typeof data === 'object' && data !== null) {
+  if (typeof data === 'object' && data !== null && !Array.isArray(data)) {
     return { ...defaultTypes, ...data };
   }
   
@@ -23,7 +23,7 @@ function normalizeCertifications(data: Json): Certifications {
     qualibat: false
   };
   
-  if (typeof data === 'object' && data !== null) {
+  if (typeof data === 'object' && data !== null && !Array.isArray(data)) {
     return { ...defaultCerts, ...data };
   }
   
@@ -38,7 +38,7 @@ function normalizeVisibilitySettings(data: Json): VisibilitySettings {
     acceptDirectMessages: true
   };
   
-  if (typeof data === 'object' && data !== null) {
+  if (typeof data === 'object' && data !== null && !Array.isArray(data)) {
     return { ...defaultSettings, ...data };
   }
   
@@ -78,9 +78,8 @@ export function transformDatabaseToForm(data: DatabaseInstallerData): InstallerF
   };
 }
 
-export function transformFormToDatabase(formData: InstallerFormData, userId: string): Partial<DatabaseInstallerData> {
+export function transformFormToDatabase(formData: InstallerFormData, userId: string): Omit<DatabaseInstallerData, 'id'> {
   return {
-    id: undefined, // Let the database generate this
     user_id: userId,
     company_name: formData.company_name,
     contact_name: formData.contact_name,
@@ -100,6 +99,8 @@ export function transformFormToDatabase(formData: InstallerFormData, userId: str
     installation_types: formData.installation_types as unknown as Json,
     maintenance_services: formData.maintenance_services,
     visibility_settings: formData.visibility_settings as unknown as Json,
-    service_area: formData.service_area
+    service_area: formData.service_area,
+    credits: 0,
+    verified: false
   };
 }
