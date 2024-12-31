@@ -1,7 +1,14 @@
-import { useState, useEffect } from "react";
-import { supabase } from "@/integrations/supabase/client";
-import { useToast } from "@/hooks/use-toast";
-import { InstallerFormData, InstallerData, VisibilitySettings } from "../types/installer";
+import { useState, useEffect } from "react"
+import { supabase } from "@/integrations/supabase/client"
+import { useToast } from "@/hooks/use-toast"
+import type { InstallerFormData, InstallerData, VisibilitySettings } from "../types/installer"
+
+const defaultVisibilitySettings: VisibilitySettings = {
+  showPhoneNumber: true,
+  highlightProfile: false,
+  acceptDirectMessages: true,
+  showCertifications: true
+}
 
 const defaultFormData: InstallerFormData = {
   firstName: "",
@@ -31,40 +38,35 @@ const defaultFormData: InstallerFormData = {
   address: "",
   postal_code: "",
   city: "",
-  visibility_settings: {
-    showPhoneNumber: true,
-    highlightProfile: false,
-    acceptDirectMessages: true,
-    showCertifications: true,
-  }
-};
+  visibility_settings: defaultVisibilitySettings
+}
 
 export const useInstallerData = () => {
-  const { toast } = useToast();
-  const [formData, setFormData] = useState<InstallerFormData>(defaultFormData);
-  const [loading, setLoading] = useState(true);
-  const [installer, setInstaller] = useState<InstallerData | null>(null);
+  const { toast } = useToast()
+  const [formData, setFormData] = useState<InstallerFormData>(defaultFormData)
+  const [loading, setLoading] = useState(true)
+  const [installer, setInstaller] = useState<InstallerData | null>(null)
 
   useEffect(() => {
     const loadInstallerData = async () => {
       try {
-        const { data: { user } } = await supabase.auth.getUser();
+        const { data: { user } } = await supabase.auth.getUser()
         if (!user) {
-          setLoading(false);
-          return;
+          setLoading(false)
+          return
         }
 
         const { data: installerData, error } = await supabase
           .from('installers')
           .select()
           .eq('user_id', user.id)
-          .maybeSingle();
+          .maybeSingle()
 
-        if (error) throw error;
+        if (error) throw error
 
         if (installerData) {
-          setInstaller(installerData);
-          const [firstName = "", lastName = ""] = (installerData.contact_name || "").split(" ");
+          setInstaller(installerData)
+          const [firstName = "", lastName = ""] = (installerData.contact_name || "").split(" ")
           
           setFormData({
             firstName,
@@ -86,28 +88,28 @@ export const useInstallerData = () => {
             address: installerData.address || "",
             postal_code: installerData.postal_code || "",
             city: installerData.city || "",
-            visibility_settings: installerData.visibility_settings as VisibilitySettings || defaultFormData.visibility_settings,
-          });
+            visibility_settings: (installerData.visibility_settings as VisibilitySettings) || defaultVisibilitySettings,
+          })
         }
       } catch (error) {
-        console.error('Error loading installer data:', error);
+        console.error('Error loading installer data:', error)
         toast({
           title: "Erreur",
           description: "Impossible de charger les données de l'installateur",
           variant: "destructive"
-        });
+        })
       } finally {
-        setLoading(false);
+        setLoading(false)
       }
-    };
+    }
 
-    loadInstallerData();
-  }, [toast]);
+    loadInstallerData()
+  }, [toast])
 
   return {
     formData,
     setFormData,
     loading,
     installer
-  };
-};
+  }
+}
