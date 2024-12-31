@@ -41,8 +41,25 @@ export function AppRoutes() {
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       console.log("AppRoutes: Auth state changed:", event, session?.user?.id);
+      
       if (event === 'SIGNED_IN' && session) {
-        navigate('/espace-installateur');
+        // Vérifier si l'utilisateur est un installateur
+        const checkInstallerStatus = async () => {
+          const { data: installer } = await supabase
+            .from('installers')
+            .select('*')
+            .eq('user_id', session.user.id)
+            .single();
+
+          if (installer) {
+            navigate('/espace-installateur');
+          } else {
+            // Si l'utilisateur n'est pas un installateur, rediriger vers la page client
+            navigate('/client');
+          }
+        };
+
+        checkInstallerStatus();
       }
     });
 
