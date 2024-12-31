@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { supabase } from "@/integrations/supabase/client"
 import { useToast } from "@/hooks/use-toast"
-import type { InstallerFormData, DatabaseInstallerData } from "@/types/installer"
+import type { InstallerFormData } from "@/types/installer"
 import { convertFormToDbFormat } from "@/types/installer"
 
 export const useInstallerForm = (
@@ -54,7 +54,7 @@ export const useInstallerForm = (
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) throw new Error("User not found")
 
-      const installerData = convertFormToDbFormat(formData, user.id)
+      const installerData = convertFormToDbFormat(formData)
 
       const { error } = await supabase
         .from("installers")
