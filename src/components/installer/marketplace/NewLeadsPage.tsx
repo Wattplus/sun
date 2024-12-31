@@ -4,6 +4,7 @@ import { NewLeadsContent } from "./components/NewLeadsContent";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { differenceInDays } from "date-fns";
+import { LeadAgeTabs } from "./components/LeadAgeTabs";
 
 export const NewLeadsPage = () => {
   const navigate = useNavigate();
@@ -90,13 +91,18 @@ export const NewLeadsPage = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-background/95 to-background">
       <div className="max-w-[1400px] mx-auto p-6 space-y-8">
-        <LeadsHeader 
-          onToggleFilters={() => setShowFilters(!showFilters)}
-          onPrepaidAccount={handlePrepaidAccount}
-          onExport={handleExport}
-          activeTab={activeTab}
-          onTabChange={setActiveTab}
-        />
+        <div className="space-y-6">
+          <LeadsHeader 
+            onToggleFilters={() => setShowFilters(!showFilters)}
+            onPrepaidAccount={handlePrepaidAccount}
+            onExport={handleExport}
+          />
+
+          <LeadAgeTabs 
+            activeTab={activeTab}
+            onTabChange={setActiveTab}
+          />
+        </div>
 
         <NewLeadsContent
           showFilters={showFilters}
