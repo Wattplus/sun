@@ -1,15 +1,17 @@
+import type { Json } from "@/integrations/supabase/types";
+
 export interface Certifications {
   qualiPV: boolean;
   rge: boolean;
   qualibat: boolean;
-  [key: string]: boolean; // Add index signature
+  [key: string]: boolean;
 }
 
 export interface InstallationTypes {
   residential: boolean;
   commercial: boolean;
   industrial: boolean;
-  [key: string]: boolean; // Add index signature
+  [key: string]: boolean;
 }
 
 export interface VisibilityOptions {
@@ -17,7 +19,16 @@ export interface VisibilityOptions {
   highlightProfile: boolean;
   acceptDirectMessages: boolean;
   showCertifications: boolean;
-  [key: string]: boolean; // Add index signature
+  [key: string]: boolean;
+}
+
+export interface ProfileStats {
+  profileViews: number;
+  messagesReceived: number;
+  averageRating: number;
+  satisfiedClients: number;
+  certificationsCount: number;
+  conversionRate: number;
 }
 
 export interface ProfileFormData {

@@ -1,20 +1,26 @@
-import { Card } from "@/components/ui/card"
-import { Eye, MessageSquare, Star, Users, Award, TrendingUp } from "lucide-react"
-import { ProfileStats as ProfileStatsType } from "../types/profile"
+import { Card } from "@/components/ui/card";
+import { Eye, MessageSquare, Star, Users, Award, TrendingUp } from "lucide-react";
 
 interface ProfileStatsProps {
-  stats?: Partial<ProfileStatsType>;
+  stats?: {
+    profileViews: number;
+    messagesReceived: number;
+    averageRating: number;
+    satisfiedClients: number;
+    certificationsCount: number;
+    conversionRate: number;
+  };
 }
 
 export const ProfileStats = ({ stats = {} }: ProfileStatsProps) => {
-  const defaultStats: ProfileStatsType = {
+  const defaultStats = {
     profileViews: stats.profileViews ?? 0,
     messagesReceived: stats.messagesReceived ?? 0,
     averageRating: stats.averageRating ?? 0,
     satisfiedClients: stats.satisfiedClients ?? 0,
     certificationsCount: stats.certificationsCount ?? 0,
     conversionRate: stats.conversionRate ?? 0,
-  }
+  };
 
   const statItems = [
     {
@@ -53,7 +59,7 @@ export const ProfileStats = ({ stats = {} }: ProfileStatsProps) => {
       icon: TrendingUp,
       color: "text-indigo-500",
     },
-  ]
+  ];
 
   return (
     <Card className="p-6 bg-background/50 backdrop-blur-sm border-primary/20">
@@ -69,5 +75,5 @@ export const ProfileStats = ({ stats = {} }: ProfileStatsProps) => {
         ))}
       </div>
     </Card>
-  )
-}
+  );
+};

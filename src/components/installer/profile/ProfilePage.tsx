@@ -5,7 +5,7 @@ import { ProfileStats } from "./ProfileStats";
 import { InstallerBreadcrumb } from "@/components/installer/navigation/InstallerBreadcrumb";
 import { motion } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
 import type { ProfileFormData } from "./types/profile";
 
@@ -95,6 +95,7 @@ export const ProfilePage = () => {
       }
 
       const { error } = await supabase.from('installers').insert({
+        user_id: user.id,
         company_name: formData.company,
         contact_name: `${formData.firstName} ${formData.lastName}`,
         phone: formData.phone,
