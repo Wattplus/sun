@@ -30,7 +30,7 @@ export const useInstallerSignup = () => {
         throw new Error("Les mots de passe ne correspondent pas")
       }
 
-      // 1. Créer l'utilisateur avec auth.signUp
+      // 1. Create user with auth.signUp
       const { data: authData, error: authError } = await supabase.auth.signUp({
         email: formData.email,
         password: formData.password,
@@ -53,46 +53,42 @@ export const useInstallerSignup = () => {
 
       if (!authData.user) throw new Error("Erreur lors de la création du compte")
 
-      // 2. Attendre que l'utilisateur soit créé dans la table users et profiles
+      // 2. Wait for the database trigger to create the user profile
       await new Promise(resolve => setTimeout(resolve, 5000))
 
-      // 3. Créer l'entrée dans la table installers
+      // 3. Create installer entry
       const { error: installerError } = await supabase
         .from("installers")
-        .insert([
-          {
-            user_id: authData.user.id,
-            company_name: formData.companyName,
-            contact_name: `${formData.firstName} ${formData.lastName}`,
-            phone: formData.phone,
-            siret: formData.siret,
-            address: formData.address,
-            postal_code: formData.postalCode,
-            city: formData.city,
-            verified: false,
-            credits: 0,
-            service_area: [],
-            certifications: {
-              qualiPV: false,
-              rge: false,
-              qualibat: false,
-            },
-            installation_types: {
-              residential: false,
-              commercial: false,
-              industrial: false,
-            },
-            maintenance_services: false,
-            visibility_settings: {
-              showPhoneNumber: true,
-              highlightProfile: false,
-              acceptDirectMessages: true,
-              showCertifications: true,
-            },
+        .insert({
+          user_id: authData.user.id,
+          company_name: formData.companyName,
+          contact_name: `${formData.firstName} ${formData.lastName}`,
+          phone: formData.phone,
+          siret: formData.siret,
+          address: formData.address,
+          postal_code: formData.postalCode,
+          city: formData.city,
+          verified: false,
+          credits: 0,
+          service_area: [],
+          certifications: {
+            qualiPV: false,
+            rge: false,
+            qualibat: false,
           },
-        ])
-        .select()
-        .single()
+          installation_types: {
+            residential: false,
+            commercial: false,
+            industrial: false,
+          },
+          maintenance_services: false,
+          visibility_settings: {
+            showPhoneNumber: true,
+            highlightProfile: false,
+            acceptDirectMessages: true,
+            showCertifications: true,
+          },
+        })
 
       if (installerError) {
         console.error("Installer creation error:", installerError)
