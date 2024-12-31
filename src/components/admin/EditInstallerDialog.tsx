@@ -12,9 +12,8 @@ import { useState, useEffect } from "react"
 import { BasicInfoSection } from "./installer/dialog/BasicInfoSection"
 import { CompanyInfoSection } from "./installer/dialog/CompanyInfoSection"
 import { ZonesSection } from "./installer/dialog/ZonesSection"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Checkbox } from "@/components/ui/checkbox"
-import { Label } from "@/components/ui/label"
+import { CertificationsSection } from "./installer/dialog/CertificationsSection"
+import { StatusSection } from "./installer/dialog/StatusSection"
 import { supabase } from "@/integrations/supabase/client"
 import { toast } from "sonner"
 import { transformInstallerToDatabase } from "@/utils/installerTransform"
@@ -40,7 +39,7 @@ export function EditInstallerDialog({
     phone: "",
     address: "",
     zones: [],
-    status: "active" as InstallerStatus, // Changed default to "active"
+    status: "active" as InstallerStatus,
     commission: 0,
     leadsAssigned: 0,
     conversionRate: 0,
@@ -76,9 +75,9 @@ export function EditInstallerDialog({
         .from('installers')
         .upsert({ 
           ...dbData,
-          user_id: formData.id, // Add user_id field
-          verified: true, // Ensure verified is true
-          status: "active" // Ensure status is active
+          user_id: formData.id,
+          verified: true,
+          status: "active"
         })
         .select()
         .single()
@@ -152,51 +151,15 @@ export function EditInstallerDialog({
               onZonesChange={handleZonesChange}
             />
 
-            <div className="space-y-4">
-              <Label>Certifications</Label>
-              <div className="space-y-2">
-                <div className="flex items-center space-x-2">
-                  <Checkbox
-                    id="qualiPV"
-                    checked={formData.certifications?.qualiPV}
-                    onCheckedChange={(checked) => handleCertificationChange('qualiPV', checked as boolean)}
-                  />
-                  <Label htmlFor="qualiPV">QualiPV</Label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Checkbox
-                    id="rge"
-                    checked={formData.certifications?.rge}
-                    onCheckedChange={(checked) => handleCertificationChange('rge', checked as boolean)}
-                  />
-                  <Label htmlFor="rge">RGE</Label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Checkbox
-                    id="qualibat"
-                    checked={formData.certifications?.qualibat}
-                    onCheckedChange={(checked) => handleCertificationChange('qualibat', checked as boolean)}
-                  />
-                  <Label htmlFor="qualibat">Qualibat</Label>
-                </div>
-              </div>
-            </div>
+            <CertificationsSection 
+              certifications={formData.certifications}
+              onCertificationChange={handleCertificationChange}
+            />
 
-            <div>
-              <Label htmlFor="status">Statut</Label>
-              <Select
-                value={formData.status}
-                onValueChange={handleStatusChange}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Sélectionnez un statut" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="active">Actif</SelectItem>
-                  <SelectItem value="inactive">Inactif</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+            <StatusSection 
+              status={formData.status}
+              onStatusChange={handleStatusChange}
+            />
           </div>
 
           <DialogFooter>
