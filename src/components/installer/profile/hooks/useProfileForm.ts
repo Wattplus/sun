@@ -1,74 +1,46 @@
 import { useState, useEffect } from "react"
 import { supabase } from "@/integrations/supabase/client"
+import { ProfileFormData, VisibilityOptions } from "../types/profile"
+import { useToast } from "@/hooks/use-toast"
 
-export interface ProfileFormData {
-  firstName: string
-  lastName: string
-  email: string
-  phone: string
-  company: string
-  siret: string
-  website: string
-  description: string
-  experience: string
-  panelBrands: string
-  inverterBrands: string
-  guaranteeYears: string
-  service_area: string[]
+const defaultFormData: ProfileFormData = {
+  firstName: "",
+  lastName: "",
+  email: "",
+  phone: "",
+  company: "",
+  siret: "",
+  website: "",
+  description: "",
+  experience: "",
+  panelBrands: "",
+  inverterBrands: "",
+  guaranteeYears: "",
+  service_area: [],
   certifications: {
-    qualiPV: boolean
-    rge: boolean
-    qualibat: boolean
-  }
+    qualiPV: false,
+    rge: false,
+    qualibat: false
+  },
   installationTypes: {
-    residential: boolean
-    commercial: boolean
-    industrial: boolean
-  }
-  maintenanceServices: boolean
+    residential: false,
+    commercial: false,
+    industrial: false
+  },
+  maintenanceServices: false,
 }
 
-export interface VisibilityOptions {
-  showPhoneNumber: boolean
-  highlightProfile: boolean
-  acceptDirectMessages: boolean
-  showCertifications: boolean
+const defaultVisibilityOptions: VisibilityOptions = {
+  showPhoneNumber: true,
+  highlightProfile: false,
+  acceptDirectMessages: true,
+  showCertifications: true,
 }
 
 export const useProfileForm = () => {
-  const [formData, setFormData] = useState<ProfileFormData>({
-    firstName: "",
-    lastName: "",
-    email: "",
-    phone: "",
-    company: "",
-    siret: "",
-    website: "",
-    description: "",
-    experience: "",
-    panelBrands: "",
-    inverterBrands: "",
-    guaranteeYears: "",
-    service_area: [],
-    certifications: {
-      qualiPV: false,
-      rge: false,
-      qualibat: false
-    },
-    installationTypes: {
-      residential: false,
-      commercial: false,
-      industrial: false
-    },
-    maintenanceServices: false,
-  })
-
-  const [visibilityOptions, setVisibilityOptions] = useState<VisibilityOptions>({
-    showPhoneNumber: true,
-    highlightProfile: false,
-    acceptDirectMessages: true,
-    showCertifications: true,
-  })
+  const { toast } = useToast()
+  const [formData, setFormData] = useState<ProfileFormData>(defaultFormData)
+  const [visibilityOptions, setVisibilityOptions] = useState<VisibilityOptions>(defaultVisibilityOptions)
 
   useEffect(() => {
     const loadInstallerData = async () => {
@@ -101,16 +73,8 @@ export const useProfileForm = () => {
             inverterBrands: Array.isArray(installer.inverter_brands) ? installer.inverter_brands.join(', ') : "",
             guaranteeYears: installer.warranty_years?.toString() || "",
             service_area: installer.service_area || [],
-            certifications: installer.certifications as ProfileFormData['certifications'] || {
-              qualiPV: false,
-              rge: false,
-              qualibat: false
-            },
-            installationTypes: installer.installation_types as ProfileFormData['installationTypes'] || {
-              residential: false,
-              commercial: false,
-              industrial: false
-            },
+            certifications: installer.certifications as ProfileFormData['certifications'] || defaultFormData.certifications,
+            installationTypes: installer.installation_types as ProfileFormData['installationTypes'] || defaultFormData.installationTypes,
             maintenanceServices: installer.maintenance_services || false,
           })
 
@@ -120,11 +84,16 @@ export const useProfileForm = () => {
         }
       } catch (error) {
         console.error('Error loading installer data:', error)
+        toast({
+          title: "Erreur",
+          description: "Impossible de charger les données de l'installateur",
+          variant: "destructive"
+        })
       }
     }
 
     loadInstallerData()
-  }, [])
+  }, [toast])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -139,7 +108,7 @@ export const useProfileForm = () => {
       setFormData({
         ...formData,
         [category]: {
-          ...formData[category],
+          ...formData[category as keyof ProfileFormData],
           [item]: checked
         }
       })
@@ -151,7 +120,7 @@ export const useProfileForm = () => {
     }
   }
 
-  const handleToggleChange = (field: string, checked: boolean) => {
+  const handleToggleChange = (field: keyof VisibilityOptions, checked: boolean) => {
     setVisibilityOptions({
       ...visibilityOptions,
       [field]: checked,
@@ -200,8 +169,18 @@ export const useProfileForm = () => {
         .eq('id', installer.id)
 
       if (updateError) throw updateError
+
+      toast({
+        title: "Profil mis à jour",
+        description: "Vos modifications ont été enregistrées avec succès.",
+      })
     } catch (error) {
       console.error('Error updating profile:', error)
+      toast({
+        title: "Erreur",
+        description: "Une erreur est survenue lors de la mise à jour du profil.",
+        variant: "destructive"
+      })
     }
   }
 
