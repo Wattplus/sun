@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Auth } from "@supabase/auth-ui-react";
 import { ThemeSupa } from "@supabase/auth-ui-shared";
 import { supabase } from "@/lib/supabase-client";
@@ -7,13 +7,26 @@ import { Card } from "@/components/ui/card";
 
 export const Login = () => {
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
       console.log("Login: Auth state changed:", event, session?.user?.id);
       if (event === "SIGNED_IN" && session) {
-        console.log("Login: User signed in, redirecting to admin...");
-        navigate("/admin");
+        // Vérifier le rôle de l'utilisateur
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('role')
+          .eq('id', session.user.id)
+          .single();
+
+        if (profile && ['admin', 'super_admin'].includes(profile.role)) {
+          console.log("Login: Admin user signed in, redirecting to admin...");
+          navigate("/admin");
+        } else {
+          console.log("Login: Non-admin user signed in, redirecting to client portal...");
+          navigate("/client");
+        }
       }
     });
 
