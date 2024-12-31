@@ -22,4 +22,10 @@ export interface InstallerFormData {
   address: string;
   postal_code: string;
   city: string;
+  // Legacy form fields for backward compatibility
+  company: string;
+  experience: string;
+  panelBrands: string;
+  inverterBrands: string;
+  guaranteeYears: string;
 }

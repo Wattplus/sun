@@ -3,8 +3,8 @@ export * from './database';
 export * from './form';
 export * from './transform';
 
-import { VisibilitySettings, InstallationTypes, Certifications } from './base';
 import { InstallerFormData } from './form';
+import { VisibilitySettings, InstallationTypes, Certifications } from './base';
 
 export const defaultFormData: InstallerFormData = {
   firstName: "",
@@ -40,5 +40,11 @@ export const defaultFormData: InstallerFormData = {
   },
   address: "",
   postal_code: "",
-  city: ""
+  city: "",
+  // Legacy form fields
+  company: "",
+  experience: "",
+  panelBrands: "",
+  inverterBrands: "",
+  guaranteeYears: ""
 };

@@ -1,4 +1,5 @@
-import type { DatabaseInstallerData, InstallerFormData } from '@/types/installer';
+import type { DatabaseInstallerData } from './database';
+import type { InstallerFormData } from './form';
 
 export function convertDbToFormFormat(data: DatabaseInstallerData): InstallerFormData {
   const [firstName = "", lastName = ""] = (data.contact_name || "").split(" ");
@@ -24,7 +25,13 @@ export function convertDbToFormFormat(data: DatabaseInstallerData): InstallerFor
     visibility_settings: data.visibility_settings,
     address: data.address,
     postal_code: data.postal_code,
-    city: data.city || ""
+    city: data.city || "",
+    // Legacy form fields
+    company: data.company_name,
+    experience: String(data.experience_years || ""),
+    panelBrands: (data.panel_brands || []).join(", "),
+    inverterBrands: (data.inverter_brands || []).join(", "),
+    guaranteeYears: String(data.warranty_years || "")
   };
 }
 
