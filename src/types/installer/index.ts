@@ -11,14 +11,15 @@ export const defaultFormData: InstallerFormData = {
   lastName: "",
   email: "",
   phone: "",
-  company: "",
+  company_name: "",
+  contact_name: "",
   siret: "",
   website: "",
   description: "",
-  experience: "",
-  panelBrands: "",
-  inverterBrands: "",
-  guaranteeYears: "",
+  experience_years: 0,
+  panel_brands: [],
+  inverter_brands: [],
+  warranty_years: 0,
   service_area: [],
   certifications: {
     qualiPV: false,
@@ -41,5 +42,3 @@ export const defaultFormData: InstallerFormData = {
   postal_code: "",
   city: ""
 };
-
-export { convertDbToFormFormat, convertFormToDbFormat } from './transform';
