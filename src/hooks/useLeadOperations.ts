@@ -19,9 +19,32 @@ export const useLeadOperations = () => {
         return;
       }
 
+      // Récupérer d'abord l'ID de l'installateur
+      const { data: installerData, error: installerError } = await supabase
+        .from('installers')
+        .select('id')
+        .eq('user_id', session.session.user.id)
+        .single();
+
+      if (installerError) {
+        console.error("[useLeadOperations] Error fetching installer:", installerError);
+        toast.error("Erreur lors de la récupération des données de l'installateur");
+        return;
+      }
+
+      if (!installerData?.id) {
+        console.error("[useLeadOperations] No installer ID found");
+        toast.error("Profil installateur non trouvé");
+        return;
+      }
+
+      console.log("[useLeadOperations] Installer ID found:", installerData.id);
+
+      // Récupérer les leads disponibles et achetés
       const { data: leadsData, error: leadsError } = await supabase
         .from('leads')
-        .select('*');
+        .select('*')
+        .or(`purchasedby.cs.{${installerData.id}},assigned_installer.eq.${installerData.id}`);
 
       if (leadsError) {
         console.error("[useLeadOperations] Error fetching leads:", leadsError);
@@ -53,7 +76,7 @@ export const useLeadOperations = () => {
         return false;
       }
 
-      await fetchLeads(); // Refresh leads after update
+      await fetchLeads();
       toast.success("Lead mis à jour avec succès");
       return true;
     } catch (error) {
@@ -77,7 +100,7 @@ export const useLeadOperations = () => {
         return false;
       }
 
-      await fetchLeads(); // Refresh leads after deletion
+      await fetchLeads();
       toast.success("Lead supprimé avec succès");
       return true;
     } catch (error) {
@@ -101,7 +124,7 @@ export const useLeadOperations = () => {
         return false;
       }
 
-      await fetchLeads(); // Refresh leads after assignment
+      await fetchLeads();
       toast.success("Lead assigné avec succès");
       return true;
     } catch (error) {
