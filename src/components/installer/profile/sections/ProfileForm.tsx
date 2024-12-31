@@ -1,76 +1,20 @@
-import { FormField } from "@/components/form/FormField"
-import { Card } from "@/components/ui/card"
-import { User, Save } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { supabase } from "@/integrations/supabase/client"
-import { toast } from "sonner"
-import { useState, useEffect } from "react"
+import { Card } from "@/components/ui/card";
+import { User, Save } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
+import { useProfileData } from "../hooks/useProfileData";
+import { PersonalInfoFields } from "../components/PersonalInfoFields";
 
-interface ProfileFormProps {
-  formData: {
-    firstName: string;
-    lastName: string;
-    email: string;
-    phone: string;
-    website: string;
-    description: string;
+export const ProfileForm = () => {
+  const { formData, setFormData, loading } = useProfileData();
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData(prev => ({
+      ...prev,
+      [e.target.id]: e.target.value
+    }));
   };
-  handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-}
-
-export const ProfileForm = ({ formData, handleChange }: ProfileFormProps) => {
-  const [isSaving, setIsSaving] = useState(false);
-  const [initialData, setInitialData] = useState(formData);
-
-  useEffect(() => {
-    const syncProfileData = async () => {
-      try {
-        // Get current user
-        const { data: { user } } = await supabase.auth.getUser();
-        if (!user) return;
-
-        // Get profile data
-        const { data: profile } = await supabase
-          .from('profiles')
-          .select('*')
-          .eq('id', user.id)
-          .maybeSingle();
-
-        // Get installer data
-        const { data: installer } = await supabase
-          .from('installers')
-          .select('*')
-          .eq('user_id', user.id)
-          .maybeSingle();
-
-        if (profile || installer) {
-          const syncedData = {
-            ...formData,
-            firstName: profile?.first_name || installer?.contact_name?.split(' ')[0] || '',
-            lastName: profile?.last_name || installer?.contact_name?.split(' ')[1] || '',
-            email: profile?.email || installer?.email || user.email || '',
-            phone: profile?.phone || installer?.phone || '',
-            website: installer?.website || '',
-            description: installer?.description || '',
-          };
-
-          setInitialData(syncedData);
-          // Update parent form data
-          Object.entries(syncedData).forEach(([key, value]) => {
-            const event = {
-              target: { id: key, value }
-            } as React.ChangeEvent<HTMLInputElement>;
-            handleChange(event);
-          });
-        }
-      } catch (error) {
-        console.error('Error syncing profile data:', error);
-        toast.error("Impossible de synchroniser les données du profil");
-      }
-    };
-
-    syncProfileData();
-  }, []);
 
   const handleSave = async () => {
     if (!formData.firstName || !formData.lastName || !formData.email) {
@@ -78,7 +22,6 @@ export const ProfileForm = ({ formData, handleChange }: ProfileFormProps) => {
       return;
     }
 
-    setIsSaving(true);
     try {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error("Non authentifié");
@@ -110,17 +53,16 @@ export const ProfileForm = ({ formData, handleChange }: ProfileFormProps) => {
 
       if (installerError) throw installerError;
 
-      setInitialData(formData);
       toast.success("Vos informations ont été mises à jour");
     } catch (error) {
       console.error('Error saving profile:', error);
       toast.error("Impossible de sauvegarder les modifications");
-    } finally {
-      setIsSaving(false);
     }
   };
 
-  const hasChanges = JSON.stringify(formData) !== JSON.stringify(initialData);
+  if (loading) {
+    return <div>Chargement...</div>;
+  }
 
   return (
     <Card className="p-6 bg-background/50 backdrop-blur-sm border-primary/20">
@@ -133,77 +75,14 @@ export const ProfileForm = ({ formData, handleChange }: ProfileFormProps) => {
         </div>
         <Button 
           onClick={handleSave}
-          disabled={!hasChanges || isSaving}
           className="bg-primary hover:bg-primary-dark"
         >
           <Save className="w-4 h-4 mr-2" />
-          {isSaving ? 'Enregistrement...' : 'Enregistrer'}
+          Enregistrer
         </Button>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <FormField
-          label="Prénom"
-          id="firstName"
-          value={formData.firstName}
-          onChange={handleChange}
-          placeholder="John"
-          required
-          lightMode
-          error={!formData.firstName ? "Le prénom est obligatoire" : ""}
-        />
-
-        <FormField
-          label="Nom"
-          id="lastName"
-          value={formData.lastName}
-          onChange={handleChange}
-          placeholder="Doe"
-          required
-          lightMode
-          error={!formData.lastName ? "Le nom est obligatoire" : ""}
-        />
-
-        <FormField
-          label="Email"
-          id="email"
-          type="email"
-          value={formData.email}
-          onChange={handleChange}
-          placeholder="john.doe@example.com"
-          required
-          lightMode
-          error={!formData.email ? "L'email est obligatoire" : ""}
-        />
-
-        <FormField
-          label="Téléphone"
-          id="phone"
-          value={formData.phone}
-          onChange={handleChange}
-          placeholder="+33 6 12 34 56 78"
-          required
-          lightMode
-        />
-
-        <FormField
-          label="Site web"
-          id="website"
-          value={formData.website}
-          onChange={handleChange}
-          placeholder="www.monentreprise.fr"
-          lightMode
-        />
-
-        <FormField
-          label="Description"
-          id="description"
-          value={formData.description}
-          onChange={handleChange}
-          placeholder="Décrivez votre entreprise en quelques mots"
-          lightMode
-        />
-      </div>
+      <PersonalInfoFields formData={formData} handleChange={handleChange} />
     </Card>
   );
 };
