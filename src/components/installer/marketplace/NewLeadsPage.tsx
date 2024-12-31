@@ -2,9 +2,12 @@ import { useNewLeads } from "@/hooks/useNewLeads";
 import { LeadsHeader } from "./components/LeadsHeader";
 import { NewLeadsContent } from "./components/NewLeadsContent";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { differenceInDays } from "date-fns";
 
 export const NewLeadsPage = () => {
   const navigate = useNavigate();
+  const [activeTab, setActiveTab] = useState("new");
   const {
     selectedLeads,
     showFilters,
@@ -23,7 +26,39 @@ export const NewLeadsPage = () => {
     calculateTotalPrice,
   } = useNewLeads();
 
-  const availableLeads = leads.filter(lead => !lead.purchasedby?.length);
+  const getLeadPrice = (createdAt: string) => {
+    const daysOld = differenceInDays(new Date(), new Date(createdAt));
+    if (daysOld >= 45) return 15;
+    if (daysOld >= 30) return 19;
+    if (daysOld >= 15) return 21;
+    return 26;
+  };
+
+  const filterLeadsByAge = (leads: any[]) => {
+    return leads.filter(lead => {
+      const daysOld = differenceInDays(new Date(), new Date(lead.created_at));
+      switch (activeTab) {
+        case "new":
+          return daysOld < 15;
+        case "15days":
+          return daysOld >= 15 && daysOld < 30;
+        case "30days":
+          return daysOld >= 30 && daysOld < 45;
+        case "45days":
+          return daysOld >= 45;
+        default:
+          return true;
+      }
+    });
+  };
+
+  const availableLeads = leads
+    .filter(lead => !lead.purchasedby?.length)
+    .map(lead => ({
+      ...lead,
+      price: getLeadPrice(lead.created_at)
+    }));
+
   console.log("[NewLeadsPage] Available leads:", availableLeads.length);
 
   const handlePrepaidAccount = () => {
@@ -43,7 +78,7 @@ export const NewLeadsPage = () => {
     new Set(availableLeads.map(lead => lead.postalcode.substring(0, 2)))
   );
 
-  const filteredLeads = availableLeads
+  const filteredLeads = filterLeadsByAge(availableLeads)
     .filter(lead => projectTypeFilter === "all" || lead.clienttype === projectTypeFilter)
     .filter(lead => selectedDepartments.length === 0 || selectedDepartments.includes(lead.postalcode.substring(0, 2)))
     .sort((a, b) => {
@@ -59,6 +94,8 @@ export const NewLeadsPage = () => {
           onToggleFilters={() => setShowFilters(!showFilters)}
           onPrepaidAccount={handlePrepaidAccount}
           onExport={handleExport}
+          activeTab={activeTab}
+          onTabChange={setActiveTab}
         />
 
         <NewLeadsContent
