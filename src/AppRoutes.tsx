@@ -1,6 +1,7 @@
 import { Routes, Route, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { supabase } from "@/lib/supabase-client";
+import { toast } from "sonner";
 
 // Pages
 import Index from "@/pages/Index";
@@ -41,19 +42,30 @@ export function AppRoutes() {
   useEffect(() => {
     // Vérifier l'état de l'authentification au chargement
     const checkInitialAuth = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (session?.user) {
-        const { data: installer } = await supabase
-          .from('installers')
-          .select('*')
-          .eq('user_id', session.user.id)
-          .single();
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session?.user) {
+          const { data: installer, error } = await supabase
+            .from('installers')
+            .select('*')
+            .eq('user_id', session.user.id)
+            .maybeSingle();
 
-        if (installer) {
-          navigate('/espace-installateur');
-        } else {
-          navigate('/client');
+          if (error) {
+            console.error("Error fetching installer:", error);
+            toast.error("Erreur lors de la vérification du profil");
+            return;
+          }
+
+          if (installer) {
+            navigate('/espace-installateur');
+          } else {
+            navigate('/client');
+          }
         }
+      } catch (error) {
+        console.error("Error in checkInitialAuth:", error);
+        toast.error("Erreur lors de la vérification de l'authentification");
       }
     };
 
@@ -63,20 +75,31 @@ export function AppRoutes() {
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
       console.log("AppRoutes: Auth state changed:", event, session?.user?.id);
       
-      if (event === 'SIGNED_IN' && session) {
-        const { data: installer } = await supabase
-          .from('installers')
-          .select('*')
-          .eq('user_id', session.user.id)
-          .single();
+      try {
+        if (event === 'SIGNED_IN' && session) {
+          const { data: installer, error } = await supabase
+            .from('installers')
+            .select('*')
+            .eq('user_id', session.user.id)
+            .maybeSingle();
 
-        if (installer) {
-          navigate('/espace-installateur');
-        } else {
-          navigate('/client');
+          if (error) {
+            console.error("Error fetching installer:", error);
+            toast.error("Erreur lors de la vérification du profil");
+            return;
+          }
+
+          if (installer) {
+            navigate('/espace-installateur');
+          } else {
+            navigate('/client');
+          }
+        } else if (event === 'SIGNED_OUT') {
+          navigate('/');
         }
-      } else if (event === 'SIGNED_OUT') {
-        navigate('/');
+      } catch (error) {
+        console.error("Error in auth state change handler:", error);
+        toast.error("Erreur lors du changement d'état d'authentification");
       }
     });
 
