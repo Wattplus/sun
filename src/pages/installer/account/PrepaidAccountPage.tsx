@@ -11,7 +11,7 @@ import { TransactionHistory } from "@/components/installer/dashboard/prepaid/Tra
 import { Card } from "@/components/ui/card";
 import { motion } from "framer-motion";
 import { FAQSection } from "@/components/installer/dashboard/prepaid/FAQSection";
-import { mockCards, mockTransactions } from "@/components/installer/dashboard/prepaid/mockData";
+import { mockCards, mockTransactions, faqItems } from "@/components/installer/dashboard/prepaid/mockData";
 
 export const PrepaidAccountPage = () => {
   const { balance, isLoading: isBalanceLoading } = useInstallerBalance();
@@ -163,7 +163,7 @@ export const PrepaidAccountPage = () => {
           </div>
 
           {/* Section FAQ */}
-          <FAQSection />
+          <FAQSection items={faqItems} />
         </div>
       </div>
     </div>
