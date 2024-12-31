@@ -4,6 +4,7 @@ import { Auth } from "@supabase/auth-ui-react";
 import { ThemeSupa } from "@supabase/auth-ui-shared";
 import { supabase } from "@/lib/supabase-client";
 import { Card } from "@/components/ui/card";
+import { toast } from "sonner";
 
 export const Login = () => {
   const navigate = useNavigate();
@@ -11,21 +12,24 @@ export const Login = () => {
 
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
-      console.log("Login: Auth state changed:", event, session?.user?.id);
       if (event === "SIGNED_IN" && session) {
-        // Vérifier le rôle de l'utilisateur
-        const { data: profile } = await supabase
-          .from('profiles')
-          .select('role')
-          .eq('id', session.user.id)
-          .single();
+        try {
+          const { data: profile } = await supabase
+            .from('profiles')
+            .select('role')
+            .eq('id', session.user.id)
+            .single();
 
-        if (profile && ['admin', 'super_admin'].includes(profile.role)) {
-          console.log("Login: Admin user signed in, redirecting to admin...");
-          navigate("/admin");
-        } else {
-          console.log("Login: Non-admin user signed in, redirecting to client portal...");
-          navigate("/client");
+          if (profile?.role === 'admin' || profile?.role === 'super_admin') {
+            toast.success("Connexion réussie en tant qu'administrateur");
+            navigate("/admin");
+          } else {
+            toast.success("Connexion réussie");
+            navigate("/espace-installateur");
+          }
+        } catch (error) {
+          console.error("Error checking user role:", error);
+          toast.error("Erreur lors de la vérification du rôle");
         }
       }
     });
