@@ -55,25 +55,35 @@ export const useInstallerSignup = () => {
       // 2. Wait for profile to be created by the trigger
       // Try for up to 5 seconds (10 attempts, 500ms apart)
       let attempts = 0
-      while (attempts < 10) {
+      let profileFound = false
+      while (attempts < 10 && !profileFound) {
         const { data: profile } = await supabase
           .from('profiles')
           .select('id')
           .eq('id', authData.user.id)
           .maybeSingle()
         
-        if (profile) break
+        if (profile) {
+          profileFound = true
+          break
+        }
         await new Promise(resolve => setTimeout(resolve, 500))
         attempts++
       }
 
-      // 3. Create user in public.users table
-      const { error: userError } = await supabase
-        .from('users')
-        .insert({
-          id: authData.user.id,
-          email: formData.email,
-        })
+      if (!profileFound) {
+        throw new Error("Erreur lors de la création du profil")
+      }
+
+      // 3. Insert into public.users table
+      const { error: userError } = await supabase.auth.getUser().then(async ({ data: { user } }) => {
+        return supabase
+          .from('users')
+          .insert({
+            id: user?.id,
+            email: formData.email,
+          })
+      })
 
       if (userError) throw userError
 
