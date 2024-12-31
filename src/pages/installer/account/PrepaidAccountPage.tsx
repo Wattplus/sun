@@ -5,59 +5,13 @@ import { RechargeOptions } from "@/components/installer/dashboard/prepaid/Rechar
 import { useInstallerBalance } from "@/hooks/installer/useInstallerBalance";
 import { supabase } from "@/lib/supabase-client";
 import { useToast } from "@/hooks/use-toast";
-import { CreditCard, History, HelpCircle, RefreshCw } from "lucide-react";
+import { CreditCard, History, HelpCircle, RefreshCw, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SavedCards } from "@/components/installer/dashboard/prepaid/SavedCards";
 import { TransactionHistory } from "@/components/installer/dashboard/prepaid/TransactionHistory";
 import { Card } from "@/components/ui/card";
 import { motion } from "framer-motion";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-
-const mockTransactions = [
-  {
-    id: "1",
-    date: "2024-03-25",
-    description: "Recharge du compte",
-    amount: 500,
-    type: "credit" as const
-  },
-  {
-    id: "2",
-    date: "2024-03-24",
-    description: "Achat de lead",
-    amount: 25,
-    type: "debit" as const
-  }
-];
-
-const mockCards = [
-  {
-    id: "card_1",
-    last4: "4242",
-    brand: "Visa",
-    expMonth: 12,
-    expYear: 2025
-  }
-];
-
-const faqItems = [
-  {
-    question: "Comment fonctionne le compte prépayé ?",
-    answer: "Le compte prépayé vous permet d'acheter des crédits à l'avance pour acquérir des leads. Vous pouvez recharger votre compte avec le montant de votre choix et utiliser ces crédits quand vous le souhaitez."
-  },
-  {
-    question: "Quels sont les moyens de paiement acceptés ?",
-    answer: "Nous acceptons les cartes bancaires (Visa, Mastercard, American Express) et les virements bancaires pour les montants importants."
-  },
-  {
-    question: "Les crédits ont-ils une date d'expiration ?",
-    answer: "Non, vos crédits restent valables sans limite de temps. Vous pouvez les utiliser quand vous le souhaitez."
-  },
-  {
-    question: "Comment obtenir une facture ?",
-    answer: "Une facture est automatiquement générée et envoyée à votre adresse email après chaque recharge de votre compte."
-  }
-];
 
 export const PrepaidAccountPage = () => {
   const { balance, isLoading: isBalanceLoading } = useInstallerBalance();
@@ -96,13 +50,6 @@ export const PrepaidAccountPage = () => {
     window.location.reload();
   };
 
-  const handleDeleteCard = (cardId: string) => {
-    toast({
-      title: "Carte supprimée",
-      description: "La carte a été supprimée avec succès",
-    });
-  };
-
   return (
     <div className="min-h-screen bg-gradient-to-b from-background via-background-light to-background p-4 md:p-6">
       <div className="max-w-7xl mx-auto space-y-8">
@@ -123,26 +70,27 @@ export const PrepaidAccountPage = () => {
           {/* Section Solde */}
           <div className="grid md:grid-cols-2 gap-6">
             <div className="md:col-span-2">
-              <PrepaidBalanceDisplay balance={balance || 0} />
+              <Card className="p-6 glass-card">
+                <div className="flex justify-between items-center mb-6">
+                  <div>
+                    <h2 className="text-2xl font-bold text-white">Solde disponible</h2>
+                    <p className="text-3xl font-bold mt-2">{balance?.toLocaleString('fr-FR')} €</p>
+                  </div>
+                  <Button
+                    onClick={() => handleRecharge(500)}
+                    className="bg-primary hover:bg-primary/90"
+                    disabled={isRecharging}
+                  >
+                    <Plus className="h-4 w-4 mr-2" />
+                    Recharger
+                  </Button>
+                </div>
+                <PrepaidBalanceDisplay balance={balance || 0} />
+              </Card>
             </div>
           </div>
 
-          {/* Section Options de rechargement */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-          >
-            <Card className="p-6 glass-card">
-              <h2 className="text-xl font-semibold mb-6 text-white flex items-center gap-2">
-                <CreditCard className="h-5 w-5 text-primary" />
-                Options de rechargement
-              </h2>
-              <RechargeOptions onRecharge={handleRecharge} isLoading={isRecharging} />
-            </Card>
-          </motion.div>
-
-          {/* Section Cartes enregistrées et Historique */}
+          {/* Section Cartes et Historique */}
           <div className="grid md:grid-cols-2 gap-6">
             <motion.div
               initial={{ opacity: 0, y: 20 }}

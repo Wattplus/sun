@@ -1,6 +1,4 @@
 import { PrepaidBalance } from "@/components/installer/dashboard/PrepaidBalance";
-import { PrepaidStats } from "@/components/installer/dashboard/prepaid/PrepaidStats";
-import { PrepaidAdvantages } from "@/components/installer/dashboard/prepaid/PrepaidAdvantages";
 import { motion } from "framer-motion";
 
 export const PrepaidSection = () => {
@@ -19,8 +17,6 @@ export const PrepaidSection = () => {
       </div>
 
       <PrepaidBalance balance={150} />
-      <PrepaidStats />
-      <PrepaidAdvantages />
     </motion.div>
   );
 };
