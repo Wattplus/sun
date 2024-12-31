@@ -1,19 +1,15 @@
-import { DatabaseInstallerData } from './database';
-import { InstallerFormData } from './form';
+import type { DatabaseInstallerData, InstallerFormData } from '@/types/installer';
 
 export function convertDbToFormFormat(data: DatabaseInstallerData): InstallerFormData {
-  const [firstName = "", lastName = ""] = data.contact_name.split(" ");
+  const [firstName = "", lastName = ""] = (data.contact_name || "").split(" ");
   
   return {
     firstName,
     lastName,
-    company: data.company_name,
     email: data.email,
     phone: data.phone,
+    company: data.company_name,
     siret: data.siret,
-    address: data.address,
-    postal_code: data.postal_code,
-    city: data.city,
     website: data.website || "",
     description: data.description || "",
     experience: String(data.experience_years || ""),
@@ -24,13 +20,16 @@ export function convertDbToFormFormat(data: DatabaseInstallerData): InstallerFor
     certifications: data.certifications,
     installation_types: data.installation_types,
     maintenance_services: data.maintenance_services,
-    visibility_settings: data.visibility_settings
+    visibility_settings: data.visibility_settings,
+    address: data.address,
+    postal_code: data.postal_code,
+    city: data.city || ""
   };
 }
 
-export function convertFormToDbFormat(formData: InstallerFormData, userId?: string): DatabaseInstallerData {
+export function convertFormToDbFormat(formData: InstallerFormData, userId: string): DatabaseInstallerData {
   return {
-    user_id: userId || "",
+    user_id: userId,
     company_name: formData.company,
     contact_name: `${formData.firstName} ${formData.lastName}`.trim(),
     email: formData.email,
@@ -41,14 +40,16 @@ export function convertFormToDbFormat(formData: InstallerFormData, userId?: stri
     city: formData.city,
     website: formData.website,
     description: formData.description,
-    experience_years: Number(formData.experience) || 0,
+    experience_years: parseInt(formData.experience) || 0,
     panel_brands: formData.panelBrands.split(",").map(s => s.trim()),
     inverter_brands: formData.inverterBrands.split(",").map(s => s.trim()),
-    warranty_years: Number(formData.guaranteeYears) || 0,
+    warranty_years: parseInt(formData.guaranteeYears) || 0,
     service_area: formData.service_area,
     certifications: formData.certifications,
     installation_types: formData.installation_types,
     maintenance_services: formData.maintenance_services,
-    visibility_settings: formData.visibility_settings
+    visibility_settings: formData.visibility_settings,
+    verified: false,
+    credits: 0
   };
 }

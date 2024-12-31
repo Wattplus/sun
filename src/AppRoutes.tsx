@@ -10,6 +10,7 @@ import { PrepaidAccountPage } from "@/pages/installer/account/PrepaidAccountPage
 import { NewProfilePage } from "@/pages/installer/profile/NewProfilePage"
 import { InstallerSignup } from "@/pages/installer/auth/InstallerSignup"
 import { InstallerProfile } from "@/pages/InstallerProfile"
+import { InstallerDashboard } from "@/components/installer/InstallerDashboard"
 import { AboutUs } from "@/pages/AboutUs"
 import { OurMission } from "@/pages/OurMission"
 import { Blog } from "@/pages/Blog"
@@ -51,6 +52,11 @@ export const AppRoutes = () => {
       <Route path="/cgv" element={<TermsOfService />} />
       
       {/* Installer Routes */}
+      <Route path="/espace-installateur" element={
+        <ProtectedRoute>
+          <InstallerDashboard />
+        </ProtectedRoute>
+      } />
       <Route path="/espace-installateur/*" element={
         <ProtectedRoute>
           <InstallerProfile />
