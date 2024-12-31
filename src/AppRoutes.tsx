@@ -5,6 +5,7 @@ import { CheckoutPage } from "@/pages/installer/payment/CheckoutPage";
 import { NewCardPage } from "@/pages/installer/payment/NewCardPage";
 import { TopUpPage } from "@/pages/installer/payment/TopUpPage";
 import { ClientsPage } from "@/components/installer/clients/ClientsPage";
+import { NewLeadsPage } from "@/components/installer/marketplace/NewLeadsPage";
 
 export const AppRoutes = () => {
   return (
@@ -15,6 +16,7 @@ export const AppRoutes = () => {
       <Route path="/espace-installateur/nouvelle-carte" element={<NewCardPage />} />
       <Route path="/espace-installateur/recharge" element={<TopUpPage />} />
       <Route path="/espace-installateur/clients" element={<ClientsPage />} />
+      <Route path="/espace-installateur/leads/nouveaux" element={<NewLeadsPage />} />
     </Routes>
   );
 };
