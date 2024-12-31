@@ -2,12 +2,40 @@ import { useState, useEffect } from "react"
 import { supabase } from "@/integrations/supabase/client"
 import { useToast } from "@/hooks/use-toast"
 import type { Json } from "@/integrations/supabase/types"
-import { 
-  ProfileFormData, 
-  Certifications, 
-  InstallationTypes, 
-  VisibilityOptions 
-} from "../types/profile"
+
+export interface ProfileFormData {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  company: string;
+  siret: string;
+  website: string;
+  description: string;
+  experience: string;
+  panelBrands: string;
+  inverterBrands: string;
+  guaranteeYears: string;
+  service_area: string[];
+  certifications: {
+    qualiPV: boolean;
+    rge: boolean;
+    qualibat: boolean;
+  };
+  installationTypes: {
+    residential: boolean;
+    commercial: boolean;
+    industrial: boolean;
+  };
+  maintenanceServices: boolean;
+}
+
+export interface VisibilityOptions {
+  showPhoneNumber: boolean;
+  highlightProfile: boolean;
+  acceptDirectMessages: boolean;
+  showCertifications: boolean;
+}
 
 const defaultFormData: ProfileFormData = {
   firstName: "",
@@ -26,12 +54,12 @@ const defaultFormData: ProfileFormData = {
   certifications: {
     qualiPV: false,
     rge: false,
-    qualibat: false
+    qualibat: false,
   },
   installationTypes: {
     residential: false,
     commercial: false,
-    industrial: false
+    industrial: false,
   },
   maintenanceServices: false,
 }
@@ -56,7 +84,7 @@ export const useProfileForm = () => {
           .from('installers')
           .select()
           .eq('user_id', user.id)
-          .single()
+          .maybeSingle()
 
         if (error) throw error
 
@@ -69,7 +97,7 @@ export const useProfileForm = () => {
             email: user.email || "",
             phone: installer.phone || "",
             company: installer.company_name || "",
-            siret: "",
+            siret: installer.siret || "",
             website: installer.website || "",
             description: installer.description || "",
             experience: installer.experience_years?.toString() || "",
@@ -77,14 +105,20 @@ export const useProfileForm = () => {
             inverterBrands: Array.isArray(installer.inverter_brands) ? installer.inverter_brands.join(', ') : "",
             guaranteeYears: installer.warranty_years?.toString() || "",
             service_area: installer.service_area || [],
-            certifications: installer.certifications as unknown as Certifications || defaultFormData.certifications,
-            installationTypes: installer.installation_types as unknown as InstallationTypes || defaultFormData.installationTypes,
+            certifications: installer.certifications as ProfileFormData['certifications'] || defaultFormData.certifications,
+            installationTypes: installer.installation_types as ProfileFormData['installationTypes'] || defaultFormData.installationTypes,
             maintenanceServices: installer.maintenance_services || false,
           })
 
           if (installer.visibility_settings) {
-            setVisibilityOptions(installer.visibility_settings as unknown as VisibilityOptions)
+            setVisibilityOptions(installer.visibility_settings as VisibilityOptions)
           }
+        } else {
+          // If no installer record exists, keep the default values
+          toast({
+            title: "Profil non trouvé",
+            description: "Veuillez remplir vos informations professionnelles",
+          })
         }
       } catch (error) {
         console.error('Error loading installer data:', error)
@@ -144,27 +178,47 @@ export const useProfileForm = () => {
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) throw new Error("User not found")
 
-      const { error: updateError } = await supabase
-        .from('installers')
-        .update({
-          contact_name: `${formData.firstName} ${formData.lastName}`,
-          phone: formData.phone,
-          company_name: formData.company,
-          website: formData.website,
-          description: formData.description,
-          experience_years: parseInt(formData.experience),
-          panel_brands: formData.panelBrands.split(',').map(brand => brand.trim()),
-          inverter_brands: formData.inverterBrands.split(',').map(brand => brand.trim()),
-          warranty_years: parseInt(formData.guaranteeYears),
-          service_area: formData.service_area,
-          certifications: formData.certifications as unknown as Json,
-          installation_types: formData.installationTypes as unknown as Json,
-          maintenance_services: formData.maintenanceServices,
-          visibility_settings: visibilityOptions as unknown as Json
-        })
-        .eq('user_id', user.id)
+      const installerData = {
+        user_id: user.id,
+        contact_name: `${formData.firstName} ${formData.lastName}`,
+        phone: formData.phone,
+        company_name: formData.company,
+        website: formData.website,
+        description: formData.description,
+        experience_years: parseInt(formData.experience) || null,
+        panel_brands: formData.panelBrands.split(',').map(brand => brand.trim()),
+        inverter_brands: formData.inverterBrands.split(',').map(brand => brand.trim()),
+        warranty_years: parseInt(formData.guaranteeYears) || null,
+        service_area: formData.service_area,
+        certifications: formData.certifications,
+        installation_types: formData.installationTypes,
+        maintenance_services: formData.maintenanceServices,
+        visibility_settings: visibilityOptions
+      }
 
-      if (updateError) throw updateError
+      const { data: existingInstaller } = await supabase
+        .from('installers')
+        .select()
+        .eq('user_id', user.id)
+        .maybeSingle()
+
+      let error
+      if (existingInstaller) {
+        // Update existing installer
+        const { error: updateError } = await supabase
+          .from('installers')
+          .update(installerData)
+          .eq('user_id', user.id)
+        error = updateError
+      } else {
+        // Create new installer
+        const { error: insertError } = await supabase
+          .from('installers')
+          .insert([installerData])
+        error = insertError
+      }
+
+      if (error) throw error
 
       toast({
         title: "Profil mis à jour",
@@ -191,4 +245,4 @@ export const useProfileForm = () => {
   }
 }
 
-export type { ProfileFormData }
+export type { ProfileFormData, VisibilityOptions }
