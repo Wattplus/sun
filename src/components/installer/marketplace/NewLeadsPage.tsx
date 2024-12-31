@@ -5,6 +5,9 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { differenceInDays } from "date-fns";
 import { LeadAgeTabs } from "./components/LeadAgeTabs";
+import { Card } from "@/components/ui/card";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { motion } from "framer-motion";
 
 export const NewLeadsPage = () => {
   const navigate = useNavigate();
@@ -60,10 +63,8 @@ export const NewLeadsPage = () => {
       price: getLeadPrice(lead.created_at)
     }));
 
-  console.log("[NewLeadsPage] Available leads:", availableLeads.length);
-
   const handlePrepaidAccount = () => {
-    window.location.href = '/espace-installateur/compte/prepaye';
+    navigate('/espace-installateur/compte/prepaye');
   };
 
   const handleExport = () => {
@@ -89,43 +90,52 @@ export const NewLeadsPage = () => {
     });
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background/95 to-background">
-      <div className="max-w-[1400px] mx-auto p-6 space-y-8">
-        <div className="space-y-6">
-          <LeadsHeader 
-            onToggleFilters={() => setShowFilters(!showFilters)}
+    <motion.div 
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+      className="min-h-screen bg-gradient-to-b from-background/95 to-background"
+    >
+      <div className="max-w-[1400px] mx-auto p-4 md:p-6 space-y-6">
+        <Card className="p-4 md:p-6 border-primary/10 bg-card/50 backdrop-blur-sm">
+          <div className="space-y-6">
+            <LeadsHeader 
+              onToggleFilters={() => setShowFilters(!showFilters)}
+              onPrepaidAccount={handlePrepaidAccount}
+              onExport={handleExport}
+            />
+
+            <LeadAgeTabs 
+              activeTab={activeTab}
+              onTabChange={setActiveTab}
+            />
+          </div>
+        </Card>
+
+        <ScrollArea className="h-[calc(100vh-200px)]">
+          <NewLeadsContent
+            showFilters={showFilters}
+            availableDepartments={availableDepartments}
+            selectedDepartments={selectedDepartments}
+            projectTypeFilter={projectTypeFilter}
+            priceFilter={priceFilter}
+            onDepartmentSelect={(dept) => setSelectedDepartments(prev => [...prev, dept])}
+            onDepartmentRemove={(dept) => setSelectedDepartments(prev => prev.filter(d => d !== dept))}
+            onProjectTypeChange={setProjectTypeFilter}
+            onPriceFilterChange={setPriceFilter}
+            selectedLeads={selectedLeads}
+            onClearSelection={() => handleSelectAll()}
+            onPurchase={handlePurchase}
+            hasEnoughBalance={hasEnoughBalance}
+            totalPrice={calculateTotalPrice()}
+            availableLeads={filteredLeads}
+            balance={balance}
             onPrepaidAccount={handlePrepaidAccount}
-            onExport={handleExport}
+            onSelectAll={handleSelectAll}
+            onSelectLead={handleLeadSelect}
           />
-
-          <LeadAgeTabs 
-            activeTab={activeTab}
-            onTabChange={setActiveTab}
-          />
-        </div>
-
-        <NewLeadsContent
-          showFilters={showFilters}
-          availableDepartments={availableDepartments}
-          selectedDepartments={selectedDepartments}
-          projectTypeFilter={projectTypeFilter}
-          priceFilter={priceFilter}
-          onDepartmentSelect={(dept) => setSelectedDepartments(prev => [...prev, dept])}
-          onDepartmentRemove={(dept) => setSelectedDepartments(prev => prev.filter(d => d !== dept))}
-          onProjectTypeChange={setProjectTypeFilter}
-          onPriceFilterChange={setPriceFilter}
-          selectedLeads={selectedLeads}
-          onClearSelection={() => handleSelectAll()}
-          onPurchase={handlePurchase}
-          hasEnoughBalance={hasEnoughBalance}
-          totalPrice={calculateTotalPrice()}
-          availableLeads={filteredLeads}
-          balance={balance}
-          onPrepaidAccount={handlePrepaidAccount}
-          onSelectAll={handleSelectAll}
-          onSelectLead={handleLeadSelect}
-        />
+        </ScrollArea>
       </div>
-    </div>
+    </motion.div>
   );
 };
