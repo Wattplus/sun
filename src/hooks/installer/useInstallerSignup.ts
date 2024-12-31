@@ -76,14 +76,12 @@ export const useInstallerSignup = () => {
       }
 
       // 3. Insert into public.users table
-      const { error: userError } = await supabase.auth.getUser().then(async ({ data: { user } }) => {
-        return supabase
-          .from('users')
-          .insert({
-            id: user?.id,
-            email: formData.email,
-          })
-      })
+      const { error: userError } = await supabase
+        .from('users')
+        .insert({
+          id: authData.user.id,
+          email: formData.email,
+        })
 
       if (userError) throw userError
 
