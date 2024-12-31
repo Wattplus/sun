@@ -3,75 +3,56 @@ import type { Database } from '@/lib/database.types'
 export type Json = Database['public']['Tables']['installers']['Row']['certifications']
 
 export interface Certifications {
-  qualiPV: boolean;
-  rge: boolean;
-  qualibat: boolean;
+  qualiPV: boolean
+  rge: boolean
+  qualibat: boolean
 }
 
 export interface InstallationTypes {
-  residential: boolean;
-  commercial: boolean;
-  industrial: boolean;
+  residential: boolean
+  commercial: boolean
+  industrial: boolean
 }
 
 export interface VisibilitySettings {
-  showPhoneNumber: boolean;
-  highlightProfile: boolean;
-  acceptDirectMessages: boolean;
-  showCertifications: boolean;
+  showPhoneNumber: boolean
+  highlightProfile: boolean
+  acceptDirectMessages: boolean
+  showCertifications: boolean
 }
 
 export interface InstallerFormData {
-  company_name: string;
-  contact_name: string;
-  email: string;
-  phone: string;
-  siret: string;
-  address: string;
-  postal_code: string;
-  city: string;
-  website: string;
-  description: string;
-  service_area: string[];
-  experience_years: number;
-  panel_brands: string[];
-  inverter_brands: string[];
-  warranty_years: number;
-  certifications: Certifications;
-  installation_types: InstallationTypes;
-  maintenance_services: boolean;
-  visibility_settings: VisibilitySettings;
+  company_name: string
+  contact_name: string
+  email: string
+  phone: string
+  siret: string
+  address: string
+  postal_code: string
+  city: string
+  website: string
+  description: string
+  service_area: string[]
+  experience_years: number
+  panel_brands: string[]
+  inverter_brands: string[]
+  warranty_years: number
+  certifications: Certifications
+  installation_types: InstallationTypes
+  maintenance_services: boolean
+  visibility_settings: VisibilitySettings
 }
 
-export interface DatabaseInstallerData {
-  id: string;
-  user_id: string;
-  company_name: string;
-  contact_name: string;
-  email: string;
-  phone: string;
-  siret: string;
-  address: string;
-  postal_code: string;
-  city: string;
-  website: string | null;
-  description: string | null;
-  service_area: string[];
-  experience_years: number | null;
-  panel_brands: string[] | null;
-  inverter_brands: string[] | null;
-  warranty_years: number | null;
-  certifications: Certifications;
-  installation_types: InstallationTypes;
-  maintenance_services: boolean;
-  visibility_settings: VisibilitySettings;
-  credits: number;
-  verified: boolean;
-  created_at?: string;
-  subscription_plan?: string;
-  profile_views?: number;
-  conversion_rate?: number;
-  satisfied_clients?: number;
+export interface DatabaseInstallerData extends InstallerFormData {
+  id: string
+  user_id: string
+  credits: number
+  verified: boolean
+  created_at: string
+  conversion_rate: number
+  profile_views: number
+  satisfied_clients: number
+  subscription_plan: string
 }
 
 export const convertDbToFormFormat = (data: DatabaseInstallerData): InstallerFormData => {
@@ -91,16 +72,51 @@ export const convertDbToFormFormat = (data: DatabaseInstallerData): InstallerFor
     panel_brands: data.panel_brands || [],
     inverter_brands: data.inverter_brands || [],
     warranty_years: data.warranty_years || 0,
-    certifications: data.certifications,
-    installation_types: data.installation_types,
+    certifications: data.certifications as Certifications,
+    installation_types: data.installation_types as InstallationTypes,
     maintenance_services: data.maintenance_services,
-    visibility_settings: data.visibility_settings
-  };
-};
+    visibility_settings: data.visibility_settings as VisibilitySettings
+  }
+}
 
 export const convertFormToDbFormat = (formData: InstallerFormData, userId: string): Partial<DatabaseInstallerData> => {
   return {
     user_id: userId,
     ...formData
-  };
-};
+  }
+}
+
+export const defaultFormData: InstallerFormData = {
+  company_name: "",
+  contact_name: "",
+  email: "",
+  phone: "",
+  siret: "",
+  address: "",
+  postal_code: "",
+  city: "",
+  website: "",
+  description: "",
+  service_area: [],
+  experience_years: 0,
+  panel_brands: [],
+  inverter_brands: [],
+  warranty_years: 0,
+  certifications: {
+    qualiPV: false,
+    rge: false,
+    qualibat: false
+  },
+  installation_types: {
+    residential: false,
+    commercial: false,
+    industrial: false
+  },
+  maintenance_services: false,
+  visibility_settings: {
+    showPhoneNumber: true,
+    highlightProfile: false,
+    acceptDirectMessages: true,
+    showCertifications: true
+  }
+}

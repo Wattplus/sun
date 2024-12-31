@@ -2,42 +2,7 @@ import { useState, useEffect } from "react"
 import { supabase } from "@/integrations/supabase/client"
 import { useToast } from "@/hooks/use-toast"
 import type { InstallerFormData, DatabaseInstallerData } from "@/types/installer"
-import { convertDbToFormFormat } from "@/types/installer"
-
-const defaultFormData: InstallerFormData = {
-  company_name: "",
-  contact_name: "",
-  email: "",
-  phone: "",
-  siret: "",
-  address: "",
-  postal_code: "",
-  city: "",
-  website: "",
-  description: "",
-  service_area: [],
-  experience_years: 0,
-  panel_brands: [],
-  inverter_brands: [],
-  warranty_years: 0,
-  certifications: {
-    qualiPV: false,
-    rge: false,
-    qualibat: false
-  },
-  installation_types: {
-    residential: false,
-    commercial: false,
-    industrial: false
-  },
-  maintenance_services: false,
-  visibility_settings: {
-    showPhoneNumber: true,
-    highlightProfile: false,
-    acceptDirectMessages: true,
-    showCertifications: true
-  }
-}
+import { convertDbToFormFormat, defaultFormData } from "@/types/installer"
 
 export const useInstallerData = () => {
   const [formData, setFormData] = useState<InstallerFormData>(defaultFormData)
@@ -48,15 +13,16 @@ export const useInstallerData = () => {
   useEffect(() => {
     const loadInstallerData = async () => {
       try {
-        const { data: session } = await supabase.auth.getSession()
-        if (!session?.session?.user) {
-          throw new Error('No authenticated user')
+        const { data: { user } } = await supabase.auth.getUser()
+        if (!user) {
+          setNoProfile(true)
+          return
         }
 
-        const { data, error } = await supabase
-          .from('installers')
-          .select('*')
-          .eq('user_id', session.session.user.id)
+        const { data: installer, error } = await supabase
+          .from("installers")
+          .select()
+          .eq("user_id", user.id)
           .single()
 
         if (error) {
@@ -67,16 +33,16 @@ export const useInstallerData = () => {
           }
         }
 
-        if (data) {
-          setFormData(convertDbToFormFormat(data as DatabaseInstallerData))
+        if (installer) {
+          setFormData(convertDbToFormFormat(installer as DatabaseInstallerData))
           setNoProfile(false)
         }
       } catch (error) {
-        console.error('Error fetching installer:', error)
+        console.error("Error loading installer data:", error)
         toast({
-          title: 'Erreur',
-          description: 'Impossible de charger vos informations',
-          variant: 'destructive',
+          title: "Erreur",
+          description: "Impossible de charger les données de l'installateur",
+          variant: "destructive"
         })
       } finally {
         setLoading(false)

@@ -58,7 +58,7 @@ export const useInstallerForm = (
 
       const { error } = await supabase
         .from("installers")
-        .upsert(installerData as any)
+        .upsert(installerData)
 
       if (error) throw error
 
