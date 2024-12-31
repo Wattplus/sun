@@ -48,8 +48,8 @@ export function InstallerLayout() {
       {/* Top Navigation */}
       <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container mx-auto">
-          <div className="flex h-14 items-center">
-            <nav className="flex items-center space-x-6 overflow-x-auto">
+          <div className="flex h-14 items-center justify-center">
+            <nav className="flex items-center space-x-6">
               {navigation.map((item) => {
                 const Icon = item.icon;
                 return (
@@ -74,7 +74,7 @@ export function InstallerLayout() {
       </header>
 
       {/* Main Content */}
-      <main className="flex-1">
+      <main className="flex-1 container mx-auto py-6">
         <Outlet />
       </main>
     </div>
