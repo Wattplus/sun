@@ -5,7 +5,7 @@ import { useEffect } from "react";
 import emailjs from '@emailjs/browser';
 import { useToast } from "@/hooks/use-toast";
 
-export function ThankYou() {
+export default function ThankYou() {
   const navigate = useNavigate();
   const location = useLocation();
   const { toast } = useToast();
@@ -17,10 +17,8 @@ export function ThankYou() {
       return;
     }
 
-    // Initialize EmailJS with your public key
     emailjs.init("3T3wauk7lJcCeW1M-");
 
-    // Send email using the specified template and service
     emailjs.send(
       "service_611ohbh",
       "template_q11t4u8",
