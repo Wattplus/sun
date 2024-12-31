@@ -1,4 +1,11 @@
-import { Json } from "@/integrations/supabase/types"
+import type { Json } from "@/integrations/supabase/types"
+
+export interface VisibilitySettings {
+  showPhoneNumber: boolean
+  highlightProfile: boolean
+  acceptDirectMessages: boolean
+  showCertifications: boolean
+}
 
 export interface Certifications {
   qualiPV: boolean
@@ -10,14 +17,6 @@ export interface InstallationTypes {
   residential: boolean
   commercial: boolean
   industrial: boolean
-}
-
-export interface VisibilitySettings {
-  showPhoneNumber: boolean
-  highlightProfile: boolean
-  acceptDirectMessages: boolean
-  showCertifications: boolean
-  [key: string]: boolean
 }
 
 export interface InstallerFormData {
@@ -67,4 +66,5 @@ export interface InstallerData {
   maintenance_services: boolean
   visibility_settings: VisibilitySettings
   created_at?: string
+  conversion_rate?: number
 }

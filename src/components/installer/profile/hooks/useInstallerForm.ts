@@ -1,7 +1,8 @@
 import { useState } from "react"
 import { supabase } from "@/integrations/supabase/client"
 import { useToast } from "@/hooks/use-toast"
-import { InstallerFormData, InstallerData, VisibilitySettings } from "../types/installer.types"
+import { InstallerFormData } from "../types/installer.types"
+import type { Json } from "@/integrations/supabase/types"
 
 export const useInstallerForm = (
   formData: InstallerFormData,
@@ -18,8 +19,8 @@ export const useInstallerForm = (
   }
 
   const handleCheckboxChange = (field: string, checked: boolean) => {
-    if (field.includes('.')) {
-      const [category, item] = field.split('.')
+    if (field.includes(".")) {
+      const [category, item] = field.split(".")
       setFormData({
         ...formData,
         [category]: {
@@ -58,22 +59,22 @@ export const useInstallerForm = (
         website: formData.website,
         description: formData.description,
         experience_years: parseInt(formData.experience) || null,
-        panel_brands: formData.panelBrands.split(',').map(brand => brand.trim()),
-        inverter_brands: formData.inverterBrands.split(',').map(brand => brand.trim()),
+        panel_brands: formData.panelBrands.split(",").map(brand => brand.trim()),
+        inverter_brands: formData.inverterBrands.split(",").map(brand => brand.trim()),
         warranty_years: parseInt(formData.guaranteeYears) || null,
         service_area: formData.service_area,
-        certifications: formData.certifications,
-        installation_types: formData.installationTypes,
+        certifications: formData.certifications as Json,
+        installation_types: formData.installationTypes as Json,
         maintenance_services: formData.maintenanceServices,
         address: formData.address,
         postal_code: formData.postal_code,
         city: formData.city,
         siret: formData.siret,
-        visibility_settings: formData.visibility_settings as unknown as Json
+        visibility_settings: formData.visibility_settings as Json
       }
 
       const { error } = await supabase
-        .from('installers')
+        .from("installers")
         .upsert([installerData])
 
       if (error) throw error
@@ -83,7 +84,7 @@ export const useInstallerForm = (
         description: "Votre profil a été mis à jour avec succès",
       })
     } catch (error) {
-      console.error('Error updating installer:', error)
+      console.error("Error updating installer:", error)
       toast({
         title: "Erreur",
         description: "Une erreur est survenue lors de la mise à jour du profil",
