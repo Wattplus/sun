@@ -2,11 +2,22 @@ import { useState, useEffect } from "react"
 import { Installer, InstallerStatus } from "@/types/crm"
 import { supabase } from "@/integrations/supabase/client"
 import { toast } from "sonner"
+import { Json } from "@/lib/database.types"
 
 interface DatabaseCertifications {
   qualiPV: boolean;
   rge: boolean;
   qualibat: boolean;
+}
+
+interface InstallerData {
+  certifications: {
+    qualiPV: boolean;
+    rge: boolean;
+    qualibat: boolean;
+  };
+  service_area?: string[];
+  [key: string]: any;
 }
 
 export const useInstallerForm = (installer: Installer | null) => {
@@ -51,19 +62,22 @@ export const useInstallerForm = (installer: Installer | null) => {
             const nationwide = data.service_area?.includes("Toute France")
             setIsNationwide(nationwide)
             
-            // Safely cast certifications with type checking
-            let certifications: DatabaseCertifications = {
+            const defaultCertifications: DatabaseCertifications = {
               qualiPV: false,
               rge: false,
               qualibat: false
             }
             
-            if (data.certifications && typeof data.certifications === 'object' && !Array.isArray(data.certifications)) {
-              const cert = data.certifications as Record<string, unknown>
-              certifications = {
-                qualiPV: Boolean(cert.qualiPV),
-                rge: Boolean(cert.rge),
-                qualibat: Boolean(cert.qualibat)
+            let certifications = defaultCertifications
+            
+            if (data.certifications && typeof data.certifications === 'object') {
+              const certData = data.certifications as Record<string, unknown>
+              if (!Array.isArray(certData)) {
+                certifications = {
+                  qualiPV: Boolean(certData.qualiPV),
+                  rge: Boolean(certData.rge),
+                  qualibat: Boolean(certData.qualibat)
+                }
               }
             }
             
