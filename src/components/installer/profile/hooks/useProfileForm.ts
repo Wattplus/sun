@@ -1,7 +1,7 @@
-import { useState } from "react"
-import { useToast } from "@/hooks/use-toast"
+import { useState, useEffect } from "react"
+import { supabase } from "@/integrations/supabase/client"
 
-export interface ProfileFormData {
+interface ProfileFormData {
   firstName: string
   lastName: string
   email: string
@@ -15,7 +15,6 @@ export interface ProfileFormData {
   inverterBrands: string
   guaranteeYears: string
   service_area: string[]
-  interventionZones: string
   certifications: {
     qualiPV: boolean
     rge: boolean
@@ -29,7 +28,7 @@ export interface ProfileFormData {
   maintenanceServices: boolean
 }
 
-export interface VisibilityOptions {
+interface VisibilityOptions {
   showPhoneNumber: boolean
   highlightProfile: boolean
   acceptDirectMessages: boolean
@@ -37,34 +36,31 @@ export interface VisibilityOptions {
 }
 
 export const useProfileForm = () => {
-  const { toast } = useToast()
-  
   const [formData, setFormData] = useState<ProfileFormData>({
-    firstName: "Jean",
-    lastName: "Dupont",
-    email: "jean.dupont@example.com",
-    phone: "06 12 34 56 78",
-    company: "Solar Pro",
-    siret: "123 456 789 00012",
-    website: "www.solarpro.fr",
-    description: "Installateur photovoltaïque certifié avec plus de 10 ans d'expérience",
-    experience: "10",
-    panelBrands: "SunPower, LG, Panasonic",
-    inverterBrands: "SMA, Fronius, Enphase",
-    guaranteeYears: "20",
-    service_area: ["75 - Paris", "92 - Hauts-de-Seine"],
-    interventionZones: "75, 92, 93, 94",
+    firstName: "",
+    lastName: "",
+    email: "",
+    phone: "",
+    company: "",
+    siret: "",
+    website: "",
+    description: "",
+    experience: "",
+    panelBrands: "",
+    inverterBrands: "",
+    guaranteeYears: "",
+    service_area: [],
     certifications: {
-      qualiPV: true,
-      rge: true,
-      qualibat: true
+      qualiPV: false,
+      rge: false,
+      qualibat: false
     },
     installationTypes: {
-      residential: true,
-      commercial: true,
+      residential: false,
+      commercial: false,
       industrial: false
     },
-    maintenanceServices: true,
+    maintenanceServices: false,
   })
 
   const [visibilityOptions, setVisibilityOptions] = useState<VisibilityOptions>({
@@ -73,6 +69,60 @@ export const useProfileForm = () => {
     acceptDirectMessages: true,
     showCertifications: true,
   })
+
+  useEffect(() => {
+    const loadInstallerData = async () => {
+      try {
+        const { data: { user } } = await supabase.auth.getUser()
+        if (!user) return
+
+        const { data: installer, error } = await supabase
+          .from('installers')
+          .select()
+          .eq('user_id', user.id)
+          .single()
+
+        if (error) throw error
+
+        if (installer) {
+          setFormData({
+            firstName: installer.contact_name?.split(' ')[0] || "",
+            lastName: installer.contact_name?.split(' ')[1] || "",
+            email: user.email || "",
+            phone: installer.phone || "",
+            company: installer.company_name || "",
+            siret: "",  // Add SIRET if available in your database
+            website: installer.website || "",
+            description: installer.description || "",
+            experience: installer.experience_years?.toString() || "",
+            panelBrands: Array.isArray(installer.panel_brands) ? installer.panel_brands.join(', ') : "",
+            inverterBrands: Array.isArray(installer.inverter_brands) ? installer.inverter_brands.join(', ') : "",
+            guaranteeYears: installer.warranty_years?.toString() || "",
+            service_area: installer.service_area || [],
+            certifications: installer.certifications || {
+              qualiPV: false,
+              rge: false,
+              qualibat: false
+            },
+            installationTypes: installer.installation_types || {
+              residential: false,
+              commercial: false,
+              industrial: false
+            },
+            maintenanceServices: installer.maintenance_services || false,
+          })
+
+          if (installer.visibility_settings) {
+            setVisibilityOptions(installer.visibility_settings)
+          }
+        }
+      } catch (error) {
+        console.error('Error loading installer data:', error)
+      }
+    }
+
+    loadInstallerData()
+  }, [])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -110,14 +160,6 @@ export const useProfileForm = () => {
     setFormData({
       ...formData,
       service_area: zones
-    });
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    toast({
-      title: "Profil mis à jour",
-      description: "Vos informations ont été enregistrées avec succès.",
     })
   }
 
@@ -127,7 +169,6 @@ export const useProfileForm = () => {
     handleChange,
     handleCheckboxChange,
     handleToggleChange,
-    handleZonesChange,
-    handleSubmit
+    handleZonesChange
   }
 }

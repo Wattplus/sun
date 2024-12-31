@@ -59,12 +59,6 @@ export const InterventionZonesSection = ({ selectedZones, onZonesChange }: Inter
 
   const handleNationwideClick = () => {
     setIsNationwide(!isNationwide);
-    if (!isNationwide) {
-      setSelectedDepartments([]);
-      onZonesChange(["Toute France"]);
-    } else {
-      onZonesChange([]);
-    }
   };
 
   const handleDepartmentChange = (department: string, checked: boolean) => {
