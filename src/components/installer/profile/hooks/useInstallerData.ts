@@ -3,7 +3,7 @@ import { supabase } from "@/integrations/supabase/client"
 import { useToast } from "@/hooks/use-toast"
 import type { InstallerFormData } from "@/types/installer"
 import { defaultFormData } from "@/types/installer"
-import { transformDatabaseToForm } from "@/utils/installerTransform"
+import { convertDbToFormFormat } from "@/utils/installerTransform"
 
 export const useInstallerData = () => {
   const [formData, setFormData] = useState<InstallerFormData>(defaultFormData)
@@ -35,7 +35,7 @@ export const useInstallerData = () => {
         }
 
         if (installer) {
-          const transformedData = transformDatabaseToForm(installer)
+          const transformedData = convertDbToFormFormat(installer)
           setFormData(transformedData)
           setNoProfile(false)
         }

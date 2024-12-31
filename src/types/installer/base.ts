@@ -27,3 +27,7 @@ export interface VisibilitySettings {
   acceptDirectMessages: boolean;
   [key: string]: boolean;
 }
+
+export type DatabaseJson = {
+  [key: string]: boolean | string | number | null | DatabaseJson | DatabaseJson[];
+};

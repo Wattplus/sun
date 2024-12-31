@@ -1,5 +1,6 @@
 import type { DatabaseInstallerData } from './database';
 import type { InstallerFormData } from './form';
+import type { DatabaseJson } from './base';
 
 export function convertDbToFormFormat(data: DatabaseInstallerData): InstallerFormData {
   const [firstName = "", lastName = ""] = (data.contact_name || "").split(" ");
@@ -19,10 +20,10 @@ export function convertDbToFormFormat(data: DatabaseInstallerData): InstallerFor
     inverter_brands: data.inverter_brands || [],
     warranty_years: data.warranty_years || 0,
     service_area: data.service_area,
-    certifications: data.certifications,
-    installation_types: data.installation_types,
+    certifications: data.certifications as unknown as Record<string, boolean>,
+    installation_types: data.installation_types as unknown as Record<string, boolean>,
     maintenance_services: data.maintenance_services,
-    visibility_settings: data.visibility_settings,
+    visibility_settings: data.visibility_settings as unknown as Record<string, boolean>,
     address: data.address,
     postal_code: data.postal_code,
     city: data.city || "",
@@ -35,7 +36,7 @@ export function convertDbToFormFormat(data: DatabaseInstallerData): InstallerFor
   };
 }
 
-export function convertFormToDbFormat(formData: InstallerFormData, userId: string): DatabaseInstallerData {
+export function convertFormToDbFormat(formData: InstallerFormData, userId: string): Omit<DatabaseInstallerData, 'id'> {
   return {
     user_id: userId,
     company_name: formData.company_name,
@@ -52,12 +53,12 @@ export function convertFormToDbFormat(formData: InstallerFormData, userId: strin
     panel_brands: formData.panel_brands,
     inverter_brands: formData.inverter_brands,
     warranty_years: formData.warranty_years,
-    service_area: formData.service_area,
-    certifications: formData.certifications,
-    installation_types: formData.installation_types,
+    certifications: formData.certifications as unknown as DatabaseJson,
+    installation_types: formData.installation_types as unknown as DatabaseJson,
     maintenance_services: formData.maintenance_services,
-    visibility_settings: formData.visibility_settings,
-    verified: false,
-    credits: 0
+    visibility_settings: formData.visibility_settings as unknown as DatabaseJson,
+    service_area: formData.service_area,
+    credits: 0,
+    verified: false
   };
 }
