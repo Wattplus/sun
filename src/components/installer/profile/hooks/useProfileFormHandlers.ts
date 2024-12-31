@@ -1,6 +1,6 @@
 import { useToast } from "@/hooks/use-toast"
 import { supabase } from "@/integrations/supabase/client"
-import type { InstallerFormData, VisibilitySettings } from "@/types/installer"
+import type { InstallerFormData, VisibilitySettings, DatabaseInstallerData } from "@/types/installer"
 import { convertFormToDbFormat } from "@/types/installer"
 
 export const useProfileFormHandlers = (
