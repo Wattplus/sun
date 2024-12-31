@@ -8,7 +8,6 @@ import Index from "@/pages/Index";
 import Login from "@/pages/Login";
 import Admin from "@/pages/Admin";
 import { ThankYou } from "@/pages/ThankYou";
-import ClientPortal from "@/pages/ClientPortal";
 import { CheckoutPage } from "@/pages/installer/payment/CheckoutPage";
 import { PrepaidAccountPage } from "@/pages/installer/account/PrepaidAccountPage";
 import { NewProfilePage } from "@/pages/installer/profile/NewProfilePage";
@@ -40,7 +39,6 @@ export function AppRoutes() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Vérifier l'état de l'authentification au chargement
     const checkInitialAuth = async () => {
       try {
         const { data: { session } } = await supabase.auth.getSession();
@@ -80,7 +78,7 @@ export function AppRoutes() {
           if (installer) {
             navigate('/espace-installateur');
           } else {
-            navigate('/client');
+            navigate('/');
           }
         }
       } catch (error) {
@@ -91,7 +89,6 @@ export function AppRoutes() {
 
     checkInitialAuth();
 
-    // Écouter les changements d'authentification
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
       console.log("AppRoutes: Auth state changed:", event, session?.user?.id);
       
@@ -132,7 +129,7 @@ export function AppRoutes() {
           if (installer) {
             navigate('/espace-installateur');
           } else {
-            navigate('/client');
+            navigate('/');
           }
         } else if (event === 'SIGNED_OUT') {
           navigate('/');
@@ -153,7 +150,6 @@ export function AppRoutes() {
       <Route path="/" element={<Index />} />
       <Route path="/login" element={<Login />} />
       <Route path="/thank-you" element={<ThankYou />} />
-      <Route path="/client" element={<ClientPortal />} />
       <Route path="/devenir-installateur" element={<InstallerSignup />} />
       
       {/* Installer Routes */}
