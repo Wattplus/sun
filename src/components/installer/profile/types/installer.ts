@@ -51,15 +51,15 @@ export interface DatabaseInstallerData {
   credits: number;
   verified: boolean;
   created_at: string;
-  website: string;
-  description: string;
-  experience_years: number | null;
-  panel_brands: string[];
-  inverter_brands: string[];
-  warranty_years: number | null;
-  certifications: Json;
-  installation_types: Json;
-  maintenance_services: boolean;
-  visibility_settings: Json;
-  siret: string;
+  website?: string;
+  description?: string;
+  experience_years?: number | null;
+  panel_brands?: string[];
+  inverter_brands?: string[];
+  warranty_years?: number | null;
+  certifications?: Json;
+  installation_types?: Json;
+  maintenance_services?: boolean;
+  visibility_settings?: Json;
+  siret?: string;
 }

@@ -1,6 +1,6 @@
-import { type InstallerFormData, type VisibilityOptions } from "../types/installer"
-import { supabase } from "@/integrations/supabase/client"
-import { useToast } from "@/hooks/use-toast"
+import { type InstallerFormData, type VisibilityOptions } from "../types/installer";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 
 export const useFormHandlers = (
   formData: InstallerFormData,
@@ -8,51 +8,51 @@ export const useFormHandlers = (
   visibilityOptions: VisibilityOptions,
   setVisibilityOptions: (options: VisibilityOptions) => void
 ) => {
-  const { toast } = useToast()
+  const { toast } = useToast();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
       ...formData,
       [e.target.id]: e.target.value,
-    })
-  }
+    });
+  };
 
   const handleCheckboxChange = (field: string, checked: boolean) => {
     if (field.includes('.')) {
-      const [category, item] = field.split('.')
-      setFormData(prev => ({
-        ...prev,
+      const [category, item] = field.split('.');
+      setFormData({
+        ...formData,
         [category]: {
-          ...(prev[category as keyof typeof prev] as Record<string, boolean>),
+          ...(formData[category as keyof InstallerFormData] as Record<string, boolean>),
           [item]: checked
         }
-      }))
+      });
     } else {
-      setFormData(prev => ({
-        ...prev,
+      setFormData({
+        ...formData,
         [field]: checked
-      }))
+      });
     }
-  }
+  };
 
   const handleToggleChange = (field: keyof VisibilityOptions) => {
-    setVisibilityOptions(prev => ({
-      ...prev,
-      [field]: !prev[field],
-    }))
-  }
+    setVisibilityOptions({
+      ...visibilityOptions,
+      [field]: !visibilityOptions[field],
+    });
+  };
 
   const handleZonesChange = (zones: string[]) => {
-    setFormData(prev => ({
-      ...prev,
+    setFormData({
+      ...formData,
       service_area: zones
-    }))
-  }
+    });
+  };
 
   return {
     handleChange,
     handleCheckboxChange,
     handleToggleChange,
     handleZonesChange,
-  }
-}
+  };
+};
