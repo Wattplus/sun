@@ -2,14 +2,14 @@ import { Card } from "@/components/ui/card";
 import { Eye, MessageSquare, Star, Users, Award, TrendingUp } from "lucide-react";
 
 interface ProfileStatsProps {
-  stats?: {
+  stats?: Partial<{
     profileViews: number;
     messagesReceived: number;
     averageRating: number;
     satisfiedClients: number;
     certificationsCount: number;
     conversionRate: number;
-  };
+  }>;
 }
 
 export const ProfileStats = ({ stats = {} }: ProfileStatsProps) => {
