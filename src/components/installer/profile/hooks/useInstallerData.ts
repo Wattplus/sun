@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react"
 import { supabase } from "@/integrations/supabase/client"
 import { useToast } from "@/hooks/use-toast"
-import { InstallerFormData, InstallerData, Certifications, InstallationTypes, VisibilitySettings } from "@/types/installer"
+import { InstallerFormData } from "@/types/installer"
 
 const defaultFormData: InstallerFormData = {
   firstName: "",
@@ -42,6 +42,7 @@ const defaultFormData: InstallerFormData = {
 export const useInstallerData = () => {
   const [formData, setFormData] = useState<InstallerFormData>(defaultFormData)
   const [loading, setLoading] = useState(true)
+  const [noProfile, setNoProfile] = useState(false)
   const { toast } = useToast()
 
   useEffect(() => {
@@ -57,45 +58,45 @@ export const useInstallerData = () => {
           .from("installers")
           .select()
           .eq("user_id", user.id)
-          .single()
+          .maybeSingle()
 
         if (error) {
-          if (error.code === "PGRST116") {
-            toast({
-              title: "Profil non trouvé",
-              description: "Veuillez créer votre profil installateur",
-            })
-          } else {
-            throw error
-          }
+          throw error
         }
 
-        if (installer) {
-          const [firstName, lastName] = (installer.contact_name || "").split(" ")
-          
-          setFormData({
-            firstName: firstName || "",
-            lastName: lastName || "",
-            email: user.email || "",
-            phone: installer.phone || "",
-            company: installer.company_name || "",
-            siret: installer.siret || "",
-            website: installer.website || "",
-            description: installer.description || "",
-            experience: installer.experience_years?.toString() || "",
-            panelBrands: Array.isArray(installer.panel_brands) ? installer.panel_brands.join(", ") : "",
-            inverterBrands: Array.isArray(installer.inverter_brands) ? installer.inverter_brands.join(", ") : "",
-            guaranteeYears: installer.warranty_years?.toString() || "",
-            service_area: installer.service_area || [],
-            certifications: (installer.certifications as unknown as Certifications) || defaultFormData.certifications,
-            installationTypes: (installer.installation_types as unknown as InstallationTypes) || defaultFormData.installationTypes,
-            maintenanceServices: installer.maintenance_services || false,
-            address: installer.address || "",
-            postal_code: installer.postal_code || "",
-            city: installer.city || "",
-            visibility_settings: (installer.visibility_settings as unknown as VisibilitySettings) || defaultFormData.visibility_settings,
+        if (!installer) {
+          setNoProfile(true)
+          toast({
+            title: "Profil non trouvé",
+            description: "Veuillez créer votre profil installateur",
           })
+          return
         }
+
+        const [firstName, lastName] = (installer.contact_name || "").split(" ")
+        
+        setFormData({
+          firstName: firstName || "",
+          lastName: lastName || "",
+          email: user.email || "",
+          phone: installer.phone || "",
+          company: installer.company_name || "",
+          siret: installer.siret || "",
+          website: installer.website || "",
+          description: installer.description || "",
+          experience: installer.experience_years?.toString() || "",
+          panelBrands: Array.isArray(installer.panel_brands) ? installer.panel_brands.join(", ") : "",
+          inverterBrands: Array.isArray(installer.inverter_brands) ? installer.inverter_brands.join(", ") : "",
+          guaranteeYears: installer.warranty_years?.toString() || "",
+          service_area: installer.service_area || [],
+          certifications: installer.certifications as InstallerFormData["certifications"],
+          installationTypes: installer.installation_types as InstallerFormData["installationTypes"],
+          maintenanceServices: installer.maintenance_services || false,
+          address: installer.address || "",
+          postal_code: installer.postal_code || "",
+          city: installer.city || "",
+          visibility_settings: installer.visibility_settings as InstallerFormData["visibility_settings"],
+        })
       } catch (error) {
         console.error("Error loading installer data:", error)
         toast({
@@ -111,5 +112,5 @@ export const useInstallerData = () => {
     loadInstallerData()
   }, [toast])
 
-  return { formData, setFormData, loading }
+  return { formData, setFormData, loading, noProfile }
 }
