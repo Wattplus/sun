@@ -2,6 +2,7 @@ import { useState } from "react"
 import { supabase } from "@/integrations/supabase/client"
 import { useToast } from "@/hooks/use-toast"
 import type { InstallerFormData } from "../types/installer"
+import type { Json } from "@/integrations/supabase/types"
 
 export const useInstallerForm = (formData: InstallerFormData, setFormData: (data: InstallerFormData) => void) => {
   const { toast } = useToast()
@@ -59,14 +60,14 @@ export const useInstallerForm = (formData: InstallerFormData, setFormData: (data
         inverter_brands: formData.inverterBrands.split(',').map(brand => brand.trim()),
         warranty_years: parseInt(formData.guaranteeYears) || null,
         service_area: formData.service_area,
-        certifications: formData.certifications,
-        installation_types: formData.installationTypes,
+        certifications: formData.certifications as Json,
+        installation_types: formData.installationTypes as Json,
         maintenance_services: formData.maintenanceServices,
         address: formData.address,
         postal_code: formData.postal_code,
         city: formData.city,
         siret: formData.siret,
-        visibility_settings: formData.visibility_settings
+        visibility_settings: formData.visibility_settings as Json
       }
 
       const { error } = await supabase
