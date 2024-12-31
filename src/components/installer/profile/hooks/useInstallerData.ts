@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react"
 import { supabase } from "@/integrations/supabase/client"
 import { useToast } from "@/hooks/use-toast"
-import type { InstallerFormData, DatabaseInstallerData, VisibilitySettings } from "../types/installer"
+import type { InstallerFormData, DatabaseInstallerData, VisibilitySettings } from "../types/installer.types"
 
 const defaultVisibilitySettings: VisibilitySettings = {
   showPhoneNumber: true,
@@ -52,10 +52,10 @@ export const useInstallerData = () => {
         if (!user) return
 
         const { data: installer, error } = await supabase
-          .from('installers')
+          .from("installers")
           .select()
-          .eq('user_id', user.id)
-          .maybeSingle()
+          .eq("user_id", user.id)
+          .single()
 
         if (error) throw error
 
@@ -66,7 +66,7 @@ export const useInstallerData = () => {
           const visibility_settings = installerData.visibility_settings 
             ? installerData.visibility_settings as VisibilitySettings 
             : defaultVisibilitySettings
-          
+
           setFormData({
             firstName,
             lastName,
@@ -77,12 +77,12 @@ export const useInstallerData = () => {
             website: installerData.website || "",
             description: installerData.description || "",
             experience: installerData.experience_years?.toString() || "",
-            panelBrands: Array.isArray(installerData.panel_brands) ? installerData.panel_brands.join(', ') : "",
-            inverterBrands: Array.isArray(installerData.inverter_brands) ? installerData.inverter_brands.join(', ') : "",
+            panelBrands: Array.isArray(installerData.panel_brands) ? installerData.panel_brands.join(", ") : "",
+            inverterBrands: Array.isArray(installerData.inverter_brands) ? installerData.inverter_brands.join(", ") : "",
             guaranteeYears: installerData.warranty_years?.toString() || "",
             service_area: installerData.service_area || [],
-            certifications: (installerData.certifications as InstallerFormData['certifications']) || defaultFormData.certifications,
-            installationTypes: (installerData.installation_types as InstallerFormData['installationTypes']) || defaultFormData.installationTypes,
+            certifications: installerData.certifications as InstallerFormData["certifications"] || defaultFormData.certifications,
+            installationTypes: installerData.installation_types as InstallerFormData["installationTypes"] || defaultFormData.installationTypes,
             maintenanceServices: installerData.maintenance_services || false,
             address: installerData.address || "",
             postal_code: installerData.postal_code || "",
@@ -91,7 +91,7 @@ export const useInstallerData = () => {
           })
         }
       } catch (error) {
-        console.error('Error loading installer data:', error)
+        console.error("Error loading installer data:", error)
         toast({
           title: "Erreur",
           description: "Impossible de charger les données de l'installateur",

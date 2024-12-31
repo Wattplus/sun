@@ -1,7 +1,6 @@
 import { supabase } from "@/integrations/supabase/client"
 import { useToast } from "@/hooks/use-toast"
-import type { InstallerFormData } from "../types/installer"
-import type { Json } from "@/integrations/supabase/types"
+import type { InstallerFormData, DatabaseInstallerData } from "../types/installer.types"
 
 export const useInstallerForm = (
   formData: InstallerFormData,
@@ -17,8 +16,8 @@ export const useInstallerForm = (
   }
 
   const handleCheckboxChange = (field: string, checked: boolean) => {
-    if (field.includes('.')) {
-      const [category, item] = field.split('.')
+    if (field.includes(".")) {
+      const [category, item] = field.split(".")
       setFormData({
         ...formData,
         [category]: {
@@ -47,7 +46,7 @@ export const useInstallerForm = (
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) throw new Error("User not found")
 
-      const installerData = {
+      const installerData: Partial<DatabaseInstallerData> = {
         user_id: user.id,
         contact_name: `${formData.firstName} ${formData.lastName}`,
         phone: formData.phone,
@@ -55,14 +54,14 @@ export const useInstallerForm = (
         website: formData.website,
         description: formData.description,
         experience_years: parseInt(formData.experience) || null,
-        panel_brands: formData.panelBrands.split(',').map(brand => brand.trim()),
-        inverter_brands: formData.inverterBrands.split(',').map(brand => brand.trim()),
+        panel_brands: formData.panelBrands.split(",").map(brand => brand.trim()),
+        inverter_brands: formData.inverterBrands.split(",").map(brand => brand.trim()),
         warranty_years: parseInt(formData.guaranteeYears) || null,
         service_area: formData.service_area,
-        certifications: formData.certifications as Json,
-        installation_types: formData.installationTypes as Json,
+        certifications: formData.certifications,
+        installation_types: formData.installationTypes,
         maintenance_services: formData.maintenanceServices,
-        visibility_settings: formData.visibility_settings as Json,
+        visibility_settings: formData.visibility_settings,
         siret: formData.siret,
         address: formData.address,
         postal_code: formData.postal_code,
@@ -70,9 +69,9 @@ export const useInstallerForm = (
       }
 
       const { error: updateError } = await supabase
-        .from('installers')
+        .from("installers")
         .update(installerData)
-        .eq('user_id', user.id)
+        .eq("user_id", user.id)
 
       if (updateError) throw updateError
 
@@ -81,7 +80,7 @@ export const useInstallerForm = (
         description: "Vos modifications ont été enregistrées avec succès.",
       })
     } catch (error) {
-      console.error('Error updating profile:', error)
+      console.error("Error updating profile:", error)
       toast({
         title: "Erreur",
         description: "Une erreur est survenue lors de la mise à jour du profil.",
