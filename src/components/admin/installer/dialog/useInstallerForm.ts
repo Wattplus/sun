@@ -3,6 +3,12 @@ import { Installer, InstallerStatus } from "@/types/crm"
 import { supabase } from "@/integrations/supabase/client"
 import { toast } from "sonner"
 
+interface DatabaseCertifications {
+  qualiPV: boolean;
+  rge: boolean;
+  qualibat: boolean;
+}
+
 export const useInstallerForm = (installer: Installer | null) => {
   const [formData, setFormData] = useState<Installer>(installer || {
     id: crypto.randomUUID(),
@@ -44,17 +50,17 @@ export const useInstallerForm = (installer: Installer | null) => {
           if (data) {
             const nationwide = data.service_area?.includes("Toute France")
             setIsNationwide(nationwide)
+            
+            // Cast certifications to the correct type
+            const certifications = data.certifications as DatabaseCertifications
+            
             setFormData({
               ...installer,
               zones: data.service_area || [],
-              certifications: typeof data.certifications === 'object' ? {
-                qualiPV: data.certifications?.qualiPV || false,
-                rge: data.certifications?.rge || false,
-                qualibat: data.certifications?.qualibat || false
-              } : {
-                qualiPV: false,
-                rge: false,
-                qualibat: false
+              certifications: {
+                qualiPV: certifications?.qualiPV || false,
+                rge: certifications?.rge || false,
+                qualibat: certifications?.qualibat || false
               }
             })
           }
