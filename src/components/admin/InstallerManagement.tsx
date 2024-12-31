@@ -1,95 +1,116 @@
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Input } from "@/components/ui/input";
-import { useState } from "react";
-import { Installer, InstallerStatus } from "@/types/crm";
-import { Search, Download, Plus, Edit, Eye } from "lucide-react";
-import { EditInstallerDialog } from "./EditInstallerDialog";
-import { useToast } from "@/components/ui/use-toast";
-import { InstallerTable } from "./installer/InstallerTable";
-import { InstallerHeader } from "./installer/InstallerHeader";
+import { useState, useEffect } from "react";
+import { Card } from "@/components/ui/card";
 import { AdminBreadcrumb } from "./AdminBreadcrumb";
-
-export const mockInstallers: Installer[] = [];
+import { supabase } from "@/lib/supabase-client";
+import { useToast } from "@/components/ui/use-toast";
+import { useNavigate } from "react-router-dom";
+import { Loader2 } from "lucide-react";
 
 const InstallerManagement = () => {
-  const [installers, setInstallers] = useState<Installer[]>(mockInstallers);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [selectedInstaller, setSelectedInstaller] = useState<Installer | null>(null);
-  const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const { toast } = useToast();
+  const navigate = useNavigate();
 
-  const handleEditClose = () => {
-    setSelectedInstaller(null);
-    setEditDialogOpen(false);
-  };
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const { data: { session }, error: sessionError } = await supabase.auth.getSession();
 
-  const handleNewInstaller = () => {
-    const newInstaller: Installer = {
-      id: String(Date.now()),
-      companyName: "",
-      contactName: "",
-      email: "",
-      phone: "",
-      address: "",
-      zones: [],
-      status: "pending",
-      commission: 0,
-      leadsAssigned: 0,
-      conversionRate: 0,
-      paymentType: "per_lead",
-      certifications: {
-        qualiPV: false,
-        rge: false,
-        qualibat: false
-      },
-      yearFounded: new Date().getFullYear().toString()
+        if (sessionError) {
+          console.error("Error checking session:", sessionError);
+          toast({
+            title: "Erreur d'authentification",
+            description: "Impossible de vérifier votre session",
+            variant: "destructive",
+          });
+          navigate("/login");
+          return;
+        }
+
+        if (!session) {
+          console.log("No active session");
+          toast({
+            title: "Non authentifié",
+            description: "Vous devez être connecté pour accéder à cette page",
+            variant: "destructive",
+          });
+          navigate("/login");
+          return;
+        }
+
+        // Vérifier le rôle de l'utilisateur
+        const { data: profile, error: profileError } = await supabase
+          .from('profiles')
+          .select('role')
+          .eq('id', session.user.id)
+          .single();
+
+        if (profileError) {
+          console.error("Error fetching profile:", profileError);
+          toast({
+            title: "Erreur",
+            description: "Impossible de vérifier vos permissions",
+            variant: "destructive",
+          });
+          return;
+        }
+
+        if (!['admin', 'super_admin'].includes(profile.role)) {
+          console.log("User is not an admin");
+          toast({
+            title: "Accès refusé",
+            description: "Vous n'avez pas les permissions nécessaires",
+            variant: "destructive",
+          });
+          navigate("/");
+          return;
+        }
+
+      } catch (error) {
+        console.error("Unexpected error:", error);
+        toast({
+          title: "Erreur",
+          description: "Une erreur inattendue s'est produite",
+          variant: "destructive",
+        });
+      } finally {
+        setIsLoading(false);
+      }
     };
-    setSelectedInstaller(newInstaller);
-    setEditDialogOpen(true);
-  };
 
-  const handleSaveInstaller = (updatedInstaller: Installer) => {
-    if (installers.find(i => i.id === updatedInstaller.id)) {
-      setInstallers(installers.map(installer => 
-        installer.id === updatedInstaller.id ? updatedInstaller : installer
-      ));
-    } else {
-      setInstallers([...installers, updatedInstaller]);
-    }
-    toast({
-      title: "Installateur mis à jour",
-      description: "Les modifications ont été enregistrées avec succès.",
-    });
-    handleEditClose();
-  };
+    checkAuth();
+  }, [navigate, toast]);
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    );
+  }
 
   return (
-    <div className="space-y-6">
-      <AdminBreadcrumb />
-      <div className="bg-background/50 backdrop-blur-md p-6 rounded-xl border border-primary/20">
-        <InstallerHeader 
-          searchTerm={searchTerm}
-          onSearchChange={setSearchTerm}
-          onNewInstaller={handleNewInstaller}
-        />
+    <div className="min-h-screen bg-gradient-to-b from-background/95 to-background/50 py-8">
+      <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+        <AdminBreadcrumb />
+        
+        <div className="space-y-6">
+          <div className="max-w-3xl">
+            <h1 className="text-3xl font-bold tracking-tight text-foreground mb-2">
+              Gestion des Installateurs
+            </h1>
+            <p className="text-muted-foreground text-lg">
+              Gérez les installateurs partenaires et leurs accès
+            </p>
+          </div>
 
-        <InstallerTable 
-          installers={installers}
-          onEditInstaller={(installer) => {
-            setSelectedInstaller(installer);
-            setEditDialogOpen(true);
-          }}
-        />
-
-        <EditInstallerDialog
-          installer={selectedInstaller}
-          open={editDialogOpen}
-          onOpenChange={handleEditClose}
-          onSave={handleSaveInstaller}
-        />
+          <Card className="p-6">
+            {/* Contenu à implémenter */}
+            <p className="text-muted-foreground">
+              Cette fonctionnalité sera bientôt disponible.
+            </p>
+          </Card>
+        </div>
       </div>
     </div>
   );
