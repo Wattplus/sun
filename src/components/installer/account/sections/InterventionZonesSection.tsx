@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react"
-import { Switch } from "@/components/ui/switch"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Card } from "@/components/ui/card"
-import { Calendar } from "lucide-react"
+import { Globe, MapPin } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
 
 // Liste des départements français
 const FRENCH_DEPARTMENTS = [
@@ -58,62 +58,91 @@ export const InterventionZonesSection = ({ selectedZones, onZonesChange }: Inter
   }, [selectedZones]);
 
   const handleNationwideClick = () => {
-    setIsNationwide(true);
-    setSelectedDepartments([]);
-    onZonesChange(["Toute France"]);
+    setIsNationwide(!isNationwide);
+    if (!isNationwide) {
+      setSelectedDepartments([]);
+      onZonesChange(["Toute France"]);
+    } else {
+      onZonesChange([]);
+    }
   };
 
   const handleDepartmentChange = (department: string, checked: boolean) => {
-    setIsNationwide(false);
-    if (checked) {
-      const newDepartments = [...selectedDepartments, department];
-      setSelectedDepartments(newDepartments);
-      onZonesChange(newDepartments);
-    } else {
-      const newDepartments = selectedDepartments.filter(d => d !== department);
-      setSelectedDepartments(newDepartments);
-      onZonesChange(newDepartments);
+    if (isNationwide) {
+      setIsNationwide(false);
     }
+    
+    let newDepartments: string[];
+    if (checked) {
+      newDepartments = [...selectedDepartments, department];
+    } else {
+      newDepartments = selectedDepartments.filter(d => d !== department);
+    }
+    
+    setSelectedDepartments(newDepartments);
+    onZonesChange(newDepartments);
   };
 
   return (
     <Card className="p-6 space-y-4 bg-background/50 backdrop-blur-sm border-primary/20">
-      <div className="flex items-center justify-between gap-3 mb-4">
+      <div className="flex items-center justify-between gap-3">
         <div className="flex items-center gap-3">
           <div className="p-2 rounded-lg bg-primary/10">
-            <Calendar className="h-5 w-5 text-primary" />
+            <MapPin className="h-5 w-5 text-primary" />
           </div>
-          <h3 className="text-lg font-semibold">Zones d'intervention</h3>
+          <div>
+            <h3 className="text-lg font-semibold text-white">Zones d'intervention</h3>
+            <p className="text-sm text-white/60">
+              Sélectionnez les départements où vous intervenez
+            </p>
+          </div>
         </div>
         <Button 
           variant={isNationwide ? "default" : "outline"}
           onClick={handleNationwideClick}
-          className="whitespace-nowrap"
+          className="gap-2 whitespace-nowrap"
         >
-          Toute France
+          <Globe className="h-4 w-4" />
+          {isNationwide ? "Toute France activé" : "Toute France"}
         </Button>
       </div>
 
       {!isNationwide && (
-        <ScrollArea className="h-[300px] border rounded-md p-4 bg-background/30">
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-            {FRENCH_DEPARTMENTS.map((department) => (
-              <div key={department} className="flex items-center space-x-2 p-2 hover:bg-primary/5 rounded-md transition-colors">
-                <Checkbox
-                  id={department}
-                  checked={selectedDepartments.includes(department)}
-                  onCheckedChange={(checked) => handleDepartmentChange(department, checked as boolean)}
-                />
-                <label 
-                  htmlFor={department} 
-                  className="text-sm cursor-pointer hover:text-primary transition-colors"
-                >
-                  {department}
-                </label>
-              </div>
+        <>
+          <div className="flex flex-wrap gap-2">
+            {selectedDepartments.map((dept) => (
+              <Badge 
+                key={dept}
+                variant="secondary"
+                className="bg-primary/20 hover:bg-primary/30 cursor-pointer"
+                onClick={() => handleDepartmentChange(dept, false)}
+              >
+                {dept}
+                <span className="ml-1 text-xs">×</span>
+              </Badge>
             ))}
           </div>
-        </ScrollArea>
+
+          <ScrollArea className="h-[300px] border rounded-md p-4 bg-background/30">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
+              {FRENCH_DEPARTMENTS.map((department) => (
+                <div key={department} className="flex items-center space-x-2 p-2 hover:bg-primary/5 rounded-md transition-colors">
+                  <Checkbox
+                    id={department}
+                    checked={selectedDepartments.includes(department)}
+                    onCheckedChange={(checked) => handleDepartmentChange(department, checked as boolean)}
+                  />
+                  <label 
+                    htmlFor={department} 
+                    className="text-sm cursor-pointer hover:text-primary transition-colors"
+                  >
+                    {department}
+                  </label>
+                </div>
+              ))}
+            </div>
+          </ScrollArea>
+        </>
       )}
     </Card>
   );

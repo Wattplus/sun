@@ -1,82 +1,51 @@
-import { useState, useEffect } from "react"
-import { useToast } from "@/hooks/use-toast"
-import { supabase } from "@/lib/supabase-client"
-import { useNavigate } from "react-router-dom"
 import { Button } from "@/components/ui/button"
-import { PhotovoltaicInfoSection } from "./sections/PhotovoltaicInfoSection"
-import { CertificationsSection } from "./sections/CertificationsSection"
-import { InstallationTypesSection } from "./sections/InstallationTypesSection"
-import { InterventionZonesSection } from "./sections/InterventionZonesSection"
+import { useToast } from "@/hooks/use-toast"
+import { useState } from "react"
+import { ProfileStats } from "@/components/installer/profile/ProfileStats"
+import { ProfileVisibilityOptions } from "@/components/installer/profile/ProfileVisibilityOptions"
+import { PremiumFeatures } from "@/components/installer/profile/PremiumFeatures"
+import { BasicInfoSection } from "@/components/installer/profile/sections/BasicInfoSection"
+import { SolarSpecificSection } from "@/components/installer/profile/sections/SolarSpecificSection"
+import { Card } from "@/components/ui/card"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Camera } from "lucide-react"
+import { InterventionZonesSection } from "../account/sections/InterventionZonesSection"
 
 export const ProfileSection = () => {
   const { toast } = useToast()
-  const navigate = useNavigate()
-  const [isLoading, setIsLoading] = useState(false)
   const [formData, setFormData] = useState({
-    experience: "",
-    panelBrands: "",
-    inverterBrands: "",
-    guaranteeYears: "",
-    service_area: [] as string[],
+    firstName: "Jean",
+    lastName: "Dupont",
+    email: "jean.dupont@example.com",
+    phone: "06 12 34 56 78",
+    company: "Solar Pro",
+    siret: "123 456 789 00012",
+    website: "www.solarpro.fr",
+    description: "Installateur photovoltaïque certifié avec plus de 10 ans d'expérience",
+    experience: "10",
+    panelBrands: "SunPower, LG, Panasonic",
+    inverterBrands: "SMA, Fronius, Enphase",
+    guaranteeYears: "20",
+    service_area: ["75 - Paris", "92 - Hauts-de-Seine"],
     certifications: {
-      qualiPV: false,
-      rge: false,
-      qualibat: false
+      qualiPV: true,
+      rge: true,
+      qualibat: true
     },
     installationTypes: {
-      residential: false,
-      commercial: false,
+      residential: true,
+      commercial: true,
       industrial: false
     },
-    maintenanceServices: false
+    maintenanceServices: true,
   })
 
-  useEffect(() => {
-    const getSession = async () => {
-      const { data: { session }, error } = await supabase.auth.getSession()
-      if (error || !session) {
-        toast({
-          title: "Erreur",
-          description: "Vous devez être connecté pour accéder à cette page",
-          variant: "destructive",
-        })
-        navigate("/login")
-        return
-      }
-
-      // Fetch existing profile data
-      const { data: installer, error: fetchError } = await supabase
-        .from('installers')
-        .select('*')
-        .eq('user_id', session.user.id)
-        .single()
-
-      if (fetchError) {
-        console.error("Error fetching installer profile:", fetchError)
-      } else if (installer) {
-        setFormData({
-          experience: installer.experience_years?.toString() || "",
-          panelBrands: installer.panel_brands?.join(", ") || "",
-          inverterBrands: installer.inverter_brands?.join(", ") || "",
-          guaranteeYears: installer.warranty_years?.toString() || "",
-          service_area: installer.service_area || [],
-          certifications: installer.certifications || {
-            qualiPV: false,
-            rge: false,
-            qualibat: false
-          },
-          installationTypes: installer.installation_types || {
-            residential: false,
-            commercial: false,
-            industrial: false
-          },
-          maintenanceServices: installer.maintenance_services || false
-        })
-      }
-    }
-
-    getSession()
-  }, [navigate, toast])
+  const [visibilityOptions, setVisibilityOptions] = useState({
+    showPhoneNumber: true,
+    highlightProfile: false,
+    acceptDirectMessages: true,
+    showCertifications: true,
+  })
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -88,106 +57,106 @@ export const ProfileSection = () => {
   const handleCheckboxChange = (field: string, checked: boolean) => {
     if (field.includes('.')) {
       const [category, item] = field.split('.')
-      setFormData(prev => ({
-        ...prev,
+      setFormData({
+        ...formData,
         [category]: {
-          ...prev[category],
+          ...formData[category],
           [item]: checked
         }
-      }))
+      })
     } else {
-      setFormData(prev => ({
-        ...prev,
+      setFormData({
+        ...formData,
         [field]: checked
-      }))
+      })
     }
+  }
+
+  const handleToggleChange = (field: string, checked: boolean) => {
+    setVisibilityOptions({
+      ...visibilityOptions,
+      [field]: checked,
+    })
   }
 
   const handleZonesChange = (zones: string[]) => {
-    setFormData(prev => ({
-      ...prev,
+    setFormData({
+      ...formData,
       service_area: zones
-    }))
+    });
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    toast({
+      title: "Profil mis à jour",
+      description: "Vos informations ont été enregistrées avec succès.",
+    })
   }
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsLoading(true)
-
-    try {
-      const { data: { session }, error: sessionError } = await supabase.auth.getSession()
-      
-      if (sessionError || !session) {
-        throw new Error("Vous devez être connecté pour créer votre profil")
-      }
-
-      const { error } = await supabase
-        .from('installers')
-        .upsert([
-          {
-            user_id: session.user.id,
-            experience_years: parseInt(formData.experience),
-            panel_brands: formData.panelBrands.split(',').map(brand => brand.trim()),
-            inverter_brands: formData.inverterBrands.split(',').map(brand => brand.trim()),
-            warranty_years: parseInt(formData.guaranteeYears),
-            service_area: formData.service_area,
-            certifications: formData.certifications,
-            installation_types: formData.installationTypes,
-            maintenance_services: formData.maintenanceServices,
-          }
-        ], {
-          onConflict: 'user_id'
-        })
-
-      if (error) throw error
-
-      toast({
-        title: "Profil mis à jour",
-        description: "Vos modifications ont été enregistrées avec succès",
-      })
-      
-    } catch (error) {
-      console.error("Error updating profile:", error)
-      toast({
-        title: "Erreur",
-        description: error instanceof Error ? error.message : "Une erreur est survenue lors de la mise à jour de votre profil",
-        variant: "destructive",
-      })
-    } finally {
-      setIsLoading(false)
-    }
+  const handleAvatarUpload = () => {
+    toast({
+      title: "Upload de photo",
+      description: "Fonctionnalité à venir",
+    })
   }
 
   return (
-    <form onSubmit={handleSubmit} className="max-w-5xl mx-auto space-y-6">
-      <PhotovoltaicInfoSection 
-        formData={formData} 
-        handleChange={handleChange}
-      />
-      
-      <InterventionZonesSection 
-        selectedZones={formData.service_area}
-        onZonesChange={handleZonesChange}
-      />
-      
-      <CertificationsSection 
-        certifications={formData.certifications}
-        handleCheckboxChange={handleCheckboxChange}
-      />
-      
-      <InstallationTypesSection 
-        installationTypes={formData.installationTypes}
-        maintenanceServices={formData.maintenanceServices}
-        handleCheckboxChange={handleCheckboxChange}
-      />
+    <div className="space-y-6">
+      <Card className="p-6 bg-secondary/80 backdrop-blur-sm border-primary/20">
+        <div className="flex items-center gap-6">
+          <div className="relative">
+            <Avatar className="h-24 w-24">
+              <AvatarImage src="/placeholder.svg" />
+              <AvatarFallback>JD</AvatarFallback>
+            </Avatar>
+            <Button
+              size="icon"
+              variant="outline"
+              className="absolute bottom-0 right-0 bg-secondary hover:bg-secondary-dark"
+              onClick={handleAvatarUpload}
+            >
+              <Camera className="h-4 w-4" />
+            </Button>
+          </div>
+          <div>
+            <h2 className="text-2xl font-bold text-white">{formData.company}</h2>
+            <p className="text-white/60">{formData.description}</p>
+          </div>
+        </div>
+      </Card>
 
-      <Button 
-        type="submit" 
-        className="w-full bg-primary hover:bg-primary/90"
-        disabled={isLoading}
-      >
-        {isLoading ? "Enregistrement..." : "Créer mon profil"}
-      </Button>
-    </form>
+      <ProfileStats />
+
+      <form onSubmit={handleSubmit} className="space-y-6">
+        <BasicInfoSection formData={formData} handleChange={handleChange} />
+        
+        <SolarSpecificSection 
+          formData={formData} 
+          handleChange={handleChange}
+          handleCheckboxChange={handleCheckboxChange}
+        />
+
+        <InterventionZonesSection
+          selectedZones={formData.service_area}
+          onZonesChange={handleZonesChange}
+        />
+
+        <Button 
+          type="submit" 
+          className="w-full md:w-auto bg-primary hover:bg-primary-dark text-white"
+        >
+          Enregistrer les modifications
+        </Button>
+      </form>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <PremiumFeatures />
+        <ProfileVisibilityOptions 
+          options={visibilityOptions}
+          onToggle={handleToggleChange}
+        />
+      </div>
+    </div>
   )
 }
