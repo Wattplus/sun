@@ -1,19 +1,16 @@
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
-import { supabase } from "@/lib/supabase-client"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
-import { toast } from "sonner"
+import { Alert, AlertDescription } from "@/components/ui/alert"
 import { motion } from "framer-motion"
 import { InstallerFormFields } from "./form/InstallerFormFields"
-import { Alert, AlertDescription } from "@/components/ui/alert"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog"
+import { SuccessDialog } from "./SuccessDialog"
+import { useInstallerSignup } from "@/hooks/installer/useInstallerSignup"
 
 export const SignupForm = () => {
   const navigate = useNavigate()
-  const [loading, setLoading] = useState(false)
-  const [userExists, setUserExists] = useState(false)
-  const [showSuccessDialog, setShowSuccessDialog] = useState(false)
+  const { loading, userExists, showSuccessDialog, setShowSuccessDialog, handleSignup } = useInstallerSignup()
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -33,95 +30,11 @@ export const SignupForm = () => {
       ...formData,
       [e.target.id]: e.target.value,
     })
-    if (e.target.id === "email") {
-      setUserExists(false)
-    }
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setLoading(true)
-    setUserExists(false)
-
-    try {
-      if (formData.password !== formData.confirmPassword) {
-        throw new Error("Les mots de passe ne correspondent pas")
-      }
-
-      // 1. Créer l'utilisateur dans auth
-      const { data: authData, error: authError } = await supabase.auth.signUp({
-        email: formData.email,
-        password: formData.password,
-        options: {
-          data: {
-            first_name: formData.firstName,
-            last_name: formData.lastName,
-          }
-        }
-      })
-
-      if (authError) {
-        if (authError.message.includes("already registered")) {
-          setUserExists(true)
-          throw new Error("Un compte existe déjà avec cette adresse email")
-        }
-        throw authError
-      }
-
-      if (!authData.user) throw new Error("Erreur lors de la création du compte")
-
-      // 2. Attendre un court instant pour s'assurer que l'utilisateur est créé
-      await new Promise(resolve => setTimeout(resolve, 1000))
-
-      // 3. Insérer les données de l'installateur
-      const { error: installerError } = await supabase
-        .from("installers")
-        .insert([
-          {
-            user_id: authData.user.id,
-            company_name: formData.companyName,
-            contact_name: `${formData.firstName} ${formData.lastName}`,
-            phone: formData.phone,
-            siret: formData.siret,
-            address: formData.address,
-            postal_code: formData.postalCode,
-            city: formData.city,
-            verified: false,
-            credits: 0,
-            service_area: [],
-            certifications: {
-              qualiPV: false,
-              rge: false,
-              qualibat: false,
-            },
-            installation_types: {
-              residential: false,
-              commercial: false,
-              industrial: false,
-            },
-            maintenance_services: false,
-            visibility_settings: {
-              showPhoneNumber: true,
-              highlightProfile: false,
-              acceptDirectMessages: true,
-              showCertifications: true,
-            },
-          },
-        ])
-
-      if (installerError) {
-        console.error("Installer creation error:", installerError)
-        throw new Error("Erreur lors de la création du profil installateur")
-      }
-
-      toast.success("Compte créé avec succès !")
-      setShowSuccessDialog(true)
-    } catch (error: any) {
-      console.error("Signup error:", error)
-      toast.error(error.message || "Erreur lors de la création du compte")
-    } finally {
-      setLoading(false)
-    }
+    await handleSignup(formData)
   }
 
   return (
@@ -171,34 +84,11 @@ export const SignupForm = () => {
           </Button>
         </div>
 
-        <Dialog open={showSuccessDialog} onOpenChange={setShowSuccessDialog}>
-          <DialogContent className="sm:max-w-md">
-            <DialogHeader>
-              <DialogTitle>Compte créé avec succès !</DialogTitle>
-              <DialogDescription className="space-y-4 pt-4">
-                <p>
-                  Votre compte a été créé avec succès. Voici vos identifiants de connexion :
-                </p>
-                <div className="bg-muted p-4 rounded-lg space-y-2">
-                  <p><strong>Email :</strong> {formData.email}</p>
-                  <p><strong>Mot de passe :</strong> Celui que vous avez choisi</p>
-                </div>
-                <p className="text-sm text-muted-foreground">
-                  Conservez ces informations précieusement. Vous en aurez besoin pour vous connecter à votre espace installateur.
-                </p>
-              </DialogDescription>
-            </DialogHeader>
-            <DialogFooter className="sm:justify-center">
-              <Button
-                type="button"
-                className="w-full sm:w-auto"
-                onClick={() => navigate("/connexion-installateur")}
-              >
-                Aller à la page de connexion
-              </Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
+        <SuccessDialog 
+          open={showSuccessDialog} 
+          onOpenChange={setShowSuccessDialog}
+          email={formData.email}
+        />
       </Card>
     </motion.div>
   )
