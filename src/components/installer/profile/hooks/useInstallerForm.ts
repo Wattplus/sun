@@ -1,60 +1,58 @@
-import { supabase } from "@/integrations/supabase/client";
-import { useToast } from "@/hooks/use-toast";
-import type { InstallerFormData, DatabaseInstallerData } from "../types/installer";
-import type { Json } from "@/integrations/supabase/types";
+import { supabase } from "@/integrations/supabase/client"
+import { useToast } from "@/hooks/use-toast"
+import type { InstallerFormData } from "../types/installer"
+import type { Json } from "@/integrations/supabase/types"
 
 export const useInstallerForm = (
-  formData: InstallerFormData, 
+  formData: InstallerFormData,
   setFormData: (data: InstallerFormData) => void
 ) => {
-  const { toast } = useToast();
+  const { toast } = useToast()
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
       ...formData,
       [e.target.id]: e.target.value,
-    });
-  };
+    })
+  }
 
   const handleCheckboxChange = (field: string, checked: boolean) => {
     if (field.includes('.')) {
-      const [category, item] = field.split('.');
+      const [category, item] = field.split('.')
       setFormData({
         ...formData,
         [category]: {
           ...(formData[category as keyof typeof formData] as Record<string, boolean>),
           [item]: checked
         }
-      });
+      })
     } else {
       setFormData({
         ...formData,
         [field]: checked
-      });
+      })
     }
-  };
+  }
 
   const handleZonesChange = (zones: string[]) => {
     setFormData({
       ...formData,
       service_area: zones
-    });
-  };
+    })
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+    e.preventDefault()
     try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) throw new Error("User not found");
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) throw new Error("User not found")
 
-      const installerData: Partial<DatabaseInstallerData> = {
+      const installerData = {
         user_id: user.id,
-        company_name: formData.company,
         contact_name: `${formData.firstName} ${formData.lastName}`,
         phone: formData.phone,
-        address: formData.address,
-        postal_code: formData.postal_code,
-        city: formData.city,
+        company_name: formData.company,
+        website: formData.website,
         description: formData.description,
         experience_years: parseInt(formData.experience) || null,
         panel_brands: formData.panelBrands.split(',').map(brand => brand.trim()),
@@ -64,36 +62,38 @@ export const useInstallerForm = (
         certifications: formData.certifications as Json,
         installation_types: formData.installationTypes as Json,
         maintenance_services: formData.maintenanceServices,
-        website: formData.website,
+        visibility_settings: formData.visibility_settings as Json,
         siret: formData.siret,
-        visibility_settings: formData.visibility_settings as Json
-      };
+        address: formData.address,
+        postal_code: formData.postal_code,
+        city: formData.city
+      }
 
       const { error: updateError } = await supabase
         .from('installers')
         .update(installerData)
-        .eq('user_id', user.id);
+        .eq('user_id', user.id)
 
-      if (updateError) throw updateError;
+      if (updateError) throw updateError
 
       toast({
         title: "Profil mis à jour",
         description: "Vos modifications ont été enregistrées avec succès.",
-      });
+      })
     } catch (error) {
-      console.error('Error updating profile:', error);
+      console.error('Error updating profile:', error)
       toast({
         title: "Erreur",
         description: "Une erreur est survenue lors de la mise à jour du profil.",
         variant: "destructive"
-      });
+      })
     }
-  };
+  }
 
   return {
     handleChange,
     handleCheckboxChange,
     handleZonesChange,
     handleSubmit
-  };
-};
+  }
+}
