@@ -1,22 +1,49 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/components/ui/use-toast";
 import { Save } from "lucide-react";
+import { supabase } from "@/lib/supabase-client";
+import { useNavigate } from "react-router-dom";
 
 export const ProfileSection = () => {
   const { toast } = useToast();
+  const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
-    firstName: "Jean",
-    lastName: "Dupont",
-    email: "jean.dupont@example.com",
-    phone: "06 12 34 56 78",
-    company: "Solar Pro",
-    siret: "123 456 789 00012",
-    website: "www.solarpro.fr",
+    firstName: "Olivier",
+    lastName: "Malai",
+    email: "",
+    phone: "0 805 29 40 40",
+    company: "PPF Énergie",
+    siret: "",
+    website: "",
   });
+
+  useEffect(() => {
+    const getSession = async () => {
+      const { data: { session }, error } = await supabase.auth.getSession();
+      if (error) {
+        console.error("Error fetching session:", error);
+        toast({
+          title: "Erreur",
+          description: "Vous devez être connecté pour accéder à cette page",
+          variant: "destructive",
+        });
+        navigate("/login");
+        return;
+      }
+      if (!session) {
+        navigate("/login");
+        return;
+      }
+      setFormData(prev => ({ ...prev, email: session.user.email || "" }));
+    };
+
+    getSession();
+  }, [navigate, toast]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -25,12 +52,52 @@ export const ProfileSection = () => {
     });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    toast({
-      title: "Profil mis à jour",
-      description: "Vos informations ont été enregistrées avec succès.",
-    });
+    setIsLoading(true);
+
+    try {
+      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+      
+      if (sessionError || !session) {
+        throw new Error("Vous devez être connecté pour créer votre profil");
+      }
+
+      const { error } = await supabase.from('installers').insert([
+        {
+          user_id: session.user.id,
+          company_name: formData.company,
+          contact_name: `${formData.firstName} ${formData.lastName}`,
+          phone: formData.phone,
+          address: "99 Rue du Moulin des Landes",
+          postal_code: "44980",
+          city: "Sainte-Luce-sur-Loire",
+          service_area: ["44980"],
+          website: formData.website,
+          siret: formData.siret,
+        }
+      ]);
+
+      if (error) {
+        throw error;
+      }
+
+      toast({
+        title: "Profil créé",
+        description: "Votre profil a été créé avec succès",
+      });
+      
+      navigate("/espace-installateur/leads/nouveaux");
+    } catch (error) {
+      console.error("Error creating profile:", error);
+      toast({
+        title: "Erreur",
+        description: error instanceof Error ? error.message : "Une erreur est survenue lors de la création de votre profil",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -65,6 +132,7 @@ export const ProfileSection = () => {
               value={formData.email}
               onChange={handleChange}
               placeholder="john.doe@example.com"
+              disabled
             />
           </div>
 
@@ -109,9 +177,13 @@ export const ProfileSection = () => {
           </div>
         </div>
 
-        <Button type="submit" className="w-full md:w-auto flex items-center gap-2">
+        <Button 
+          type="submit" 
+          className="w-full md:w-auto flex items-center gap-2"
+          disabled={isLoading}
+        >
           <Save className="w-4 h-4" />
-          Enregistrer les modifications
+          {isLoading ? "Création en cours..." : "Enregistrer les modifications"}
         </Button>
       </form>
     </Card>
