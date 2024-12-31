@@ -60,10 +60,10 @@ export interface DatabaseInstallerData {
   panel_brands?: string[]
   inverter_brands?: string[]
   warranty_years?: number
-  certifications: Record<string, boolean>
-  installation_types: Record<string, boolean>
+  certifications: Certifications
+  installation_types: InstallationTypes
   maintenance_services: boolean
-  visibility_settings: Record<string, boolean>
+  visibility_settings: VisibilitySettings
   subscription_plan?: string
   profile_views?: number
   conversion_rate?: number
@@ -85,23 +85,10 @@ export const convertFormToDbFormat = (formData: InstallerFormData, userId: strin
   inverter_brands: formData.inverterBrands.split(",").map(brand => brand.trim()),
   warranty_years: parseInt(formData.guaranteeYears) || 0,
   service_area: formData.service_area,
-  certifications: {
-    qualiPV: formData.certifications.qualiPV,
-    rge: formData.certifications.rge,
-    qualibat: formData.certifications.qualibat
-  },
-  installation_types: {
-    residential: formData.installationTypes.residential,
-    commercial: formData.installationTypes.commercial,
-    industrial: formData.installationTypes.industrial
-  },
+  certifications: formData.certifications,
+  installation_types: formData.installationTypes,
   maintenance_services: formData.maintenanceServices,
-  visibility_settings: {
-    showPhoneNumber: formData.visibility_settings.showPhoneNumber,
-    highlightProfile: formData.visibility_settings.highlightProfile,
-    acceptDirectMessages: formData.visibility_settings.acceptDirectMessages,
-    showCertifications: formData.visibility_settings.showCertifications
-  },
+  visibility_settings: formData.visibility_settings,
   credits: 0,
   verified: false
 })
@@ -123,25 +110,25 @@ export const convertDbToFormFormat = (dbData: DatabaseInstallerData, email: stri
     inverterBrands: Array.isArray(dbData.inverter_brands) ? dbData.inverter_brands.join(", ") : "",
     guaranteeYears: dbData.warranty_years?.toString() || "",
     service_area: dbData.service_area || [],
-    certifications: {
-      qualiPV: dbData.certifications?.qualiPV || false,
-      rge: dbData.certifications?.rge || false,
-      qualibat: dbData.certifications?.qualibat || false
+    certifications: dbData.certifications || {
+      qualiPV: false,
+      rge: false,
+      qualibat: false
     },
-    installationTypes: {
-      residential: dbData.installation_types?.residential || false,
-      commercial: dbData.installation_types?.commercial || false,
-      industrial: dbData.installation_types?.industrial || false
+    installationTypes: dbData.installation_types || {
+      residential: false,
+      commercial: false,
+      industrial: false
     },
     maintenanceServices: dbData.maintenance_services || false,
     address: dbData.address || "",
     postal_code: dbData.postal_code || "",
     city: dbData.city || "",
-    visibility_settings: {
-      showPhoneNumber: dbData.visibility_settings?.showPhoneNumber || true,
-      highlightProfile: dbData.visibility_settings?.highlightProfile || false,
-      acceptDirectMessages: dbData.visibility_settings?.acceptDirectMessages || true,
-      showCertifications: dbData.visibility_settings?.showCertifications || true
+    visibility_settings: dbData.visibility_settings || {
+      showPhoneNumber: true,
+      highlightProfile: false,
+      acceptDirectMessages: true,
+      showCertifications: true
     }
   }
 }
