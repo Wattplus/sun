@@ -16,7 +16,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { EditLeadDialog } from "../EditLeadDialog";
-import { mockInstallers } from "../InstallerManagement";
+import { mockInstallers } from "../mockData";
 
 interface LeadDialogsProps {
   selectedLead: Lead | null;

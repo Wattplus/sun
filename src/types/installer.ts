@@ -17,7 +17,6 @@ export interface Certifications {
   qualiPV: boolean;
   rge: boolean;
   qualibat: boolean;
-  [key: string]: boolean;
 }
 
 export interface InstallationTypes {
@@ -28,7 +27,7 @@ export interface InstallationTypes {
 
 export interface DatabaseInstallerData {
   id?: string;
-  user_id: string;
+  user_id?: string;
   company_name: string;
   contact_name: string;
   email: string;
@@ -48,9 +47,9 @@ export interface DatabaseInstallerData {
   maintenance_services: boolean;
   visibility_settings: VisibilitySettings;
   service_area: string[];
-  created_at?: string;
   credits?: number;
   verified?: boolean;
+  created_at?: string;
   conversion_rate?: number;
   profile_views?: number;
   satisfied_clients?: number;
