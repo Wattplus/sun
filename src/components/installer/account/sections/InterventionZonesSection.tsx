@@ -4,7 +4,7 @@ import { Label } from "@/components/ui/label"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Card } from "@/components/ui/card"
-import { Building2 } from "lucide-react"
+import { Building2, Calendar } from "lucide-react"
 
 // Liste des départements français
 const FRENCH_DEPARTMENTS = [
@@ -67,34 +67,37 @@ export const InterventionZonesSection = ({ selectedZones, onZonesChange }: Inter
   };
 
   return (
-    <Card className="p-6 space-y-4">
+    <Card className="p-6 space-y-4 bg-background/50 backdrop-blur-sm border-primary/20">
       <div className="flex items-center gap-3 mb-4">
         <div className="p-2 rounded-lg bg-primary/10">
-          <Building2 className="h-5 w-5 text-primary" />
+          <Calendar className="h-5 w-5 text-primary" />
         </div>
         <h3 className="text-lg font-semibold">Zones d'intervention</h3>
       </div>
 
-      <div className="flex items-center space-x-2 mb-4">
+      <div className="flex items-center space-x-2 mb-4 p-4 rounded-lg bg-secondary/20">
         <Switch
           id="nationwide"
           checked={isNationwide}
           onCheckedChange={handleNationwideChange}
         />
-        <Label htmlFor="nationwide">Toute France</Label>
+        <Label htmlFor="nationwide" className="font-medium">Toute France</Label>
       </div>
 
       {!isNationwide && (
-        <ScrollArea className="h-[300px] border rounded-md p-4">
+        <ScrollArea className="h-[300px] border rounded-md p-4 bg-background/30">
           <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
             {FRENCH_DEPARTMENTS.map((department) => (
-              <div key={department} className="flex items-center space-x-2">
+              <div key={department} className="flex items-center space-x-2 p-2 hover:bg-primary/5 rounded-md transition-colors">
                 <Checkbox
                   id={department}
                   checked={selectedDepartments.includes(department)}
                   onCheckedChange={(checked) => handleDepartmentChange(department, checked as boolean)}
                 />
-                <Label htmlFor={department} className="text-sm">
+                <Label 
+                  htmlFor={department} 
+                  className="text-sm cursor-pointer hover:text-primary transition-colors"
+                >
                   {department}
                 </Label>
               </div>
