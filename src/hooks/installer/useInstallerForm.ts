@@ -25,7 +25,7 @@ export const useInstallerForm = (
         setFormData({
           ...formData,
           [category]: {
-            ...formData[category as keyof InstallerFormData],
+            ...(formData[category as keyof InstallerFormData] as Record<string, boolean>),
             [item]: checked
           }
         })
