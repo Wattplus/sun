@@ -8,11 +8,17 @@ import {
   Bell,
   Users,
   Wallet,
-  MessageSquare
+  MessageSquare,
+  Menu,
+  X
 } from "lucide-react";
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
 export const InstallerLayout = () => {
   const location = useLocation();
+  const [isOpen, setIsOpen] = useState(false);
   
   const navigation = [
     {
@@ -60,7 +66,7 @@ export const InstallerLayout = () => {
 
   return (
     <div className="flex min-h-screen">
-      {/* Sidebar */}
+      {/* Desktop Sidebar */}
       <aside className="hidden md:flex md:w-64 md:flex-col">
         <div className="flex flex-grow flex-col overflow-y-auto border-r border-primary/10 bg-background/50 backdrop-blur-xl px-6">
           <div className="flex flex-shrink-0 items-center px-4 py-8">
@@ -101,38 +107,53 @@ export const InstallerLayout = () => {
         </div>
       </aside>
 
-      {/* Mobile navigation */}
-      <div className="fixed bottom-0 left-0 right-0 z-50 bg-background/95 backdrop-blur border-t border-primary/10 flex overflow-x-auto md:hidden">
-        {navigation.map((item) => {
-          const isActive = item.exact 
-            ? location.pathname === item.href
-            : location.pathname.startsWith(item.href);
-          
-          return (
-            <Link
-              key={item.name}
-              to={item.href}
-              className={cn(
-                "flex flex-1 flex-col items-center justify-center py-4 min-w-0 text-xs font-medium",
-                isActive
-                  ? "text-primary"
-                  : "text-gray-400 hover:text-white"
-              )}
-            >
-              <item.icon
-                className={cn(
-                  "h-5 w-5",
-                  isActive ? "text-primary" : "text-gray-400"
-                )}
-              />
-              <span className="mt-1 truncate">{item.name}</span>
-            </Link>
-          );
-        })}
+      {/* Mobile Top Navigation */}
+      <div className="fixed top-0 left-0 right-0 z-50 md:hidden">
+        <div className="flex items-center justify-between px-4 py-3 bg-background/95 backdrop-blur border-b border-primary/10">
+          <Link to="/espace-installateur" className="text-lg font-bold text-white">
+            Espace Installateur
+          </Link>
+          <Sheet open={isOpen} onOpenChange={setIsOpen}>
+            <SheetTrigger asChild>
+              <Button variant="ghost" size="icon" className="md:hidden">
+                <Menu className="h-6 w-6" />
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="top" className="w-full pt-12">
+              <nav className="grid grid-cols-4 gap-4 px-2">
+                {navigation.map((item) => {
+                  const isActive = item.exact 
+                    ? location.pathname === item.href
+                    : location.pathname.startsWith(item.href);
+                  
+                  return (
+                    <Link
+                      key={item.name}
+                      to={item.href}
+                      onClick={() => setIsOpen(false)}
+                      className={cn(
+                        "flex flex-col items-center justify-center p-3 rounded-lg text-center",
+                        isActive
+                          ? "bg-primary text-white"
+                          : "text-gray-300 hover:bg-primary/10 hover:text-white"
+                      )}
+                    >
+                      <item.icon className={cn(
+                        "h-6 w-6 mb-1",
+                        isActive ? "text-white" : "text-gray-400"
+                      )} />
+                      <span className="text-xs font-medium">{item.name}</span>
+                    </Link>
+                  );
+                })}
+              </nav>
+            </SheetContent>
+          </Sheet>
+        </div>
       </div>
 
       {/* Main content */}
-      <main className="flex-1 overflow-y-auto">
+      <main className="flex-1 overflow-y-auto pt-16 md:pt-0">
         <Outlet />
       </main>
     </div>
