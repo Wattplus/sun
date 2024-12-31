@@ -5,9 +5,10 @@ import { Installer } from "@/types/crm"
 interface CompanyInfoSectionProps {
   formData: Installer
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
+  error?: string
 }
 
-export function CompanyInfoSection({ formData, onChange }: CompanyInfoSectionProps) {
+export function CompanyInfoSection({ formData, onChange, error }: CompanyInfoSectionProps) {
   return (
     <div className="space-y-4">
       <div>
@@ -16,9 +17,12 @@ export function CompanyInfoSection({ formData, onChange }: CompanyInfoSectionPro
           id="siret"
           value={formData.siret}
           onChange={onChange}
-          className="bg-background border-input"
+          className={`bg-background border-input ${error ? 'border-red-500' : ''}`}
           placeholder="123 456 789 00012"
         />
+        {error && (
+          <p className="text-sm text-red-500 mt-1">{error}</p>
+        )}
       </div>
       <div>
         <Label htmlFor="siren">SIREN</Label>

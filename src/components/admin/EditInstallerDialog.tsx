@@ -55,18 +55,21 @@ export function EditInstallerDialog({
   })
   const [isNationwide, setIsNationwide] = useState(false)
   const [isSaving, setIsSaving] = useState(false)
+  const [siretError, setSiretError] = useState("")
 
   useEffect(() => {
     if (installer) {
       const nationwide = installer.zones.includes("Toute France")
       setIsNationwide(nationwide)
       setFormData(installer)
+      setSiretError("")
     }
   }, [installer])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSaving(true)
+    setSiretError("")
 
     try {
       const dbData = transformInstallerToDatabase(formData)
@@ -82,20 +85,29 @@ export function EditInstallerDialog({
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {
+        if (error.message?.includes("installers_siret_unique")) {
+          setSiretError("Ce numéro SIRET est déjà utilisé par un autre installateur")
+          throw new Error("SIRET déjà utilisé")
+        }
+        throw error
+      }
 
       toast.success("Modifications enregistrées avec succès")
       onSave(formData)
       onOpenChange(false)
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error saving installer:', error)
-      toast.error("Erreur lors de l'enregistrement des modifications")
+      if (!siretError) {
+        toast.error("Erreur lors de l'enregistrement des modifications")
+      }
     } finally {
       setIsSaving(false)
     }
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSiretError("")
     setFormData({ ...formData, [e.target.id]: e.target.value })
   }
 
@@ -142,7 +154,11 @@ export function EditInstallerDialog({
           
           <div className="grid gap-6 py-4">
             <BasicInfoSection formData={formData} onChange={handleChange} />
-            <CompanyInfoSection formData={formData} onChange={handleChange} />
+            <CompanyInfoSection 
+              formData={formData} 
+              onChange={handleChange} 
+              error={siretError}
+            />
             
             <ZonesSection
               isNationwide={isNationwide}
