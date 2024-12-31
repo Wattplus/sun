@@ -46,6 +46,29 @@ export const InstallerTable = ({
     return <div className="flex gap-0.5">{stars}</div>;
   };
 
+  const getStatusBadge = (status: string) => {
+    switch (status) {
+      case "active":
+        return (
+          <Badge className="bg-emerald-500">
+            Actif
+          </Badge>
+        );
+      case "inactive":
+        return (
+          <Badge className="bg-gray-500">
+            Inactif
+          </Badge>
+        );
+      default:
+        return (
+          <Badge className="bg-blue-500">
+            En attente
+          </Badge>
+        );
+    }
+  };
+
   return (
     <ScrollArea className="h-[600px] rounded-md border border-[#33C3F0]/20">
       <Table>
@@ -114,15 +137,7 @@ export const InstallerTable = ({
                 </div>
               </TableCell>
               <TableCell>
-                <Badge className={
-                  installer.status === "active" 
-                    ? "bg-emerald-500" 
-                    : installer.status === "inactive" 
-                    ? "bg-gray-500" 
-                    : "bg-blue-500"
-                }>
-                  {installer.status === "active" ? "Actif" : installer.status === "inactive" ? "Inactif" : "En attente"}
-                </Badge>
+                {getStatusBadge(installer.status)}
               </TableCell>
               <TableCell>
                 <div className="flex gap-2">
