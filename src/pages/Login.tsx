@@ -127,3 +127,6 @@ export default function Login() {
     </div>
   );
 }
+
+// Change the export to be a named export
+export { Login as default };

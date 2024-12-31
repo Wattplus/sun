@@ -10,12 +10,14 @@ export interface InstallationTypes {
   residential: boolean;
   commercial: boolean;
   industrial: boolean;
+  [key: string]: boolean;
 }
 
 export interface Certifications {
   qualiPV: boolean;
   rge: boolean;
   qualibat: boolean;
+  [key: string]: boolean;
 }
 
 export interface VisibilitySettings {
@@ -23,4 +25,5 @@ export interface VisibilitySettings {
   highlightProfile: boolean;
   showCertifications: boolean;
   acceptDirectMessages: boolean;
+  [key: string]: boolean;
 }

@@ -6,10 +6,9 @@ import { Blog } from "@/pages/Blog"
 import { SolarInstallation } from "@/pages/SolarInstallation"
 import { Maintenance } from "@/pages/Maintenance"
 import { Financing } from "@/pages/Financing"
-import { Contact } from "@/pages/Contact"
 import { FAQ } from "@/pages/FAQ"
 import { Pricing } from "@/pages/Pricing"
-import { Login } from "@/pages/Login"
+import Login from "@/pages/Login"
 import { InstallerProfile } from "@/pages/InstallerProfile"
 import { LegalNotice } from "@/pages/LegalNotice"
 import { PrivacyPolicy } from "@/pages/PrivacyPolicy"
@@ -28,7 +27,6 @@ export const PublicRoutes = () => {
       <Route path="/devenir-installateur" element={<InstallerProfile />} />
       <Route path="/login" element={<Login />} />
       <Route path="/tarifs" element={<Pricing />} />
-      <Route path="/contact" element={<Contact />} />
       <Route path="/faq" element={<FAQ />} />
       <Route path="/mentions-legales" element={<LegalNotice />} />
       <Route path="/confidentialite" element={<PrivacyPolicy />} />

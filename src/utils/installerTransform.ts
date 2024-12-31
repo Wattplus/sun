@@ -1,32 +1,47 @@
-import type { DatabaseInstallerData, InstallerFormData, InstallationTypes, Certifications, VisibilitySettings } from "@/types/installer";
+import type { DatabaseInstallerData, InstallerFormData } from "@/types/installer";
+import type { Json } from "@/types/installer/base";
 
-function normalizeInstallationTypes(data: any): InstallationTypes {
-  return {
-    residential: Boolean(data?.residential),
-    commercial: Boolean(data?.commercial),
-    industrial: Boolean(data?.industrial),
+function normalizeInstallationTypes(data: Json): InstallationTypes {
+  const defaultTypes = {
+    residential: false,
+    commercial: false,
+    industrial: false
   };
+  
+  if (typeof data === 'object' && data !== null) {
+    return { ...defaultTypes, ...data };
+  }
+  
+  return defaultTypes;
 }
 
-function normalizeCertifications(data: any): Certifications {
-  return {
-    qualiPV: Boolean(data?.qualiPV),
-    rge: Boolean(data?.rge),
-    qualibat: Boolean(data?.qualibat),
-    ...Object.entries(data || {}).reduce((acc, [key, value]) => ({
-      ...acc,
-      [key]: Boolean(value)
-    }), {})
+function normalizeCertifications(data: Json): Certifications {
+  const defaultCerts = {
+    qualiPV: false,
+    rge: false,
+    qualibat: false
   };
+  
+  if (typeof data === 'object' && data !== null) {
+    return { ...defaultCerts, ...data };
+  }
+  
+  return defaultCerts;
 }
 
-function normalizeVisibilitySettings(data: any): VisibilitySettings {
-  return {
-    showPhoneNumber: data?.showPhoneNumber ?? true,
-    highlightProfile: data?.highlightProfile ?? false,
-    showCertifications: data?.showCertifications ?? true,
-    acceptDirectMessages: data?.acceptDirectMessages ?? true,
+function normalizeVisibilitySettings(data: Json): VisibilitySettings {
+  const defaultSettings = {
+    showPhoneNumber: true,
+    highlightProfile: false,
+    showCertifications: true,
+    acceptDirectMessages: true
   };
+  
+  if (typeof data === 'object' && data !== null) {
+    return { ...defaultSettings, ...data };
+  }
+  
+  return defaultSettings;
 }
 
 export function transformDatabaseToForm(data: DatabaseInstallerData): InstallerFormData {
@@ -62,9 +77,8 @@ export function transformDatabaseToForm(data: DatabaseInstallerData): InstallerF
   };
 }
 
-export function transformFormToDatabase(formData: InstallerFormData, userId: string): DatabaseInstallerData {
+export function transformFormToDatabase(formData: InstallerFormData): Partial<DatabaseInstallerData> {
   return {
-    user_id: userId,
     company_name: formData.company_name,
     contact_name: formData.contact_name,
     email: formData.email,
@@ -79,27 +93,10 @@ export function transformFormToDatabase(formData: InstallerFormData, userId: str
     panel_brands: formData.panel_brands,
     inverter_brands: formData.inverter_brands,
     warranty_years: formData.warranty_years,
-    certifications: formData.certifications,
-    installation_types: formData.installation_types,
+    certifications: formData.certifications as Json,
+    installation_types: formData.installation_types as Json,
     maintenance_services: formData.maintenance_services,
-    visibility_settings: formData.visibility_settings,
-    service_area: formData.service_area,
-    verified: false,
-    credits: 0
+    visibility_settings: formData.visibility_settings as Json,
+    service_area: formData.service_area
   };
-}
-
-export function validateInstallerData(data: Partial<DatabaseInstallerData>): string[] {
-  const errors: string[] = [];
-
-  if (!data.company_name) errors.push("Le nom de l'entreprise est requis");
-  if (!data.contact_name) errors.push("Le nom du contact est requis");
-  if (!data.phone) errors.push("Le numéro de téléphone est requis");
-  if (!data.siret) errors.push("Le numéro SIRET est requis");
-  if (!data.email) errors.push("L'email est requis");
-  if (!data.address) errors.push("L'adresse est requise");
-  if (!data.postal_code) errors.push("Le code postal est requis");
-  if (!data.city) errors.push("La ville est requise");
-
-  return errors;
 }
