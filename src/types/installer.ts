@@ -21,30 +21,21 @@ export interface VisibilitySettings {
 }
 
 export interface InstallerFormData {
-  // Personal Info
   company_name: string;
   contact_name: string;
   email: string;
   phone: string;
-  
-  // Company Info
   siret: string;
   address: string;
   postal_code: string;
   city: string;
   website: string;
   description: string;
-  
-  // Service Areas
   service_area: string[];
-  
-  // Experience & Equipment
   experience_years: number;
   panel_brands: string[];
   inverter_brands: string[];
   warranty_years: number;
-  
-  // Certifications & Services
   certifications: Certifications;
   installation_types: InstallationTypes;
   maintenance_services: boolean;
@@ -80,18 +71,18 @@ export const convertDbToFormFormat = (data: DatabaseInstallerData): InstallerFor
     panel_brands: data.panel_brands || [],
     inverter_brands: data.inverter_brands || [],
     warranty_years: data.warranty_years || 0,
-    certifications: data.certifications || {
+    certifications: data.certifications as Certifications || {
       qualiPV: false,
       rge: false,
       qualibat: false
     },
-    installation_types: data.installation_types || {
+    installation_types: data.installation_types as InstallationTypes || {
       residential: false,
       commercial: false,
       industrial: false
     },
     maintenance_services: data.maintenance_services || false,
-    visibility_settings: data.visibility_settings || {
+    visibility_settings: data.visibility_settings as VisibilitySettings || {
       showPhoneNumber: true,
       highlightProfile: false,
       acceptDirectMessages: true,
@@ -103,6 +94,10 @@ export const convertDbToFormFormat = (data: DatabaseInstallerData): InstallerFor
 export const convertFormToDbFormat = (formData: InstallerFormData, userId: string): Partial<DatabaseInstallerData> => {
   return {
     user_id: userId,
-    ...formData
+    ...formData,
+    // Convert complex objects to JSON for Supabase
+    certifications: formData.certifications as unknown as Json,
+    installation_types: formData.installation_types as unknown as Json,
+    visibility_settings: formData.visibility_settings as unknown as Json
   };
 };
