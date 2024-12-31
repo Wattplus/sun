@@ -18,6 +18,10 @@ import ProfilePage from "@/components/admin/profile/ProfilePage"
 import StatisticsPage from "@/components/admin/statistics/StatisticsPage"
 import { InstallerSignup } from "@/pages/installer/auth/InstallerSignup"
 import { InstallerLogin } from "@/pages/installer/auth/InstallerLogin"
+import { InstallerDashboard } from "@/components/installer/InstallerDashboard"
+import { AccountPage } from "@/components/installer/account/AccountPage"
+import { MessagesPage } from "@/components/installer/messages/MessagesPage"
+import { InstallerLayout } from "@/components/installer/navigation/InstallerLayout"
 
 export const AppRoutes = () => {
   return (
@@ -26,6 +30,7 @@ export const AppRoutes = () => {
       <Route path="/login" element={<Login />} />
       <Route path="/connexion-installateur" element={<InstallerLogin />} />
       <Route path="/devenir-installateur" element={<InstallerSignup />} />
+      
       <Route
         path="/admin/*"
         element={
@@ -48,14 +53,19 @@ export const AppRoutes = () => {
         <Route path="settings" element={<SettingsPage />} />
         <Route path="profile" element={<ProfilePage />} />
       </Route>
+
       <Route
-        path="/espace-installateur/*"
+        path="/espace-installateur"
         element={
           <ProtectedRoute requiredRole={["installer"]}>
-            <InstallerSpace />
+            <InstallerLayout />
           </ProtectedRoute>
         }
-      />
+      >
+        <Route index element={<InstallerDashboard />} />
+        <Route path="mon-compte" element={<AccountPage />} />
+        <Route path="messages" element={<MessagesPage />} />
+      </Route>
     </Routes>
   )
 }

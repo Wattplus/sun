@@ -22,39 +22,14 @@ const navigation = [
     icon: LayoutDashboard 
   },
   { 
-    name: "Nouveaux leads", 
-    href: "/espace-installateur/leads/nouveaux", 
-    icon: UserPlus 
-  },
-  { 
-    name: "Leads achetés", 
-    href: "/espace-installateur/leads/achetes", 
-    icon: ShoppingCart 
+    name: "Mon compte", 
+    href: "/espace-installateur/mon-compte", 
+    icon: User 
   },
   { 
     name: "Messages", 
     href: "/espace-installateur/messages", 
     icon: MessageSquare 
-  },
-  { 
-    name: "Rapports", 
-    href: "/espace-installateur/rapports", 
-    icon: FileText 
-  },
-  {
-    name: "Profil",
-    href: "/espace-installateur/profil",
-    icon: User
-  },
-  { 
-    name: "Paramètres", 
-    href: "/espace-installateur/parametres", 
-    icon: Settings 
-  },
-  { 
-    name: "Notifications", 
-    href: "/espace-installateur/notifications", 
-    icon: Bell 
   }
 ];
 
@@ -62,7 +37,7 @@ export function InstallerLayout() {
   const location = useLocation();
 
   return (
-    <div className="min-h-screen w-full flex flex-col">
+    <div className="min-h-screen w-full flex flex-col bg-background">
       {/* Top Navigation */}
       <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container mx-auto">
