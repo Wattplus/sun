@@ -69,7 +69,8 @@ export const useInstallerForm = (
         certifications: formData.certifications as unknown as Json,
         installation_types: formData.installationTypes as unknown as Json,
         maintenance_services: formData.maintenanceServices,
-        visibility_settings: formData.visibility_settings as unknown as Json
+        visibility_settings: formData.visibility_settings as unknown as Json,
+        siret: formData.siret
       }
 
       const { error } = await supabase

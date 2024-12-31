@@ -5,21 +5,21 @@ export interface VisibilitySettings {
   highlightProfile: boolean
   acceptDirectMessages: boolean
   showCertifications: boolean
-  [key: string]: boolean // Add index signature for Json compatibility
+  [key: string]: boolean
 }
 
 export interface Certifications {
   qualiPV: boolean
   rge: boolean
   qualibat: boolean
-  [key: string]: boolean // Add index signature for Json compatibility
+  [key: string]: boolean
 }
 
 export interface InstallationTypes {
   residential: boolean
   commercial: boolean
   industrial: boolean
-  [key: string]: boolean // Add index signature for Json compatibility
+  [key: string]: boolean
 }
 
 export interface InstallerFormData {
