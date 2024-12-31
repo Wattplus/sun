@@ -6,8 +6,34 @@ import { InstallerBreadcrumb } from "@/components/installer/navigation/Installer
 import { motion } from "framer-motion"
 import { useState } from "react"
 
+interface FormData {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  company: string;
+  siret: string;
+  website: string;
+  experience: string;
+  panelBrands: string;
+  inverterBrands: string;
+  guaranteeYears: string;
+  interventionZones: string;
+  certifications: {
+    qualiPV: boolean;
+    rge: boolean;
+    qualibat: boolean;
+  };
+  installationTypes: {
+    residential: boolean;
+    commercial: boolean;
+    industrial: boolean;
+  };
+  maintenanceServices: boolean;
+}
+
 export const ProfilePage = () => {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormData>({
     firstName: "",
     lastName: "",
     email: "",
@@ -49,7 +75,7 @@ export const ProfilePage = () => {
         return {
           ...prev,
           [group]: {
-            ...prev[group as keyof typeof prev],
+            ...(prev[group as keyof FormData] as Record<string, boolean>),
             [key]: checked
           }
         };

@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Check, Sparkles, Star } from "lucide-react"
+import { Check, Sparkles } from "lucide-react"
 import { subscriptionPlans } from "@/types/subscription"
 import { useToast } from "@/components/ui/use-toast"
 import { motion } from "framer-motion"
@@ -43,7 +43,7 @@ export const SubscriptionPlans = () => {
   return (
     <div className="py-8">
       <div className="text-center mb-8">
-        <h2 className="text-3xl font-bold">Plans d'abonnement</h2>
+        <h2 className="text-3xl font-bold text-white">Plans d'abonnement</h2>
         <p className="text-muted-foreground mt-2">
           Choisissez le plan qui correspond le mieux à vos besoins
         </p>
