@@ -31,7 +31,7 @@ export const Navbar = () => {
 
             <div className="flex items-center space-x-8">
               <Link 
-                to="/espace-installateur" 
+                to="/connexion-installateur" 
                 className="flex items-center text-sm font-medium text-blue-100 hover:text-primary transition-colors"
               >
                 <UserCheck className="w-4 h-4 mr-2" />
@@ -86,7 +86,7 @@ export const Navbar = () => {
                 Témoignages
               </a>
               <Link 
-                to="/espace-installateur" 
+                to="/connexion-installateur" 
                 className="flex items-center text-sm font-medium text-blue-100 hover:text-primary transition-colors" 
                 onClick={() => setIsMenuOpen(false)}
               >

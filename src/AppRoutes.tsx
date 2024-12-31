@@ -23,6 +23,7 @@ export const AppRoutes = () => {
     <Routes>
       <Route path="/" element={<Index />} />
       <Route path="/login" element={<Login />} />
+      <Route path="/connexion-installateur" element={<Login />} />
       <Route path="/devenir-installateur" element={<InstallerSignup />} />
       <Route
         path="/admin/*"
