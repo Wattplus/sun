@@ -1,11 +1,7 @@
-import { Routes, Route, Navigate } from "react-router-dom";
-import { Index } from "@/pages/Index";
-import Login from "@/pages/Login";
+import { Route, Routes, Navigate } from "react-router-dom";
 import { ProtectedRoute } from "@/routes/ProtectedRoute";
-import AdminLayout from "@/components/admin/AdminLayout";
-import AdminDashboard from "@/components/admin/AdminDashboard";
-import { InstallerManagement } from "@/components/admin/InstallerManagement";
-import { LeadManagement } from "@/components/admin/LeadManagement";
+import { PublicRoutes } from "@/routes/public/PublicRoutes";
+import { AdminRoutes } from "@/routes/admin/AdminRoutes";
 import { InstallerSpace } from "@/pages/installer/InstallerSpace";
 import InstallerLogin from "@/pages/installer/auth/InstallerLogin";
 import { InstallerSignup } from "@/pages/installer/auth/InstallerSignup";
@@ -17,24 +13,21 @@ export const AppRoutes = () => {
     <Routes>
       {/* Public routes */}
       <Route path="/" element={<LandingPage />} />
-      <Route path="/index" element={<Index />} />
-      <Route path="/login" element={<Login />} />
       <Route path="/connexion-installateur" element={<InstallerLogin />} />
-      <Route path="/devenir-installateur" element={<InstallerSignup />} />
+      <Route path="/inscription-installateur" element={<InstallerSignup />} />
+      
+      {/* Public pages */}
+      <Route path="/*" element={<PublicRoutes />} />
 
-      {/* Protected admin routes */}
+      {/* Admin routes */}
       <Route
-        path="/admin"
+        path="/admin/*"
         element={
           <ProtectedRoute>
-            <AdminLayout />
+            <AdminRoutes />
           </ProtectedRoute>
         }
-      >
-        <Route index element={<AdminDashboard />} />
-        <Route path="installers" element={<InstallerManagement />} />
-        <Route path="leads" element={<LeadManagement />} />
-      </Route>
+      />
 
       {/* Protected installer routes */}
       <Route
@@ -46,6 +39,12 @@ export const AppRoutes = () => {
         }
       >
         <Route index element={<InstallerDashboard />} />
+        <Route path="marketplace" element={<InstallerDashboard />} />
+        <Route path="leads" element={<InstallerDashboard />} />
+        <Route path="messages" element={<InstallerDashboard />} />
+        <Route path="mon-compte" element={<InstallerDashboard />} />
+        <Route path="parametres" element={<InstallerDashboard />} />
+        <Route path="notifications" element={<InstallerDashboard />} />
       </Route>
 
       {/* Catch all redirect */}

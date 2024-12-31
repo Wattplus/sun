@@ -1,4 +1,4 @@
-import { Bell, FileText, LayoutDashboard, MessageSquare, Settings, ShoppingCart, User, UserPlus } from "lucide-react";
+import { Bell, LayoutDashboard, UserPlus, ShoppingCart, MessageSquare, User, Settings } from "lucide-react";
 import { Link, Outlet, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 
