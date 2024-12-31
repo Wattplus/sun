@@ -41,7 +41,19 @@ export const processInstallerData = (data: any, installer: Installer) => {
       ...installer,
       zones: data.service_area || [],
       certifications,
-      status: "active" as InstallerStatus
+      status: "active" as InstallerStatus,
+      companyName: data.company_name || "",
+      contactName: data.contact_name || "",
+      email: data.email || "",
+      phone: data.phone || "",
+      address: data.address || "",
+      siret: data.siret || "",
+      siren: data.siren || "",
+      commission: data.commission || 0,
+      leadsAssigned: data.leads_assigned || 0,
+      conversionRate: data.conversion_rate || 0,
+      paymentType: data.payment_type || "prepaid",
+      yearFounded: data.year_founded || new Date().getFullYear().toString()
     }
   }
 }

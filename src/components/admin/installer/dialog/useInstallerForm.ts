@@ -22,6 +22,9 @@ export const useInstallerForm = (installer: Installer | null): UseInstallerFormR
         } catch (error) {
           console.error('Error initializing form:', error)
         }
+      } else {
+        // Si c'est un nouvel installateur, on initialise avec les valeurs par défaut
+        setFormData(defaultFormData)
       }
       setSiretError("")
     }
