@@ -1,7 +1,7 @@
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Euro, CreditCard, Info, ShoppingCart } from "lucide-react";
+import { Euro, CreditCard, Info, ShoppingCart, Wallet } from "lucide-react";
 import { Lead } from "@/types/crm";
 
 interface MarketplaceBalanceProps {
