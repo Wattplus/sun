@@ -3,15 +3,9 @@ import { DashboardContent } from "./dashboard/DashboardContent";
 import { InstallerBreadcrumb } from "./navigation/InstallerBreadcrumb";
 import { motion } from "framer-motion";
 import { useLeadOperations } from "@/hooks/useLeadOperations";
-import { useEffect } from "react";
 
 export function InstallerDashboard() {
-  const { fetchLeads } = useLeadOperations();
-
-  useEffect(() => {
-    console.log("[InstallerDashboard] Initializing dashboard");
-    fetchLeads();
-  }, [fetchLeads]);
+  const { leads } = useLeadOperations();
 
   return (
     <div className="min-h-screen bg-background relative overflow-hidden">
