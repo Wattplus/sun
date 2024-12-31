@@ -5,21 +5,21 @@ export interface VisibilitySettings {
   highlightProfile: boolean;
   acceptDirectMessages: boolean;
   showCertifications: boolean;
-  [key: string]: boolean; // Add index signature
+  [key: string]: boolean;
 }
 
 export interface Certifications {
   qualiPV: boolean;
   rge: boolean;
   qualibat: boolean;
-  [key: string]: boolean; // Add index signature
+  [key: string]: boolean;
 }
 
 export interface InstallationTypes {
   residential: boolean;
   commercial: boolean;
   industrial: boolean;
-  [key: string]: boolean; // Add index signature
+  [key: string]: boolean;
 }
 
 export interface InstallerFormData {
@@ -69,5 +69,7 @@ export interface InstallerData {
   maintenance_services: boolean;
   visibility_settings: VisibilitySettings;
   created_at?: string;
+  profile_views?: number;
   conversion_rate?: number;
+  satisfied_clients?: number;
 }
