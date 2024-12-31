@@ -16,6 +16,7 @@ export const InstallerLogin = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
+    console.log("[InstallerLogin] Attempting login...")
 
     try {
       const { data: { session }, error } = await supabase.auth.signInWithPassword({
@@ -25,23 +26,31 @@ export const InstallerLogin = () => {
 
       if (error) throw error
 
+      if (!session) {
+        throw new Error("No session after login")
+      }
+
+      console.log("[InstallerLogin] Login successful, checking installer status...")
+
       // Fetch user profile to check role
       const { data: installer } = await supabase
         .from('installers')
         .select('id')
-        .eq('user_id', session?.user.id)
+        .eq('user_id', session.user.id)
         .single()
 
       if (installer) {
+        console.log("[InstallerLogin] Installer found, redirecting to dashboard...")
         toast.success("Connexion réussie")
-        // Redirect to installer dashboard
         navigate("/espace-installateur")
       } else {
+        console.error("[InstallerLogin] User is not an installer")
         toast.error("Accès non autorisé")
         await supabase.auth.signOut()
+        navigate("/connexion-installateur")
       }
     } catch (error: any) {
-      console.error("Error logging in:", error)
+      console.error("[InstallerLogin] Error during login:", error)
       toast.error(error.message || "Erreur lors de la connexion")
     } finally {
       setLoading(false)
