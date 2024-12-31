@@ -38,6 +38,7 @@ export const useInstallerSignup = () => {
           data: {
             first_name: formData.firstName,
             last_name: formData.lastName,
+            role: 'installer' // Set role as installer
           }
         }
       })
@@ -53,7 +54,6 @@ export const useInstallerSignup = () => {
       if (!authData.user) throw new Error("Erreur lors de la création du compte")
 
       // 2. Wait for profile to be created by the trigger
-      // Try for up to 5 seconds (10 attempts, 500ms apart)
       let attempts = 0
       let profileFound = false
       while (attempts < 10 && !profileFound) {
@@ -75,17 +75,15 @@ export const useInstallerSignup = () => {
         throw new Error("Erreur lors de la création du profil")
       }
 
-      // 3. Insert into public.users table
-      const { error: userError } = await supabase
-        .from('users')
-        .insert({
-          id: authData.user.id,
-          email: formData.email,
-        })
+      // 3. Update profile role to installer
+      const { error: profileError } = await supabase
+        .from('profiles')
+        .update({ role: 'installer' })
+        .eq('id', authData.user.id)
 
-      if (userError) throw userError
+      if (profileError) throw profileError
 
-      // 4. Create installer entry
+      // 4. Create installer entry with verified = true
       const { error: installerError } = await supabase
         .from("installers")
         .insert({
@@ -97,7 +95,7 @@ export const useInstallerSignup = () => {
           address: formData.address,
           postal_code: formData.postalCode,
           city: formData.city,
-          verified: false,
+          verified: true, // Set verified to true by default
           credits: 0,
           service_area: [],
           certifications: {
@@ -117,6 +115,7 @@ export const useInstallerSignup = () => {
             acceptDirectMessages: true,
             showCertifications: true,
           },
+          status: 'active' // Set status to active by default
         })
 
       if (installerError) {
