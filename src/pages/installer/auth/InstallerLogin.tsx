@@ -7,7 +7,7 @@ import { supabase } from "@/integrations/supabase/client"
 import { toast } from "sonner"
 import { motion } from "framer-motion"
 
-export const InstallerLogin = () => {
+export default function InstallerLogin() {
   const navigate = useNavigate()
   const [loading, setLoading] = useState(false)
   const [email, setEmail] = useState("")
@@ -35,7 +35,7 @@ export const InstallerLogin = () => {
       // Fetch installer profile
       const { data: installer, error: installerError } = await supabase
         .from('installers')
-        .select('id')
+        .select('id, verified')
         .eq('user_id', session.user.id)
         .single()
 
@@ -47,11 +47,17 @@ export const InstallerLogin = () => {
         console.error("[InstallerLogin] User is not an installer")
         await supabase.auth.signOut()
         toast.error("Accès non autorisé - Compte installateur non trouvé")
-        navigate("/connexion-installateur")
         return
       }
 
-      console.log("[InstallerLogin] Installer found, redirecting to dashboard...")
+      if (!installer.verified) {
+        console.error("[InstallerLogin] Installer not verified")
+        await supabase.auth.signOut()
+        toast.error("Votre compte n'est pas encore vérifié")
+        return
+      }
+
+      console.log("[InstallerLogin] Installer found and verified, redirecting to dashboard...")
       toast.success("Connexion réussie")
       navigate("/espace-installateur")
 
