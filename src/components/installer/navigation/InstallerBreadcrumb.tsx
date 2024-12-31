@@ -67,7 +67,11 @@ export const InstallerBreadcrumb = () => {
               <BreadcrumbItem>
                 {isLast ? (
                   <BreadcrumbPage className="font-medium flex items-center gap-2">
-                    {Icon && <span className="flex items-center"><Icon className="h-4 w-4" /></span>}
+                    {Icon && (
+                      <span className="flex items-center">
+                        <Icon className="h-4 w-4" />
+                      </span>
+                    )}
                     {breadcrumbTitles[segment] || segment}
                   </BreadcrumbPage>
                 ) : (
@@ -75,7 +79,11 @@ export const InstallerBreadcrumb = () => {
                     to={path} 
                     className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors"
                   >
-                    {Icon && <span className="flex items-center"><Icon className="h-4 w-4" /></span>}
+                    {Icon && (
+                      <span className="flex items-center">
+                        <Icon className="h-4 w-4" />
+                      </span>
+                    )}
                     {breadcrumbTitles[segment] || segment}
                   </Link>
                 )}
