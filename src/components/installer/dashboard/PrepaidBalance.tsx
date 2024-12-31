@@ -8,6 +8,7 @@ import { QuickTopUpButtons } from "./prepaid/QuickTopUpButtons";
 import { SavedCards } from "./prepaid/SavedCards";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { supabase } from "@/lib/supabase-client";
 
 interface PrepaidBalanceProps {
   balance?: number;
@@ -15,19 +16,26 @@ interface PrepaidBalanceProps {
 
 export const PrepaidBalance = ({ balance = 0 }: PrepaidBalanceProps) => {
   const { toast } = useToast();
-  const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
 
   const handleRecharge = async (amount: number) => {
     setIsLoading(true);
     try {
-      // Redirect to checkout page with amount
-      navigate("/espace-installateur/paiement/recharge", { state: { amount } });
+      const { data, error } = await supabase.functions.invoke('create-prepaid-checkout', {
+        body: { amount },
+      });
+
+      if (error) throw error;
+      if (!data?.url) throw new Error('No checkout URL received');
+
+      window.location.href = data.url;
+      
       toast({
         title: "Rechargement",
         description: `Redirection vers la page de paiement pour ${amount.toLocaleString('fr-FR')}€...`,
       });
     } catch (error) {
+      console.error('Error:', error);
       toast({
         title: "Erreur",
         description: "Une erreur est survenue lors de la redirection",
