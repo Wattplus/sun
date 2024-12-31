@@ -61,10 +61,10 @@ export const AccountPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background/80 to-background p-6 space-y-8">
-      <div className="max-w-[1600px] mx-auto space-y-8">
+    <div className="min-h-screen bg-gradient-to-b from-background to-background-dark p-6 space-y-8">
+      <div className="max-w-[1200px] mx-auto space-y-8">
         <div className="flex justify-between items-center">
-          <h1 className="text-3xl font-bold text-white">Mon Compte</h1>
+          <h1 className="text-2xl font-medium text-white">Mon Compte</h1>
           <Button 
             variant="outline" 
             onClick={clearCache}
@@ -83,17 +83,26 @@ export const AccountPage = () => {
         </div>
         
         <Tabs defaultValue="profile" className="space-y-6">
-          <TabsList className="bg-white/10 border-primary/20">
-            <TabsTrigger value="profile" className="text-white data-[state=active]:bg-primary flex gap-2">
-              <User className="h-4 w-4" />
+          <TabsList className="bg-background-dark/80 border border-primary/10 p-1">
+            <TabsTrigger 
+              value="profile" 
+              className="data-[state=active]:bg-primary data-[state=active]:text-white"
+            >
+              <User className="h-4 w-4 mr-2" />
               Profil
             </TabsTrigger>
-            <TabsTrigger value="payment" className="text-white data-[state=active]:bg-primary flex gap-2">
-              <CreditCard className="h-4 w-4" />
+            <TabsTrigger 
+              value="payment" 
+              className="data-[state=active]:bg-primary data-[state=active]:text-white"
+            >
+              <CreditCard className="h-4 w-4 mr-2" />
               Moyens de paiement
             </TabsTrigger>
-            <TabsTrigger value="prepaid" className="text-white data-[state=active]:bg-primary flex gap-2">
-              <Wallet className="h-4 w-4" />
+            <TabsTrigger 
+              value="prepaid" 
+              className="data-[state=active]:bg-primary data-[state=active]:text-white"
+            >
+              <Wallet className="h-4 w-4 mr-2" />
               Compte prépayé
             </TabsTrigger>
           </TabsList>
@@ -103,7 +112,7 @@ export const AccountPage = () => {
           </TabsContent>
 
           <TabsContent value="payment">
-            <Card className="p-6 bg-background/50 backdrop-blur-sm border-primary/20">
+            <Card className="p-6 bg-background-dark/80 backdrop-blur-sm border-primary/20">
               <SavedCards
                 cards={cards}
                 onDeleteCard={handleDeleteCard}
@@ -113,7 +122,7 @@ export const AccountPage = () => {
           </TabsContent>
 
           <TabsContent value="prepaid">
-            <Card className="p-6 bg-background/50 backdrop-blur-sm border-primary/20">
+            <Card className="p-6 bg-background-dark/80 backdrop-blur-sm border-primary/20">
               <PrepaidBalance balance={150} />
             </Card>
           </TabsContent>

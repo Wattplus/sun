@@ -19,15 +19,21 @@ export const ProfileSection = () => {
   } = useInstallerForm(formData, setFormData)
 
   if (loading) {
-    return <div>Chargement...</div>
+    return (
+      <Card className="p-6 bg-background-dark/80 backdrop-blur-sm border-primary/20">
+        <div className="flex items-center justify-center h-32">
+          <div className="animate-pulse text-primary">Chargement...</div>
+        </div>
+      </Card>
+    )
   }
 
   if (!formData) {
     return (
-      <Card className="p-6 space-y-4 bg-[#0B1623] border-primary/20">
+      <Card className="p-6 space-y-4 bg-background-dark/80 backdrop-blur-sm border-primary/20">
         <div className="flex items-center gap-2 text-yellow-500">
           <AlertCircle className="h-5 w-5" />
-          <h2 className="text-lg font-semibold">Profil non configuré</h2>
+          <h2 className="text-lg font-medium">Profil non configuré</h2>
         </div>
         <p className="text-muted-foreground">
           Vous n'avez pas encore créé votre profil installateur. Veuillez remplir le formulaire ci-dessous pour commencer.
