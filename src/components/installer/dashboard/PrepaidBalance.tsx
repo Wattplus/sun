@@ -1,12 +1,9 @@
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { DollarSign, Plus, RefreshCw } from "lucide-react";
+import { Euro, RefreshCw } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { motion } from "framer-motion";
-import { CustomAmountInput } from "./prepaid/CustomAmountInput";
 import { QuickTopUpButtons } from "./prepaid/QuickTopUpButtons";
-import { SavedCards } from "./prepaid/SavedCards";
-import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { supabase } from "@/lib/supabase-client";
 
@@ -54,21 +51,24 @@ export const PrepaidBalance = ({ balance = 0 }: PrepaidBalanceProps) => {
       className="w-full"
     >
       <Card className="overflow-hidden bg-gradient-to-br from-background to-background-light border-primary/20">
-        <div className="p-6 space-y-6">
+        <div className="p-6 space-y-8">
           {/* Balance Display */}
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-            <div className="space-y-1">
-              <h3 className="text-lg font-semibold text-white/90 flex items-center gap-2">
-                <DollarSign className="h-5 w-5 text-primary" />
+            <div className="space-y-2">
+              <h3 className="text-lg font-medium text-white/90 flex items-center gap-2">
+                <Euro className="h-5 w-5 text-primary" />
                 Solde disponible
               </h3>
-              <motion.p 
-                className="text-4xl font-bold text-white"
+              <motion.div 
+                className="flex items-baseline gap-1"
                 whileHover={{ scale: 1.05 }}
                 transition={{ type: "spring", stiffness: 300 }}
               >
-                {balance.toLocaleString('fr-FR')}€
-              </motion.p>
+                <span className="text-4xl font-bold text-white">
+                  {balance.toLocaleString('fr-FR')}
+                </span>
+                <span className="text-2xl font-semibold text-white/80">€</span>
+              </motion.div>
             </div>
             <Button
               variant="outline"
@@ -83,19 +83,8 @@ export const PrepaidBalance = ({ balance = 0 }: PrepaidBalanceProps) => {
 
           {/* Quick Top-up Options */}
           <div className="space-y-4">
-            <h4 className="text-sm font-medium text-white/60">Recharger rapidement</h4>
+            <h4 className="text-sm font-medium text-white/60">Options de rechargement</h4>
             <QuickTopUpButtons onTopUp={handleRecharge} isLoading={isLoading} />
-          </div>
-
-          {/* Custom Amount Input */}
-          <div className="space-y-4">
-            <h4 className="text-sm font-medium text-white/60">Montant personnalisé</h4>
-            <CustomAmountInput 
-              value=""
-              onChange={() => {}}
-              onSubmit={() => handleRecharge(0)}
-              isLoading={isLoading}
-            />
           </div>
         </div>
       </Card>

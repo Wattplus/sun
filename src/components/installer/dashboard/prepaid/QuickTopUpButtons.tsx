@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { DollarSign, Plus } from "lucide-react";
+import { Euro, Plus } from "lucide-react";
 import { motion } from "framer-motion";
 
 interface QuickTopUpButtonsProps {
