@@ -8,9 +8,7 @@ import {
   MessageSquare, 
   FileText, 
   Settings, 
-  Bell, 
-  User,
-  Menu 
+  Bell
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
@@ -50,12 +48,7 @@ const navigation = [
     name: "Notifications", 
     href: "/espace-installateur/notifications", 
     icon: Bell 
-  },
-  { 
-    name: "Mon profil", 
-    href: "/espace-installateur/mon-compte", 
-    icon: User 
-  },
+  }
 ];
 
 export function InstallerLayout() {

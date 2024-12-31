@@ -8,7 +8,6 @@ import Login from "@/pages/Login";
 import Admin from "@/pages/Admin";
 import { ThankYou } from "@/pages/ThankYou";
 import ClientPortal from "@/pages/ClientPortal";
-import { InstallerProfile } from "@/pages/InstallerProfile";
 import { CheckoutPage } from "@/pages/installer/payment/CheckoutPage";
 import { PrepaidAccountPage } from "@/pages/installer/account/PrepaidAccountPage";
 
@@ -31,7 +30,6 @@ import { InstallerDashboard } from "@/components/installer/InstallerDashboard";
 import { NewLeadsPage } from "@/components/installer/marketplace/NewLeadsPage";
 import { PurchasedLeadsPage } from "@/components/installer/leads/PurchasedLeadsPage";
 import { MessagesPage } from "@/components/installer/messages/MessagesPage";
-import { ProfilePage } from "@/components/installer/profile/ProfilePage";
 import { SettingsPage as InstallerSettings } from "@/components/installer/settings/SettingsPage";
 
 export function AppRoutes() {
@@ -62,7 +60,6 @@ export function AppRoutes() {
         <Route path="messages" element={<MessagesPage />} />
         <Route path="parametres" element={<InstallerSettings />} />
         <Route path="notifications" element={<NotificationsPage />} />
-        <Route path="mon-compte" element={<ProfilePage />} />
         <Route path="mon-compte/prepaid" element={<PrepaidAccountPage />} />
         <Route path="checkout" element={<CheckoutPage />} />
       </Route>
