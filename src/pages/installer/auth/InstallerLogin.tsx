@@ -59,6 +59,7 @@ export default function InstallerLogin() {
 
       console.log("[InstallerLogin] Installer found and verified, redirecting to dashboard...")
       toast.success("Connexion réussie")
+      // Changed the navigation path to ensure we go to the installer dashboard
       navigate("/espace-installateur")
 
     } catch (error: any) {

@@ -10,6 +10,7 @@ import { InstallerSpace } from "@/pages/installer/InstallerSpace";
 import InstallerLogin from "@/pages/installer/auth/InstallerLogin";
 import { InstallerSignup } from "@/pages/installer/auth/InstallerSignup";
 import { LandingPage } from "@/pages/LandingPage";
+import { InstallerDashboard } from "@/components/installer/InstallerDashboard";
 
 export const AppRoutes = () => {
   return (
@@ -37,13 +38,15 @@ export const AppRoutes = () => {
 
       {/* Protected installer routes */}
       <Route
-        path="/espace-installateur/*"
+        path="/espace-installateur"
         element={
           <ProtectedRoute>
             <InstallerSpace />
           </ProtectedRoute>
         }
-      />
+      >
+        <Route index element={<InstallerDashboard />} />
+      </Route>
 
       {/* Catch all redirect */}
       <Route path="*" element={<Navigate to="/" replace />} />
