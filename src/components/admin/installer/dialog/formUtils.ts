@@ -28,9 +28,9 @@ export const processInstallerData = (data: any, installer: Installer) => {
     const certData = data.certifications as Record<string, boolean>
     if (typeof certData === 'object' && !Array.isArray(certData)) {
       certifications = {
-        qualiPV: Boolean(certData.qualiPV),
-        rge: Boolean(certData.rge),
-        qualibat: Boolean(certData.qualibat)
+        qualiPV: true,
+        rge: true,
+        qualibat: true
       }
     }
   }
@@ -41,7 +41,7 @@ export const processInstallerData = (data: any, installer: Installer) => {
       ...installer,
       zones: data.service_area || [],
       certifications,
-      status: (data.status || "active") as InstallerStatus
+      status: "active" as InstallerStatus
     }
   }
 }
