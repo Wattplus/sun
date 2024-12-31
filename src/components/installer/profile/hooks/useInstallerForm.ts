@@ -15,26 +15,26 @@ export const useInstallerForm = (formData: InstallerFormData, setFormData: (data
   const handleCheckboxChange = (field: string, checked: boolean) => {
     if (field.includes('.')) {
       const [category, item] = field.split('.')
-      setFormData(prev => ({
-        ...prev,
+      setFormData({
+        ...formData,
         [category]: {
-          ...(prev[category as keyof typeof prev] as Record<string, boolean>),
+          ...(formData[category as keyof typeof formData] as Record<string, boolean>),
           [item]: checked
         }
-      }))
+      })
     } else {
-      setFormData(prev => ({
-        ...prev,
+      setFormData({
+        ...formData,
         [field]: checked
-      }))
+      })
     }
   }
 
   const handleZonesChange = (zones: string[]) => {
-    setFormData(prev => ({
-      ...prev,
+    setFormData({
+      ...formData,
       service_area: zones
-    }))
+    })
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
