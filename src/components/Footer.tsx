@@ -56,8 +56,13 @@ export const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link to="/espace-installateur" className="text-muted-foreground hover:text-primary">
-                  Espace installateur
+                <Link to="/login" className="text-muted-foreground hover:text-primary">
+                  Connexion installateur
+                </Link>
+              </li>
+              <li>
+                <Link to="/admin/login" className="text-muted-foreground hover:text-primary">
+                  Connexion admin
                 </Link>
               </li>
               <li>
