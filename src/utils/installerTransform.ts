@@ -30,12 +30,17 @@ function normalizeVisibilitySettings(data: any): VisibilitySettings {
 }
 
 export function transformDatabaseToForm(data: DatabaseInstallerData): InstallerFormData {
+  const [firstName = "", lastName = ""] = data.contact_name.split(" ");
+  
   return {
-    company_name: data.company_name,
-    contact_name: data.contact_name,
+    firstName,
+    lastName,
+    company: data.company_name,
     email: data.email,
     phone: data.phone,
     siret: data.siret,
+    company_name: data.company_name,
+    contact_name: data.contact_name,
     address: data.address,
     postal_code: data.postal_code,
     city: data.city || "",
@@ -45,15 +50,19 @@ export function transformDatabaseToForm(data: DatabaseInstallerData): InstallerF
     panel_brands: data.panel_brands || [],
     inverter_brands: data.inverter_brands || [],
     warranty_years: data.warranty_years || 0,
+    service_area: data.service_area,
     certifications: normalizeCertifications(data.certifications),
     installation_types: normalizeInstallationTypes(data.installation_types),
     maintenance_services: data.maintenance_services,
     visibility_settings: normalizeVisibilitySettings(data.visibility_settings),
-    service_area: data.service_area
+    experience: String(data.experience_years || ""),
+    panelBrands: (data.panel_brands || []).join(", "),
+    inverterBrands: (data.inverter_brands || []).join(", "),
+    guaranteeYears: String(data.warranty_years || "")
   };
 }
 
-export function transformFormToDatabase(formData: InstallerFormData, userId: string): Omit<DatabaseInstallerData, "id" | "created_at"> {
+export function transformFormToDatabase(formData: InstallerFormData, userId: string): DatabaseInstallerData {
   return {
     user_id: userId,
     company_name: formData.company_name,

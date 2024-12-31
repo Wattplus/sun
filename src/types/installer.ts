@@ -184,3 +184,18 @@ export function transformFormToDatabase(formData: InstallerFormData): DatabaseIn
     visibility_settings: formData.visibility_settings
   };
 }
+
+export function validateInstallerData(data: Partial<DatabaseInstallerData>): string[] {
+  const errors: string[] = [];
+
+  if (!data.company_name) errors.push("Le nom de l'entreprise est requis");
+  if (!data.contact_name) errors.push("Le nom du contact est requis");
+  if (!data.phone) errors.push("Le numéro de téléphone est requis");
+  if (!data.siret) errors.push("Le numéro SIRET est requis");
+  if (!data.email) errors.push("L'email est requis");
+  if (!data.address) errors.push("L'adresse est requise");
+  if (!data.postal_code) errors.push("Le code postal est requis");
+  if (!data.city) errors.push("La ville est requise");
+
+  return errors;
+}
