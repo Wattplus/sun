@@ -6,6 +6,15 @@ import { Installer } from "@/types/crm";
 import { Edit, Eye, Star, Award, BadgeCheck, Trash2 } from "lucide-react";
 import { getRatingBadge } from "./InstallerBadges";
 import { Checkbox } from "@/components/ui/checkbox";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 
 interface InstallerTableProps {
   installers: Installer[];
@@ -47,25 +56,25 @@ export const InstallerTable = ({
   };
 
   const getStatusBadge = (status: string) => {
-    switch (status) {
-      case "active":
-        return (
-          <Badge className="bg-emerald-500">
-            Actif
-          </Badge>
-        );
-      case "inactive":
-        return (
-          <Badge className="bg-gray-500">
-            Inactif
-          </Badge>
-        );
-      default:
-        return (
-          <Badge className="bg-blue-500">
-            En attente
-          </Badge>
-        );
+    return (
+      <Badge className="bg-emerald-500">
+        {status === "active" ? "Actif" : status === "inactive" ? "Inactif" : "En attente"}
+      </Badge>
+    );
+  };
+
+  const handleStatusChange = async (installerId: string, newStatus: string) => {
+    try {
+      const { error } = await supabase
+        .from('installers')
+        .update({ status: newStatus })
+        .eq('id', installerId);
+
+      if (error) throw error;
+      toast.success("Statut mis à jour avec succès");
+    } catch (error) {
+      console.error('Error updating status:', error);
+      toast.error("Erreur lors de la mise à jour du statut");
     }
   };
 
@@ -137,7 +146,21 @@ export const InstallerTable = ({
                 </div>
               </TableCell>
               <TableCell>
-                {getStatusBadge(installer.status)}
+                <Select
+                  defaultValue={installer.status || "active"}
+                  onValueChange={(value) => handleStatusChange(installer.id, value)}
+                >
+                  <SelectTrigger className="w-[130px]">
+                    <SelectValue>
+                      {getStatusBadge(installer.status || "active")}
+                    </SelectValue>
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="active">Actif</SelectItem>
+                    <SelectItem value="inactive">Inactif</SelectItem>
+                    <SelectItem value="pending">En attente</SelectItem>
+                  </SelectContent>
+                </Select>
               </TableCell>
               <TableCell>
                 <div className="flex gap-2">
