@@ -1,13 +1,11 @@
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Lock, Home, Building2, Factory } from "lucide-react";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Lead } from "@/types/crm";
 import { Card } from "@/components/ui/card";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { LeadsFilters } from "@/components/installer/dashboard/LeadsFilters";
 import { useState } from "react";
+import { Building2, Factory, Home } from "lucide-react";
+import { LeadMobileCard } from "../components/LeadMobileCard";
+import { LeadDesktopTable } from "../components/LeadDesktopTable";
 
 interface MarketplaceLeadsTableProps {
   leads: Lead[];
@@ -62,78 +60,6 @@ export const MarketplaceLeadsTable = ({
     }
   };
 
-  if (isMobile) {
-    return (
-      <div className="space-y-4">
-        <Card className="p-4 bg-background/50 backdrop-blur-sm border-primary/20">
-          <LeadsFilters
-            availableDepartments={availableDepartments}
-            selectedDepartments={selectedDepartments}
-            projectTypeFilter={projectTypeFilter}
-            priceFilter={priceFilter}
-            onDepartmentSelect={handleDepartmentSelect}
-            onDepartmentRemove={handleDepartmentRemove}
-            onProjectTypeChange={setProjectTypeFilter}
-            onPriceFilterChange={setPriceFilter}
-          />
-        </Card>
-
-        <div className="space-y-4">
-          {leads.map((lead) => (
-            <Card key={lead.id} className="p-4 space-y-4 bg-background/50 backdrop-blur-sm border-primary/10">
-              <div className="flex items-center justify-between">
-                <Badge variant="outline" className="flex items-center gap-2 bg-primary/10 text-primary">
-                  {getProjectIcon(lead.clienttype)}
-                  <span>{getClientTypeLabel(lead.clienttype)}</span>
-                </Badge>
-                <Checkbox
-                  checked={selectedLeads.some(l => l.id === lead.id)}
-                  onCheckedChange={() => onLeadSelect(lead)}
-                  className="border-primary/50"
-                />
-              </div>
-              
-              <div className="grid grid-cols-2 gap-2 text-sm">
-                <div>
-                  <span className="text-muted-foreground">Prénom:</span>
-                  <p>{lead.firstname}</p>
-                </div>
-                <div>
-                  <span className="text-muted-foreground">Nom:</span>
-                  <p className="flex items-center gap-1">
-                    <Lock className="h-3 w-3" />
-                    <span className="text-muted-foreground">Masqué</span>
-                  </p>
-                </div>
-                <div>
-                  <span className="text-muted-foreground">Code postal:</span>
-                  <p>{lead.postalcode}</p>
-                </div>
-                <div>
-                  <span className="text-muted-foreground">Facture:</span>
-                  <p>{lead.monthlybill}€</p>
-                </div>
-                <div className="col-span-2">
-                  <span className="text-muted-foreground">Prix:</span>
-                  <p className="font-semibold text-primary">{lead.price}€</p>
-                </div>
-              </div>
-
-              <Button
-                variant="outline"
-                size="sm"
-                className="w-full bg-primary/10 hover:bg-primary/20 border-primary/20"
-                onClick={() => onLeadSelect(lead)}
-              >
-                {selectedLeads.some(l => l.id === lead.id) ? "Désélectionner" : "Sélectionner"}
-              </Button>
-            </Card>
-          ))}
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="space-y-6">
       <Card className="p-4 bg-background/50 backdrop-blur-sm border-primary/20">
@@ -149,65 +75,34 @@ export const MarketplaceLeadsTable = ({
         />
       </Card>
 
-      <Card className="overflow-hidden border border-primary/20 bg-background/50 backdrop-blur-sm">
-        <div className="p-6">
-          <div className="overflow-x-auto">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="w-12"></TableHead>
-                  <TableHead>Type</TableHead>
-                  <TableHead>Prénom</TableHead>
-                  <TableHead>Nom</TableHead>
-                  <TableHead>Code postal</TableHead>
-                  <TableHead>Facture mensuelle</TableHead>
-                  <TableHead>Prix</TableHead>
-                  <TableHead className="text-right"></TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {leads.map((lead) => (
-                  <TableRow key={lead.id}>
-                    <TableCell>
-                      <Checkbox
-                        checked={selectedLeads.some(l => l.id === lead.id)}
-                        onCheckedChange={() => onLeadSelect(lead)}
-                        className="border-primary/50"
-                      />
-                    </TableCell>
-                    <TableCell>
-                      <Badge variant="outline" className="flex items-center gap-2 bg-primary/10 text-primary">
-                        {getProjectIcon(lead.clienttype)}
-                        <span>{getClientTypeLabel(lead.clienttype)}</span>
-                      </Badge>
-                    </TableCell>
-                    <TableCell>{lead.firstname}</TableCell>
-                    <TableCell>
-                      <div className="flex items-center gap-1">
-                        <Lock className="h-3 w-3" />
-                        <span className="text-muted-foreground">Masqué</span>
-                      </div>
-                    </TableCell>
-                    <TableCell>{lead.postalcode}</TableCell>
-                    <TableCell>{lead.monthlybill}€</TableCell>
-                    <TableCell className="font-semibold text-primary">{lead.price}€</TableCell>
-                    <TableCell className="text-right">
-                      <Button
-                        onClick={() => onLeadSelect(lead)}
-                        variant="outline"
-                        size="sm"
-                        className="bg-primary/10 hover:bg-primary/20 border-primary/20"
-                      >
-                        {selectedLeads.some(l => l.id === lead.id) ? "Désélectionner" : "Sélectionner"}
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </div>
+      {isMobile ? (
+        <div className="space-y-4">
+          {leads.map((lead) => (
+            <LeadMobileCard
+              key={lead.id}
+              lead={lead}
+              isSelected={selectedLeads.some(l => l.id === lead.id)}
+              onSelect={onLeadSelect}
+              getProjectIcon={getProjectIcon}
+              getClientTypeLabel={getClientTypeLabel}
+            />
+          ))}
         </div>
-      </Card>
+      ) : (
+        <Card className="overflow-hidden border border-primary/20 bg-background/50 backdrop-blur-sm">
+          <div className="p-6">
+            <div className="overflow-x-auto">
+              <LeadDesktopTable
+                leads={leads}
+                selectedLeads={selectedLeads}
+                onSelectLead={onLeadSelect}
+                getProjectIcon={getProjectIcon}
+                getClientTypeLabel={getClientTypeLabel}
+              />
+            </div>
+          </div>
+        </Card>
+      )}
     </div>
   );
 };
