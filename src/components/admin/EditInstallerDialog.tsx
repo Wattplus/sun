@@ -15,6 +15,9 @@ import { ZonesSection } from "./installer/dialog/ZonesSection"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Label } from "@/components/ui/label"
+import { supabase } from "@/integrations/supabase/client"
+import { toast } from "sonner"
+import { transformInstallerToDatabase } from "@/utils/installerTransform"
 
 interface EditInstallerDialogProps {
   installer: Installer | null
@@ -52,6 +55,7 @@ export function EditInstallerDialog({
     siren: ""
   })
   const [isNationwide, setIsNationwide] = useState(false)
+  const [isSaving, setIsSaving] = useState(false)
 
   useEffect(() => {
     if (installer) {
@@ -61,9 +65,33 @@ export function EditInstallerDialog({
     }
   }, [installer])
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    onSave(formData)
+    setIsSaving(true)
+
+    try {
+      const dbData = transformInstallerToDatabase(formData)
+      
+      const { error } = await supabase
+        .from('installers')
+        .upsert({ 
+          ...dbData,
+          id: formData.id,
+        })
+        .select()
+        .single()
+
+      if (error) throw error
+
+      toast.success("Modifications enregistrées avec succès")
+      onSave(formData)
+      onOpenChange(false)
+    } catch (error) {
+      console.error('Error saving installer:', error)
+      toast.error("Erreur lors de l'enregistrement des modifications")
+    } finally {
+      setIsSaving(false)
+    }
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -171,8 +199,12 @@ export function EditInstallerDialog({
           </div>
 
           <DialogFooter>
-            <Button type="submit" className="w-full sm:w-auto">
-              Sauvegarder
+            <Button 
+              type="submit" 
+              className="w-full sm:w-auto"
+              disabled={isSaving}
+            >
+              {isSaving ? "Enregistrement..." : "Sauvegarder"}
             </Button>
           </DialogFooter>
         </form>
