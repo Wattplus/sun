@@ -13,6 +13,26 @@ export const useInstallerSubmit = (onSave: (installer: Installer) => void, onOpe
     setSiretError("")
 
     try {
+      // 1. First, ensure user exists in the users table
+      const { data: existingUser, error: userCheckError } = await supabase
+        .from('users')
+        .select('id')
+        .eq('id', formData.id)
+        .single()
+
+      if (userCheckError || !existingUser) {
+        // Create user entry if it doesn't exist
+        const { error: userInsertError } = await supabase
+          .from('users')
+          .insert({
+            id: formData.id,
+            email: formData.email
+          })
+
+        if (userInsertError) throw userInsertError
+      }
+
+      // 2. Then create/update installer
       const dbData = transformInstallerToDatabase(formData)
       
       const { error } = await supabase
@@ -28,7 +48,6 @@ export const useInstallerSubmit = (onSave: (installer: Installer) => void, onOpe
         console.error('Database error:', error)
         if (error.message?.includes("installers_siret_unique")) {
           setSiretError("Ce numéro SIRET est déjà utilisé par un autre installateur")
-          setIsSaving(false)
           return
         }
         throw error
