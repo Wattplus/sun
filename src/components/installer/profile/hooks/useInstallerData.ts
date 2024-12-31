@@ -22,7 +22,7 @@ export const useInstallerData = () => {
 
         const { data: installer, error } = await supabase
           .from("installers")
-          .select()
+          .select("*")
           .eq("user_id", user.id)
           .single()
 
@@ -35,7 +35,8 @@ export const useInstallerData = () => {
         }
 
         if (installer) {
-          setFormData(transformDatabaseToForm(installer))
+          const transformedData = transformDatabaseToForm(installer)
+          setFormData(transformedData)
           setNoProfile(false)
         }
       } catch (error) {

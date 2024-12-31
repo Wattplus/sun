@@ -1,117 +1,79 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { supabase } from "@/lib/supabase-client";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { useToast } from "@/hooks/use-toast";
-import { Card } from "@/components/ui/card";
+import { Helmet } from "react-helmet"
+import { Card } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { useState } from "react"
+import { supabase } from "@/lib/supabase-client"
+import { useNavigate } from "react-router-dom"
+import { toast } from "sonner"
 
 export default function Login() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
-  const { toast } = useToast();
+  const navigate = useNavigate()
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+  const [loading, setLoading] = useState(false)
 
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setLoading(true)
 
     try {
-      const { data: { user }, error: signInError } = await supabase.auth.signInWithPassword({
+      const { error } = await supabase.auth.signInWithPassword({
         email,
-        password,
-      });
+        password
+      })
 
-      if (signInError) throw signInError;
+      if (error) throw error
 
-      if (!user) {
-        toast({
-          title: "Erreur",
-          description: "Utilisateur non trouvé",
-          variant: "destructive",
-        });
-        return;
-      }
-
-      // Fetch user profile to check role
-      const { data: profile, error: profileError } = await supabase
-        .from('profiles')
-        .select('role')
-        .eq('id', user.id)
-        .single();
-
-      if (profileError) throw profileError;
-
-      // Check if user is an installer
-      const { data: installer } = await supabase
-        .from('installers')
-        .select('*')
-        .eq('user_id', user.id)
-        .single();
-
-      // Redirect based on role and installer status
-      if (profile?.role === 'admin' || profile?.role === 'super_admin') {
-        toast({
-          title: "Connexion réussie",
-          description: "Bienvenue dans l'interface d'administration",
-        });
-        navigate("/admin/leads");
-      } else if (installer) {
-        toast({
-          title: "Connexion réussie",
-          description: "Bienvenue dans votre espace installateur",
-        });
-        navigate("/espace-installateur");
-      } else {
-        toast({
-          title: "Connexion réussie",
-          description: "Bienvenue",
-        });
-        navigate("/");
-      }
+      toast.success("Connexion réussie")
+      navigate("/dashboard")
     } catch (error) {
-      console.error("Error during login:", error);
-      toast({
-        title: "Erreur de connexion",
-        description: "Vérifiez vos identifiants et réessayez",
-        variant: "destructive",
-      });
+      console.error("Error logging in:", error)
+      toast.error("Erreur lors de la connexion")
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background/95 to-background/50 p-4">
-      <Card className="w-full max-w-md p-6 space-y-6 bg-background/50 backdrop-blur-sm border border-primary/20">
+    <div className="min-h-screen flex items-center justify-center p-4">
+      <Helmet>
+        <title>Connexion - Solar Pro</title>
+      </Helmet>
+
+      <Card className="w-full max-w-md p-6 space-y-6 bg-background/50 backdrop-blur-sm border-primary/20">
         <div className="space-y-2 text-center">
-          <h1 className="text-2xl font-bold tracking-tight">Connexion</h1>
+          <h1 className="text-2xl font-bold">Connexion</h1>
           <p className="text-muted-foreground">
-            Connectez-vous pour accéder à votre espace
+            Connectez-vous à votre compte
           </p>
         </div>
 
-        <form onSubmit={handleLogin} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
+            <label htmlFor="email" className="text-sm font-medium">
+              Email
+            </label>
             <Input
+              id="email"
               type="email"
-              placeholder="Email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="bg-background/50"
+              placeholder="john.doe@example.com"
             />
           </div>
-          
+
           <div className="space-y-2">
+            <label htmlFor="password" className="text-sm font-medium">
+              Mot de passe
+            </label>
             <Input
+              id="password"
               type="password"
-              placeholder="Mot de passe"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="bg-background/50"
             />
           </div>
 
@@ -123,7 +85,13 @@ export default function Login() {
             {loading ? "Connexion..." : "Se connecter"}
           </Button>
         </form>
+
+        <div className="text-center text-sm">
+          <a href="/forgot-password" className="text-primary hover:underline">
+            Mot de passe oublié ?
+          </a>
+        </div>
       </Card>
     </div>
-  );
+  )
 }

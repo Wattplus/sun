@@ -3,7 +3,7 @@ import { supabase } from "@/integrations/supabase/client"
 import { useToast } from "@/hooks/use-toast"
 import { useProfileFormState } from "./useProfileFormState"
 import { useProfileFormHandlers } from "./useProfileFormHandlers"
-import { convertDbToFormFormat } from "@/types/installer"
+import { transformDatabaseToForm } from "@/utils/installerTransform"
 
 export const useProfileForm = () => {
   const { toast } = useToast()
@@ -36,7 +36,8 @@ export const useProfileForm = () => {
         if (error) throw error
 
         if (installer) {
-          setFormData(convertDbToFormFormat(installer, user.email || ""))
+          const transformedData = transformDatabaseToForm(installer)
+          setFormData(transformedData)
         } else {
           toast({
             title: "Profil non trouvé",
