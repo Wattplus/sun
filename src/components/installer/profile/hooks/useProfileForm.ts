@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react"
 import { supabase } from "@/integrations/supabase/client"
 import { useToast } from "@/hooks/use-toast"
+import type { Json } from "@/integrations/supabase/types"
 import { 
   ProfileFormData, 
   Certifications, 
@@ -78,13 +79,13 @@ export const useProfileForm = () => {
             inverterBrands: Array.isArray(installer.inverter_brands) ? installer.inverter_brands.join(', ') : "",
             guaranteeYears: installer.warranty_years?.toString() || "",
             service_area: installer.service_area || [],
-            certifications: (installer.certifications as Certifications) || defaultFormData.certifications,
-            installationTypes: (installer.installation_types as InstallationTypes) || defaultFormData.installationTypes,
+            certifications: (installer.certifications as unknown as Certifications) || defaultFormData.certifications,
+            installationTypes: (installer.installation_types as unknown as InstallationTypes) || defaultFormData.installationTypes,
             maintenanceServices: installer.maintenance_services || false,
           })
 
           if (installer.visibility_settings) {
-            setVisibilityOptions(installer.visibility_settings as VisibilityOptions || defaultVisibilityOptions)
+            setVisibilityOptions(installer.visibility_settings as unknown as VisibilityOptions || defaultVisibilityOptions)
           }
         }
       } catch (error) {
@@ -158,10 +159,10 @@ export const useProfileForm = () => {
           inverter_brands: formData.inverterBrands.split(',').map(brand => brand.trim()),
           warranty_years: parseInt(formData.guaranteeYears),
           service_area: formData.service_area,
-          certifications: formData.certifications,
-          installation_types: formData.installationTypes,
+          certifications: formData.certifications as unknown as Json,
+          installation_types: formData.installationTypes as unknown as Json,
           maintenance_services: formData.maintenanceServices,
-          visibility_settings: visibilityOptions
+          visibility_settings: visibilityOptions as unknown as Json
         })
         .eq('user_id', user.id)
 
@@ -191,3 +192,5 @@ export const useProfileForm = () => {
     handleSubmit
   }
 }
+
+export type { ProfileFormData }
