@@ -12,6 +12,7 @@ interface ProfileFormProps {
     company: string;
     siret: string;
     website: string;
+    description: string;
   };
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleSubmit: (e: React.FormEvent) => void;
@@ -85,16 +86,27 @@ export const ProfileForm = ({ formData, handleChange, handleSubmit, isLoading }:
             onChange={handleChange}
             placeholder="www.monentreprise.fr"
           />
+
+          <FormField
+            label="Description"
+            id="description"
+            value={formData.description}
+            onChange={handleChange}
+            placeholder="Décrivez votre entreprise en quelques mots"
+          />
         </div>
 
-        <Button 
-          type="submit" 
-          className="w-full md:w-auto flex items-center gap-2"
-          disabled={isLoading}
-        >
-          <Save className="w-4 h-4" />
-          {isLoading ? "Enregistrement..." : "Enregistrer les modifications"}
-        </Button>
+        <div className="flex justify-end">
+          <Button 
+            type="submit" 
+            className="w-full md:w-auto flex items-center gap-2 bg-primary hover:bg-primary/90"
+            disabled={isLoading}
+            size="lg"
+          >
+            <Save className="w-4 h-4" />
+            {isLoading ? "Enregistrement en cours..." : "Enregistrer les modifications"}
+          </Button>
+        </div>
       </form>
     </Card>
   );
