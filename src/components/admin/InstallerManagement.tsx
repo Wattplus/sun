@@ -60,7 +60,9 @@ export const InstallerManagement = () => {
         .from('installers')
         .upsert({ 
           ...dbInstaller,
-          id: installer.id || undefined 
+          user_id: installer.id,
+          verified: true, // Ensure verified is true
+          status: "active" // Ensure status is active
         })
         .select()
         .single();

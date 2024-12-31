@@ -40,7 +40,7 @@ export function EditInstallerDialog({
     phone: "",
     address: "",
     zones: [],
-    status: "pending" as InstallerStatus,
+    status: "active" as InstallerStatus, // Changed default to "active"
     commission: 0,
     leadsAssigned: 0,
     conversionRate: 0,
@@ -76,7 +76,9 @@ export function EditInstallerDialog({
         .from('installers')
         .upsert({ 
           ...dbData,
-          id: formData.id,
+          user_id: formData.id, // Add user_id field
+          verified: true, // Ensure verified is true
+          status: "active" // Ensure status is active
         })
         .select()
         .single()
@@ -192,7 +194,6 @@ export function EditInstallerDialog({
                 <SelectContent>
                   <SelectItem value="active">Actif</SelectItem>
                   <SelectItem value="inactive">Inactif</SelectItem>
-                  <SelectItem value="pending">En attente</SelectItem>
                 </SelectContent>
               </Select>
             </div>

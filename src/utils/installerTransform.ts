@@ -11,7 +11,7 @@ export const transformDatabaseToInstaller = (data: DatabaseInstallerData): Insta
     phone: data.phone,
     address: data.address,
     zones: data.service_area,
-    status: (data.status || "pending") as InstallerStatus,
+    status: (data.status || "active") as InstallerStatus, // Changed default to "active"
     siret: data.siret || "",
     siren: data.siret?.slice(0, 9) || "",
     certifications: {
@@ -27,8 +27,9 @@ export const transformDatabaseToInstaller = (data: DatabaseInstallerData): Insta
   };
 };
 
-export const transformInstallerToDatabase = (data: Installer): Omit<DatabaseInstallerData, 'id' | 'user_id' | 'created_at'> => {
+export const transformInstallerToDatabase = (data: Installer): Omit<DatabaseInstallerData, 'id' | 'created_at'> => {
   return {
+    user_id: data.id, // Add user_id field
     company_name: data.companyName,
     contact_name: data.contactName,
     email: data.email,
@@ -42,7 +43,7 @@ export const transformInstallerToDatabase = (data: Installer): Omit<DatabaseInst
       qualibat: data.certifications.qualibat
     },
     credits: 0,
-    verified: false,
+    verified: true, // Set verified to true by default
     installation_types: {
       residential: false,
       commercial: false,
@@ -55,7 +56,7 @@ export const transformInstallerToDatabase = (data: Installer): Omit<DatabaseInst
       showCertifications: true,
       acceptDirectMessages: true
     },
-    status: data.status,
+    status: "active", // Set status to active by default
     siret: data.siret,
     city: null,
     website: null,
