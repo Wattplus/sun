@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import type { InstallerFormData, DatabaseInstallerData } from "../types/installer";
+import type { InstallerFormData, DatabaseInstallerData, VisibilitySettings } from "../types/installer";
 
 const defaultFormData: InstallerFormData = {
   firstName: "",
@@ -75,13 +75,13 @@ export const useInstallerData = () => {
             inverterBrands: Array.isArray(installerData.inverter_brands) ? installerData.inverter_brands.join(', ') : "",
             guaranteeYears: installerData.warranty_years?.toString() || "",
             service_area: installerData.service_area || [],
-            certifications: installerData.certifications as InstallerFormData['certifications'] || defaultFormData.certifications,
-            installationTypes: installerData.installation_types as InstallerFormData['installationTypes'] || defaultFormData.installationTypes,
+            certifications: (installerData.certifications as InstallerFormData['certifications']) || defaultFormData.certifications,
+            installationTypes: (installerData.installation_types as InstallerFormData['installationTypes']) || defaultFormData.installationTypes,
             maintenanceServices: installerData.maintenance_services || false,
             address: installerData.address || "",
             postal_code: installerData.postal_code || "",
             city: installerData.city || "",
-            visibility_settings: installerData.visibility_settings as InstallerFormData['visibility_settings'] || defaultFormData.visibility_settings,
+            visibility_settings: (installerData.visibility_settings as VisibilitySettings) || defaultFormData.visibility_settings,
           });
         }
       } catch (error) {

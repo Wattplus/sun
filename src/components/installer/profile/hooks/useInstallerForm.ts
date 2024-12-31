@@ -1,6 +1,7 @@
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import type { InstallerFormData } from "../types/installer";
+import type { Json } from "@/integrations/supabase/types";
 
 export const useInstallerForm = (
   formData: InstallerFormData, 
@@ -60,12 +61,12 @@ export const useInstallerForm = (
         inverter_brands: formData.inverterBrands.split(',').map(brand => brand.trim()),
         warranty_years: parseInt(formData.guaranteeYears) || null,
         service_area: formData.service_area,
-        certifications: formData.certifications,
-        installation_types: formData.installationTypes,
+        certifications: formData.certifications as Json,
+        installation_types: formData.installationTypes as Json,
         maintenance_services: formData.maintenanceServices,
         website: formData.website,
         siret: formData.siret,
-        visibility_settings: formData.visibility_settings
+        visibility_settings: formData.visibility_settings as Json
       };
 
       const { error: updateError } = await supabase

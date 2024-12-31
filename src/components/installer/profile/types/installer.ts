@@ -1,6 +1,6 @@
 import type { Json } from "@/integrations/supabase/types";
 
-export interface VisibilityOptions {
+export interface VisibilitySettings {
   showPhoneNumber: boolean;
   highlightProfile: boolean;
   acceptDirectMessages: boolean;
@@ -35,7 +35,7 @@ export interface InstallerFormData {
   address: string;
   postal_code: string;
   city: string;
-  visibility_settings: VisibilityOptions;
+  visibility_settings: VisibilitySettings;
 }
 
 export interface DatabaseInstallerData {
