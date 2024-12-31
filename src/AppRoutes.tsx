@@ -11,8 +11,9 @@ import { MarketplacePage } from "@/components/installer/marketplace/MarketplaceP
 import { PurchasedLeadsPage } from "@/components/installer/leads/PurchasedLeadsPage";
 import { MessagesPage } from "@/components/installer/messages/MessagesPage";
 import { ProfilePage } from "@/components/installer/profile/ProfilePage";
-import { SettingsPage } from "@/pages/installer/account/AccountPage";
+import { AccountPage } from "@/components/installer/account/AccountPage";
 import { NotificationsPage } from "@/components/installer/notifications/NotificationsPage";
+import { PrepaidAccountPage } from "@/pages/installer/account/PrepaidAccountPage";
 
 export const AppRoutes = () => {
   return (
@@ -49,7 +50,8 @@ export const AppRoutes = () => {
         <Route path="leads" element={<PurchasedLeadsPage />} />
         <Route path="messages" element={<MessagesPage />} />
         <Route path="mon-compte" element={<ProfilePage />} />
-        <Route path="parametres" element={<SettingsPage />} />
+        <Route path="mon-compte/prepaid" element={<PrepaidAccountPage />} />
+        <Route path="parametres" element={<AccountPage />} />
         <Route path="notifications" element={<NotificationsPage />} />
       </Route>
 
