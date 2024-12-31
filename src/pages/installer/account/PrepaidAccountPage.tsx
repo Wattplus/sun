@@ -1,62 +1,17 @@
 import { useState } from "react";
 import { InstallerBreadcrumb } from "@/components/installer/navigation/InstallerBreadcrumb";
 import { PrepaidBalanceDisplay } from "@/components/installer/dashboard/prepaid/PrepaidBalanceDisplay";
-import { RechargeOptions } from "@/components/installer/dashboard/prepaid/RechargeOptions";
 import { useInstallerBalance } from "@/hooks/installer/useInstallerBalance";
 import { supabase } from "@/lib/supabase-client";
 import { useToast } from "@/hooks/use-toast";
-import { CreditCard, History, HelpCircle, RefreshCw, Plus } from "lucide-react";
+import { CreditCard, History, RefreshCw, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SavedCards } from "@/components/installer/dashboard/prepaid/SavedCards";
 import { TransactionHistory } from "@/components/installer/dashboard/prepaid/TransactionHistory";
 import { Card } from "@/components/ui/card";
 import { motion } from "framer-motion";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-
-// Mock data for saved cards
-const mockCards = [
-  {
-    id: "1",
-    last4: "4242",
-    brand: "Visa",
-    expMonth: 12,
-    expYear: 2024,
-  }
-];
-
-// Mock data for transactions
-const mockTransactions = [
-  {
-    id: "1",
-    date: new Date().toISOString(),
-    description: "Rechargement du compte",
-    amount: 500,
-    type: "credit" as const,
-  },
-  {
-    id: "2",
-    date: new Date().toISOString(),
-    description: "Achat de lead",
-    amount: 25,
-    type: "debit" as const,
-  }
-];
-
-// FAQ items
-const faqItems = [
-  {
-    question: "Comment recharger mon compte ?",
-    answer: "Vous pouvez recharger votre compte en utilisant une carte bancaire. Cliquez sur le bouton 'Recharger' et choisissez le montant souhaité."
-  },
-  {
-    question: "Quand mes crédits seront-ils disponibles ?",
-    answer: "Vos crédits sont disponibles immédiatement après le paiement."
-  },
-  {
-    question: "Comment sont utilisés mes crédits ?",
-    answer: "Vos crédits sont automatiquement déduits lors de l'achat de leads."
-  }
-];
+import { FAQSection } from "@/components/installer/dashboard/prepaid/FAQSection";
+import { mockCards, mockTransactions } from "@/components/installer/dashboard/prepaid/mockData";
 
 export const PrepaidAccountPage = () => {
   const { balance, isLoading: isBalanceLoading } = useInstallerBalance();
@@ -93,7 +48,10 @@ export const PrepaidAccountPage = () => {
 
   const handleDeleteCard = (cardId: string) => {
     console.log("Delete card:", cardId);
-    // This will be implemented later when we add card management functionality
+    toast({
+      title: "Carte supprimée",
+      description: "La carte a été supprimée avec succès.",
+    });
   };
 
   const handleRefresh = () => {
@@ -176,30 +134,7 @@ export const PrepaidAccountPage = () => {
           </div>
 
           {/* Section FAQ */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5 }}
-          >
-            <Card className="p-6 glass-card">
-              <h2 className="text-xl font-semibold mb-6 text-white flex items-center gap-2">
-                <HelpCircle className="h-5 w-5 text-primary" />
-                Questions fréquentes
-              </h2>
-              <Accordion type="single" collapsible className="w-full">
-                {faqItems.map((item, index) => (
-                  <AccordionItem key={index} value={`item-${index}`} className="border-primary/10">
-                    <AccordionTrigger className="text-white hover:text-primary">
-                      {item.question}
-                    </AccordionTrigger>
-                    <AccordionContent className="text-white/80">
-                      {item.answer}
-                    </AccordionContent>
-                  </AccordionItem>
-                ))}
-              </Accordion>
-            </Card>
-          </motion.div>
+          <FAQSection />
         </div>
       </div>
     </div>
