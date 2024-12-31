@@ -53,13 +53,13 @@ export const useInstallerSignup = () => {
 
       if (!authData.user) throw new Error("Erreur lors de la création du compte")
 
-      // 2. Verify user exists in users table before proceeding
+      // 2. Verify user exists in profiles table before proceeding
       const verifyUser = async (): Promise<boolean> => {
         const { data, error } = await supabase
-          .from('users')
+          .from('profiles')
           .select('id')
           .eq('id', authData.user.id)
-          .single()
+          .maybeSingle()
         
         return !!data
       }
