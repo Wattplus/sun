@@ -1,14 +1,23 @@
-import { BenefitsSection } from "@/components/installer/auth/BenefitsSection";
-import { SignupForm } from "@/components/installer/auth/SignupForm";
-import { InstallerBreadcrumb } from "@/components/installer/auth/InstallerBreadcrumb";
-import { Button } from "@/components/ui/button";
-import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
-import { ArrowRight, LogIn } from "lucide-react";
+import { BenefitsSection } from "@/components/installer/auth/BenefitsSection"
+import { SignupForm } from "@/components/installer/auth/SignupForm"
+import { InstallerBreadcrumb } from "@/components/installer/auth/InstallerBreadcrumb"
+import { Button } from "@/components/ui/button"
+import { motion } from "framer-motion"
+import { Link } from "react-router-dom"
+import { ArrowRight, LogIn } from "lucide-react"
+import { Helmet } from "react-helmet"
 
 export function InstallerSignup() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-background/95 to-background/50 py-8 px-4">
+      <Helmet>
+        <title>Devenir Installateur - Rejoignez notre réseau</title>
+        <meta 
+          name="description" 
+          content="Inscrivez-vous en tant qu'installateur photovoltaïque et développez votre activité avec notre plateforme." 
+        />
+      </Helmet>
+      
       <div className="max-w-6xl mx-auto space-y-12">
         <div className="flex justify-between items-center">
           <InstallerBreadcrumb />
@@ -68,5 +77,5 @@ export function InstallerSignup() {
         </div>
       </div>
     </div>
-  );
+  )
 }

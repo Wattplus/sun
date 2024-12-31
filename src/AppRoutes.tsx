@@ -16,12 +16,14 @@ import NotificationsPage from "@/components/admin/notifications/NotificationsPag
 import SettingsPage from "@/components/admin/settings/SettingsPage"
 import ProfilePage from "@/components/admin/profile/ProfilePage"
 import StatisticsPage from "@/components/admin/statistics/StatisticsPage"
+import { InstallerSignup } from "@/pages/installer/auth/InstallerSignup"
 
 export const AppRoutes = () => {
   return (
     <Routes>
       <Route path="/" element={<Index />} />
       <Route path="/login" element={<Login />} />
+      <Route path="/devenir-installateur" element={<InstallerSignup />} />
       <Route
         path="/admin/*"
         element={
