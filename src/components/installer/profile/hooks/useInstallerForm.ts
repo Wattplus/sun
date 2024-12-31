@@ -2,7 +2,7 @@ import { useState } from "react"
 import { supabase } from "@/integrations/supabase/client"
 import { useToast } from "@/hooks/use-toast"
 import type { InstallerFormData } from "@/types/installer"
-import type { Json } from "@/integrations/supabase/types"
+import { convertFormToDbFormat } from "@/types/installer"
 
 export const useInstallerForm = (
   formData: InstallerFormData,
@@ -51,27 +51,7 @@ export const useInstallerForm = (
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) throw new Error("User not found")
 
-      const installerData = {
-        user_id: user.id,
-        company_name: formData.company,
-        contact_name: `${formData.firstName} ${formData.lastName}`,
-        phone: formData.phone,
-        address: formData.address,
-        postal_code: formData.postal_code,
-        city: formData.city,
-        website: formData.website,
-        description: formData.description,
-        experience_years: parseInt(formData.experience) || null,
-        panel_brands: formData.panelBrands.split(",").map(brand => brand.trim()),
-        inverter_brands: formData.inverterBrands.split(",").map(brand => brand.trim()),
-        warranty_years: parseInt(formData.guaranteeYears) || null,
-        service_area: formData.service_area,
-        certifications: formData.certifications as unknown as Json,
-        installation_types: formData.installationTypes as unknown as Json,
-        maintenance_services: formData.maintenanceServices,
-        visibility_settings: formData.visibility_settings as unknown as Json,
-        siret: formData.siret
-      }
+      const installerData = convertFormToDbFormat(formData, user.id)
 
       const { error } = await supabase
         .from("installers")
