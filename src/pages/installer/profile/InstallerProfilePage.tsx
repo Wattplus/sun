@@ -46,8 +46,8 @@ export const InstallerProfilePage = () => {
         />
 
         <InstallationTypesSection
-          installationTypes={formData.installationTypes}
-          maintenanceServices={formData.maintenanceServices}
+          installation_types={formData.installation_types}
+          maintenance_services={formData.maintenance_services}
           handleCheckboxChange={handleCheckboxChange}
         />
 
