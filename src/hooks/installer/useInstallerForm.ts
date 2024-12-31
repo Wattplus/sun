@@ -21,14 +21,17 @@ export const useInstallerForm = (
   const handleCheckboxChange = (field: string, checked: boolean) => {
     if (field.includes(".")) {
       const [category, item] = field.split(".")
-      const categoryData = formData[category as keyof InstallerFormData] as Record<string, boolean>
-      setFormData({
-        ...formData,
-        [category]: {
-          ...categoryData,
-          [item]: checked
-        }
-      })
+      const categoryData = formData[category as keyof InstallerFormData]
+      
+      if (typeof categoryData === 'object' && categoryData !== null) {
+        setFormData({
+          ...formData,
+          [category]: {
+            ...categoryData,
+            [item]: checked
+          }
+        })
+      }
     } else {
       setFormData({
         ...formData,

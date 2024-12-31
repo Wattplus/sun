@@ -64,7 +64,6 @@ export interface DatabaseInstallerData {
   installation_types: Record<string, boolean>
   maintenance_services: boolean
   visibility_settings: Record<string, boolean>
-  created_at?: string
   subscription_plan?: string
   profile_views?: number
   conversion_rate?: number
@@ -76,8 +75,8 @@ export const convertFormToDbFormat = (formData: InstallerFormData, userId: strin
   company_name: formData.company,
   contact_name: `${formData.firstName} ${formData.lastName}`,
   phone: formData.phone,
-  address: formData.address || "",
-  postal_code: formData.postal_code || "",
+  address: formData.address,
+  postal_code: formData.postal_code,
   city: formData.city,
   website: formData.website,
   description: formData.description,
@@ -86,10 +85,19 @@ export const convertFormToDbFormat = (formData: InstallerFormData, userId: strin
   inverter_brands: formData.inverterBrands.split(",").map(brand => brand.trim()),
   warranty_years: parseInt(formData.guaranteeYears) || 0,
   service_area: formData.service_area,
-  certifications: formData.certifications as Record<string, boolean>,
-  installation_types: formData.installationTypes as Record<string, boolean>,
+  certifications: Object.entries(formData.certifications).reduce((acc, [key, value]) => ({
+    ...acc,
+    [key]: value
+  }), {} as Record<string, boolean>),
+  installation_types: Object.entries(formData.installationTypes).reduce((acc, [key, value]) => ({
+    ...acc,
+    [key]: value
+  }), {} as Record<string, boolean>),
   maintenance_services: formData.maintenanceServices,
-  visibility_settings: formData.visibility_settings as Record<string, boolean>,
+  visibility_settings: Object.entries(formData.visibility_settings).reduce((acc, [key, value]) => ({
+    ...acc,
+    [key]: value
+  }), {} as Record<string, boolean>),
   credits: 0,
   verified: false
 })
@@ -111,12 +119,25 @@ export const convertDbToFormFormat = (dbData: DatabaseInstallerData, email: stri
     inverterBrands: Array.isArray(dbData.inverter_brands) ? dbData.inverter_brands.join(", ") : "",
     guaranteeYears: dbData.warranty_years?.toString() || "",
     service_area: dbData.service_area || [],
-    certifications: dbData.certifications as Certifications,
-    installationTypes: dbData.installation_types as InstallationTypes,
+    certifications: {
+      qualiPV: dbData.certifications?.qualiPV || false,
+      rge: dbData.certifications?.rge || false,
+      qualibat: dbData.certifications?.qualibat || false
+    },
+    installationTypes: {
+      residential: dbData.installation_types?.residential || false,
+      commercial: dbData.installation_types?.commercial || false,
+      industrial: dbData.installation_types?.industrial || false
+    },
     maintenanceServices: dbData.maintenance_services || false,
     address: dbData.address || "",
     postal_code: dbData.postal_code || "",
     city: dbData.city || "",
-    visibility_settings: dbData.visibility_settings as VisibilitySettings
+    visibility_settings: {
+      showPhoneNumber: dbData.visibility_settings?.showPhoneNumber || true,
+      highlightProfile: dbData.visibility_settings?.highlightProfile || false,
+      acceptDirectMessages: dbData.visibility_settings?.acceptDirectMessages || true,
+      showCertifications: dbData.visibility_settings?.showCertifications || true
+    }
   }
 }
