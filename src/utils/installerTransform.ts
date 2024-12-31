@@ -1,5 +1,6 @@
-import type { DatabaseInstallerData, InstallerFormData } from "@/types/installer";
-import type { Json } from "@/types/installer/base";
+import type { DatabaseInstallerData } from '@/types/installer/database';
+import type { InstallerFormData } from '@/types/installer/form';
+import type { Json, InstallationTypes, Certifications, VisibilitySettings } from '@/types/installer/base';
 
 function normalizeInstallationTypes(data: Json): InstallationTypes {
   const defaultTypes = {
@@ -77,8 +78,10 @@ export function transformDatabaseToForm(data: DatabaseInstallerData): InstallerF
   };
 }
 
-export function transformFormToDatabase(formData: InstallerFormData): Partial<DatabaseInstallerData> {
+export function transformFormToDatabase(formData: InstallerFormData, userId: string): Partial<DatabaseInstallerData> {
   return {
+    id: undefined, // Let the database generate this
+    user_id: userId,
     company_name: formData.company_name,
     contact_name: formData.contact_name,
     email: formData.email,
@@ -93,10 +96,10 @@ export function transformFormToDatabase(formData: InstallerFormData): Partial<Da
     panel_brands: formData.panel_brands,
     inverter_brands: formData.inverter_brands,
     warranty_years: formData.warranty_years,
-    certifications: formData.certifications as Json,
-    installation_types: formData.installation_types as Json,
+    certifications: formData.certifications as unknown as Json,
+    installation_types: formData.installation_types as unknown as Json,
     maintenance_services: formData.maintenance_services,
-    visibility_settings: formData.visibility_settings as Json,
+    visibility_settings: formData.visibility_settings as unknown as Json,
     service_area: formData.service_area
   };
 }
