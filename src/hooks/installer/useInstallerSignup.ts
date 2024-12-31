@@ -53,18 +53,23 @@ export const useInstallerSignup = () => {
       if (!authData.user) throw new Error("Erreur lors de la création du compte")
 
       // 2. Attendre que l'utilisateur soit créé dans la table users
-      await new Promise(resolve => setTimeout(resolve, 2000))
+      await new Promise(resolve => setTimeout(resolve, 3000))
 
       // 3. Vérifier que l'utilisateur existe bien dans la table users
       const { data: userData, error: userError } = await supabase
         .from('users')
         .select('id')
         .eq('id', authData.user.id)
-        .single()
+        .maybeSingle()
 
-      if (userError || !userData) {
+      if (userError) {
         console.error("User verification error:", userError)
         throw new Error("Erreur lors de la vérification du compte utilisateur")
+      }
+
+      if (!userData) {
+        console.error("User not found in users table after creation")
+        throw new Error("L'utilisateur n'a pas été créé correctement. Veuillez réessayer.")
       }
 
       // 4. Créer l'entrée dans la table installers
