@@ -8,13 +8,16 @@ import { useToast } from "@/components/ui/use-toast";
 import { Card } from "@/components/ui/card";
 import { Loader2 } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { AlertCircle } from "lucide-react";
+import { AlertCircle, ArrowRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
 
 export const PurchasedLeadsPage = () => {
   const [leads, setLeads] = useState<Lead[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchLeads();
@@ -47,7 +50,7 @@ export const PurchasedLeadsPage = () => {
 
       if (!installerData) {
         console.log("No installer profile found");
-        setError("Aucun profil installateur trouvé. Veuillez contacter le support.");
+        setError("Vous n'avez pas encore créé votre profil installateur");
         return;
       }
 
@@ -111,7 +114,18 @@ export const PurchasedLeadsPage = () => {
         <Alert variant="destructive">
           <AlertCircle className="h-4 w-4" />
           <AlertTitle>Erreur</AlertTitle>
-          <AlertDescription>{error}</AlertDescription>
+          <AlertDescription className="mt-2">
+            {error}
+            {error === "Vous n'avez pas encore créé votre profil installateur" && (
+              <Button 
+                onClick={() => navigate("/espace-installateur/compte")}
+                className="mt-4 w-full sm:w-auto"
+                variant="outline"
+              >
+                Créer mon profil <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            )}
+          </AlertDescription>
         </Alert>
       </div>
     );
