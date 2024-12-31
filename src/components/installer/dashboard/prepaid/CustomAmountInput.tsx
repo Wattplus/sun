@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Euro } from "lucide-react";
+import { DollarSign } from "lucide-react";
 import { motion } from "framer-motion";
 
 interface CustomAmountInputProps {
@@ -28,15 +28,15 @@ export const CustomAmountInput = ({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder="Montant personnalisé"
-        className="flex-1 bg-white/5 border-[#1EAEDB]/20 text-white placeholder:text-white/50"
+        className="flex-1 bg-white/5 border-primary/20 text-white placeholder:text-white/50"
       />
       <Button
         variant="outline"
         onClick={onSubmit}
         disabled={isLoading}
-        className="whitespace-nowrap bg-white/5 hover:bg-white/10 border-[#1EAEDB]/20 text-white"
+        className="whitespace-nowrap bg-white/5 hover:bg-white/10 border-primary/20 text-white"
       >
-        <Euro className="h-4 w-4 mr-2 text-[#1EAEDB]" />
+        <DollarSign className="h-4 w-4 mr-2 text-primary" />
         Recharger
       </Button>
     </motion.div>
