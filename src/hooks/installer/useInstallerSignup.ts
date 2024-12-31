@@ -102,20 +102,7 @@ export const useInstallerSignup = () => {
 
       if (profileError) throw profileError
 
-      // 4. Create user record first
-      const { error: userError } = await supabase
-        .from('users')
-        .insert({
-          id: authData.user.id,
-          email: formData.email
-        })
-
-      if (userError) {
-        console.error("User creation error:", userError)
-        throw new Error("Erreur lors de la création de l'utilisateur")
-      }
-
-      // 5. Create installer entry with verified = true
+      // 4. Create installer entry with verified = true
       const { error: installerError } = await supabase
         .from("installers")
         .insert({
