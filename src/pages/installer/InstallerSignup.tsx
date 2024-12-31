@@ -22,7 +22,7 @@ export const InstallerSignup = () => {
     setLoading(true);
 
     try {
-      // 1. Créer le compte utilisateur
+      // 1. Create user account
       const { data: authData, error: authError } = await supabase.auth.signUp({
         email: formData.email,
         password: formData.password,
@@ -31,7 +31,7 @@ export const InstallerSignup = () => {
       if (authError) throw authError;
 
       if (authData.user) {
-        // 2. Créer le profil installateur
+        // 2. Create installer profile
         const { error: profileError } = await supabase
           .from("installers")
           .insert([
@@ -41,6 +41,10 @@ export const InstallerSignup = () => {
               contact_name: formData.contactName,
               phone: formData.phone,
               verified: false,
+              address: "",
+              postal_code: "",
+              service_area: [],
+              credits: 0,
             },
           ]);
 
@@ -48,9 +52,10 @@ export const InstallerSignup = () => {
 
         toast({
           title: "Compte créé avec succès",
-          description: "Vous allez être redirigé vers votre espace installateur.",
+          description: "Vous allez être redirigé vers votre tableau de bord.",
         });
 
+        // Redirect to installer dashboard
         navigate("/espace-installateur");
       }
     } catch (error) {
