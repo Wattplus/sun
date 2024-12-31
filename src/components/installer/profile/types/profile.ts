@@ -17,6 +17,15 @@ export interface VisibilityOptions {
   showCertifications: boolean;
 }
 
+export interface ProfileStats {
+  profileViews: number;
+  messagesReceived: number;
+  averageRating: number;
+  satisfiedClients: number;
+  certificationsCount: number;
+  conversionRate: number;
+}
+
 export interface ProfileFormData {
   firstName: string;
   lastName: string;

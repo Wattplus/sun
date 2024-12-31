@@ -58,9 +58,6 @@ export const useProfileForm = () => {
 
         if (installer) {
           const [firstName, lastName] = (installer.contact_name || "").split(" ")
-          const certifications = installer.certifications as Certifications
-          const installation_types = installer.installation_types as InstallationTypes
-          const visibility_settings = installer.visibility_settings as VisibilityOptions
           
           setFormData({
             firstName: firstName || "",
@@ -76,13 +73,13 @@ export const useProfileForm = () => {
             inverterBrands: Array.isArray(installer.inverter_brands) ? installer.inverter_brands.join(', ') : "",
             guaranteeYears: installer.warranty_years?.toString() || "",
             service_area: installer.service_area || [],
-            certifications,
-            installationTypes: installation_types,
+            certifications: installer.certifications as Certifications || defaultFormData.certifications,
+            installationTypes: installer.installation_types as InstallationTypes || defaultFormData.installationTypes,
             maintenanceServices: installer.maintenance_services || false,
           })
 
           if (installer.visibility_settings) {
-            setVisibilityOptions(visibility_settings)
+            setVisibilityOptions(installer.visibility_settings as VisibilityOptions)
           }
         }
       } catch (error) {
