@@ -74,7 +74,7 @@ export function EditInstallerDialog({
     try {
       const dbData = transformInstallerToDatabase(formData)
       
-      const { data, error } = await supabase
+      const { error } = await supabase
         .from('installers')
         .upsert({ 
           ...dbData,
@@ -84,9 +84,11 @@ export function EditInstallerDialog({
         })
 
       if (error) {
+        console.error('Database error:', error)
         if (error.message?.includes("installers_siret_unique")) {
           setSiretError("Ce numéro SIRET est déjà utilisé par un autre installateur")
-          throw new Error("SIRET déjà utilisé")
+          setIsSaving(false)
+          return
         }
         throw error
       }
