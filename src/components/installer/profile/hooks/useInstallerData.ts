@@ -1,110 +1,71 @@
-import { useState, useEffect } from "react"
-import { supabase } from "@/integrations/supabase/client"
-import { useToast } from "@/hooks/use-toast"
-import type { InstallerFormData, DatabaseInstallerData, VisibilitySettings } from "../types/installer.types"
-
-const defaultVisibilitySettings: VisibilitySettings = {
-  showPhoneNumber: true,
-  highlightProfile: false,
-  acceptDirectMessages: true,
-  showCertifications: true,
-}
-
-const defaultFormData: InstallerFormData = {
-  firstName: "",
-  lastName: "",
-  email: "",
-  phone: "",
-  company: "",
-  siret: "",
-  website: "",
-  description: "",
-  experience: "",
-  panelBrands: "",
-  inverterBrands: "",
-  guaranteeYears: "",
-  service_area: [],
-  certifications: {
-    qualiPV: false,
-    rge: false,
-    qualibat: false,
-  },
-  installationTypes: {
-    residential: false,
-    commercial: false,
-    industrial: false,
-  },
-  maintenanceServices: false,
-  address: "",
-  postal_code: "",
-  city: "",
-  visibility_settings: defaultVisibilitySettings,
-}
+import { useEffect, useState } from "react";
+import { supabase } from "@/lib/supabase-client";
+import { toast } from "sonner";
+import { InstallerData, VisibilitySettings } from "../types/installer.types";
 
 export const useInstallerData = () => {
-  const { toast } = useToast()
-  const [formData, setFormData] = useState<InstallerFormData>(defaultFormData)
+  const [installer, setInstaller] = useState<InstallerData | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const loadInstallerData = async () => {
+    const fetchInstallerData = async () => {
       try {
-        const { data: { user } } = await supabase.auth.getUser()
-        if (!user) return
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session?.user) {
+          toast.error("Vous devez être connecté pour accéder à cette page");
+          return;
+        }
 
-        const { data: installer, error } = await supabase
+        const { data, error } = await supabase
           .from("installers")
-          .select()
-          .eq("user_id", user.id)
-          .single()
+          .select("*")
+          .eq("user_id", session.user.id)
+          .single();
 
-        if (error) throw error
+        if (error) {
+          console.error("Error fetching installer data:", error);
+          toast.error("Erreur lors de la récupération des données");
+          return;
+        }
 
-        if (installer) {
-          const installerData = installer as DatabaseInstallerData
-          const [firstName = "", lastName = ""] = (installerData.contact_name || "").split(" ")
-          
-          const visibility_settings = installerData.visibility_settings 
-            ? installerData.visibility_settings as VisibilitySettings 
-            : defaultVisibilitySettings
+        if (data) {
+          // Convert JSON data to strongly typed data
+          const visibilitySettings: VisibilitySettings = data.visibility_settings as VisibilitySettings || {
+            showPhoneNumber: true,
+            highlightProfile: false,
+            acceptDirectMessages: true,
+            showCertifications: true
+          };
 
-          setFormData({
-            firstName,
-            lastName,
-            email: user.email || "",
-            phone: installerData.phone || "",
-            company: installerData.company_name || "",
-            siret: installerData.siret || "",
-            website: installerData.website || "",
-            description: installerData.description || "",
-            experience: installerData.experience_years?.toString() || "",
-            panelBrands: Array.isArray(installerData.panel_brands) ? installerData.panel_brands.join(", ") : "",
-            inverterBrands: Array.isArray(installerData.inverter_brands) ? installerData.inverter_brands.join(", ") : "",
-            guaranteeYears: installerData.warranty_years?.toString() || "",
-            service_area: installerData.service_area || [],
-            certifications: installerData.certifications as InstallerFormData["certifications"] || defaultFormData.certifications,
-            installationTypes: installerData.installation_types as InstallerFormData["installationTypes"] || defaultFormData.installationTypes,
-            maintenanceServices: installerData.maintenance_services || false,
-            address: installerData.address || "",
-            postal_code: installerData.postal_code || "",
-            city: installerData.city || "",
-            visibility_settings,
-          })
+          const certifications = data.certifications as { [key: string]: boolean } || {
+            qualiPV: false,
+            rge: false,
+            qualibat: false
+          };
+
+          const installationTypes = data.installation_types as { [key: string]: boolean } || {
+            residential: false,
+            commercial: false,
+            industrial: false
+          };
+
+          setInstaller({
+            ...data,
+            visibility_settings: visibilitySettings,
+            certifications,
+            installation_types: installationTypes
+          });
         }
       } catch (error) {
-        console.error("Error loading installer data:", error)
-        toast({
-          title: "Erreur",
-          description: "Impossible de charger les données de l'installateur",
-          variant: "destructive"
-        })
+        console.error("Error in fetchInstallerData:", error);
+        toast.error("Une erreur est survenue");
+      } finally {
+        setLoading(false);
       }
-    }
+    };
 
-    loadInstallerData()
-  }, [toast])
+    fetchInstallerData();
+  }, []);
 
-  return {
-    formData,
-    setFormData,
-  }
-}
+  return { installer, loading };
+};
