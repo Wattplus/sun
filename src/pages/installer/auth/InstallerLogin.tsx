@@ -32,23 +32,38 @@ export const InstallerLogin = () => {
 
       console.log("[InstallerLogin] Login successful, checking installer status...")
 
-      // Fetch user profile to check role
-      const { data: installer } = await supabase
+      // Fetch installer profile to check verification status
+      const { data: installer, error: installerError } = await supabase
         .from('installers')
-        .select('id')
+        .select('verified, status')
         .eq('user_id', session.user.id)
         .single()
 
-      if (installer) {
-        console.log("[InstallerLogin] Installer found, redirecting to dashboard...")
-        toast.success("Connexion réussie")
-        navigate("/espace-installateur")
-      } else {
-        console.error("[InstallerLogin] User is not an installer")
-        toast.error("Accès non autorisé")
-        await supabase.auth.signOut()
-        navigate("/connexion-installateur")
+      if (installerError) {
+        throw installerError
       }
+
+      if (!installer) {
+        console.error("[InstallerLogin] User is not an installer")
+        await supabase.auth.signOut()
+        toast.error("Accès non autorisé - Compte installateur non trouvé")
+        navigate("/connexion-installateur")
+        return
+      }
+
+      console.log("[InstallerLogin] Installer found:", installer)
+      
+      if (!installer.verified) {
+        console.log("[InstallerLogin] Installer not verified")
+        toast.error("Votre compte n'est pas encore vérifié")
+        await supabase.auth.signOut()
+        return
+      }
+
+      console.log("[InstallerLogin] Installer verified, redirecting to dashboard...")
+      toast.success("Connexion réussie")
+      navigate("/espace-installateur")
+
     } catch (error: any) {
       console.error("[InstallerLogin] Error during login:", error)
       toast.error(error.message || "Erreur lors de la connexion")
