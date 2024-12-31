@@ -22,7 +22,7 @@ export const ProfileSection = () => {
     return <div>Chargement...</div>
   }
 
-  if (noProfile) {
+  if (!formData) {
     return (
       <Card className="p-6 space-y-4">
         <div className="flex items-center gap-2 text-yellow-500">
@@ -33,7 +33,16 @@ export const ProfileSection = () => {
           Vous n'avez pas encore créé votre profil installateur. Veuillez remplir le formulaire ci-dessous pour commencer.
         </p>
         <form onSubmit={handleSubmit} className="space-y-6">
-          <BasicInfoSection formData={formData} handleChange={handleChange} />
+          <BasicInfoSection formData={{
+            firstName: "",
+            lastName: "",
+            email: "",
+            phone: "",
+            company: "",
+            siret: "",
+            website: "",
+            description: ""
+          }} handleChange={handleChange} />
           <Button 
             type="submit" 
             className="w-full md:w-auto bg-primary hover:bg-primary-dark text-white"
