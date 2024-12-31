@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/components/ui/use-toast";
+import { Save } from "lucide-react";
 
 export const ProfileSection = () => {
   const { toast } = useToast();
@@ -108,7 +109,8 @@ export const ProfileSection = () => {
           </div>
         </div>
 
-        <Button type="submit" className="w-full md:w-auto">
+        <Button type="submit" className="w-full md:w-auto flex items-center gap-2">
+          <Save className="w-4 h-4" />
           Enregistrer les modifications
         </Button>
       </form>
