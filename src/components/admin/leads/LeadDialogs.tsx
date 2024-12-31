@@ -70,10 +70,10 @@ export const LeadDialogs = ({
               </SelectTrigger>
               <SelectContent>
                 {mockInstallers
-                  .filter(installer => installer.status === "active")
+                  .filter(installer => installer.verified)
                   .map(installer => (
                     <SelectItem key={installer.id} value={installer.id}>
-                      {installer.companyName}
+                      {installer.company_name}
                     </SelectItem>
                   ))}
               </SelectContent>

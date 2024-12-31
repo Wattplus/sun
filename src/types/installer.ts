@@ -24,6 +24,7 @@ export interface InstallationTypes {
   residential: boolean;
   commercial: boolean;
   industrial: boolean;
+  [key: string]: boolean;
 }
 
 export interface DatabaseInstallerData {
@@ -51,9 +52,7 @@ export interface DatabaseInstallerData {
   credits?: number;
   verified?: boolean;
   created_at?: string;
-  conversion_rate?: number;
-  profile_views?: number;
-  satisfied_clients?: number;
+  status?: string;
 }
 
 export interface InstallerFormData {
@@ -76,6 +75,9 @@ export interface InstallerFormData {
   installation_types: InstallationTypes;
   maintenance_services: boolean;
   visibility_settings: VisibilitySettings;
+  firstName?: string;
+  lastName?: string;
+  company?: string;
 }
 
 export const defaultFormData: InstallerFormData = {
@@ -110,10 +112,15 @@ export const defaultFormData: InstallerFormData = {
     highlightProfile: false,
     showCertifications: true,
     acceptDirectMessages: true
-  }
+  },
+  firstName: "",
+  lastName: "",
+  company: ""
 };
 
 export function transformDatabaseToForm(data: DatabaseInstallerData): InstallerFormData {
+  const [firstName = "", lastName = ""] = data.contact_name.split(" ");
+  
   return {
     company_name: data.company_name,
     contact_name: data.contact_name,
@@ -133,14 +140,18 @@ export function transformDatabaseToForm(data: DatabaseInstallerData): InstallerF
     certifications: data.certifications,
     installation_types: data.installation_types,
     maintenance_services: data.maintenance_services,
-    visibility_settings: data.visibility_settings
+    visibility_settings: data.visibility_settings,
+    firstName,
+    lastName,
+    company: data.company_name
   };
 }
 
-export function transformFormToDatabase(formData: InstallerFormData): Omit<DatabaseInstallerData, "id" | "user_id"> {
+export function transformFormToDatabase(formData: InstallerFormData): Omit<DatabaseInstallerData, "id"> {
   return {
+    user_id: "", // This should be set by the caller
     company_name: formData.company_name,
-    contact_name: formData.contact_name,
+    contact_name: `${formData.firstName} ${formData.lastName}`.trim() || formData.contact_name,
     email: formData.email,
     phone: formData.phone,
     siret: formData.siret,
