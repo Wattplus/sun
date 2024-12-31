@@ -5,7 +5,7 @@ import { PrepaidAdvantages } from "@/components/installer/dashboard/prepaid/Prep
 import { useInstallerBalance } from "@/hooks/installer/useInstallerBalance";
 import { motion } from "framer-motion";
 import { ChartLine } from "lucide-react";
-import { PerformanceChart } from "@/components/admin/PerformanceChart";
+import PerformanceChart from "@/components/admin/PerformanceChart";
 
 export const PrepaidAccountPage = () => {
   const { balance, isLoading } = useInstallerBalance();
