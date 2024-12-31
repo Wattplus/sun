@@ -7,11 +7,13 @@ import { toast } from "sonner"
 import { motion } from "framer-motion"
 import { InstallerFormFields } from "./form/InstallerFormFields"
 import { Alert, AlertDescription } from "@/components/ui/alert"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog"
 
 export const SignupForm = () => {
   const navigate = useNavigate()
   const [loading, setLoading] = useState(false)
   const [userExists, setUserExists] = useState(false)
+  const [showSuccessDialog, setShowSuccessDialog] = useState(false)
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -31,7 +33,6 @@ export const SignupForm = () => {
       ...formData,
       [e.target.id]: e.target.value,
     })
-    // Reset the userExists error when they change the email
     if (e.target.id === "email") {
       setUserExists(false)
     }
@@ -100,7 +101,7 @@ export const SignupForm = () => {
       if (installerError) throw installerError
 
       toast.success("Compte créé avec succès !")
-      navigate("/espace-installateur")
+      setShowSuccessDialog(true)
     } catch (error: any) {
       console.error("Signup error:", error)
       toast.error(error.message || "Erreur lors de la création du compte")
@@ -123,7 +124,7 @@ export const SignupForm = () => {
               <Button 
                 variant="link" 
                 className="p-0 text-primary hover:text-primary-light h-auto font-semibold"
-                onClick={() => navigate("/login")}
+                onClick={() => navigate("/connexion-installateur")}
               >
                 Se connecter
               </Button>
@@ -150,11 +151,40 @@ export const SignupForm = () => {
           <Button
             variant="outline"
             className="w-full bg-white/5 hover:bg-white/10 border-primary/20 text-primary hover:text-primary-light transition-all duration-300"
-            onClick={() => navigate("/login")}
+            onClick={() => navigate("/connexion-installateur")}
           >
             Se connecter à mon espace
           </Button>
         </div>
+
+        <Dialog open={showSuccessDialog} onOpenChange={setShowSuccessDialog}>
+          <DialogContent className="sm:max-w-md">
+            <DialogHeader>
+              <DialogTitle>Compte créé avec succès !</DialogTitle>
+              <DialogDescription className="space-y-4 pt-4">
+                <p>
+                  Votre compte a été créé avec succès. Voici vos identifiants de connexion :
+                </p>
+                <div className="bg-muted p-4 rounded-lg space-y-2">
+                  <p><strong>Email :</strong> {formData.email}</p>
+                  <p><strong>Mot de passe :</strong> Celui que vous avez choisi</p>
+                </div>
+                <p className="text-sm text-muted-foreground">
+                  Conservez ces informations précieusement. Vous en aurez besoin pour vous connecter à votre espace installateur.
+                </p>
+              </DialogDescription>
+            </DialogHeader>
+            <DialogFooter className="sm:justify-center">
+              <Button
+                type="button"
+                className="w-full sm:w-auto"
+                onClick={() => navigate("/connexion-installateur")}
+              >
+                Aller à la page de connexion
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </Card>
     </motion.div>
   )
