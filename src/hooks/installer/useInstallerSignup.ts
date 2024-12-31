@@ -72,7 +72,7 @@ export const useInstallerSignup = () => {
 
       if (!authData.user) throw new Error("Erreur lors de la création du compte")
 
-      // 2. Create user record
+      // 2. Create user record if it doesn't exist
       const { error: userError } = await supabase
         .from('users')
         .insert({
@@ -81,7 +81,7 @@ export const useInstallerSignup = () => {
         })
 
       if (userError) {
-        if (userError.code === '23505') { // Duplicate key error
+        if (userError.code === '23505') { // Code for duplicate key error
           console.log("User record already exists, continuing...")
         } else {
           console.error("User creation error:", userError)
