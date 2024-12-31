@@ -13,6 +13,51 @@ import { Card } from "@/components/ui/card";
 import { motion } from "framer-motion";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
+// Mock data for saved cards
+const mockCards = [
+  {
+    id: "1",
+    last4: "4242",
+    brand: "Visa",
+    expMonth: 12,
+    expYear: 2024,
+  }
+];
+
+// Mock data for transactions
+const mockTransactions = [
+  {
+    id: "1",
+    date: new Date().toISOString(),
+    description: "Rechargement du compte",
+    amount: 500,
+    type: "credit" as const,
+  },
+  {
+    id: "2",
+    date: new Date().toISOString(),
+    description: "Achat de lead",
+    amount: 25,
+    type: "debit" as const,
+  }
+];
+
+// FAQ items
+const faqItems = [
+  {
+    question: "Comment recharger mon compte ?",
+    answer: "Vous pouvez recharger votre compte en utilisant une carte bancaire. Cliquez sur le bouton 'Recharger' et choisissez le montant souhaité."
+  },
+  {
+    question: "Quand mes crédits seront-ils disponibles ?",
+    answer: "Vos crédits sont disponibles immédiatement après le paiement."
+  },
+  {
+    question: "Comment sont utilisés mes crédits ?",
+    answer: "Vos crédits sont automatiquement déduits lors de l'achat de leads."
+  }
+];
+
 export const PrepaidAccountPage = () => {
   const { balance, isLoading: isBalanceLoading } = useInstallerBalance();
   const [isRecharging, setIsRecharging] = useState(false);
@@ -44,6 +89,11 @@ export const PrepaidAccountPage = () => {
     } finally {
       setIsRecharging(false);
     }
+  };
+
+  const handleDeleteCard = (cardId: string) => {
+    console.log("Delete card:", cardId);
+    // This will be implemented later when we add card management functionality
   };
 
   const handleRefresh = () => {
