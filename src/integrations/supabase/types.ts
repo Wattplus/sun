@@ -107,42 +107,87 @@ export type Database = {
       installers: {
         Row: {
           address: string
+          certifications: Json | null
+          city: string | null
           company_name: string
           contact_name: string
+          conversion_rate: number | null
           created_at: string | null
           credits: number
+          description: string | null
+          experience_years: number | null
           id: string
+          installation_types: Json | null
+          inverter_brands: string[] | null
+          maintenance_services: boolean | null
+          panel_brands: string[] | null
           phone: string
           postal_code: string
+          profile_views: number | null
+          satisfied_clients: number | null
           service_area: string[]
+          subscription_plan: string | null
           user_id: string
           verified: boolean
+          visibility_settings: Json | null
+          warranty_years: number | null
+          website: string | null
         }
         Insert: {
           address: string
+          certifications?: Json | null
+          city?: string | null
           company_name: string
           contact_name: string
+          conversion_rate?: number | null
           created_at?: string | null
           credits?: number
+          description?: string | null
+          experience_years?: number | null
           id?: string
+          installation_types?: Json | null
+          inverter_brands?: string[] | null
+          maintenance_services?: boolean | null
+          panel_brands?: string[] | null
           phone: string
           postal_code: string
+          profile_views?: number | null
+          satisfied_clients?: number | null
           service_area: string[]
+          subscription_plan?: string | null
           user_id: string
           verified?: boolean
+          visibility_settings?: Json | null
+          warranty_years?: number | null
+          website?: string | null
         }
         Update: {
           address?: string
+          certifications?: Json | null
+          city?: string | null
           company_name?: string
           contact_name?: string
+          conversion_rate?: number | null
           created_at?: string | null
           credits?: number
+          description?: string | null
+          experience_years?: number | null
           id?: string
+          installation_types?: Json | null
+          inverter_brands?: string[] | null
+          maintenance_services?: boolean | null
+          panel_brands?: string[] | null
           phone?: string
           postal_code?: string
+          profile_views?: number | null
+          satisfied_clients?: number | null
           service_area?: string[]
+          subscription_plan?: string | null
           user_id?: string
           verified?: boolean
+          visibility_settings?: Json | null
+          warranty_years?: number | null
+          website?: string | null
         }
         Relationships: [
           {

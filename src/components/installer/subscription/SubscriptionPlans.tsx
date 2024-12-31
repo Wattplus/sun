@@ -1,19 +1,20 @@
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Check, Sparkles } from "lucide-react";
-import { subscriptionPlans } from "@/types/subscription";
-import { useToast } from "@/components/ui/use-toast";
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { Check, Sparkles, Star } from "lucide-react"
+import { subscriptionPlans } from "@/types/subscription"
+import { useToast } from "@/components/ui/use-toast"
+import { motion } from "framer-motion"
 
 export const SubscriptionPlans = () => {
-  const { toast } = useToast();
+  const { toast } = useToast()
 
   const handleSubscribe = async (priceId: string) => {
     if (!priceId) {
       toast({
         title: "Plan gratuit",
         description: "Vous utilisez déjà le plan gratuit.",
-      });
-      return;
+      })
+      return
     }
 
     try {
@@ -24,20 +25,20 @@ export const SubscriptionPlans = () => {
           "Authorization": `Bearer ${process.env.SUPABASE_ANON_KEY}`,
         },
         body: JSON.stringify({ priceId }),
-      });
+      })
 
-      if (!response.ok) throw new Error();
+      if (!response.ok) throw new Error()
 
-      const { url } = await response.json();
-      if (url) window.location.href = url;
+      const { url } = await response.json()
+      if (url) window.location.href = url
     } catch (error) {
       toast({
         title: "Erreur",
         description: "Une erreur est survenue lors de la souscription.",
         variant: "destructive",
-      });
+      })
     }
-  };
+  }
 
   return (
     <div className="py-8">
@@ -48,7 +49,7 @@ export const SubscriptionPlans = () => {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto px-4">
+      <div className="grid grid-cols-1 gap-6">
         {subscriptionPlans.map((plan) => (
           <Card 
             key={plan.id} 
@@ -69,11 +70,8 @@ export const SubscriptionPlans = () => {
             <CardHeader>
               <CardTitle className="text-xl flex items-center justify-between">
                 {plan.name}
+                <span className="text-3xl font-bold">{plan.price}€<span className="text-sm font-normal text-muted-foreground">/mois</span></span>
               </CardTitle>
-              <div className="mt-2">
-                <span className="text-3xl font-bold">{plan.price}€</span>
-                <span className="text-muted-foreground">/mois</span>
-              </div>
             </CardHeader>
             <CardContent className="flex-grow">
               <ul className="space-y-2">
@@ -106,5 +104,5 @@ export const SubscriptionPlans = () => {
         ))}
       </div>
     </div>
-  );
-};
+  )
+}
