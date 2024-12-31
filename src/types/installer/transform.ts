@@ -1,11 +1,13 @@
 import type { InstallerFormData, DatabaseInstallerData } from "./index"
 
-export const convertFormToDbFormat = (formData: InstallerFormData, userId: string): DatabaseInstallerData => {
+export const convertFormToDbFormat = (formData: InstallerFormData, userId: string): Omit<DatabaseInstallerData, 'id' | 'created_at' | 'credits' | 'verified'> => {
   return {
     user_id: userId,
     company_name: formData.company_name,
     contact_name: formData.contact_name,
+    email: formData.email,
     phone: formData.phone,
+    siret: formData.siret,
     address: formData.address,
     postal_code: formData.postal_code,
     city: formData.city,

@@ -4,11 +4,12 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { useState } from "react"
 import { supabase } from "@/lib/supabase-client"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useLocation } from "react-router-dom"
 import { toast } from "sonner"
 
 export default function Login() {
   const navigate = useNavigate()
+  const location = useLocation()
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [loading, setLoading] = useState(false)
@@ -18,41 +19,54 @@ export default function Login() {
     setLoading(true)
 
     try {
-      const { error } = await supabase.auth.signInWithPassword({
+      const { data: { session }, error } = await supabase.auth.signInWithPassword({
         email,
         password
       })
 
       if (error) throw error
 
-      toast.success("Connexion réussie")
-      navigate("/dashboard")
-    } catch (error) {
+      // Fetch user profile to check role
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('role')
+        .eq('id', session?.user.id)
+        .single()
+
+      if (profile?.role === 'admin' || profile?.role === 'super_admin') {
+        toast.success("Connexion admin réussie")
+        navigate("/admin/leads")
+      } else {
+        toast.error("Accès non autorisé")
+        // Sign out if not admin
+        await supabase.auth.signOut()
+      }
+    } catch (error: any) {
       console.error("Error logging in:", error)
-      toast.error("Erreur lors de la connexion")
+      toast.error(error.message || "Erreur lors de la connexion")
     } finally {
       setLoading(false)
     }
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4">
+    <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-b from-background-dark to-primary-dark">
       <Helmet>
-        <title>Connexion - Solar Pro</title>
+        <title>Connexion Admin - Solar Pro</title>
       </Helmet>
 
-      <Card className="w-full max-w-md p-6 space-y-6 bg-background/50 backdrop-blur-sm border-primary/20">
+      <Card className="w-full max-w-md p-8 space-y-6 bg-background/50 backdrop-blur-sm border-primary/20">
         <div className="space-y-2 text-center">
-          <h1 className="text-2xl font-bold">Connexion</h1>
-          <p className="text-muted-foreground">
-            Connectez-vous à votre compte
+          <h1 className="text-2xl font-bold text-white">Connexion Admin</h1>
+          <p className="text-primary-light/80">
+            Accédez à votre espace administrateur
           </p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <label htmlFor="email" className="text-sm font-medium">
-              Email
+            <label htmlFor="email" className="text-sm font-medium text-white">
+              Email administrateur
             </label>
             <Input
               id="email"
@@ -60,12 +74,13 @@ export default function Login() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              placeholder="john.doe@example.com"
+              placeholder="admin@example.com"
+              className="bg-background/50 border-primary/20 text-white placeholder:text-primary-light/50"
             />
           </div>
 
           <div className="space-y-2">
-            <label htmlFor="password" className="text-sm font-medium">
+            <label htmlFor="password" className="text-sm font-medium text-white">
               Mot de passe
             </label>
             <Input
@@ -74,12 +89,13 @@ export default function Login() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
+              className="bg-background/50 border-primary/20 text-white"
             />
           </div>
 
           <Button 
             type="submit" 
-            className="w-full"
+            className="w-full bg-primary hover:bg-primary-light text-white"
             disabled={loading}
           >
             {loading ? "Connexion..." : "Se connecter"}
@@ -87,7 +103,7 @@ export default function Login() {
         </form>
 
         <div className="text-center text-sm">
-          <a href="/forgot-password" className="text-primary hover:underline">
+          <a href="/forgot-password" className="text-primary-light hover:underline">
             Mot de passe oublié ?
           </a>
         </div>
