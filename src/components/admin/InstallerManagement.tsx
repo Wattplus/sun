@@ -1,116 +1,47 @@
 import { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
-import { AdminBreadcrumb } from "./AdminBreadcrumb";
-import { supabase } from "@/lib/supabase-client";
-import { useToast } from "@/components/ui/use-toast";
-import { useNavigate } from "react-router-dom";
-import { Loader2 } from "lucide-react";
+import { mockInstallers } from "./InstallerManagement";
+import { DatabaseInstallerData } from "@/types/installer";
 
-const InstallerManagement = () => {
-  const [isLoading, setIsLoading] = useState(true);
-  const { toast } = useToast();
-  const navigate = useNavigate();
+export const InstallerManagement = () => {
+  const [installers, setInstallers] = useState<DatabaseInstallerData[]>(mockInstallers);
 
   useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        const { data: { session }, error: sessionError } = await supabase.auth.getSession();
-
-        if (sessionError) {
-          console.error("Error checking session:", sessionError);
-          toast({
-            title: "Erreur d'authentification",
-            description: "Impossible de vérifier votre session",
-            variant: "destructive",
-          });
-          navigate("/login");
-          return;
-        }
-
-        if (!session) {
-          console.log("No active session");
-          toast({
-            title: "Non authentifié",
-            description: "Vous devez être connecté pour accéder à cette page",
-            variant: "destructive",
-          });
-          navigate("/login");
-          return;
-        }
-
-        // Vérifier le rôle de l'utilisateur
-        const { data: profile, error: profileError } = await supabase
-          .from('profiles')
-          .select('role')
-          .eq('id', session.user.id)
-          .single();
-
-        if (profileError) {
-          console.error("Error fetching profile:", profileError);
-          toast({
-            title: "Erreur",
-            description: "Impossible de vérifier vos permissions",
-            variant: "destructive",
-          });
-          return;
-        }
-
-        if (!['admin', 'super_admin'].includes(profile.role)) {
-          console.log("User is not an admin");
-          toast({
-            title: "Accès refusé",
-            description: "Vous n'avez pas les permissions nécessaires",
-            variant: "destructive",
-          });
-          navigate("/");
-          return;
-        }
-
-      } catch (error) {
-        console.error("Unexpected error:", error);
-        toast({
-          title: "Erreur",
-          description: "Une erreur inattendue s'est produite",
-          variant: "destructive",
-        });
-      } finally {
-        setIsLoading(false);
-      }
+    // Fetch installers from the database or API
+    const fetchInstallers = async () => {
+      // Simulate fetching data
+      const fetchedInstallers = await new Promise<DatabaseInstallerData[]>((resolve) => {
+        setTimeout(() => {
+          resolve(mockInstallers);
+        }, 1000);
+      });
+      setInstallers(fetchedInstallers);
     };
 
-    checkAuth();
-  }, [navigate, toast]);
-
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
-      </div>
-    );
-  }
+    fetchInstallers();
+  }, []);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background/95 to-background/50 py-8">
       <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
-        <AdminBreadcrumb />
-        
-        <div className="space-y-6">
-          <div className="max-w-3xl">
-            <h1 className="text-3xl font-bold tracking-tight text-foreground mb-2">
-              Gestion des Installateurs
-            </h1>
-            <p className="text-muted-foreground text-lg">
-              Gérez les installateurs partenaires et leurs accès
-            </p>
+        <h1 className="text-3xl font-bold tracking-tight text-foreground mb-2">
+          Gestion des Installateurs
+        </h1>
+        <Card className="overflow-hidden border-primary/10 bg-card/50 backdrop-blur-sm">
+          <div className="p-6 space-y-6">
+            {installers.map((installer) => (
+              <div key={installer.id} className="border-b border-primary/10 pb-4">
+                <h2 className="text-xl font-semibold">{installer.company_name}</h2>
+                <p>{installer.contact_name}</p>
+                <p>{installer.email}</p>
+                <p>{installer.phone}</p>
+                <p>{installer.address}, {installer.postal_code} {installer.city}</p>
+                <p>Expérience: {installer.experience_years} ans</p>
+                <p>Certifications: {Object.keys(installer.certifications).filter(key => installer.certifications[key]).join(", ")}</p>
+              </div>
+            ))}
           </div>
-
-          <Card className="p-6">
-            {/* Contenu à implémenter */}
-            <p className="text-muted-foreground">
-              Cette fonctionnalité sera bientôt disponible.
-            </p>
-          </Card>
-        </div>
+        </Card>
       </div>
     </div>
   );
