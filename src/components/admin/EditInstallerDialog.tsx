@@ -32,7 +32,7 @@ export function EditInstallerDialog({
   onSave,
 }: EditInstallerDialogProps) {
   const [formData, setFormData] = useState<Installer>(installer || {
-    id: crypto.randomUUID(), // Generate a UUID for new installers
+    id: crypto.randomUUID(),
     companyName: "",
     contactName: "",
     email: "",
@@ -74,7 +74,7 @@ export function EditInstallerDialog({
     try {
       const dbData = transformInstallerToDatabase(formData)
       
-      const { error } = await supabase
+      const { data, error } = await supabase
         .from('installers')
         .upsert({ 
           ...dbData,
@@ -82,8 +82,6 @@ export function EditInstallerDialog({
           verified: true,
           status: "active"
         })
-        .select()
-        .single()
 
       if (error) {
         if (error.message?.includes("installers_siret_unique")) {
