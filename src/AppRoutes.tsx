@@ -4,7 +4,7 @@ import { PublicRoutes } from "@/routes/public/PublicRoutes";
 import { AdminRoutes } from "@/routes/admin/AdminRoutes";
 import { InstallerSpace } from "@/pages/installer/InstallerSpace";
 import InstallerLogin from "@/pages/installer/auth/InstallerLogin";
-import { InstallerSignup } from "@/pages/installer/auth/InstallerSignup";
+import InstallerSignup from "@/pages/installer/auth/InstallerSignup";
 import { LandingPage } from "@/pages/LandingPage";
 import { InstallerDashboard } from "@/components/installer/InstallerDashboard";
 import { MarketplacePage } from "@/components/installer/marketplace/MarketplacePage";
