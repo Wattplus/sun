@@ -7,7 +7,7 @@ import { Link } from "react-router-dom"
 import { ArrowRight, LogIn } from "lucide-react"
 import { Helmet } from "react-helmet"
 
-export default function InstallerSignup() {
+const InstallerSignup = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-background/95 to-background/50 py-8 px-4">
       <Helmet>
@@ -77,5 +77,7 @@ export default function InstallerSignup() {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
+
+export default InstallerSignup;

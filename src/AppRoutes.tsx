@@ -21,6 +21,7 @@ export const AppRoutes = () => {
       {/* Public routes */}
       <Route path="/" element={<LandingPage />} />
       <Route path="/connexion-installateur" element={<InstallerLogin />} />
+      <Route path="/devenir-installateur" element={<InstallerSignup />} />
       <Route path="/inscription-installateur" element={<InstallerSignup />} />
       
       {/* Public pages */}
