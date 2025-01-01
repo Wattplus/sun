@@ -9,6 +9,33 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      calculation_parameters: {
+        Row: {
+          active: boolean | null
+          created_at: string
+          description: string | null
+          id: string
+          parameter_name: string
+          parameter_value: number
+        }
+        Insert: {
+          active?: boolean | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          parameter_name: string
+          parameter_value: number
+        }
+        Update: {
+          active?: boolean | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          parameter_name?: string
+          parameter_value?: number
+        }
+        Relationships: []
+      }
       complaints: {
         Row: {
           created_at: string
@@ -496,6 +523,54 @@ export type Database = {
           phone?: string | null
           postal_code?: string | null
           role?: string | null
+        }
+        Relationships: []
+      }
+      simulations: {
+        Row: {
+          annual_consumption: number | null
+          created_at: string
+          estimated_cost: number | null
+          estimated_savings: number | null
+          id: string
+          installation_type: string | null
+          monthly_bill: number
+          notes: string | null
+          postal_code: string
+          roof_surface: number | null
+          roof_type: string | null
+          status: string | null
+          user_id: string | null
+        }
+        Insert: {
+          annual_consumption?: number | null
+          created_at?: string
+          estimated_cost?: number | null
+          estimated_savings?: number | null
+          id?: string
+          installation_type?: string | null
+          monthly_bill: number
+          notes?: string | null
+          postal_code: string
+          roof_surface?: number | null
+          roof_type?: string | null
+          status?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          annual_consumption?: number | null
+          created_at?: string
+          estimated_cost?: number | null
+          estimated_savings?: number | null
+          id?: string
+          installation_type?: string | null
+          monthly_bill?: number
+          notes?: string | null
+          postal_code?: string
+          roof_surface?: number | null
+          roof_type?: string | null
+          status?: string | null
+          user_id?: string | null
         }
         Relationships: []
       }
