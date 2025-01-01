@@ -14,12 +14,14 @@ import { ProfilePage } from "@/components/installer/profile/ProfilePage";
 import { AccountPage } from "@/components/installer/account/AccountPage";
 import { NotificationsPage } from "@/components/installer/notifications/NotificationsPage";
 import { PrepaidAccountPage } from "@/pages/installer/account/PrepaidAccountPage";
+import { Index } from "@/pages/Index";
 
 export const AppRoutes = () => {
   return (
     <Routes>
       {/* Public routes */}
-      <Route path="/" element={<LandingPage />} />
+      <Route path="/" element={<Index />} />
+      <Route path="/landing" element={<LandingPage />} />
       <Route path="/connexion-installateur" element={<InstallerLogin />} />
       <Route path="/devenir-installateur" element={<InstallerSignup />} />
       <Route path="/inscription-installateur" element={<InstallerSignup />} />
