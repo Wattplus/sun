@@ -7,7 +7,7 @@ import { Link } from "react-router-dom"
 import { ArrowRight, LogIn } from "lucide-react"
 import { Helmet } from "react-helmet"
 
-export function InstallerSignup() {
+export default function InstallerSignup() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-background/95 to-background/50 py-8 px-4">
       <Helmet>
@@ -21,7 +21,7 @@ export function InstallerSignup() {
       <div className="max-w-6xl mx-auto space-y-12">
         <div className="flex justify-between items-center">
           <InstallerBreadcrumb />
-          <Link to="/login">
+          <Link to="/connexion-installateur">
             <Button 
               variant="outline" 
               className="bg-primary/10 hover:bg-primary/20 border-primary/20 text-primary hover:text-primary-light transition-all duration-300 flex items-center gap-2"
