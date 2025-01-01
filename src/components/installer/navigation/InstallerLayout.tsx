@@ -2,6 +2,7 @@ import { Bell, LayoutDashboard, UserPlus, ShoppingCart, MessageSquare, User, Set
 import { Link, Outlet, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
+import { Button } from "@/components/ui/button";
 
 const navigation = [
   { 
@@ -52,12 +53,14 @@ export function InstallerLayout() {
         <div className="container mx-auto">
           <div className="flex h-14 items-center justify-between md:justify-center px-4">
             {/* Mobile menu button */}
-            <button
-              className="md:hidden text-white hover:text-primary transition-colors"
+            <Button
+              variant="ghost"
+              size="icon"
+              className="md:hidden"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
             >
-              {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-            </button>
+              {isMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            </Button>
 
             {/* Desktop navigation */}
             <nav className="hidden md:flex items-center space-x-6">
@@ -88,7 +91,7 @@ export function InstallerLayout() {
       {isMenuOpen && (
         <div className="fixed inset-0 z-40 md:hidden">
           <div 
-            className="fixed inset-0 bg-background-dark/80 backdrop-blur-sm" 
+            className="fixed inset-0 bg-black/80 backdrop-blur-sm" 
             onClick={() => setIsMenuOpen(false)} 
           />
           <nav className="fixed inset-y-0 left-0 w-64 bg-background/95 backdrop-blur-lg border-r border-primary/10 px-4 py-6 overflow-y-auto">
