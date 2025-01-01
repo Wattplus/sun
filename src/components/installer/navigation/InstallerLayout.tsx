@@ -2,43 +2,42 @@ import { Bell, LayoutDashboard, UserPlus, ShoppingCart, MessageSquare, User, Set
 import { Link, Outlet, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
 
 const navigation = [
   { 
-    name: "Tableau de bord", 
-    href: "/espace-installateur", 
-    icon: LayoutDashboard 
+    name: "Tableau de bord",
+    href: "/espace-installateur",
+    icon: LayoutDashboard
   },
-  { 
-    name: "Nouveaux leads", 
-    href: "/espace-installateur/marketplace", 
-    icon: UserPlus 
+  {
+    name: "Nouveaux leads",
+    href: "/espace-installateur/marketplace",
+    icon: UserPlus
   },
-  { 
-    name: "Leads achetés", 
-    href: "/espace-installateur/leads", 
-    icon: ShoppingCart 
+  {
+    name: "Leads achetés",
+    href: "/espace-installateur/leads",
+    icon: ShoppingCart
   },
-  { 
-    name: "Messages", 
-    href: "/espace-installateur/messages", 
-    icon: MessageSquare 
+  {
+    name: "Messages",
+    href: "/espace-installateur/messages",
+    icon: MessageSquare
   },
-  { 
-    name: "Mon compte", 
-    href: "/espace-installateur/mon-compte", 
-    icon: User 
+  {
+    name: "Mon compte",
+    href: "/espace-installateur/mon-compte",
+    icon: User
   },
-  { 
-    name: "Paramètres", 
-    href: "/espace-installateur/parametres", 
-    icon: Settings 
+  {
+    name: "Paramètres",
+    href: "/espace-installateur/parametres",
+    icon: Settings
   },
-  { 
-    name: "Notifications", 
-    href: "/espace-installateur/notifications", 
-    icon: Bell 
+  {
+    name: "Notifications",
+    href: "/espace-installateur/notifications",
+    icon: Bell
   }
 ];
 
@@ -69,13 +68,13 @@ export function InstallerLayout() {
                     key={item.href}
                     to={item.href}
                     className={cn(
-                      "flex items-center gap-2 text-sm font-medium transition-colors hover:text-primary",
+                      "flex items-center gap-2 text-sm font-medium transition-colors",
                       location.pathname === item.href
                         ? "text-primary"
-                        : "text-muted-foreground"
+                        : "text-muted-foreground hover:text-primary"
                     )}
                   >
-                    <Icon className="h-4 w-4" />
+                    <Icon className="h-5 w-5" />
                     <span>{item.name}</span>
                   </Link>
                 );
@@ -88,8 +87,11 @@ export function InstallerLayout() {
       {/* Mobile menu */}
       {isMenuOpen && (
         <div className="fixed inset-0 z-40 md:hidden">
-          <div className="fixed inset-0 bg-background-dark/80 backdrop-blur-sm" onClick={() => setIsMenuOpen(false)} />
-          <nav className="fixed inset-y-0 left-0 w-64 bg-background-dark/95 backdrop-blur-lg border-r border-primary/10 px-4 py-6 overflow-y-auto">
+          <div 
+            className="fixed inset-0 bg-background-dark/80 backdrop-blur-sm" 
+            onClick={() => setIsMenuOpen(false)} 
+          />
+          <nav className="fixed inset-y-0 left-0 w-64 bg-background/95 backdrop-blur-lg border-r border-primary/10 px-4 py-6 overflow-y-auto">
             <div className="space-y-2">
               {navigation.map((item) => {
                 const Icon = item.icon;
