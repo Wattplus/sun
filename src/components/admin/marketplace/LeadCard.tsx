@@ -6,7 +6,7 @@ import { LeadCardHeader } from "./LeadCardHeader";
 import { LeadCardActions } from "./LeadCardActions";
 import { LeadInfoDisplay } from "@/components/installer/marketplace/LeadInfoDisplay";
 import { supabase } from "@/lib/supabase-client";
-import { calculateLeadPrice } from "@/utils/leadPricing";
+import { calculateLeadPrice, getPriceId } from "@/utils/leadPricing";
 
 interface LeadCardProps {
   lead: Lead;
