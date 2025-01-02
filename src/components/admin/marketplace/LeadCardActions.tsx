@@ -35,7 +35,7 @@ export const LeadCardActions = ({
           <div className="flex flex-col items-end">
             <div className="flex items-center gap-1">
               <Euro className="h-4 w-4 text-[#1EAEDB]" />
-              <span className="text-sm font-medium">{mutualPrice}</span>
+              <span className="text-sm font-medium">{mutualPrice}€</span>
             </div>
             <span className="text-xs text-muted-foreground">
               {hasPrepaidAccount ? "avec compte prépayé" : "sans compte prépayé"}
