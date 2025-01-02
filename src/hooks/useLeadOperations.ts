@@ -91,8 +91,7 @@ export const useLeadOperations = () => {
             DELETE: 'Lead supprimé'
           };
           
-          toast({
-            title: eventMessages[payload.eventType as keyof typeof eventMessages],
+          toast(eventMessages[payload.eventType as keyof typeof eventMessages], {
             description: "La liste des leads a été mise à jour"
           });
         }
