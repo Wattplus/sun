@@ -1,11 +1,11 @@
 import { Routes, Route } from "react-router-dom";
 import { LandingPage } from "@/pages/LandingPage";
-import { InstallerLogin } from "@/pages/installer/auth/InstallerLogin";
-import { InstallerSignup } from "@/pages/installer/auth/InstallerSignup";
+import InstallerLogin from "@/pages/installer/auth/InstallerLogin";
+import InstallerSignup from "@/pages/installer/auth/InstallerSignup";
 import { InstallerSpace } from "@/pages/installer/InstallerSpace";
 import { ProtectedRoute } from "@/routes/ProtectedRoute";
-import { Admin } from "@/pages/Admin";
-import { Login } from "@/pages/Login";
+import Admin from "@/pages/Admin";
+import Login from "@/pages/Login";
 import { ThankYou } from "@/pages/ThankYou";
 import { InstallerProfile } from "@/pages/InstallerProfile";
 import { AccountPage } from "@/components/installer/account/AccountPage";
