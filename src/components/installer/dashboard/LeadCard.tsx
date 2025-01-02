@@ -14,7 +14,7 @@ interface LeadCardProps {
 }
 
 export const LeadCard = ({ lead, status, onStatusChange }: LeadCardProps) => {
-  const price = calculateLeadPrice(lead);
+  const price = calculateLeadPrice(lead.clienttype, false); // Add false as second argument
   const age = formatDistanceToNow(new Date(lead.created_at), { 
     addSuffix: true,
     locale: fr 

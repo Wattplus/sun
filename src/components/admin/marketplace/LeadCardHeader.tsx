@@ -1,5 +1,5 @@
 import { Badge } from "@/components/ui/badge";
-import { MapPin, Clock, Users, UserPlus } from "lucide-react";
+import { MapPin, Clock, Users, UserPlus, Phone, Mail, Euro } from "lucide-react";
 import { differenceInDays } from "date-fns";
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 
@@ -38,6 +38,7 @@ export const LeadCardHeader = ({
   const purchaseCount = purchasedBy.length;
   const remainingPurchases = 3 - purchaseCount;
   const hasExclusivePurchase = purchasedBy.some(p => p.purchaseType === 'exclusif');
+  const ageLabel = getAgeLabel(createdAt);
 
   return (
     <div className="space-y-4">
@@ -50,9 +51,14 @@ export const LeadCardHeader = ({
             {projectType === 'professional' ? 'Professionnel' : 'Résidentiel'}
           </Badge>
         </div>
-        <Badge variant="outline" className="flex items-center gap-1">
+        <Badge 
+          variant="outline" 
+          className={`flex items-center gap-1 ${
+            ageLabel === "Nouveau" ? "bg-green-500/10 text-green-600" : ""
+          }`}
+        >
           <Clock className="h-3 w-3" />
-          {getAgeLabel(createdAt)}
+          {ageLabel}
         </Badge>
       </div>
 
@@ -67,11 +73,33 @@ export const LeadCardHeader = ({
           </TableRow>
           <TableRow>
             <TableCell className="font-medium">Budget</TableCell>
-            <TableCell>{budget.toLocaleString()}€</TableCell>
+            <TableCell className="flex items-center gap-2">
+              <Euro className="h-4 w-4 text-primary" />
+              {budget.toLocaleString()}€
+            </TableCell>
           </TableRow>
           <TableRow>
             <TableCell className="font-medium">Type de projet</TableCell>
-            <TableCell>{projectType === 'professional' ? 'Professionnel' : 'Résidentiel'}</TableCell>
+            <TableCell>
+              <Badge variant="outline" className={`
+                ${projectType === 'professional' 
+                  ? 'bg-amber-500/10 text-amber-600 border-amber-200/20' 
+                  : 'bg-emerald-500/10 text-emerald-600 border-emerald-200/20'
+                }
+              `}>
+                {projectType === 'professional' ? 'Professionnel' : 'Résidentiel'}
+              </Badge>
+            </TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell className="font-medium">Date de création</TableCell>
+            <TableCell>
+              {new Date(createdAt).toLocaleDateString('fr-FR', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+              })}
+            </TableCell>
           </TableRow>
           <TableRow>
             <TableCell className="font-medium">Statut</TableCell>
