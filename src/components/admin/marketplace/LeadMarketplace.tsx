@@ -25,32 +25,32 @@ export const LeadMarketplace = () => {
 
   const fetchLeads = async () => {
     try {
-      console.log("Fetching marketplace leads");
+      console.log("Fetching marketplace leads...");
       setIsLoading(true);
       
-      const { data, error } = await supabase
+      const { data: leadsData, error } = await supabase
         .from('leads')
         .select('*')
-        .eq('status', 'qualified')
         .order('created_at', { ascending: false });
 
       if (error) {
         console.error('Error fetching leads:', error);
-        toast("Erreur lors du chargement des leads");
+        toast.error("Erreur lors du chargement des leads");
         return;
       }
 
-      console.log("Fetched leads:", data);
-      setAvailableLeads(data || []);
+      console.log("Fetched leads:", leadsData?.length, "leads");
+      setAvailableLeads(leadsData || []);
     } catch (error) {
       console.error('Error in fetchLeads:', error);
-      toast("Une erreur est survenue lors du chargement des leads");
+      toast.error("Une erreur est survenue lors du chargement des leads");
     } finally {
       setIsLoading(false);
     }
   };
 
   useEffect(() => {
+    console.log("Initial leads fetch");
     fetchLeads();
   }, []);
 
@@ -68,10 +68,12 @@ export const LeadMarketplace = () => {
         },
         (payload) => {
           console.log('Received real-time update:', payload);
-          fetchLeads(); // Refresh leads when changes occur
+          fetchLeads();
         }
       )
-      .subscribe();
+      .subscribe((status) => {
+        console.log("Subscription status:", status);
+      });
 
     return () => {
       console.log("Cleaning up marketplace subscription");
@@ -84,14 +86,23 @@ export const LeadMarketplace = () => {
   ).sort();
 
   const filteredLeads = availableLeads.filter(lead => {
-    if (projectTypeFilter !== 'all' && lead.clienttype !== projectTypeFilter) return false;
-    if (selectedDepartments.length > 0 && !selectedDepartments.includes(lead.postalcode.substring(0, 2))) return false;
+    console.log("Filtering lead:", lead);
+    if (projectTypeFilter !== 'all' && lead.clienttype !== projectTypeFilter) {
+      console.log("Filtered out by project type");
+      return false;
+    }
+    if (selectedDepartments.length > 0 && !selectedDepartments.includes(lead.postalcode.substring(0, 2))) {
+      console.log("Filtered out by department");
+      return false;
+    }
     return true;
   });
 
+  console.log("Filtered leads:", filteredLeads.length);
+
   const handlePurchase = (lead: Lead) => {
     setPurchasedLeads(prev => [...prev, lead.id]);
-    toast(`Lead ${lead.firstname} ${lead.lastname} acheté avec succès`);
+    toast.success(`Lead ${lead.firstname} ${lead.lastname} acheté avec succès`);
   };
 
   const handleBulkPurchase = () => {
