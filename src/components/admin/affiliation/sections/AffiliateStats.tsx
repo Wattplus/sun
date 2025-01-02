@@ -1,16 +1,16 @@
 import { motion } from "framer-motion";
 import { Card } from "@/components/ui/card";
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area, Legend } from 'recharts';
 import { Users, TrendingUp, CreditCard, BarChart, ArrowUpRight, ArrowDownRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const mockData = [
-  { name: 'Jan', leads: 40, revenue: 2400, affiliates: 10 },
-  { name: 'Fév', leads: 30, revenue: 1398, affiliates: 12 },
-  { name: 'Mar', leads: 60, revenue: 4800, affiliates: 15 },
-  { name: 'Avr', leads: 80, revenue: 3908, affiliates: 18 },
-  { name: 'Mai', leads: 70, revenue: 4800, affiliates: 20 },
-  { name: 'Jun', leads: 90, revenue: 3800, affiliates: 25 },
+  { name: 'Jan', leads: 40, revenue: 2400, affiliates: 10, commissions: 960 },
+  { name: 'Fév', leads: 30, revenue: 1398, affiliates: 12, commissions: 559 },
+  { name: 'Mar', leads: 60, revenue: 4800, affiliates: 15, commissions: 1920 },
+  { name: 'Avr', leads: 80, revenue: 3908, affiliates: 18, commissions: 1563 },
+  { name: 'Mai', leads: 70, revenue: 4800, affiliates: 20, commissions: 1920 },
+  { name: 'Jun', leads: 90, revenue: 5800, affiliates: 25, commissions: 2320 },
 ];
 
 const stats = [
@@ -95,6 +95,10 @@ export const AffiliateStats = () => {
                     <stop offset="5%" stopColor="#33C3F0" stopOpacity={0.3}/>
                     <stop offset="95%" stopColor="#33C3F0" stopOpacity={0}/>
                   </linearGradient>
+                  <linearGradient id="colorCommissions" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#4CAF50" stopOpacity={0.3}/>
+                    <stop offset="95%" stopColor="#4CAF50" stopOpacity={0}/>
+                  </linearGradient>
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" stroke="#ffffff10" vertical={false} />
                 <XAxis dataKey="name" stroke="#ffffff50" />
@@ -106,6 +110,7 @@ export const AffiliateStats = () => {
                     borderRadius: '8px'
                   }}
                 />
+                <Legend />
                 <Area 
                   type="monotone" 
                   dataKey="leads" 
@@ -121,6 +126,14 @@ export const AffiliateStats = () => {
                   fillOpacity={1} 
                   fill="url(#colorRevenue)" 
                   name="Revenus (€)"
+                />
+                <Area 
+                  type="monotone" 
+                  dataKey="commissions" 
+                  stroke="#4CAF50" 
+                  fillOpacity={1} 
+                  fill="url(#colorCommissions)" 
+                  name="Commissions (€)"
                 />
               </AreaChart>
             </ResponsiveContainer>
@@ -142,6 +155,7 @@ export const AffiliateStats = () => {
                     borderRadius: '8px'
                   }}
                 />
+                <Legend />
                 <Line 
                   type="monotone" 
                   dataKey="affiliates" 

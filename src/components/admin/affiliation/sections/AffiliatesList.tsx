@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { UserPlus, Search, Filter, Download, Mail, ExternalLink, MoreVertical } from "lucide-react";
+import { UserPlus, Search, Filter, Download, Mail, ExternalLink, MoreVertical, Copy, CheckCircle2 } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,6 +14,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { toast } from "sonner";
 
 const mockAffiliates = [
   {
@@ -42,6 +43,32 @@ const mockAffiliates = [
     conversionRate: "2.8%",
     affiliateLink: "https://solar-pro.fr/ref/marie-dubois",
   },
+  {
+    id: "3",
+    name: "Pierre Durand",
+    email: "pierre.durand@example.com",
+    status: "active",
+    leads: 78,
+    revenue: 4200,
+    commission: 1680,
+    joinDate: "2023-12-10",
+    lastActive: "2024-03-21",
+    conversionRate: "4.1%",
+    affiliateLink: "https://solar-pro.fr/ref/pierre-durand",
+  },
+  {
+    id: "4",
+    name: "Sophie Bernard",
+    email: "sophie.bernard@example.com",
+    status: "inactive",
+    leads: 23,
+    revenue: 1200,
+    commission: 480,
+    joinDate: "2024-01-05",
+    lastActive: "2024-02-15",
+    conversionRate: "2.5%",
+    affiliateLink: "https://solar-pro.fr/ref/sophie-bernard",
+  }
 ];
 
 export const AffiliatesList = () => {
@@ -55,6 +82,11 @@ export const AffiliatesList = () => {
       inactive: "bg-gray-100 text-gray-800",
     };
     return styles[status as keyof typeof styles] || styles.inactive;
+  };
+
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text);
+    toast.success("Lien d'affiliation copié !");
   };
 
   return (
@@ -129,6 +161,7 @@ export const AffiliatesList = () => {
                 <TableHead>Revenus Générés</TableHead>
                 <TableHead>Commission</TableHead>
                 <TableHead>Taux Conv.</TableHead>
+                <TableHead>Lien d'Affiliation</TableHead>
                 <TableHead>Dernière Activité</TableHead>
                 <TableHead>Actions</TableHead>
               </TableRow>
@@ -144,13 +177,28 @@ export const AffiliatesList = () => {
                   </TableCell>
                   <TableCell>
                     <Badge className={getStatusBadge(affiliate.status)}>
-                      {affiliate.status === 'active' ? 'Actif' : 'En attente'}
+                      {affiliate.status === 'active' ? 'Actif' : 
+                       affiliate.status === 'pending' ? 'En attente' : 'Inactif'}
                     </Badge>
                   </TableCell>
                   <TableCell>{affiliate.leads}</TableCell>
                   <TableCell>{affiliate.revenue}€</TableCell>
                   <TableCell>{affiliate.commission}€</TableCell>
                   <TableCell>{affiliate.conversionRate}</TableCell>
+                  <TableCell>
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm text-muted-foreground truncate max-w-[200px]">
+                        {affiliate.affiliateLink}
+                      </span>
+                      <Button 
+                        variant="ghost" 
+                        size="icon"
+                        onClick={() => copyToClipboard(affiliate.affiliateLink)}
+                      >
+                        <Copy className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </TableCell>
                   <TableCell>
                     <span className="text-sm text-muted-foreground">
                       {new Date(affiliate.lastActive).toLocaleDateString('fr-FR')}
@@ -174,6 +222,12 @@ export const AffiliatesList = () => {
                           <ExternalLink className="mr-2 h-4 w-4" />
                           Voir le profil
                         </DropdownMenuItem>
+                        {affiliate.status === 'pending' && (
+                          <DropdownMenuItem>
+                            <CheckCircle2 className="mr-2 h-4 w-4" />
+                            Approuver
+                          </DropdownMenuItem>
+                        )}
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </TableCell>
