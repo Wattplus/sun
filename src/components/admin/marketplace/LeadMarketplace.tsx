@@ -1,5 +1,5 @@
 import { AdminBreadcrumb } from "../AdminBreadcrumb";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { mockLeads, Lead } from "@/types/crm";
 import { LeadsFilters } from "@/components/installer/dashboard/LeadsFilters";
@@ -11,32 +11,105 @@ import { MarketplaceSelection } from "./sections/MarketplaceSelection";
 import { MarketplaceGrid } from "./sections/MarketplaceGrid";
 import { BalanceSection } from "@/components/installer/marketplace/sections/BalanceSection";
 import { BottomCTA } from "@/components/installer/marketplace/sections/BottomCTA";
+import { supabase } from "@/lib/supabase-client";
+import { toast } from "sonner";
 
 export const LeadMarketplace = () => {
-  const { toast } = useToast();
   const [purchasedLeads, setPurchasedLeads] = useState<string[]>([]);
   const [selectedLeads, setSelectedLeads] = useState<Lead[]>([]);
   const [selectedDepartments, setSelectedDepartments] = useState<string[]>([]);
   const [projectTypeFilter, setProjectTypeFilter] = useState<string>("all");
   const [priceFilter, setPriceFilter] = useState<"default" | "asc" | "desc">("default");
   const [activeTab, setActiveTab] = useState("new");
+  const [availableLeads, setAvailableLeads] = useState<Lead[]>([]);
+
+  // Fetch leads initially
+  useEffect(() => {
+    fetchLeads();
+  }, []);
+
+  // Set up real-time subscription
+  useEffect(() => {
+    console.log("Setting up real-time subscription for marketplace leads");
+    
+    const channel = supabase
+      .channel('marketplace-changes')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'leads'
+        },
+        (payload) => {
+          console.log('Received real-time update:', payload);
+          
+          if (payload.eventType === 'INSERT') {
+            const newLead = payload.new as Lead;
+            setAvailableLeads(prev => [...prev, newLead]);
+            toast(`New lead available: ${newLead.firstname} ${newLead.lastname}`);
+          }
+          
+          if (payload.eventType === 'UPDATE') {
+            const updatedLead = payload.new as Lead;
+            setAvailableLeads(prev => 
+              prev.map(lead => lead.id === updatedLead.id ? updatedLead : lead)
+            );
+            toast(`Lead updated: ${updatedLead.firstname} ${updatedLead.lastname}`);
+          }
+          
+          if (payload.eventType === 'DELETE') {
+            const deletedLead = payload.old as Lead;
+            setAvailableLeads(prev => 
+              prev.filter(lead => lead.id !== deletedLead.id)
+            );
+            toast(`Lead removed: ${deletedLead.firstname} ${deletedLead.lastname}`);
+          }
+        }
+      )
+      .subscribe();
+
+    return () => {
+      console.log("Cleaning up marketplace subscription");
+      supabase.removeChannel(channel);
+    };
+  }, []);
+
+  const fetchLeads = async () => {
+    try {
+      console.log("Fetching marketplace leads");
+      const { data, error } = await supabase
+        .from('leads')
+        .select('*')
+        .eq('status', 'qualified');
+
+      if (error) {
+        console.error('Error fetching leads:', error);
+        toast.error('Failed to fetch leads');
+        return;
+      }
+
+      console.log("Fetched leads:", data);
+      setAvailableLeads(data);
+    } catch (error) {
+      console.error('Error in fetchLeads:', error);
+      toast.error('An error occurred while fetching leads');
+    }
+  };
 
   const availableDepartments = Array.from(
-    new Set(mockLeads.map(lead => lead.postalcode.substring(0, 2)))
+    new Set(availableLeads.map(lead => lead.postalcode.substring(0, 2)))
   ).sort();
 
-  const availableLeads = mockLeads.filter(lead => {
-    if (projectTypeFilter !== 'all' && lead.projectType !== projectTypeFilter) return false;
+  const filteredLeads = availableLeads.filter(lead => {
+    if (projectTypeFilter !== 'all' && lead.clienttype !== projectTypeFilter) return false;
     if (selectedDepartments.length > 0 && !selectedDepartments.includes(lead.postalcode.substring(0, 2))) return false;
-    return lead.status === "qualified";
+    return true;
   });
 
   const handlePurchase = (lead: Lead) => {
     setPurchasedLeads(prev => [...prev, lead.id]);
-    toast({
-      title: "Lead acheté avec succès",
-      description: `Le lead ${lead.firstname} ${lead.lastname} a été ajouté à votre liste.`,
-    });
+    toast(`Lead ${lead.firstname} ${lead.lastname} has been purchased`);
   };
 
   const handleBulkPurchase = () => {
@@ -72,7 +145,7 @@ export const LeadMarketplace = () => {
 
         <Card className="p-6 bg-background/50 backdrop-blur-sm border-primary/10">
           <div className="space-y-6">
-            <MarketplaceHeader availableLeads={availableLeads} />
+            <MarketplaceHeader availableLeads={filteredLeads} />
 
             <LeadAgeTabs activeTab={activeTab} onTabChange={setActiveTab} />
 
@@ -97,7 +170,7 @@ export const LeadMarketplace = () => {
               />
 
               <MarketplaceGrid 
-                availableLeads={availableLeads}
+                availableLeads={filteredLeads}
                 purchasedLeads={purchasedLeads}
                 onPurchase={handlePurchase}
               />
