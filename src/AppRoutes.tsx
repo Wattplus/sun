@@ -11,6 +11,19 @@ import { InstallerProfile } from "@/pages/InstallerProfile";
 import { AccountPage } from "@/components/installer/account/AccountPage";
 import { NotificationsPage } from "@/components/installer/notifications/NotificationsPage";
 import { PrepaidAccountPage } from "@/pages/installer/account/PrepaidAccountPage";
+import AdminDashboard from "@/components/admin/AdminDashboard";
+import StatisticsPage from "@/components/admin/statistics/StatisticsPage";
+import { LeadManagement } from "@/components/admin/LeadManagement";
+import { InstallerManagement } from "@/components/admin/InstallerManagement";
+import { LeadMarketplace } from "@/components/admin/marketplace/LeadMarketplace";
+import UserManagement from "@/components/admin/users/UserManagement";
+import PricingSettings from "@/components/admin/pricing/PricingSettings";
+import TransactionMonitoring from "@/components/admin/transactions/TransactionMonitoring";
+import ComplaintManagement from "@/components/admin/complaints/ComplaintManagement";
+import DataExport from "@/components/admin/export/DataExport";
+import NotificationsPage from "@/components/admin/notifications/NotificationsPage";
+import SettingsPage from "@/components/admin/settings/SettingsPage";
+import AdminProfilePage from "@/components/admin/profile/ProfilePage";
 
 export const AppRoutes = () => {
   return (
@@ -36,13 +49,27 @@ export const AppRoutes = () => {
 
       {/* Protected admin routes */}
       <Route
-        path="/admin/*"
+        path="/admin"
         element={
-          <ProtectedRoute>
+          <ProtectedRoute requiredRole={["admin", "super_admin"]}>
             <Admin />
           </ProtectedRoute>
         }
-      />
+      >
+        <Route index element={<AdminDashboard />} />
+        <Route path="statistics" element={<StatisticsPage />} />
+        <Route path="leads" element={<LeadManagement />} />
+        <Route path="installers" element={<InstallerManagement />} />
+        <Route path="marketplace" element={<LeadMarketplace />} />
+        <Route path="users" element={<UserManagement />} />
+        <Route path="pricing" element={<PricingSettings />} />
+        <Route path="transactions" element={<TransactionMonitoring />} />
+        <Route path="complaints" element={<ComplaintManagement />} />
+        <Route path="export" element={<DataExport />} />
+        <Route path="notifications" element={<NotificationsPage />} />
+        <Route path="settings" element={<SettingsPage />} />
+        <Route path="profile" element={<AdminProfilePage />} />
+      </Route>
 
       {/* Account routes */}
       <Route path="/account" element={<AccountPage />} />
