@@ -5,8 +5,8 @@ import { calculateLeadPrice, getPriceId } from "@/utils/leadPricing";
 
 export const useLeadPurchase = (
   lead: Lead,
-  onPurchase?: (lead: Lead) => void,
-  setIsLoading: (loading: boolean) => void
+  setIsLoading: (loading: boolean) => void,
+  onPurchase?: (lead: Lead) => void
 ) => {
   const { toast } = useToast();
 
