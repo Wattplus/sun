@@ -1,7 +1,5 @@
 import { Badge } from "@/components/ui/badge";
 import { MapPin, Users, Euro, Receipt } from "lucide-react";
-import { differenceInDays } from "date-fns";
-import { fr } from "date-fns/locale";
 
 interface LeadCardHeaderProps {
   firstName: string;
@@ -32,6 +30,7 @@ export const LeadCardHeader = ({
 }: LeadCardHeaderProps) => {
   const purchaseCount = purchasedBy.length;
   const remainingPurchases = 3 - purchaseCount;
+  const isProfessional = projectType === 'professionnel';
 
   return (
     <div className="space-y-6">
@@ -42,11 +41,11 @@ export const LeadCardHeader = ({
           </h3>
           <div className="flex items-center gap-2">
             <Badge variant="outline" className={`${
-              projectType === 'professional' 
+              isProfessional
                 ? 'bg-purple-500/10 text-purple-500 border-purple-500/20' 
                 : 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20'
             }`}>
-              {projectType === 'professional' ? 'Lead Professionnel' : 'Lead Particulier'}
+              {isProfessional ? 'Lead Professionnel' : 'Lead Particulier'}
             </Badge>
             <Badge variant="outline" className="bg-green-500/10 text-green-500 border-green-500/20">
               Nouveau
@@ -70,7 +69,7 @@ export const LeadCardHeader = ({
             <Euro className="h-4 w-4 text-[#1EAEDB]" />
             <span className="text-white">{budget}€</span>
             <span className="text-xs text-white/60">
-              ({projectType === 'professional' ? 'Professionnel' : 'Particulier'})
+              ({isProfessional ? 'Professionnel' : 'Particulier'})
             </span>
           </div>
         </div>
