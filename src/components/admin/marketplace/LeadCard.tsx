@@ -31,7 +31,8 @@ export const LeadCard = ({
     id: lead.id,
     clientType: lead.clienttype,
     price: lead.price,
-    purchasedBy: lead.purchasedby
+    purchasedBy: lead.purchasedby,
+    monthlyBill: lead.monthlybill
   });
 
   const priceWithPrepaid = calculateLeadPrice(lead.clienttype, true);
@@ -127,6 +128,7 @@ export const LeadCard = ({
           createdAt={lead.created_at}
           projectType={lead.clienttype}
           budget={lead.price || 0}
+          monthlyBill={lead.monthlybill}
           purchasedBy={lead.purchasedby?.map(p => ({
             installerId: p.toString(),
             purchaseType: 'mutualise',

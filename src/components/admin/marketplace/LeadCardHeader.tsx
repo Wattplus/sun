@@ -1,5 +1,5 @@
 import { Badge } from "@/components/ui/badge";
-import { MapPin, Users, Euro } from "lucide-react";
+import { MapPin, Users, Euro, Receipt } from "lucide-react";
 import { differenceInDays } from "date-fns";
 import { fr } from "date-fns/locale";
 
@@ -10,6 +10,7 @@ interface LeadCardHeaderProps {
   createdAt: string;
   projectType: string;
   budget: number;
+  monthlyBill: string;
   purchasedBy?: Array<{ installerId: string; purchaseType: string; purchaseDate: string; }>;
   isExpanded?: boolean;
   onToggleExpand?: () => void;
@@ -23,6 +24,7 @@ export const LeadCardHeader = ({
   createdAt, 
   projectType,
   budget,
+  monthlyBill,
   purchasedBy = [],
   isExpanded,
   onToggleExpand,
@@ -67,6 +69,14 @@ export const LeadCardHeader = ({
         </div>
 
         <div className="flex items-center justify-between border-b border-white/10 pb-3">
+          <span className="text-white/60">Facture mensuelle</span>
+          <div className="flex items-center gap-2 text-white">
+            <Receipt className="h-4 w-4 text-[#1EAEDB]" />
+            {monthlyBill}€
+          </div>
+        </div>
+
+        <div className="flex items-center justify-between border-b border-white/10 pb-3">
           <span className="text-white/60">Type de projet</span>
           <Badge variant="outline" className="bg-[#1EAEDB]/10 text-[#1EAEDB] border-[#1EAEDB]/20">
             {projectType === 'professional' ? 'Professionnel' : 'Résidentiel'}
@@ -93,7 +103,7 @@ export const LeadCardHeader = ({
             </div>
             {remainingPurchases > 0 && (
               <span className="text-[#1EAEDB]">
-                {remainingPurchases} pl rest{remainingPurchases > 1 ? 's' : ''}
+                {remainingPurchases} place{remainingPurchases > 1 ? 's' : ''} restante{remainingPurchases > 1 ? 's' : ''}
               </span>
             )}
           </div>
