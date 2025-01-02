@@ -1,7 +1,7 @@
 import { Badge } from "@/components/ui/badge";
-import { MapPin, Clock, Users, UserPlus, Phone, Mail, Euro } from "lucide-react";
+import { MapPin, Users, Euro } from "lucide-react";
 import { differenceInDays } from "date-fns";
-import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
+import { fr } from "date-fns/locale";
 
 interface LeadCardHeaderProps {
   firstName: string;
@@ -15,13 +15,6 @@ interface LeadCardHeaderProps {
   onToggleExpand?: () => void;
   status?: "available" | "purchased";
 }
-
-const getAgeLabel = (createdAt: string) => {
-  const days = differenceInDays(new Date(), new Date(createdAt));
-  if (days >= 30) return "Plus d'un mois";
-  if (days >= 15) return "Plus de 15 jours";
-  return "Nouveau";
-};
 
 export const LeadCardHeader = ({ 
   firstName, 
@@ -37,89 +30,75 @@ export const LeadCardHeader = ({
 }: LeadCardHeaderProps) => {
   const purchaseCount = purchasedBy.length;
   const remainingPurchases = 3 - purchaseCount;
-  const hasExclusivePurchase = purchasedBy.some(p => p.purchaseType === 'exclusif');
-  const ageLabel = getAgeLabel(createdAt);
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <h3 className="text-lg font-medium">
+        <div>
+          <h3 className="text-xl font-medium text-white mb-2">
             {firstName} {lastName}
           </h3>
-          <Badge variant="secondary" className="bg-primary/10 text-primary">
+          <div className="flex items-center gap-2">
+            <Badge variant="outline" className="bg-[#1EAEDB]/10 text-[#1EAEDB] border-[#1EAEDB]/20">
+              {projectType === 'professional' ? 'Professionnel' : 'Résidentiel'}
+            </Badge>
+            <Badge variant="outline" className="bg-green-500/10 text-green-500 border-green-500/20">
+              Nouveau
+            </Badge>
+          </div>
+        </div>
+      </div>
+
+      <div className="grid gap-4 text-sm">
+        <div className="flex items-center justify-between border-b border-white/10 pb-3">
+          <span className="text-white/60">Localisation</span>
+          <div className="flex items-center gap-2 text-white">
+            <MapPin className="h-4 w-4 text-[#1EAEDB]" />
+            {postalCode}
+          </div>
+        </div>
+
+        <div className="flex items-center justify-between border-b border-white/10 pb-3">
+          <span className="text-white/60">Budget</span>
+          <div className="flex items-center gap-2 text-white">
+            <Euro className="h-4 w-4 text-[#1EAEDB]" />
+            {budget}€
+          </div>
+        </div>
+
+        <div className="flex items-center justify-between border-b border-white/10 pb-3">
+          <span className="text-white/60">Type de projet</span>
+          <Badge variant="outline" className="bg-[#1EAEDB]/10 text-[#1EAEDB] border-[#1EAEDB]/20">
             {projectType === 'professional' ? 'Professionnel' : 'Résidentiel'}
           </Badge>
         </div>
-        <Badge 
-          variant="outline" 
-          className={`flex items-center gap-1 ${
-            ageLabel === "Nouveau" ? "bg-green-500/10 text-green-600" : ""
-          }`}
-        >
-          <Clock className="h-3 w-3" />
-          {ageLabel}
-        </Badge>
-      </div>
 
-      <Table>
-        <TableBody>
-          <TableRow>
-            <TableCell className="font-medium w-1/3">Localisation</TableCell>
-            <TableCell className="flex items-center gap-2">
-              <MapPin className="h-4 w-4 text-primary" />
-              {postalCode}
-            </TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell className="font-medium">Budget</TableCell>
-            <TableCell className="flex items-center gap-2">
-              <Euro className="h-4 w-4 text-primary" />
-              {budget.toLocaleString()}€
-            </TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell className="font-medium">Type de projet</TableCell>
-            <TableCell>
-              <Badge variant="outline" className={`
-                ${projectType === 'professional' 
-                  ? 'bg-amber-500/10 text-amber-600 border-amber-200/20' 
-                  : 'bg-emerald-500/10 text-emerald-600 border-emerald-200/20'
-                }
-              `}>
-                {projectType === 'professional' ? 'Professionnel' : 'Résidentiel'}
-              </Badge>
-            </TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell className="font-medium">Date de création</TableCell>
-            <TableCell>
-              {new Date(createdAt).toLocaleDateString('fr-FR', {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
-              })}
-            </TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell className="font-medium">Statut</TableCell>
-            <TableCell>
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <Users className="h-4 w-4 text-primary" />
-                  <span>{purchaseCount} installateur{purchaseCount > 1 ? 's' : ''}</span>
-                </div>
-                {!hasExclusivePurchase && remainingPurchases > 0 && (
-                  <div className="flex items-center gap-2">
-                    <UserPlus className="h-4 w-4 text-primary" />
-                    <span>{remainingPurchases} place{remainingPurchases > 1 ? 's' : ''} restante{remainingPurchases > 1 ? 's' : ''}</span>
-                  </div>
-                )}
-              </div>
-            </TableCell>
-          </TableRow>
-        </TableBody>
-      </Table>
+        <div className="flex items-center justify-between border-b border-white/10 pb-3">
+          <span className="text-white/60">Date de création</span>
+          <span className="text-white">
+            {new Date(createdAt).toLocaleDateString('fr-FR', {
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric'
+            })}
+          </span>
+        </div>
+
+        <div className="flex items-center justify-between">
+          <span className="text-white/60">Statut</span>
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2 text-white">
+              <Users className="h-4 w-4 text-[#1EAEDB]" />
+              <span>{purchaseCount} installateur{purchaseCount > 1 ? 's' : ''}</span>
+            </div>
+            {remainingPurchases > 0 && (
+              <span className="text-[#1EAEDB]">
+                {remainingPurchases} pl rest{remainingPurchases > 1 ? 's' : ''}
+              </span>
+            )}
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

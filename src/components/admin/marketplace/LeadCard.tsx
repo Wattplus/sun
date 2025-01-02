@@ -27,16 +27,8 @@ export const LeadCard = ({
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
 
-  // Calculate prices based on client type and prepaid status
   const priceWithPrepaid = calculateLeadPrice(lead.clienttype, true);
   const priceWithoutPrepaid = calculateLeadPrice(lead.clienttype, false);
-
-  const getPriceId = (clientType: string, usePrepaid: boolean) => {
-    if (clientType === 'professional') {
-      return usePrepaid ? 'price_1Qa0nUFOePj4Hv47Ih00CR8k' : 'price_1QaAlfFOePj4Hv475LWE2bGQ';
-    }
-    return usePrepaid ? 'price_1QaAlfFOePj4Hv475LWE2bGQ' : 'price_1QbzwKFOePj4Hv47XHGG9Vwt';
-  };
 
   const handlePurchase = async (type: 'mutualise' | 'exclusif', paymentMethod: 'prepaid' | 'direct') => {
     try {
@@ -106,7 +98,7 @@ export const LeadCard = ({
   };
 
   return (
-    <Card className="overflow-hidden border-primary/10 bg-card/50 backdrop-blur-sm">
+    <Card className="overflow-hidden border-[#1EAEDB]/10 bg-[#0A1A2C] text-white">
       <div className="p-6 space-y-6">
         <LeadCardHeader
           firstName={lead.firstname}
@@ -126,7 +118,7 @@ export const LeadCard = ({
         />
 
         {isExpanded && (
-          <div className="space-y-6 pt-4 border-t border-primary/10">
+          <div className="space-y-6 pt-4 border-t border-white/10">
             <LeadInfoDisplay lead={lead} />
             
             {showActions && status === "available" && (
