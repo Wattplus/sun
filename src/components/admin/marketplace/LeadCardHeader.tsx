@@ -1,7 +1,7 @@
 import { Badge } from "@/components/ui/badge";
 import { MapPin, Clock, Users, UserPlus } from "lucide-react";
 import { differenceInDays } from "date-fns";
-import { Lead } from "@/types/crm";
+import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 
 interface LeadCardHeaderProps {
   firstName: string;
@@ -56,30 +56,42 @@ export const LeadCardHeader = ({
         </Badge>
       </div>
 
-      <div className="flex items-center gap-2 text-muted-foreground">
-        <MapPin className="h-4 w-4" />
-        <span>{postalCode}</span>
-      </div>
-
-      <div className="space-y-2">
-        <div>
-          <span className="text-muted-foreground">Budget:</span>
-          <p className="font-medium">{budget.toLocaleString()}€</p>
-        </div>
-
-        <div className="flex items-center justify-between mt-4 text-sm text-muted-foreground border-t pt-4 border-primary/10">
-          <div className="flex items-center gap-2">
-            <Users className="h-4 w-4 text-primary" />
-            <span>{purchaseCount} installateur{purchaseCount > 1 ? 's' : ''}</span>
-          </div>
-          {!hasExclusivePurchase && remainingPurchases > 0 && (
-            <div className="flex items-center gap-2">
-              <UserPlus className="h-4 w-4 text-primary" />
-              <span>{remainingPurchases} place{remainingPurchases > 1 ? 's' : ''} restante{remainingPurchases > 1 ? 's' : ''}</span>
-            </div>
-          )}
-        </div>
-      </div>
+      <Table>
+        <TableBody>
+          <TableRow>
+            <TableCell className="font-medium w-1/3">Localisation</TableCell>
+            <TableCell className="flex items-center gap-2">
+              <MapPin className="h-4 w-4 text-primary" />
+              {postalCode}
+            </TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell className="font-medium">Budget</TableCell>
+            <TableCell>{budget.toLocaleString()}€</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell className="font-medium">Type de projet</TableCell>
+            <TableCell>{projectType === 'professional' ? 'Professionnel' : 'Résidentiel'}</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell className="font-medium">Statut</TableCell>
+            <TableCell>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Users className="h-4 w-4 text-primary" />
+                  <span>{purchaseCount} installateur{purchaseCount > 1 ? 's' : ''}</span>
+                </div>
+                {!hasExclusivePurchase && remainingPurchases > 0 && (
+                  <div className="flex items-center gap-2">
+                    <UserPlus className="h-4 w-4 text-primary" />
+                    <span>{remainingPurchases} place{remainingPurchases > 1 ? 's' : ''} restante{remainingPurchases > 1 ? 's' : ''}</span>
+                  </div>
+                )}
+              </div>
+            </TableCell>
+          </TableRow>
+        </TableBody>
+      </Table>
     </div>
   );
 };
