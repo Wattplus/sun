@@ -9,7 +9,7 @@ import Login from "@/pages/Login";
 import { ThankYou } from "@/pages/ThankYou";
 import { InstallerProfile } from "@/pages/InstallerProfile";
 import { AccountPage } from "@/components/installer/account/AccountPage";
-import { NotificationsPage } from "@/components/installer/notifications/NotificationsPage";
+import { NotificationsPage as InstallerNotificationsPage } from "@/components/installer/notifications/NotificationsPage";
 import { PrepaidAccountPage } from "@/pages/installer/account/PrepaidAccountPage";
 import AdminDashboard from "@/components/admin/AdminDashboard";
 import StatisticsPage from "@/components/admin/statistics/StatisticsPage";
@@ -21,7 +21,7 @@ import PricingSettings from "@/components/admin/pricing/PricingSettings";
 import TransactionMonitoring from "@/components/admin/transactions/TransactionMonitoring";
 import ComplaintManagement from "@/components/admin/complaints/ComplaintManagement";
 import DataExport from "@/components/admin/export/DataExport";
-import NotificationsPage from "@/components/admin/notifications/NotificationsPage";
+import AdminNotificationsPage from "@/components/admin/notifications/NotificationsPage";
 import SettingsPage from "@/components/admin/settings/SettingsPage";
 import AdminProfilePage from "@/components/admin/profile/ProfilePage";
 
@@ -66,14 +66,14 @@ export const AppRoutes = () => {
         <Route path="transactions" element={<TransactionMonitoring />} />
         <Route path="complaints" element={<ComplaintManagement />} />
         <Route path="export" element={<DataExport />} />
-        <Route path="notifications" element={<NotificationsPage />} />
+        <Route path="notifications" element={<AdminNotificationsPage />} />
         <Route path="settings" element={<SettingsPage />} />
         <Route path="profile" element={<AdminProfilePage />} />
       </Route>
 
       {/* Account routes */}
       <Route path="/account" element={<AccountPage />} />
-      <Route path="/notifications" element={<NotificationsPage />} />
+      <Route path="/notifications" element={<InstallerNotificationsPage />} />
       <Route path="/prepaid-account" element={<PrepaidAccountPage />} />
     </Routes>
   );
