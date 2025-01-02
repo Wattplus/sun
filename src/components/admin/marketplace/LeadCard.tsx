@@ -22,7 +22,7 @@ export const LeadCard = ({
   hasPrepaidAccount = false
 }: LeadCardProps) => {
   const { isExpanded, setIsExpanded, isLoading, setIsLoading } = useLeadCardState(lead);
-  const { handlePurchase } = useLeadPurchase(lead, onPurchase, setIsLoading);
+  const { handlePurchase } = useLeadPurchase(lead, setIsLoading, onPurchase);
 
   return (
     <Card className="overflow-hidden border-[#1EAEDB]/10 bg-[#0A1A2C] text-white">
