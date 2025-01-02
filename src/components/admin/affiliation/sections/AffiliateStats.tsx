@@ -1,10 +1,11 @@
 import { motion } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area, Legend } from 'recharts';
-import { Users, TrendingUp, CreditCard, BarChart, ArrowUpRight, ArrowDownRight } from "lucide-react";
+import { Users, TrendingUp, CreditCard, BarChart, ArrowUpRight, ArrowDownRight, UserCheck, Percent } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAffiliateStats } from "@/hooks/affiliates/useAffiliateStats";
 import { useAffiliateTransactions } from "@/hooks/affiliates/useAffiliateTransactions";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export const AffiliateStats = () => {
   const { data: stats, isLoading: statsLoading } = useAffiliateStats();
@@ -19,6 +20,13 @@ export const AffiliateStats = () => {
       icon: Users,
     },
     {
+      title: "Affiliés Actifs",
+      value: stats?.activeAffiliates?.toString() || "0",
+      change: "+8%",
+      trend: "up",
+      icon: UserCheck,
+    },
+    {
       title: "Leads Générés",
       value: stats?.totalLeads?.toString() || "0",
       change: "+25%",
@@ -27,24 +35,39 @@ export const AffiliateStats = () => {
     },
     {
       title: "Revenus Totaux",
-      value: `${stats?.totalRevenue || 0}€`,
+      value: `${stats?.totalRevenue?.toLocaleString() || 0}€`,
       change: "+18%",
       trend: "up",
       icon: CreditCard,
     },
     {
-      title: "Taux de Conversion",
-      value: stats?.totalLeads && stats?.totalRevenue 
-        ? `${((stats.totalLeads / stats.totalRevenue) * 100).toFixed(1)}%`
-        : "0%",
-      change: "-5%",
-      trend: "down",
+      title: "Commission Moyenne",
+      value: `${stats?.averageCommission?.toLocaleString() || 0}€`,
+      change: "+15%",
+      trend: "up",
       icon: BarChart,
+    },
+    {
+      title: "Taux de Conversion",
+      value: `${stats?.conversionRate || 0}%`,
+      change: "+10%",
+      trend: "up",
+      icon: Percent,
     },
   ];
 
   if (statsLoading || transactionsLoading) {
-    return <div className="p-8 text-center">Chargement...</div>;
+    return (
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {[...Array(6)].map((_, i) => (
+          <Card key={i} className="p-6">
+            <Skeleton className="h-4 w-24 mb-4" />
+            <Skeleton className="h-8 w-16 mb-2" />
+            <Skeleton className="h-4 w-12" />
+          </Card>
+        ))}
+      </div>
+    );
   }
 
   // Transformer les transactions pour le graphique
@@ -72,7 +95,7 @@ export const AffiliateStats = () => {
       animate={{ opacity: 1, y: 0 }}
       className="space-y-6"
     >
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {statsCards.map((stat, index) => (
           <Card key={index} className="p-6 hover:shadow-lg transition-shadow">
             <div className="flex items-center justify-between">
