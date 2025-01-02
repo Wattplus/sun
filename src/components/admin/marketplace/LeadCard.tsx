@@ -27,12 +27,17 @@ export const LeadCard = ({
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
 
-  console.log('Lead data:', {
+  // Ajout de logs détaillés pour le débogage
+  console.log('Lead détaillé:', {
     id: lead.id,
     clientType: lead.clienttype,
+    firstName: lead.firstname,
+    lastName: lead.lastname,
+    monthlyBill: lead.monthlybill,
     price: lead.price,
     purchasedBy: lead.purchasedby,
-    monthlyBill: lead.monthlybill
+    status: lead.status,
+    rawLead: lead
   });
 
   const priceWithPrepaid = calculateLeadPrice(lead.clienttype, true);
