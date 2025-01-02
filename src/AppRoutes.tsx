@@ -1,65 +1,53 @@
-import { Route, Routes, Navigate } from "react-router-dom";
-import { ProtectedRoute } from "@/routes/ProtectedRoute";
-import { PublicRoutes } from "@/routes/public/PublicRoutes";
-import { AdminRoutes } from "@/routes/admin/AdminRoutes";
-import { InstallerSpace } from "@/pages/installer/InstallerSpace";
-import InstallerLogin from "@/pages/installer/auth/InstallerLogin";
-import InstallerSignup from "@/pages/installer/auth/InstallerSignup";
+import { Routes, Route } from "react-router-dom";
 import { LandingPage } from "@/pages/LandingPage";
-import { InstallerDashboard } from "@/components/installer/InstallerDashboard";
-import { MarketplacePage } from "@/components/installer/marketplace/MarketplacePage";
-import { PurchasedLeadsPage } from "@/components/installer/leads/PurchasedLeadsPage";
-import { MessagesPage } from "@/components/installer/messages/MessagesPage";
-import { ProfilePage } from "@/components/installer/profile/ProfilePage";
+import { InstallerLogin } from "@/pages/installer/auth/InstallerLogin";
+import { InstallerSignup } from "@/pages/installer/auth/InstallerSignup";
+import { InstallerSpace } from "@/pages/installer/InstallerSpace";
+import { ProtectedRoute } from "@/routes/ProtectedRoute";
+import { Admin } from "@/pages/Admin";
+import { Login } from "@/pages/Login";
+import { ThankYou } from "@/pages/ThankYou";
+import { InstallerProfile } from "@/pages/InstallerProfile";
 import { AccountPage } from "@/components/installer/account/AccountPage";
 import { NotificationsPage } from "@/components/installer/notifications/NotificationsPage";
 import { PrepaidAccountPage } from "@/pages/installer/account/PrepaidAccountPage";
-import { Index } from "@/pages/Index";
 
 export const AppRoutes = () => {
   return (
     <Routes>
       {/* Public routes */}
-      <Route path="/" element={<Index />} />
-      <Route path="/landing" element={<LandingPage />} />
+      <Route path="/" element={<LandingPage />} />
       <Route path="/connexion-installateur" element={<InstallerLogin />} />
       <Route path="/devenir-installateur" element={<InstallerSignup />} />
       <Route path="/inscription-installateur" element={<InstallerSignup />} />
-      
-      {/* Public pages */}
-      <Route path="/*" element={<PublicRoutes />} />
-
-      {/* Admin routes */}
-      <Route
-        path="/admin/*"
-        element={
-          <ProtectedRoute>
-            <AdminRoutes />
-          </ProtectedRoute>
-        }
-      />
+      <Route path="/login" element={<Login />} />
+      <Route path="/merci" element={<ThankYou />} />
+      <Route path="/installateur/:id" element={<InstallerProfile />} />
 
       {/* Protected installer routes */}
       <Route
-        path="/espace-installateur"
+        path="/espace-installateur/*"
         element={
           <ProtectedRoute>
             <InstallerSpace />
           </ProtectedRoute>
         }
-      >
-        <Route index element={<InstallerDashboard />} />
-        <Route path="marketplace" element={<MarketplacePage />} />
-        <Route path="leads" element={<PurchasedLeadsPage />} />
-        <Route path="messages" element={<MessagesPage />} />
-        <Route path="mon-compte" element={<ProfilePage />} />
-        <Route path="mon-compte/prepaid" element={<PrepaidAccountPage />} />
-        <Route path="parametres" element={<AccountPage />} />
-        <Route path="notifications" element={<NotificationsPage />} />
-      </Route>
+      />
 
-      {/* Catch all redirect */}
-      <Route path="*" element={<Navigate to="/" replace />} />
+      {/* Protected admin routes */}
+      <Route
+        path="/admin/*"
+        element={
+          <ProtectedRoute>
+            <Admin />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Account routes */}
+      <Route path="/account" element={<AccountPage />} />
+      <Route path="/notifications" element={<NotificationsPage />} />
+      <Route path="/prepaid-account" element={<PrepaidAccountPage />} />
     </Routes>
   );
 };
