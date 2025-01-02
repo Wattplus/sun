@@ -13,14 +13,14 @@ export const AffiliateStats = () => {
   const statsCards = [
     {
       title: "Total Affiliés",
-      value: stats?.totalAffiliates || "0",
+      value: stats?.totalAffiliates?.toString() || "0",
       change: "+12%",
       trend: "up",
       icon: Users,
     },
     {
       title: "Leads Générés",
-      value: stats?.totalLeads || "0",
+      value: stats?.totalLeads?.toString() || "0",
       change: "+25%",
       trend: "up",
       icon: TrendingUp,

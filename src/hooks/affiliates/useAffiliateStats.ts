@@ -6,6 +6,16 @@ export const useAffiliateStats = () => {
   return useQuery({
     queryKey: ["affiliate-stats"],
     queryFn: async () => {
+      const { count: totalAffiliates, error: countError } = await supabase
+        .from("affiliates")
+        .select("*", { count: 'exact', head: true });
+
+      if (countError) {
+        console.error("Error fetching affiliate count:", countError);
+        toast.error("Erreur lors de la récupération du nombre d'affiliés");
+        throw countError;
+      }
+
       const { data: affiliates, error: affiliatesError } = await supabase
         .from("affiliates")
         .select("total_leads, total_revenue, total_commission");
@@ -25,7 +35,10 @@ export const useAffiliateStats = () => {
         { totalLeads: 0, totalRevenue: 0, totalCommission: 0 }
       );
 
-      return stats;
+      return {
+        ...stats,
+        totalAffiliates: totalAffiliates || 0
+      };
     },
   });
 };
