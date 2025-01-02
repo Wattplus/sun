@@ -41,8 +41,12 @@ export const LeadCardHeader = ({
             {firstName} {lastName}
           </h3>
           <div className="flex items-center gap-2">
-            <Badge variant="outline" className="bg-[#1EAEDB]/10 text-[#1EAEDB] border-[#1EAEDB]/20">
-              {projectType === 'professional' ? 'Professionnel' : 'Résidentiel'}
+            <Badge variant="outline" className={`${
+              projectType === 'professional' 
+                ? 'bg-purple-500/10 text-purple-500 border-purple-500/20' 
+                : 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20'
+            }`}>
+              {projectType === 'professional' ? 'Lead Professionnel' : 'Lead Particulier'}
             </Badge>
             <Badge variant="outline" className="bg-green-500/10 text-green-500 border-green-500/20">
               Nouveau
@@ -61,10 +65,13 @@ export const LeadCardHeader = ({
         </div>
 
         <div className="flex items-center justify-between border-b border-white/10 pb-3">
-          <span className="text-white/60">Budget</span>
-          <div className="flex items-center gap-2 text-white">
+          <span className="text-white/60">Prix du lead</span>
+          <div className="flex items-center gap-2">
             <Euro className="h-4 w-4 text-[#1EAEDB]" />
-            {budget}€
+            <span className="text-white">{budget}€</span>
+            <span className="text-xs text-white/60">
+              ({projectType === 'professional' ? 'Professionnel' : 'Particulier'})
+            </span>
           </div>
         </div>
 
@@ -74,13 +81,6 @@ export const LeadCardHeader = ({
             <Receipt className="h-4 w-4 text-[#1EAEDB]" />
             {monthlyBill}€
           </div>
-        </div>
-
-        <div className="flex items-center justify-between border-b border-white/10 pb-3">
-          <span className="text-white/60">Type de projet</span>
-          <Badge variant="outline" className="bg-[#1EAEDB]/10 text-[#1EAEDB] border-[#1EAEDB]/20">
-            {projectType === 'professional' ? 'Professionnel' : 'Résidentiel'}
-          </Badge>
         </div>
 
         <div className="flex items-center justify-between border-b border-white/10 pb-3">
