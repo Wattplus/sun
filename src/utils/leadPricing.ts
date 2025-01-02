@@ -20,6 +20,7 @@ const LEAD_PRICES: LeadPrices = {
 };
 
 export const calculateLeadPrice = (clientType: string, hasPrepaidAccount: boolean): number => {
+  console.log('Calculating price for:', { clientType, hasPrepaidAccount });
   const prices = clientType === 'professional' ? LEAD_PRICES.professional : LEAD_PRICES.particular;
   return hasPrepaidAccount ? prices.withPrepaid : prices.withoutPrepaid;
 };
