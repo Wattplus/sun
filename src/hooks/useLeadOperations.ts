@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { supabase } from "@/lib/supabase-client";
 import { Lead } from "@/types/crm";
 import { toast } from "sonner";
@@ -65,6 +65,45 @@ export const useLeadOperations = () => {
     }
   }, []);
 
+  useEffect(() => {
+    fetchLeads();
+
+    // Subscribe to real-time changes
+    const channel = supabase
+      .channel('leads-changes')
+      .on(
+        'postgres_changes',
+        {
+          event: '*', // Listen to all changes (INSERT, UPDATE, DELETE)
+          schema: 'public',
+          table: 'leads'
+        },
+        (payload) => {
+          console.log('Real-time update received:', payload);
+          
+          // Refresh the leads list to ensure we have the latest data
+          fetchLeads();
+          
+          // Show a toast notification
+          const eventMessages = {
+            INSERT: 'Nouveau lead ajouté',
+            UPDATE: 'Lead mis à jour',
+            DELETE: 'Lead supprimé'
+          };
+          
+          toast({
+            title: eventMessages[payload.eventType as keyof typeof eventMessages],
+            description: "La liste des leads a été mise à jour"
+          });
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [fetchLeads]);
+
   const updateLead = async (updatedLead: Lead) => {
     try {
       const { error } = await supabase
@@ -75,7 +114,6 @@ export const useLeadOperations = () => {
       if (error) throw error;
 
       toast.success("Lead mis à jour avec succès");
-      await fetchLeads();
       return true;
     } catch (error) {
       console.error('Error updating lead:', error);
@@ -94,7 +132,6 @@ export const useLeadOperations = () => {
       if (error) throw error;
 
       toast.success("Lead supprimé avec succès");
-      await fetchLeads();
       return true;
     } catch (error) {
       console.error('Error deleting lead:', error);
@@ -113,7 +150,6 @@ export const useLeadOperations = () => {
       if (error) throw error;
 
       toast.success("Lead assigné avec succès");
-      await fetchLeads();
       return true;
     } catch (error) {
       console.error('Error assigning lead:', error);
