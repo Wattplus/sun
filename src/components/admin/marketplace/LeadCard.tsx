@@ -27,8 +27,22 @@ export const LeadCard = ({
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
 
+  console.log('Lead data:', {
+    id: lead.id,
+    clientType: lead.clienttype,
+    price: lead.price,
+    purchasedBy: lead.purchasedby
+  });
+
   const priceWithPrepaid = calculateLeadPrice(lead.clienttype, true);
   const priceWithoutPrepaid = calculateLeadPrice(lead.clienttype, false);
+
+  console.log('Calculated prices:', {
+    clientType: lead.clienttype,
+    priceWithPrepaid,
+    priceWithoutPrepaid,
+    hasPrepaidAccount
+  });
 
   const handlePurchase = async (type: 'mutualise' | 'exclusif', paymentMethod: 'prepaid' | 'direct') => {
     try {
@@ -49,7 +63,13 @@ export const LeadCard = ({
         (hasPrepaidAccount ? priceWithPrepaid * 2 : priceWithoutPrepaid * 2) : 
         (hasPrepaidAccount ? priceWithPrepaid : priceWithoutPrepaid);
       
-      console.log('Final price calculated:', { priceWithPrepaid, priceWithoutPrepaid, finalPrice, type });
+      console.log('Final price calculated:', { 
+        priceWithPrepaid, 
+        priceWithoutPrepaid, 
+        finalPrice, 
+        type,
+        priceId: getPriceId(lead.clienttype, hasPrepaidAccount)
+      });
       
       const { data, error } = await supabase.functions.invoke('create-lead-checkout', {
         body: { 
