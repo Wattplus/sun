@@ -2,7 +2,7 @@ import { Outlet } from "react-router-dom"
 import { AdminNavigation } from "@/components/admin/AdminNavigation"
 import { Helmet } from "react-helmet"
 
-export default function Admin() {
+const Admin = () => {
   return (
     <>
       <Helmet>
@@ -19,3 +19,5 @@ export default function Admin() {
     </>
   )
 }
+
+export default Admin;

@@ -7,7 +7,7 @@ import { supabase } from "@/lib/supabase-client"
 import { useNavigate, useLocation } from "react-router-dom"
 import { toast } from "sonner"
 
-export default function Login() {
+const Login = () => {
   const navigate = useNavigate()
   const location = useLocation()
   const [email, setEmail] = useState("")
@@ -135,3 +135,5 @@ export default function Login() {
     </div>
   )
 }
+
+export default Login;
