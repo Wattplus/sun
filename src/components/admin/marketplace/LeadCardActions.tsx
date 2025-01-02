@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Wallet, CreditCard, Loader2 } from "lucide-react";
+import { Wallet, CreditCard, Loader2, Euro } from "lucide-react";
 
 interface LeadCardActionsProps {
   onPurchase: (type: 'mutualise' | 'exclusif', paymentMethod: 'prepaid' | 'direct') => void;
@@ -26,9 +26,17 @@ export const LeadCardActions = ({
     <div className="space-y-4">
       <div className="space-y-2">
         <div className="flex items-center justify-between">
-          <span className="text-sm font-medium text-[#1EAEDB]">Acheter ce lead</span>
+          <div className="flex items-center gap-2">
+            <span className="text-sm font-medium text-[#1EAEDB]">Acheter ce lead</span>
+            <span className="text-xs px-2 py-1 rounded-full bg-amber-500/10 text-amber-600">
+              {isProfessionalProject ? 'Professionnel' : 'Particulier'}
+            </span>
+          </div>
           <div className="flex flex-col items-end">
-            <span className="text-sm font-medium">{mutualPrice}€</span>
+            <div className="flex items-center gap-1">
+              <Euro className="h-4 w-4 text-[#1EAEDB]" />
+              <span className="text-sm font-medium">{mutualPrice}</span>
+            </div>
             <span className="text-xs text-muted-foreground">
               {hasPrepaidAccount ? "avec compte prépayé" : "sans compte prépayé"}
             </span>
