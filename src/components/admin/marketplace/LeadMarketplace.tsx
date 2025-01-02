@@ -1,7 +1,6 @@
 import { AdminBreadcrumb } from "../AdminBreadcrumb";
 import { useState, useEffect } from "react";
-import { useToast } from "@/components/ui/use-toast";
-import { mockLeads, Lead } from "@/types/crm";
+import { Lead } from "@/types/crm";
 import { LeadsFilters } from "@/components/installer/dashboard/LeadsFilters";
 import { Card } from "@/components/ui/card";
 import { LeadAgeTabs } from "@/components/installer/marketplace/components/LeadAgeTabs";
@@ -22,13 +21,39 @@ export const LeadMarketplace = () => {
   const [priceFilter, setPriceFilter] = useState<"default" | "asc" | "desc">("default");
   const [activeTab, setActiveTab] = useState("new");
   const [availableLeads, setAvailableLeads] = useState<Lead[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  // Fetch leads initially
+  const fetchLeads = async () => {
+    try {
+      console.log("Fetching marketplace leads");
+      setIsLoading(true);
+      
+      const { data, error } = await supabase
+        .from('leads')
+        .select('*')
+        .eq('status', 'qualified')
+        .order('created_at', { ascending: false });
+
+      if (error) {
+        console.error('Error fetching leads:', error);
+        toast("Erreur lors du chargement des leads");
+        return;
+      }
+
+      console.log("Fetched leads:", data);
+      setAvailableLeads(data || []);
+    } catch (error) {
+      console.error('Error in fetchLeads:', error);
+      toast("Une erreur est survenue lors du chargement des leads");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   useEffect(() => {
     fetchLeads();
   }, []);
 
-  // Set up real-time subscription
   useEffect(() => {
     console.log("Setting up real-time subscription for marketplace leads");
     
@@ -43,28 +68,7 @@ export const LeadMarketplace = () => {
         },
         (payload) => {
           console.log('Received real-time update:', payload);
-          
-          if (payload.eventType === 'INSERT') {
-            const newLead = payload.new as Lead;
-            setAvailableLeads(prev => [...prev, newLead]);
-            toast(`New lead available: ${newLead.firstname} ${newLead.lastname}`);
-          }
-          
-          if (payload.eventType === 'UPDATE') {
-            const updatedLead = payload.new as Lead;
-            setAvailableLeads(prev => 
-              prev.map(lead => lead.id === updatedLead.id ? updatedLead : lead)
-            );
-            toast(`Lead updated: ${updatedLead.firstname} ${updatedLead.lastname}`);
-          }
-          
-          if (payload.eventType === 'DELETE') {
-            const deletedLead = payload.old as Lead;
-            setAvailableLeads(prev => 
-              prev.filter(lead => lead.id !== deletedLead.id)
-            );
-            toast(`Lead removed: ${deletedLead.firstname} ${deletedLead.lastname}`);
-          }
+          fetchLeads(); // Refresh leads when changes occur
         }
       )
       .subscribe();
@@ -74,28 +78,6 @@ export const LeadMarketplace = () => {
       supabase.removeChannel(channel);
     };
   }, []);
-
-  const fetchLeads = async () => {
-    try {
-      console.log("Fetching marketplace leads");
-      const { data, error } = await supabase
-        .from('leads')
-        .select('*')
-        .eq('status', 'qualified');
-
-      if (error) {
-        console.error('Error fetching leads:', error);
-        toast.error('Failed to fetch leads');
-        return;
-      }
-
-      console.log("Fetched leads:", data);
-      setAvailableLeads(data);
-    } catch (error) {
-      console.error('Error in fetchLeads:', error);
-      toast.error('An error occurred while fetching leads');
-    }
-  };
 
   const availableDepartments = Array.from(
     new Set(availableLeads.map(lead => lead.postalcode.substring(0, 2)))
@@ -109,7 +91,7 @@ export const LeadMarketplace = () => {
 
   const handlePurchase = (lead: Lead) => {
     setPurchasedLeads(prev => [...prev, lead.id]);
-    toast(`Lead ${lead.firstname} ${lead.lastname} has been purchased`);
+    toast(`Lead ${lead.firstname} ${lead.lastname} acheté avec succès`);
   };
 
   const handleBulkPurchase = () => {
@@ -169,11 +151,17 @@ export const LeadMarketplace = () => {
                 totalPrice={totalPrice}
               />
 
-              <MarketplaceGrid 
-                availableLeads={filteredLeads}
-                purchasedLeads={purchasedLeads}
-                onPurchase={handlePurchase}
-              />
+              {isLoading ? (
+                <div className="text-center py-12">
+                  <p className="text-muted-foreground">Chargement des leads...</p>
+                </div>
+              ) : (
+                <MarketplaceGrid 
+                  availableLeads={filteredLeads}
+                  purchasedLeads={purchasedLeads}
+                  onPurchase={handlePurchase}
+                />
+              )}
             </div>
           </div>
         </Card>
