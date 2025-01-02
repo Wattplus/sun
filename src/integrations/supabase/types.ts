@@ -9,6 +9,107 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      affiliate_transactions: {
+        Row: {
+          affiliate_id: string | null
+          amount: number
+          commission: number
+          created_at: string
+          description: string | null
+          id: string
+          payment_date: string | null
+          status: string | null
+          type: string
+        }
+        Insert: {
+          affiliate_id?: string | null
+          amount: number
+          commission: number
+          created_at?: string
+          description?: string | null
+          id?: string
+          payment_date?: string | null
+          status?: string | null
+          type: string
+        }
+        Update: {
+          affiliate_id?: string | null
+          amount?: number
+          commission?: number
+          created_at?: string
+          description?: string | null
+          id?: string
+          payment_date?: string | null
+          status?: string | null
+          type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "affiliate_transactions_affiliate_id_fkey"
+            columns: ["affiliate_id"]
+            isOneToOne: false
+            referencedRelation: "affiliates"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      affiliates: {
+        Row: {
+          bank_info: Json | null
+          commission_rate: number | null
+          company_name: string
+          contact_name: string
+          created_at: string
+          email: string
+          id: string
+          last_active: string | null
+          payment_method: string | null
+          phone: string | null
+          status: string | null
+          total_commission: number | null
+          total_leads: number | null
+          total_revenue: number | null
+          user_id: string | null
+          verified: boolean | null
+        }
+        Insert: {
+          bank_info?: Json | null
+          commission_rate?: number | null
+          company_name: string
+          contact_name: string
+          created_at?: string
+          email: string
+          id?: string
+          last_active?: string | null
+          payment_method?: string | null
+          phone?: string | null
+          status?: string | null
+          total_commission?: number | null
+          total_leads?: number | null
+          total_revenue?: number | null
+          user_id?: string | null
+          verified?: boolean | null
+        }
+        Update: {
+          bank_info?: Json | null
+          commission_rate?: number | null
+          company_name?: string
+          contact_name?: string
+          created_at?: string
+          email?: string
+          id?: string
+          last_active?: string | null
+          payment_method?: string | null
+          phone?: string | null
+          status?: string | null
+          total_commission?: number | null
+          total_leads?: number | null
+          total_revenue?: number | null
+          user_id?: string | null
+          verified?: boolean | null
+        }
+        Relationships: []
+      }
       calculation_parameters: {
         Row: {
           active: boolean | null

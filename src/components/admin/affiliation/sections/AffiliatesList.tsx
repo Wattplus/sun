@@ -6,74 +6,14 @@ import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { UserPlus, Search, Filter, Download, Mail, ExternalLink, MoreVertical, Copy, CheckCircle2 } from "lucide-react";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { toast } from "sonner";
-
-const mockAffiliates = [
-  {
-    id: "1",
-    name: "Jean Martin",
-    email: "jean.martin@example.com",
-    status: "active",
-    leads: 45,
-    revenue: 2500,
-    commission: 1000,
-    joinDate: "2024-01-15",
-    lastActive: "2024-03-20",
-    conversionRate: "3.2%",
-    affiliateLink: "https://solar-pro.fr/ref/jean-martin",
-  },
-  {
-    id: "2",
-    name: "Marie Dubois",
-    email: "marie.dubois@example.com",
-    status: "pending",
-    leads: 12,
-    revenue: 750,
-    commission: 300,
-    joinDate: "2024-02-20",
-    lastActive: "2024-03-19",
-    conversionRate: "2.8%",
-    affiliateLink: "https://solar-pro.fr/ref/marie-dubois",
-  },
-  {
-    id: "3",
-    name: "Pierre Durand",
-    email: "pierre.durand@example.com",
-    status: "active",
-    leads: 78,
-    revenue: 4200,
-    commission: 1680,
-    joinDate: "2023-12-10",
-    lastActive: "2024-03-21",
-    conversionRate: "4.1%",
-    affiliateLink: "https://solar-pro.fr/ref/pierre-durand",
-  },
-  {
-    id: "4",
-    name: "Sophie Bernard",
-    email: "sophie.bernard@example.com",
-    status: "inactive",
-    leads: 23,
-    revenue: 1200,
-    commission: 480,
-    joinDate: "2024-01-05",
-    lastActive: "2024-02-15",
-    conversionRate: "2.5%",
-    affiliateLink: "https://solar-pro.fr/ref/sophie-bernard",
-  }
-];
+import { useAffiliatesData } from "@/hooks/affiliates/useAffiliatesData";
 
 export const AffiliatesList = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedStatus, setSelectedStatus] = useState("all");
+  const { data: affiliates, isLoading } = useAffiliatesData();
 
   const getStatusBadge = (status: string) => {
     const styles = {
@@ -88,6 +28,21 @@ export const AffiliatesList = () => {
     navigator.clipboard.writeText(text);
     toast.success("Lien d'affiliation copié !");
   };
+
+  const filteredAffiliates = affiliates?.filter((affiliate) => {
+    const matchesSearch =
+      affiliate.company_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      affiliate.contact_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      affiliate.email.toLowerCase().includes(searchTerm.toLowerCase());
+    
+    const matchesStatus = selectedStatus === "all" || affiliate.status === selectedStatus;
+    
+    return matchesSearch && matchesStatus;
+  });
+
+  if (isLoading) {
+    return <div className="p-8 text-center">Chargement...</div>;
+  }
 
   return (
     <motion.div
@@ -161,17 +116,16 @@ export const AffiliatesList = () => {
                 <TableHead>Revenus Générés</TableHead>
                 <TableHead>Commission</TableHead>
                 <TableHead>Taux Conv.</TableHead>
-                <TableHead>Lien d'Affiliation</TableHead>
                 <TableHead>Dernière Activité</TableHead>
                 <TableHead>Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {mockAffiliates.map((affiliate) => (
+              {filteredAffiliates?.map((affiliate) => (
                 <TableRow key={affiliate.id} className="group">
                   <TableCell>
                     <div>
-                      <p className="font-medium">{affiliate.name}</p>
+                      <p className="font-medium">{affiliate.company_name}</p>
                       <p className="text-sm text-muted-foreground">{affiliate.email}</p>
                     </div>
                   </TableCell>
@@ -181,27 +135,13 @@ export const AffiliatesList = () => {
                        affiliate.status === 'pending' ? 'En attente' : 'Inactif'}
                     </Badge>
                   </TableCell>
-                  <TableCell>{affiliate.leads}</TableCell>
-                  <TableCell>{affiliate.revenue}€</TableCell>
-                  <TableCell>{affiliate.commission}€</TableCell>
-                  <TableCell>{affiliate.conversionRate}</TableCell>
-                  <TableCell>
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm text-muted-foreground truncate max-w-[200px]">
-                        {affiliate.affiliateLink}
-                      </span>
-                      <Button 
-                        variant="ghost" 
-                        size="icon"
-                        onClick={() => copyToClipboard(affiliate.affiliateLink)}
-                      >
-                        <Copy className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </TableCell>
+                  <TableCell>{affiliate.total_leads}</TableCell>
+                  <TableCell>{affiliate.total_revenue}€</TableCell>
+                  <TableCell>{affiliate.total_commission}€</TableCell>
+                  <TableCell>{((affiliate.total_leads / affiliate.total_revenue) * 100).toFixed(1)}%</TableCell>
                   <TableCell>
                     <span className="text-sm text-muted-foreground">
-                      {new Date(affiliate.lastActive).toLocaleDateString('fr-FR')}
+                      {new Date(affiliate.last_active).toLocaleDateString('fr-FR')}
                     </span>
                   </TableCell>
                   <TableCell>

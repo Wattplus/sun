@@ -3,48 +3,69 @@ import { Card } from "@/components/ui/card";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area, Legend } from 'recharts';
 import { Users, TrendingUp, CreditCard, BarChart, ArrowUpRight, ArrowDownRight } from "lucide-react";
 import { cn } from "@/lib/utils";
-
-const mockData = [
-  { name: 'Jan', leads: 40, revenue: 2400, affiliates: 10, commissions: 960 },
-  { name: 'Fév', leads: 30, revenue: 1398, affiliates: 12, commissions: 559 },
-  { name: 'Mar', leads: 60, revenue: 4800, affiliates: 15, commissions: 1920 },
-  { name: 'Avr', leads: 80, revenue: 3908, affiliates: 18, commissions: 1563 },
-  { name: 'Mai', leads: 70, revenue: 4800, affiliates: 20, commissions: 1920 },
-  { name: 'Jun', leads: 90, revenue: 5800, affiliates: 25, commissions: 2320 },
-];
-
-const stats = [
-  {
-    title: "Total Affiliés",
-    value: "156",
-    change: "+12%",
-    trend: "up",
-    icon: Users,
-  },
-  {
-    title: "Leads Générés",
-    value: "2,345",
-    change: "+25%",
-    trend: "up",
-    icon: TrendingUp,
-  },
-  {
-    title: "Revenus Totaux",
-    value: "45,678€",
-    change: "+18%",
-    trend: "up",
-    icon: CreditCard,
-  },
-  {
-    title: "Taux de Conversion",
-    value: "3.2%",
-    change: "-5%",
-    trend: "down",
-    icon: BarChart,
-  },
-];
+import { useAffiliateStats } from "@/hooks/affiliates/useAffiliateStats";
+import { useAffiliateTransactions } from "@/hooks/affiliates/useAffiliateTransactions";
 
 export const AffiliateStats = () => {
+  const { data: stats, isLoading: statsLoading } = useAffiliateStats();
+  const { data: transactions, isLoading: transactionsLoading } = useAffiliateTransactions();
+
+  const statsCards = [
+    {
+      title: "Total Affiliés",
+      value: stats?.totalAffiliates || "0",
+      change: "+12%",
+      trend: "up",
+      icon: Users,
+    },
+    {
+      title: "Leads Générés",
+      value: stats?.totalLeads || "0",
+      change: "+25%",
+      trend: "up",
+      icon: TrendingUp,
+    },
+    {
+      title: "Revenus Totaux",
+      value: `${stats?.totalRevenue || 0}€`,
+      change: "+18%",
+      trend: "up",
+      icon: CreditCard,
+    },
+    {
+      title: "Taux de Conversion",
+      value: stats?.totalLeads && stats?.totalRevenue 
+        ? `${((stats.totalLeads / stats.totalRevenue) * 100).toFixed(1)}%`
+        : "0%",
+      change: "-5%",
+      trend: "down",
+      icon: BarChart,
+    },
+  ];
+
+  if (statsLoading || transactionsLoading) {
+    return <div className="p-8 text-center">Chargement...</div>;
+  }
+
+  // Transformer les transactions pour le graphique
+  const chartData = transactions?.reduce((acc: any[], transaction) => {
+    const date = new Date(transaction.created_at).toLocaleDateString('fr-FR', { month: 'short' });
+    const existingData = acc.find(item => item.name === date);
+    
+    if (existingData) {
+      existingData.revenue += transaction.amount;
+      existingData.commissions += transaction.commission;
+    } else {
+      acc.push({
+        name: date,
+        revenue: transaction.amount,
+        commissions: transaction.commission,
+      });
+    }
+    
+    return acc;
+  }, []) || [];
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -52,7 +73,7 @@ export const AffiliateStats = () => {
       className="space-y-6"
     >
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        {stats.map((stat, index) => (
+        {statsCards.map((stat, index) => (
           <Card key={index} className="p-6 hover:shadow-lg transition-shadow">
             <div className="flex items-center justify-between">
               <div className="space-y-1">
@@ -85,15 +106,11 @@ export const AffiliateStats = () => {
           <h3 className="text-lg font-semibold mb-4">Performance des Affiliations</h3>
           <div className="h-[300px]">
             <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={mockData}>
+              <AreaChart data={chartData}>
                 <defs>
-                  <linearGradient id="colorLeads" x1="0" y1="0" x2="0" y2="1">
+                  <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="5%" stopColor="#1EAEDB" stopOpacity={0.3}/>
                     <stop offset="95%" stopColor="#1EAEDB" stopOpacity={0}/>
-                  </linearGradient>
-                  <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#33C3F0" stopOpacity={0.3}/>
-                    <stop offset="95%" stopColor="#33C3F0" stopOpacity={0}/>
                   </linearGradient>
                   <linearGradient id="colorCommissions" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="5%" stopColor="#4CAF50" stopOpacity={0.3}/>
@@ -113,16 +130,8 @@ export const AffiliateStats = () => {
                 <Legend />
                 <Area 
                   type="monotone" 
-                  dataKey="leads" 
-                  stroke="#1EAEDB" 
-                  fillOpacity={1} 
-                  fill="url(#colorLeads)" 
-                  name="Leads"
-                />
-                <Area 
-                  type="monotone" 
                   dataKey="revenue" 
-                  stroke="#33C3F0" 
+                  stroke="#1EAEDB" 
                   fillOpacity={1} 
                   fill="url(#colorRevenue)" 
                   name="Revenus (€)"
@@ -144,7 +153,7 @@ export const AffiliateStats = () => {
           <h3 className="text-lg font-semibold mb-4">Croissance des Affiliés</h3>
           <div className="h-[300px]">
             <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={mockData}>
+              <LineChart data={chartData}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#ffffff10" vertical={false} />
                 <XAxis dataKey="name" stroke="#ffffff50" />
                 <YAxis stroke="#ffffff50" />
@@ -158,11 +167,11 @@ export const AffiliateStats = () => {
                 <Legend />
                 <Line 
                   type="monotone" 
-                  dataKey="affiliates" 
+                  dataKey="revenue" 
                   stroke="#1EAEDB" 
                   strokeWidth={2}
                   dot={{ fill: '#1EAEDB', strokeWidth: 2 }}
-                  name="Nombre d'affiliés"
+                  name="Revenus"
                 />
               </LineChart>
             </ResponsiveContainer>
