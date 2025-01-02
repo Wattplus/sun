@@ -39,8 +39,13 @@ export const LeadMarketplace = () => {
         return;
       }
 
-      console.log("Fetched leads:", leadsData?.length, "leads");
-      setAvailableLeads(leadsData || []);
+      if (leadsData) {
+        console.log("Fetched leads:", leadsData);
+        setAvailableLeads(leadsData);
+      } else {
+        console.log("No leads found");
+        setAvailableLeads([]);
+      }
     } catch (error) {
       console.error('Error in fetchLeads:', error);
       toast.error("Une erreur est survenue lors du chargement des leads");
@@ -86,19 +91,16 @@ export const LeadMarketplace = () => {
   ).sort();
 
   const filteredLeads = availableLeads.filter(lead => {
-    console.log("Filtering lead:", lead);
     if (projectTypeFilter !== 'all' && lead.clienttype !== projectTypeFilter) {
-      console.log("Filtered out by project type");
       return false;
     }
     if (selectedDepartments.length > 0 && !selectedDepartments.includes(lead.postalcode.substring(0, 2))) {
-      console.log("Filtered out by department");
       return false;
     }
     return true;
   });
 
-  console.log("Filtered leads:", filteredLeads.length);
+  console.log("Filtered leads:", filteredLeads);
 
   const handlePurchase = (lead: Lead) => {
     setPurchasedLeads(prev => [...prev, lead.id]);
