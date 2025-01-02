@@ -24,6 +24,7 @@ import DataExport from "@/components/admin/export/DataExport";
 import AdminNotificationsPage from "@/components/admin/notifications/NotificationsPage";
 import SettingsPage from "@/components/admin/settings/SettingsPage";
 import AdminProfilePage from "@/components/admin/profile/ProfilePage";
+import AffiliationManagement from "@/components/admin/affiliation/AffiliationManagement";
 
 export const AppRoutes = () => {
   return (
@@ -65,6 +66,7 @@ export const AppRoutes = () => {
         <Route path="pricing" element={<PricingSettings />} />
         <Route path="transactions" element={<TransactionMonitoring />} />
         <Route path="complaints" element={<ComplaintManagement />} />
+        <Route path="affiliation" element={<AffiliationManagement />} />
         <Route path="export" element={<DataExport />} />
         <Route path="notifications" element={<AdminNotificationsPage />} />
         <Route path="settings" element={<SettingsPage />} />
