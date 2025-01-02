@@ -27,6 +27,7 @@ export const LeadCard = ({
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
 
+  // Calculate prices based on client type and prepaid status
   const priceWithPrepaid = calculateLeadPrice(lead.clienttype, true);
   const priceWithoutPrepaid = calculateLeadPrice(lead.clienttype, false);
 
