@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Users, TrendingUp, CreditCard, BarChart, UserCheck, Percent } from "lucide-react";
+import { Users, TrendingUp, CreditCard, ChartBar, UserCheck, Percent } from "lucide-react";
 import { useAffiliateStats } from "@/hooks/affiliates/useAffiliateStats";
 import { useAffiliateTransactions } from "@/hooks/affiliates/useAffiliateTransactions";
 import { StatsCard } from "../components/StatsCard";
@@ -45,7 +45,7 @@ export const AffiliateStats = () => {
       value: `${stats?.averageCommission?.toLocaleString() || 0}€`,
       change: "+15%",
       trend: "up" as const,
-      icon: BarChart,
+      icon: ChartBar,
     },
     {
       title: "Taux de Conversion",
