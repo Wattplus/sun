@@ -28,8 +28,12 @@ export const LeadCardActions = ({
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <span className="text-sm font-medium text-[#1EAEDB]">Acheter ce lead</span>
-            <span className="text-xs px-2 py-1 rounded-full bg-amber-500/10 text-amber-600">
-              {isProfessionalProject ? 'Professionnel' : 'Particulier'}
+            <span className={`text-xs px-2 py-1 rounded-full ${
+              isProfessionalProject 
+                ? 'bg-purple-500/10 text-purple-500' 
+                : 'bg-emerald-500/10 text-emerald-500'
+            }`}>
+              {isProfessionalProject ? 'Lead Professionnel' : 'Lead Particulier'}
             </span>
           </div>
           <div className="flex flex-col items-end">
