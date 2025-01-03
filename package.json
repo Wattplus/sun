@@ -90,3 +90,6 @@
     "vite": "^5.4.1"
   }
 }
+"devDependencies": {
+  "vite": "^x.x.x"
+}
